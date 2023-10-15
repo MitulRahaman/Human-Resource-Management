@@ -14,6 +14,28 @@ class PermissionService
         $this->permissionRepository = $permissionRepository;
     }
 
+
+    public function createPermission(array $data)
+    {
+        // You can add any business logic or validation here before saving
+        return $this->permissionRepository->create($data);
+    }
+
+    public function changeStatus(int $data)
+    {
+        // You can add any business logic or validation here before saving
+        return $this->permissionRepository->change($data);
+    }
+    public function delete(int $data)
+    {
+        // You can add any business logic or validation here before saving
+        return $this->permissionRepository->delete($data);
+    }
+    public function edit(int $id)
+    {
+        return $this->permissionRepository->edit($id);
+    }
+
     public function fetchData()
     {
         $result = $this->permissionRepository->getAllPermissionData();
@@ -34,7 +56,7 @@ class PermissionService
                     $status_msg = "Activate";
                 }
                 $edit_url = route('edit_permission', ['permission'=>$id]);
-
+//                dd($edit_url);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'>$status_msg</a>";
                 if ($row->deleted_at) {

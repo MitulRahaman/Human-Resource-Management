@@ -113,7 +113,7 @@
                 </li>
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">
-                    <a class="nav-main-link" href="#">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, "Permissions") == 0 ? 'active' : '' }}" href="{{ url('permission') }}">
                         <span class="nav-main-link-name">Permissions</span>
                     </a>
                 </li>

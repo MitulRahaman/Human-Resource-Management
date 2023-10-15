@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Branch\BranchController;
+use App\Http\Controllers\Permission\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +32,13 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/', [BranchController::class, 'index']);
         Route::get('/add', [BranchController::class, 'create']);
         Route::get('/store', [BranchController::class, 'store']);
+    });
+
+    Route::prefix('permission')->group(function() {
+        Route::get('/', [PermissionController::class, 'index']);
+        Route::get('/add', [PermissionController::class, 'create']);
+        Route::get('/store', [PermissionController::class, 'store']);
+        Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
+        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
     });
 });

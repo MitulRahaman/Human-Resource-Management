@@ -45,6 +45,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/{id}/update', [PermissionController::class, 'update']);
         Route::post('/restore', [PermissionController::class, 'restore']);
 
+        Route::post('/check_create', [PermissionController::class, 'check']);
+        Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
+
+
         Route::match(['get', 'post'], '/delete', [PermissionController::class, 'delete']);
     });
 });

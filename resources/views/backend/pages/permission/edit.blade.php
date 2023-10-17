@@ -19,7 +19,7 @@
 
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-            <form class="js-validation" action="{{ url('permission/' . $permission_info->id . '/update') }}" method="POST">
+            <form class="js-validation" id='form' action="{{ url('permission/' . $permission_info->id . '/update') }}" method="POST">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -27,7 +27,9 @@
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $permission_info->name }}" placeholder="Enter a name.." required>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $permission_info->name }}" placeholder="Enter a name..">
+                                    <span id="error_name"></span>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>
@@ -54,6 +56,7 @@
     </div>
 @endsection
 
+
 @section('js_after')
 
     <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
@@ -61,16 +64,5 @@
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
-    <script>
-        $('#validation').validate({
-            rules{
-                name:{
-                    required:true,
-                },
-                messages:{
-                    name:'unique name is required',
-                }
-            }
-        })
-    </script>
+
 @endsection

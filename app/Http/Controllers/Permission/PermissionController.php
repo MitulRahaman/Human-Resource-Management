@@ -8,6 +8,7 @@ use App\Http\Requests\PermissionEditRequest;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
 
 class PermissionController extends Controller
 {
@@ -34,17 +35,26 @@ class PermissionController extends Controller
     {
         return $this->permissionService->fetchData();
     }
-    public function store(PermissionAddRequest $request)
+
+    public function store(Request $request)
     {
-        try{
-            $permission = $this->permissionService->createPermission($request->validated());
 
+        $validator = Validator::make($request->all(), [
+            'slug' => 'required|unique:permissions,slug|string|regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
+            'name' => 'required|unique:permissions,name',
+        ]);
 
-            return redirect('permission/');
-            } catch (\Exception $exception) {
-        return redirect()->back()->with('error', $exception->getMessage());
+        // If validation fails, return a JSON response with validation errors
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        } else {
 
+            // If validation passes, create a new permission using permissionService
+             $this->permissionService->createPermission($request->all());
+            return response()->json(['success' => true]);
         }
+
+
 
     }
     public function changeStatus(Request $request)
@@ -82,6 +92,7 @@ class PermissionController extends Controller
 
         try{
             $permission = $this->permissionService->edit($request->validated(),(int)$request->id);
+
             return redirect('permission/');
 
         } catch (\Exception $exception) {
@@ -103,5 +114,25 @@ class PermissionController extends Controller
         }
 
     }
+
+//    public function checkEdit(Request $request)
+//    {
+//        dd('cbjkbakjcbak');
+//        dd('fajvckhabvk',$request->all());
+////        $id = $this->route('id');
+////        $id=(int)$id;
+//        $validator = Validator::make($request->all(), [
+//            'name' => 'unique:permissions,name',
+////              'name'=>"required|unique:permissions,name,$id",
+//        ]);
+//
+//        if ($validator->fails()){
+//            return response()->json(['errors' => $validator->errors()], 400);
+//        }
+//
+//
+//        // If validation passes, return a success response
+//        return response()->json(['success' => true]);
+//    }
 
 }

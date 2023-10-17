@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Permission;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionAddRequest;
+use App\Http\Requests\PermissionEditRequest;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -35,35 +36,72 @@ class PermissionController extends Controller
     }
     public function store(PermissionAddRequest $request)
     {
-        $data = [
-            'slug' => $request->input('name'),
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-        ];
-
-        $permission = $this->permissionService->createPermission($data);
+        try{
+            $permission = $this->permissionService->createPermission($request->validated());
 
 
-        return redirect('permission/');
+            return redirect('permission/');
+            } catch (\Exception $exception) {
+        return redirect()->back()->with('error', $exception->getMessage());
+
+        }
+
     }
     public function changeStatus(Request $request)
     {
+        try{
+            $id = $request->permission_id;
+            $permissionStatus = $this->permissionService->changeStatus($id);
+                    return redirect('permission/');
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('error', $exception->getMessage());
 
-        $id = $request->permission_id;
-        $permissionStatus = $this->permissionService->changeStatus($id);
-        return redirect('permission/');
+            }
+
     }
     public function delete(Request $request)
     {
-        $id = (int)$request->delete_permission_id;
-        $permissionStatus = $this->permissionService->delete($id);
-        return redirect('permission/');
+        try{
+            $id = (int)$request->delete_permission_id;
+            $permissionStatus = $this->permissionService->delete($id);
+            return redirect('permission/');
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+
+        }
+
     }
     public function edit(int $id )
     {
+        $permission_info = $this->permissionService->getPermission($id);
+        return \view('backend.pages.permission.edit',compact('permission_info'));
+    }
+    public function update(PermissionEditRequest $request)
+    {
 
+        try{
+            $permission = $this->permissionService->edit($request->validated(),(int)$request->id);
+            return redirect('permission/');
 
-        return redirect('permission/{$id}/edit');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+
+        }
+    }
+    public function restore(Request $request)
+    {
+        try{
+            $id = (int)$request->restore_permission_id;
+            $permissionStatus = $this->permissionService->restore($id);
+
+            return redirect('permission/');
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+
+        }
+
     }
 
 }

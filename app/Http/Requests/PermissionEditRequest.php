@@ -3,8 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class PermissionAddRequest extends FormRequest
+
+
+class PermissionEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +26,13 @@ class PermissionAddRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'slug' => 'required|unique:permissions,slug|string|regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
-            'name' => 'required|unique:permissions,name',
+        $id = $this->route('id');
+        $id=(int)$id;
+            return [
+              'name'=>"required|unique:permissions,name,$id",
+              'description'=> 'nullable',
 
-        ];
+            ];
+
     }
 }

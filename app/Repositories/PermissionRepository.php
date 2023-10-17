@@ -19,29 +19,39 @@ class PermissionRepository
     }
     public function change(int $data)
     {
-        $permission = Permission::find($data);
+        $permission = Permission::findOrFail($data);
         $old=$permission->status;
-            // Update the status to a new value, for example, 1 for active or 0 for inactive
-            if($old==1)
+        $status= config('variable_constants.activation');
+            if($old==$status['active'])
             {
-                $permission->status=0;
+                $permission->status=$status['inactive'];
                 $permission->save();
 
             }
             else
             {
 
-                $permission->status=1;
+                $permission->status=$status['active'];
                 $permission->save();
 
             }
     }
     public function delete(int $id)
     {
-        Permission::destroy($id);
+        $permission= Permission::findOrFail($id);
+        return $permission->delete();
     }
-    public function edit(int $id)
+    public function getPermission(int $id)
     {
-
+        return Permission::findOrFail($id);
+    }
+    public function edit( $data, int $id)
+    {
+        $permission= Permission:: findorFail($id);
+        return $permission->update($data);
+    }
+    public function restore(int $id)
+    {
+        return Permission::withTrashed()->where('id', $id)->restore();;
     }
 }

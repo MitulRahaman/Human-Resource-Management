@@ -1,4 +1,4 @@
-@extends('layouts.backend.master')
+@extends('backend.layouts.master')
 
 @section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
@@ -11,18 +11,19 @@
 @endsection
 @section('content')
     <div class="content">
-    @include('layouts.backend.error_msg')
+    @include('backend.layouts.error_msg')
         <div class="block block-rounded">
             <div class="block-header">
                 <h3 class="block-title">Edit Permission</h3>
             </div>
+
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-            <form class="js-validation" action="{{ url('permission/update') }}" method="POST">
+            <form class="js-validation" action="{{ url('permission/' . $permission_info->id . '/update') }}" method="POST">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
-                        <div class="row items-push">
+                        <div class="row items-push ml-10">
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
@@ -60,4 +61,16 @@
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
+    <script>
+        $('#validation').validate({
+            rules{
+                name:{
+                    required:true,
+                },
+                messages:{
+                    name:'unique name is required',
+                }
+            }
+        })
+    </script>
 @endsection

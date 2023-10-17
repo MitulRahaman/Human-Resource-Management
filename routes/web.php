@@ -40,8 +40,11 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/store', [PermissionController::class, 'store']);
          Route::post('/change_status', [PermissionController::class, 'changeStatus']);
         Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
+
         Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
-        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
+        Route::post('/{id}/update', [PermissionController::class, 'update']);
+        Route::post('/restore', [PermissionController::class, 'restore']);
+
         Route::match(['get', 'post'], '/delete', [PermissionController::class, 'delete']);
     });
 });

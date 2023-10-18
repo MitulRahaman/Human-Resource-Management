@@ -91,17 +91,7 @@ class PermissionRepository
     {
         $id=$data["id"];
         $id=(int)$id;
-//        dd($id);
-//        $dum=Permission::where('name', 'aaaa')->whereNotIn('id', [37])->get();
-//        $dum=Permission::where('name', 'aaaa')->where('id', '!=', 37)->get();
-//        dd($dum);
-//        $count = Permission::where('name', $this->name)->count();
-        $validator = Validator::make($data, [
-            'name'=>"unique:permissions,name,$id",
-        ]);
-
-
-        if ($validator->fails()) {
+        if (Permission::where('name',$this->name)->where('id', '!=', $id)->first()) {
             return true;
         } else {
             return false;

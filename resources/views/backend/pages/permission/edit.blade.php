@@ -97,6 +97,7 @@
 
                 },
                 error: function() {
+                    // e.preventDefault();
                     return false;
                 }
             });

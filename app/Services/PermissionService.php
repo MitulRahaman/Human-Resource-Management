@@ -141,7 +141,9 @@ class PermissionService
 
         $is_name_exists = $this->permissionRepository->isNameUnique($data);
 
+
         $name_msg = $is_name_exists ? 'Name already taken' : null;
+//        dd($name_msg);
 
         if ( $is_name_exists) {
             return [

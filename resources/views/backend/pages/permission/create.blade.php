@@ -138,7 +138,7 @@
                             document.getElementById('error_name').innerHTML = name_msg;
                         }
                         else {
-                            document.getElementById('error_slug').innerHTML = '';
+                            document.getElementById('error_name').innerHTML = '';
                         }
                         e.preventDefault();
                         return false;

@@ -20,7 +20,7 @@
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
             {{--action="{{ url('permission/' . $permission_info->id . '/update') }}"--}}
-            <form class="js-validation" id='form' action='{{ url('permission/' . $permission_info->id . '/update')}}' method="POST" onsubmit="return validate_inputs(event)">
+            <form class="js-validation" id='form' action='{{ url('permission/' . $permission_info->id . '/update')}}' method="POST" onsubmit="return validate_name(event)">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -28,7 +28,7 @@
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $permission_info->name }}" placeholder="Enter a name..">
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $permission_info->name }}" placeholder="Enter a name.." required>
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
 
                                 </div>
@@ -67,7 +67,8 @@
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
 
     <script>
-        function validate_inputs(e) {
+        function validate_name(e) {
+
             var name = $('#name').val();
             $.ajax({
                 type: 'POST',
@@ -78,12 +79,13 @@
                     // console.log(response.success);
                     var name_msg = response.name_msg;
                     var success = response.success;
+                    // console.log(success);
                     if (!success) {
                         if (name_msg) {
                             document.getElementById('error_name').innerHTML = name_msg;
                         }
                         else {
-                            document.getElementById('error_slug').innerHTML = '';
+                            document.getElementById('error_name').innerHTML = '';
                         }
                         e.preventDefault();
                         return false;
@@ -100,42 +102,6 @@
             });
 
         }
-        {{--$('#form').submit(function (e) {--}}
-            {{--e.preventDefault();--}}
-            {{--var $form = $(this);--}}
-
-            {{--// check if the input is valid using a 'valid' property--}}
-            {{--if (!$form.valid) return false;--}}
-            {{--console.log('{{url('permission/' . $permission_info->id . '/update') }}');--}}
-            {{--$.ajax({--}}
-                {{--type: 'POST',--}}
-                {{--url: '{{ url('permission/' . $permission_info->id . '/update') }}',--}}
-                {{--data: $('#form').serialize(),--}}
-
-                {{--success: function (response) {--}}
-                    {{--$('#answers').html(response);--}}
-
-                    {{--window.location = '/permission';--}}
-                    {{--console.log(response);--}}
-                {{--},--}}
-                {{--error: function (response) {--}}
-                    {{--$('#answers').html(response);--}}
-
-
-                    {{--$name_msg='';--}}
-
-                    {{--if($name_msg)--}}
-                    {{--{--}}
-                        {{--document.getElementById('error_name').innerHTML = $name_msg;--}}
-                    {{--}--}}
-                    {{--else {--}}
-                        {{--document.getElementById('error_name').innerHTML = '';--}}
-                    {{--}--}}
-                {{--},--}}
-            {{--});--}}
-
-            {{--// $('#error_slug').html('<p>'+ xhr.responseJSON.errors.slug[0] + '</p>')p--}}
-        {{--});--}}
     </script>
 
 

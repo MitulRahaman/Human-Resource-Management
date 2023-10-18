@@ -124,6 +124,7 @@ class PermissionController extends Controller
     }
     public function validate_name(Request $request)
     {
+//        dd($request->id);
 
         $response = $this->permissionService->validateName($request->all());
         return $response;

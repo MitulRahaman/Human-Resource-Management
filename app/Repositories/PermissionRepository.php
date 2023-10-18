@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Validator;
+
 
 class PermissionRepository
 {
@@ -85,16 +87,24 @@ class PermissionRepository
             return false;
         }
     }
-    public function isNameUnique()
+    public function isNameUnique($data)
     {
-        $id = $this->route('id');
+        $id=$data["id"];
         $id=(int)$id;
+//        dd($id);
+//        $dum=Permission::where('name', 'aaaa')->whereNotIn('id', [37])->get();
+//        $dum=Permission::where('name', 'aaaa')->where('id', '!=', 37)->get();
+//        dd($dum);
+//        $count = Permission::where('name', $this->name)->count();
+        $validator = Validator::make($data, [
+            'name'=>"unique:permissions,name,$id",
+        ]);
 
-        // Check if a permission with the given name exists, excluding the current record
-        if (Permission::where('name', $this->name)->where('id', '!=', $id)->exists()) {
-            return true; // Permission with the given name already exists, excluding the current record
+
+        if ($validator->fails()) {
+            return true;
         } else {
-            return false; // Permission with the given name does not exist, or it's the current record
+            return false;
         }
     }
 }

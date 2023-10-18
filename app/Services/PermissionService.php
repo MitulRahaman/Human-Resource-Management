@@ -139,7 +139,7 @@ class PermissionService
     {
         $this->permissionRepository->setName($data['name']);
 
-        $is_name_exists = $this->permissionRepository->isNameUnique();
+        $is_name_exists = $this->permissionRepository->isNameUnique($data);
 
         $name_msg = $is_name_exists ? 'Name already taken' : null;
 

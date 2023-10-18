@@ -46,12 +46,13 @@ class PermissionController extends Controller
 
         // If validation fails, return a JSON response with validation errors
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+//            return response()->json(['errors' => $validator->errors()], 400);
+            return redirect()->back()->with('errors', $validator->errors(), 401);
         } else {
 
             // If validation passes, create a new permission using permissionService
              $this->permissionService->createPermission($request->all());
-            return response()->json(['success' => true]);
+            return redirect('permission/');
         }
 
 
@@ -89,7 +90,6 @@ class PermissionController extends Controller
     }
     public function update(PermissionEditRequest $request)
     {
-
         try{
             $permission = $this->permissionService->edit($request->validated(),(int)$request->id);
 
@@ -115,24 +115,19 @@ class PermissionController extends Controller
 
     }
 
-//    public function checkEdit(Request $request)
-//    {
-//        dd('cbjkbakjcbak');
-//        dd('fajvckhabvk',$request->all());
-////        $id = $this->route('id');
-////        $id=(int)$id;
-//        $validator = Validator::make($request->all(), [
-//            'name' => 'unique:permissions,name',
-////              'name'=>"required|unique:permissions,name,$id",
-//        ]);
-//
-//        if ($validator->fails()){
-//            return response()->json(['errors' => $validator->errors()], 400);
-//        }
-//
-//
-//        // If validation passes, return a success response
-//        return response()->json(['success' => true]);
-//    }
+    public function validate_inputs(Request $request)
+    {
+
+        $response = $this->permissionService->validateInputs($request->all());
+        return $response;
+
+    }
+    public function validate_name(Request $request)
+    {
+
+        $response = $this->permissionService->validateName($request->all());
+        return $response;
+
+    }
 
 }

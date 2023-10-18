@@ -108,4 +108,51 @@ class PermissionService
                 }';
         }
     }
+
+    public function validateInputs($data)
+    {
+        $this->permissionRepository->setSlug($data['slug']);
+        $this->permissionRepository->setName($data['name']);
+
+        $is_slug_exists = $this->permissionRepository->isSlugExists();
+        $is_name_exists = $this->permissionRepository->isNameExists();
+
+
+        $slug_msg = $is_slug_exists ? 'Slug already taken' : null;
+        $name_msg = $is_name_exists ? 'Name already taken' : null;
+
+        if ($is_slug_exists || $is_name_exists) {
+            return [
+                'success' => false,
+                'slug_msg' => $slug_msg,
+                'name_msg' => $name_msg,
+            ];
+        } else {
+            return [
+                'success' => true,
+                'slug_msg' => $slug_msg,
+                'name_msg' => $name_msg,
+            ];
+        }
+    }
+    public function validateName($data)
+    {
+        $this->permissionRepository->setName($data['name']);
+
+        $is_name_exists = $this->permissionRepository->isNameUnique();
+
+        $name_msg = $is_name_exists ? 'Name already taken' : null;
+
+        if ( $is_name_exists) {
+            return [
+                'success' => false,
+                'name_msg' => $name_msg,
+            ];
+        } else {
+            return [
+                'success' => true,
+                'name_msg' => $name_msg,
+            ];
+        }
+    }
 }

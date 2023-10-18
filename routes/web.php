@@ -35,6 +35,7 @@ Route::group(['middleware'=> 'auth'], function() {
     });
 
     Route::prefix('permission')->group(function() {
+
         Route::get('/', [PermissionController::class, 'index']);
         Route::get('/add', [PermissionController::class, 'create']);
         Route::post('/store', [PermissionController::class, 'store']);
@@ -43,9 +44,11 @@ Route::group(['middleware'=> 'auth'], function() {
 
         Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
         Route::post('/{id}/update', [PermissionController::class, 'update']);
+
         Route::post('/restore', [PermissionController::class, 'restore']);
 
-        Route::post('/check_create', [PermissionController::class, 'check']);
+        Route::post('/validate_inputs', [PermissionController::class, 'validate_inputs']);
+        Route::post('/{id}/validate_name',[PermissionController::class, 'validate_name']);
         Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
 
 

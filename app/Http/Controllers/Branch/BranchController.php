@@ -67,10 +67,24 @@ class BranchController extends Controller
         return redirect('/branch');
     }
 
-    public function destroy($branch)
+    public function status($id)
     {
         try{
-            $data = Branch::find($branch);
+            $data = Branch::find($id);
+                if($data->status)
+                    $data->update(array('status' => 0));
+                else
+                    $data->update(array('status' => 1));
+        }catch (\Exception $exception) {
+            return redirect()->back()->with('error', 'You need to restore the branch first');
+        }
+        return redirect()->back();
+    }
+
+    public function destroy($id)
+    {
+        try{
+            $data = Branch::find($id);
             $data->delete();
         }catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
@@ -92,5 +106,10 @@ class BranchController extends Controller
     public function verifydata(Request $request)
     {
         return $this->branchService->validateInputs($request->all());
+    }
+
+    public function updatedata(Request $request)
+    {
+        return $this->branchService->updateInputs($request->all());
     }
 }

@@ -17,7 +17,7 @@
                 <h3 class="block-title">Update Branch</h3>
             </div>
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ route('branch.update', $data->id) }}" method="POST" enctype="multipart/form-data">
+            <form class="js-validation" action="{{ route('branch.update', $data->id) }}" method="POST" onsubmit="return validate_inputs()" enctype="multipart/form-data">
                 @csrf
                 @method('patch')
                 <div class="block block-rounded">
@@ -27,7 +27,7 @@
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ $data->name }}"  required>
-                                    <span id="name_error" style="color:red"></span>
+                                    <span id="error_name" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-description">Address</label>
@@ -40,7 +40,7 @@
                         <!-- Update -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary">Update</button>
+                                <button type="submit" class="btn btn-alt-primary" id="submit">Update</button>
                             </div>
                         </div>
                         <!-- END Update -->
@@ -54,33 +54,43 @@
 @endsection
 
 @section('js_after')
-
-    <script> 
-        $(document).ready(function(){
-            $('#name').on('focusout', function(){
-                var _name = $('#name').val();
-                var _url = "{{ url('branch/verifydata') }}";
-                $.ajax({                   
-                    type: "post",
-                    url: _url,
-                    data:{
-                        _token: '{{ csrf_token() }}',
-                        name:_name,
-                        },
-                    success: function(){
-                        $("#name_error").fadeIn().html(" ");
-                    },
-                    error:function(e) {
-                        $("#name_error").fadeIn().html(e.responseJSON.errors);
-                    }
-                });
-            });
-        });
-    </script>
-
     <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/jquery-validation/additional-methods.js') }}"></script>
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
+
+    <script> 
+        function validate_inputs(e){
+            let name = $('#name').val();
+            var current_name = " <?php echo $data->name; ?>"
+            let flag = 0;
+            $.ajax({
+                type: 'POST',
+                async:false,
+                url: '{{ route("updatedata") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    name: name,
+                    current_name: current_name
+                },
+                context: this,
+                success: function(response) {
+                    if (!response.success) {
+                        document.getElementById('error_name').innerHTML = response.name_msg;
+                        flag = 0;
+                    }
+                    else{
+                        flag = 1;
+                    }
+                },
+            });
+            if(!flag)
+                return false;
+            else{
+                $('#submit').attr('disabled', true);
+                return true;
+            }
+        } 
+    </script>
 @endsection

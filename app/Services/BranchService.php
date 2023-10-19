@@ -76,15 +76,31 @@ class BranchService
         $is_name_exists = $this->branchRepository->isNameExists();
         
         if ($is_name_exists) {
-            $name_msg = $is_name_exists ? 'Name already taken' : null;
             return [
                 'success' => false,
-                'name_msg' => $name_msg,
+                'name_msg' => 'Name already taken',
             ];
         } else {
             return [
                 'success' => true,
                 'name_msg' => null,
+            ];
+        }
+    }
+
+    public function updateInputs($data)
+    {
+        $this->branchRepository->updateName($data['name']);
+        $is_name_exists_for_update = $this->branchRepository->isNameExistsForUpdate($data['current_name']);
+        
+        if ($is_name_exists_for_update) {
+            return [
+                'success' => true,
+            ];
+        } else {
+            return [
+                'success' => false,
+                'name_msg' => 'Name already taken',
             ];
         }
     }

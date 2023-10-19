@@ -37,6 +37,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('{id}/restore', [BranchController::class, 'restore'])->name('branch.restore');
         Route::get('{id}/edit', [BranchController::class, 'edit'])->name('branch.edit');
         Route::post('verifydata', [BranchController::class, 'verifydata'])->name('verifydata');
+        Route::patch('/updatedata', [BranchController::class, 'updatedata'])->name('updatedata');
+        Route::get('{id}/status', [BranchController::class, 'status'])->name('branch.status');
     });
 
     Route::prefix('permission')->group(function() {

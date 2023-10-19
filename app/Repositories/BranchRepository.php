@@ -20,11 +20,26 @@ class BranchRepository
         $this->name = $name;
     }
 
+    public function updateName($name)
+    {
+        $this->name = $name;
+    }
+
     public function isNameExists()
     {
         if(DB::table('branches')->where('name', '=', $this->name)->first())
             return true;
         else
             return false;
+    }
+
+    public function isNameExistsForUpdate($current_name)
+    {
+        $available_name = DB::table('branches')->where('name', '!=', $current_name)->get('name');
+ 
+        if($available_name->where('name', $this->name)->first())
+            return false;
+        else
+            return true;
     }
 }

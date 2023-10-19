@@ -50,13 +50,15 @@ class PermissionService
         $result = $this->permissionRepository->getAllPermissionData();
         if ($result->count() > 0) {
             $data = array();
+
             foreach ($result as $key=>$row) {
+
                 $id = $row->id;
                 $slug = $row->slug;
                 $name = $row->name;
                 $description = $row->description;
                 $created_at = $row->created_at;
-                $deleted_at = $row->deleted_at;
+
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "Active";
                     $status_msg = "Deactivate";
@@ -64,6 +66,7 @@ class PermissionService
                     $status = "Inactive";
                     $status_msg = "Activate";
                 }
+                $deleted = $row->deleted_at;
                 $edit_url = route('edit_permission', ['permission'=>$id]);
 //              dd($edit_url);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
@@ -94,6 +97,12 @@ class PermissionService
                 array_push($temp, $slug);
                 array_push($temp, $description);
                 array_push($temp, $status);
+                if ($row->deleted_at) {
+                    array_push($temp, 'Restore');
+                } else {
+                    array_push($temp, 'Delete');
+                }
+
                 array_push($temp, $created_at);
                 array_push($temp, $action_btn);
                 array_push($data, $temp);

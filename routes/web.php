@@ -33,7 +33,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/add', [BranchController::class, 'create']);
         Route::get('/store', [BranchController::class, 'store']);
     });
-
+    Route::group(['middleware'=> 'superUser'], function() {
     Route::prefix('permission')->group(function() {
 
         Route::get('/', [PermissionController::class, 'index']);
@@ -53,5 +53,9 @@ Route::group(['middleware'=> 'auth'], function() {
 
 
         Route::match(['get', 'post'], '/delete', [PermissionController::class, 'delete']);
+
+        Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
+
+    });
     });
 });

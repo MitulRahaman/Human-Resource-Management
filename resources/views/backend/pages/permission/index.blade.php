@@ -27,8 +27,10 @@
                         <th class="text-center">#</th>
                         <th>Name</th>
                         <th>Slug</th>
+
                         <th class="d-none d-sm-table-cell" style="width: 20%;">Description</th>
                         <th class="d-none d-sm-table-cell">Status</th>
+                        <th>Deleted</th>
                         <th>Created At</th>
                         <th>Action</th>
                     </tr>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Permission;
 
+use App\Exports\ExportPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionAddRequest;
 use App\Http\Requests\PermissionEditRequest;
@@ -9,6 +10,10 @@ use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
+use Excel;
+
+//use App\Exports\ExportPermissions;
+
 
 class PermissionController extends Controller
 {
@@ -43,14 +48,9 @@ class PermissionController extends Controller
             'slug' => 'required|unique:permissions,slug|string|regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
             'name' => 'required|unique:permissions,name',
         ]);
-
-        // If validation fails, return a JSON response with validation errors
         if ($validator->fails()) {
-//            return response()->json(['errors' => $validator->errors()], 400);
             return redirect()->back()->with('errors', $validator->errors(), 401);
         } else {
-
-            // If validation passes, create a new permission using permissionService
              $this->permissionService->createPermission($request->all());
             return redirect('permission/');
         }
@@ -127,6 +127,20 @@ class PermissionController extends Controller
 
         $response = $this->permissionService->validateName($request->all());
         return $response;
+
+    }
+    public function exportPermissionsData(){
+
+
+
+        $permissionData = 'permissions.xlsx';
+
+
+
+
+        return Excel::download(new ExportPermissions, $permissionData);
+
+
 
     }
 

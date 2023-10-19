@@ -121,6 +121,8 @@ class PermissionService
         $slug_msg = $is_slug_exists ? 'Slug already taken' : null;
         $name_msg = $is_name_exists ? 'Name already taken' : null;
 
+        if(!$data['slug']) $slug_msg = 'Slug is required';
+        if(!$data['name']) $name_msg = 'Name is required';
         if ($is_slug_exists || $is_name_exists) {
             return [
                 'success' => false,
@@ -144,7 +146,7 @@ class PermissionService
 
         $name_msg = $is_name_exists ? 'Name already taken' : null;
 //        dd($name_msg);
-
+        if(!$data['name']) $name_msg = 'Name is required';
         if ( $is_name_exists) {
             return [
                 'success' => false,

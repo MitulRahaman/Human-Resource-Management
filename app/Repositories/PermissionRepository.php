@@ -73,7 +73,7 @@ class PermissionRepository
     }
     public function isSlugExists()
     {
-        if (Permission::where('slug', $this->slug)->exists()) {
+        if (Permission::where('slug', $this->slug)->exists() || !$this->slug) {
             return true;
         } else {
             return false;
@@ -81,7 +81,7 @@ class PermissionRepository
     }
     public function isNameExists()
     {
-        if (Permission::where('name', $this->name)->exists()) {
+        if (Permission::where('name', $this->name)->exists() || !$this->name) {
             return true;
         } else {
             return false;
@@ -91,7 +91,7 @@ class PermissionRepository
     {
         $id=$data["id"];
         $id=(int)$id;
-        if (Permission::where('name',$this->name)->where('id', '!=', $id)->first()) {
+        if (Permission::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name) {
             return true;
         } else {
             return false;

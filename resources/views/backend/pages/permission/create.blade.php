@@ -27,12 +27,12 @@
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-username">Slug <span class="text-danger">*</span></label>
-                                    <input type="text"  class="form-control" id="slug" name="slug" value="{{ old('slug') }}" placeholder="..." required>
+                                    <input type="text"  class="form-control" id="slug" name="slug" value="{{ old('slug') }}" placeholder="..." >
                                     <span id="error_slug"  class="m-2" style="color:red;  font-size: 14px;"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"  placeholder="Enter a name.." required>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"  placeholder="Enter a name.." >
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
 
                                 </div>
@@ -68,84 +68,47 @@
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script>
-        {{--$('#form').submit(function (e) {--}}
-            {{--e.preventDefault();--}}
-            {{--var $form = $(this);--}}
-
-            {{--// check if the input is valid using a 'valid' property--}}
-            {{--if (!$form.valid) return false;--}}
-
-            {{--$.ajax({--}}
-                {{--type: 'POST',--}}
-                {{--url: '{{ url('permission/store') }}',--}}
-                {{--data: $('#form').serialize(),--}}
-                {{--success: function (response) {--}}
-                    {{--$('#answers').html(response);--}}
-
-                    {{--window.location = '/permission';--}}
-
-                {{--},--}}
-                {{--error: function (response) {--}}
-                    {{--$('#answers').html(response);--}}
-
-                    {{--$slug_msg=response.responseJSON.errors.slug;--}}
-                    {{--$name_msg=response.responseJSON.errors.name;--}}
-                   {{--if($slug_msg)--}}
-                   {{--{--}}
-                       {{--document.getElementById('error_slug').innerHTML = $slug_msg;--}}
-
-                   {{--}--}}
-                   {{--else {--}}
-                       {{--document.getElementById('error_slug').innerHTML = '';--}}
-                   {{--}--}}
-                   {{--if($name_msg)--}}
-                   {{--{--}}
-                       {{--document.getElementById('error_name').innerHTML = $name_msg;--}}
-                   {{--}--}}
-                   {{--else {--}}
-                       {{--document.getElementById('error_slug').innerHTML = '';--}}
-                   {{--}--}}
-                {{--},--}}
-            {{--});--}}
-
-            {{--// $('#error_slug').html('<p>'+ xhr.responseJSON.errors.slug[0] + '</p>')p--}}
-        {{--});--}}
         function validate_inputs(e) {
            //
             var slug = $('#slug').val();
             var name = $('#name').val();
+//alert('asdasdasd');
+
             $.ajax({
                 type: 'POST',
                 async:false,
                 url: '{{ url('permission/validate_inputs') }}',
                 data: $('#form').serialize(),
+
                 success: function (response) {
-                    // console.log(response.success);
+
                     var slug_msg = response.slug_msg;
                     var name_msg = response.name_msg;
                     var success = response.success;
-                    if (!success) {
+
+                        if (!success) {
 
 
-                        if (slug_msg) {
-                            document.getElementById('error_slug').innerHTML = slug_msg;
+                            if (slug_msg) {
+                                document.getElementById('error_slug').innerHTML = slug_msg;
+
+                            }
+                            else {
+                                document.getElementById('error_slug').innerHTML = '';
+                            }
+                            if (name_msg) {
+                                document.getElementById('error_name').innerHTML = name_msg;
+                            }
+                            else {
+                                document.getElementById('error_name').innerHTML = '';
+                            }
+                            e.preventDefault();
+                            return false;
 
                         }
-                        else {
-                            document.getElementById('error_slug').innerHTML = '';
-                        }
-                        if (name_msg) {
-                            document.getElementById('error_name').innerHTML = name_msg;
-                        }
-                        else {
-                            document.getElementById('error_name').innerHTML = '';
-                        }
-                        e.preventDefault();
-                        return false;
+                        $('#create').attr('disabled', true);
+                        return true;
 
-                    }
-
-                    return true;
 
 
                 },

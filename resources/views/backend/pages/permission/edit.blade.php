@@ -28,7 +28,7 @@
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $permission_info->name }}" placeholder="Enter a name.." required>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $permission_info->name }}" placeholder="Enter a name.." >
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
 
                                 </div>

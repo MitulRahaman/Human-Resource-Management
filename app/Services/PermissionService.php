@@ -68,7 +68,6 @@ class PermissionService
                 }
                 $deleted = $row->deleted_at;
                 $edit_url = route('edit_permission', ['permission'=>$id]);
-//              dd($edit_url);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'>$status_msg</a>";
                 if ($row->deleted_at) {
@@ -98,9 +97,9 @@ class PermissionService
                 array_push($temp, $description);
                 array_push($temp, $status);
                 if ($row->deleted_at) {
-                    array_push($temp, 'Restore');
+                    array_push($temp, ' <span class="badge badge-success" >Restore</span>');
                 } else {
-                    array_push($temp, 'Delete');
+                    array_push($temp, ' <span class="badge badge-danger">Delete</span>');
                 }
 
                 array_push($temp, $created_at);

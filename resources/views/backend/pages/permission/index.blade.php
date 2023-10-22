@@ -2,6 +2,7 @@
 @section('css_after')
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
+
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
@@ -20,37 +21,44 @@
                 <h3 class="block-title">Manage Permissions</h3>
             </div>
             <div class="block-content block-content-full">
+
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
-                <table class="table table-bordered table-striped table-vcenter" id="permission_table">
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
+
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="text-center bg-body-light py-2 mb-2">
-                                <div class="dt-buttons">
-                                    <button class="dt-button buttons-copy buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onClick="copytable()" value="Copy to Clipboard"><span>Copy</span></button>
-                                    <button class="dt-button buttons-csv buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="download_table_as_csv('permission_table');"><span>CSV</span></button>
-                                    <button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" value="Export" onclick="Export()"><span>PDF</span></button>
-                                    <button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="window.print()"><span>Print</span></button>
-                                </div>
-                            </div>
-                        </div>
+                        {{--<div class="col-sm-12">--}}
+                            {{--<div class="text-center bg-body-light py-2 mb-2">--}}
+                                {{--<div class="dt-buttons">--}}
+                                    {{--<button class="dt-button buttons-copy buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onClick="copytable()" value="Copy to Clipboard"><span>Copy</span></button>--}}
+                                    {{--<button class="dt-button buttons-csv buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="download_table_as_csv('permission_table');"><span>CSV</span></button>--}}
+                                    {{--<button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" value="Export" onclick="Export()"><span>PDF</span></button>--}}
+                                    {{--<button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="window.print()"><span>Print</span></button>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+
                     </div>
 
-                    <thead>
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th>Name</th>
-                        <th>Slug</th>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <thead>
+                            <tr>
+                                <th class="text-center ">#</th>
+                                <th >Name</th>
+                                <th >Slug</th>
 
-                        <th class="d-none d-sm-table-cell" style="width: 20%;">Description</th>
-                        <th class="d-none d-sm-table-cell">Status</th>
-                        <th>Deleted</th>
-                        <th>Created At</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                                <th class="d-none d-sm-table-cell " style="width: 20%;">Description</th>
+                                <th class="d-none d-sm-table-cell ">Status</th>
+                                <th >Deleted</th>
+                                <th >Created At</th>
+                                <th >Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                    </tbody>
+                            </tbody>
+                        </div>
+                    </div>
                 </table>
                 <!-- Vertically Centered Block Modal -->
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
@@ -142,6 +150,9 @@
 @endsection
 
 @section('js_after')
+    {{--<script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>--}}
+    {{--<script src="{{ asset('backend/js/oneui.core.min.js') }}"></script>--}}
+
     <script src="{{ asset('backend/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/dataTables.buttons.min.js') }}"></script>
@@ -156,18 +167,22 @@
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $('#permission_table').DataTable().destroy();
+
             var dtable = $('#permission_table').DataTable({
                 responsive: true,
                 ajax: '{{ url('permission/get_permission_data') }}',
                 paging: true,
+
+                dom: 'Bfrtip',
                 retrieve: true,
-                "order": [[ 0, "asc" ]],
+
+                // "order": [[ 0, "asc" ]],
             });
         });
 
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
-            x.innerHTML = msg;
+            x.innerHTML = "Are you sure, you want to change status?";
             $('#permission_id').val(id);
             $('#status-modal').modal('show');
         }
@@ -186,63 +201,63 @@
             $('#restore-modal').modal('show');
         }
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-    <script type="text/javascript">
-        function Export() {
-            html2canvas(document.getElementById('permission_table'), {
-                onrendered: function (canvas) {
-                    var data = canvas.toDataURL();
-                    var docDefinition = {
-                        content: [{
-                            image: data,
-                            width: 500
-                        }]
-                    };
-                    pdfMake.createPdf(docDefinition).download("PermissionTable.pdf");
-                }
-            });
-        }
-    </script>
-    <script type="text/javascript">
+    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>--}}
+    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>--}}
+    {{--<script type="text/javascript">--}}
+        {{--function Export() {--}}
+            {{--html2canvas(document.getElementById('permission_table'), {--}}
+                {{--onrendered: function (canvas) {--}}
+                    {{--var data = canvas.toDataURL();--}}
+                    {{--var docDefinition = {--}}
+                        {{--content: [{--}}
+                            {{--image: data,--}}
+                            {{--width: 500--}}
+                        {{--}]--}}
+                    {{--};--}}
+                    {{--pdfMake.createPdf(docDefinition).download("PermissionTable.pdf");--}}
+                {{--}--}}
+            {{--});--}}
+        {{--}--}}
+    {{--</script>--}}
+    {{--<script type="text/javascript">--}}
 
-        function copytable() {
-            var urlField = document.getElementById('permission_table')
-            var range = document.createRange()
-            range.selectNode(urlField)
-            window.getSelection().addRange(range)
-            document.execCommand('copy')
-        }
-    </script>
-    <script>
-        function download_table_as_csv(table_id, separator = ',') {
-            // Select rows from table_id
-            var rows = document.querySelectorAll('table#' + table_id + ' tr');
-            // Construct csv
-            var csv = [];
-            for (var i = 0; i < rows.length; i++) {
-                var row = [], cols = rows[i].querySelectorAll('td, th');
-                for (var j = 0; j < cols.length-2; j++) {
-                    // Clean innertext to remove multiple spaces and jumpline (break csv)
-                    var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
-                    // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
-                    data = data.replace(/"/g, '""');
-                    // Push escaped string
-                    row.push('"' + data + '"');
-                }
-                csv.push(row.join(separator));
-            }
-            var csv_string = csv.join('\n');
-            // Download it
-            var filename = 'export_' + table_id + '_' + new Date().toLocaleDateString() + '.csv';
-            var link = document.createElement('a');
-            link.style.display = 'none';
-            link.setAttribute('target', '_blank');
-            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
+        {{--function copytable() {--}}
+            {{--var urlField = document.getElementById('permission_table')--}}
+            {{--var range = document.createRange()--}}
+            {{--range.selectNode(urlField)--}}
+            {{--window.getSelection().addRange(range)--}}
+            {{--document.execCommand('copy')--}}
+        {{--}--}}
+    {{--</script>--}}
+    {{--<script>--}}
+        {{--function download_table_as_csv(table_id, separator = ',') {--}}
+            {{--// Select rows from table_id--}}
+            {{--var rows = document.querySelectorAll('table#' + table_id + ' tr');--}}
+            {{--// Construct csv--}}
+            {{--var csv = [];--}}
+            {{--for (var i = 0; i < rows.length; i++) {--}}
+                {{--var row = [], cols = rows[i].querySelectorAll('td, th');--}}
+                {{--for (var j = 0; j < cols.length-2; j++) {--}}
+                    {{--// Clean innertext to remove multiple spaces and jumpline (break csv)--}}
+                    {{--var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')--}}
+                    {{--// Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)--}}
+                    {{--data = data.replace(/"/g, '""');--}}
+                    {{--// Push escaped string--}}
+                    {{--row.push('"' + data + '"');--}}
+                {{--}--}}
+                {{--csv.push(row.join(separator));--}}
+            {{--}--}}
+            {{--var csv_string = csv.join('\n');--}}
+            {{--// Download it--}}
+            {{--var filename = 'export_' + table_id + '_' + new Date().toLocaleDateString() + '.csv';--}}
+            {{--var link = document.createElement('a');--}}
+            {{--link.style.display = 'none';--}}
+            {{--link.setAttribute('target', '_blank');--}}
+            {{--link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));--}}
+            {{--link.setAttribute('download', filename);--}}
+            {{--document.body.appendChild(link);--}}
+            {{--link.click();--}}
+            {{--document.body.removeChild(link);--}}
+        {{--}--}}
+    {{--</script>--}}
 @endsection

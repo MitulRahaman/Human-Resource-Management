@@ -36,7 +36,7 @@
                                     <label for="val-suggestions">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ $permission_info->description ?? "" }}</textarea>
                                 </div>
-                                <input type="hidden" name="id" id="id" value="{{ $permission_info->id }}">
+                                {{--<input type="hidden" name="id" id="id" value="{{ $permission_info->id }}">--}}
                             </div>
                         </div>
                         <!-- END Regular -->

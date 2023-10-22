@@ -47,7 +47,7 @@
                         <!-- Submit -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="create" >Submit</button>
+                                <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>
                             </div>
                         </div>
                         <!-- END Submit -->
@@ -106,7 +106,7 @@
                             return false;
 
                         }
-                        $('#create').attr('disabled', true);
+                        $('#submit').attr('disabled', true);
                         return true;
 
 
@@ -116,6 +116,7 @@
                     return false;
                 }
             });
+
 
         }
     </script>

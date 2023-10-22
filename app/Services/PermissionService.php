@@ -60,16 +60,16 @@ class PermissionService
                 $created_at = $row->created_at;
 
                 if ($row->status == Config::get('variable_constants.activation.active')) {
-                    $status = "Active";
+                    $status = "<span class=\"badge badge-success\">Active</span>";
                     $status_msg = "Deactivate";
                 }else{
-                    $status = "Inactive";
+                    $status = "<span class=\"badge badge-danger\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
                 $deleted = $row->deleted_at;
                 $edit_url = route('edit_permission', ['permission'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
-                $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'>$status_msg</a>";
+                $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {
                     $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a>";
                 } else {
@@ -97,9 +97,9 @@ class PermissionService
                 array_push($temp, $description);
                 array_push($temp, $status);
                 if ($row->deleted_at) {
-                    array_push($temp, ' <span class="badge badge-success" >Restore</span>');
+                    array_push($temp, ' <span class="badge badge-danger" >Yes</span>');
                 } else {
-                    array_push($temp, ' <span class="badge badge-danger">Delete</span>');
+                    array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
 
                 array_push($temp, $created_at);

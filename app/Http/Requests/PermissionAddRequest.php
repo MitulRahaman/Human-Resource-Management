@@ -24,9 +24,9 @@ class PermissionAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'slug' => 'required|unique:permissions,slug|string|regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
+            'slug' => 'required|unique:permissions,slug|string|regex:/^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/',
             'name' => 'required|unique:permissions,name',
-
+            'description' => 'nullable',
         ];
     }
 }

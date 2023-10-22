@@ -42,14 +42,14 @@ class PermissionRepository
             if($old==$status['active'])
             {
                 $permission->status=$status['inactive'];
-                $permission->save();
+                return  $permission->save();
 
             }
             else
             {
 
                 $permission->status=$status['active'];
-                $permission->save();
+                return  $permission->save();
 
             }
     }

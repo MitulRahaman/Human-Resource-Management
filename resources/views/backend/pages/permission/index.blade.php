@@ -5,15 +5,15 @@
     <style >
         .button {
             background-color: white;
-            color: #75997D;
+            color: #999999;
             padding: 5px 10px;
-            border-color: #75997D;
+            /* border-color: #999999; */
             border-radius: 10px;
            
 
         }
         .button:hover {
-            background-color: #75997D;
+            background-color: #999999;
             color: #fff; 
         }
         .center-align-buttons {

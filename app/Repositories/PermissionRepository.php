@@ -32,7 +32,11 @@ class PermissionRepository
     }
     public function create(array $data)
     {
-        return Permission::create($data);
+       if(Permission::create($data))
+           return response()->json(['message' => 'Permission added successfully'], 201);
+    
+       return response()->json(['error' => 'Bad request: Permission not added'], 400);
+
     }
     public function change(int $data)
     {
@@ -42,21 +46,28 @@ class PermissionRepository
             if($old==$status['active'])
             {
                 $permission->status=$status['inactive'];
-                return  $permission->save();
+                if($permission->save())
+                    return response()->json(['message' => 'Permission status changed successfully'], 204);
+    
+                return response()->json(['error' => 'Bad request: Permission status not changed'], 400);
 
             }
             else
             {
-
-                $permission->status=$status['active'];
-                return  $permission->save();
+                if($permission->save())
+                    return response()->json(['message' => 'Permission status changed successfully'], 204);
+    
+                return response()->json(['error' => 'Bad request: Permission status not changed'], 400);
 
             }
     }
     public function delete(int $id)
     {
         $permission= Permission::findOrFail($id);
-        return $permission->delete();
+        if($permission->delete())
+                return response()->json(['message' => 'Permission deleted successfully'], 204);
+    
+        return response()->json(['error' => 'Bad request: Permission not deleted'], 400);
     }
     public function getPermission(int $id)
     {
@@ -65,11 +76,16 @@ class PermissionRepository
     public function edit( $data, int $id)
     {
         $permission= Permission:: findorFail($id);
-        return $permission->update($data);
+        if( $permission->update($data))
+                return response()->json(['message' => 'Permission edited successfully'], 204);
+        return response()->json(['error' => 'Bad request: Permission not edited'], 400);
     }
     public function restore(int $id)
     {
-        return Permission::withTrashed()->where('id', $id)->restore();;
+       
+        if( Permission::withTrashed()->where('id', $id)->restore())
+                return response()->json(['message' => 'Permission restored successfully'], 204);
+        return response()->json(['error' => 'Bad request: Permission not restored'], 400);
     }
     public function isSlugExists()
     {

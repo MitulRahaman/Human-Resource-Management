@@ -45,12 +45,9 @@ class PermissionController extends Controller
     {
         try{
             $permission = $this->permissionService->createPermission($request->validated(),(int)$request->id);
-
-            if($permission)
-                return redirect('permission/')->with('success', "Permission Added");
-            else
-                return redirect('permission/')->with('error', "Permission Not Added");
-
+           
+                return redirect('permission/')->with('success', $permission->getData()->message);
+            
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
 
@@ -61,11 +58,8 @@ class PermissionController extends Controller
     {
         try{
             $id = $request->permission_id;
-            $permissionStatus = $this->permissionService->changeStatus($id);
-            if($permissionStatus)
-                return redirect('permission/')->with('success', "Permission Status Updated");
-            else
-                return redirect('permission/')->with('error', "Permission Status Not Updated");
+            $permission = $this->permissionService->changeStatus($id);
+            return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
                 return redirect()->back()->with('error', $exception->getMessage());
 
@@ -76,12 +70,8 @@ class PermissionController extends Controller
     {
         try{
             $id = (int)$request->delete_permission_id;
-            $permissionStatus = $this->permissionService->delete($id);
-            if ($permissionStatus)
-                return redirect()->back()->with('success', "Permission Deleted");
-            else
-                return redirect()->back()->with('error', "Permission Not Deleted");
-
+            $permission= $this->permissionService->delete($id);
+            return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
 
@@ -97,11 +87,7 @@ class PermissionController extends Controller
     {
         try{
             $permission = $this->permissionService->edit($request->validated(),(int)$request->id);
-            if ($permission)
-                 return redirect('permission/')->with('success', "Permission Updated");
-            else
-                return redirect('permission/')->with('error', "Permission Not Updated");
-
+            return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
 
@@ -111,11 +97,9 @@ class PermissionController extends Controller
     {
         try{
             $id = (int)$request->restore_permission_id;
-            $permissionStatus = $this->permissionService->restore($id);
-            if($permissionStatus)
-                return redirect('permission/')->with('success', "Permission Restored");
-            else
-                return redirect('permission/')->with('error', "Permission Not Restored");
+            $permission= $this->permissionService->restore($id);
+            return redirect('permission/')->with('success', $permission->getData()->message);
+
 
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
@@ -139,18 +123,8 @@ class PermissionController extends Controller
 
     }
     public function exportPermissionsData(){
-
-
-
         $permissionData = 'permissions.xlsx';
-
-
-
-
         return Excel::download(new ExportPermissions, $permissionData);
-
-
-
     }
 
 }

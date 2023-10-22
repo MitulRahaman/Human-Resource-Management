@@ -18,6 +18,7 @@ class PermissionService
     public function createPermission($data)
     {
         // You can add any business logic or validation here before saving
+        // dd($this->permissionRepository->create($data));
         return $this->permissionRepository->create($data);
     }
 

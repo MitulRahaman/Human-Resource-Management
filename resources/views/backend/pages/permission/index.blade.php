@@ -2,7 +2,25 @@
 @section('css_after')
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
+    <style >
+        .button {
+            background-color: white;
+            color: #75997D;
+            padding: 5px 10px;
+            border-color: #75997D;
+            border-radius: 10px;
+           
 
+        }
+        .button:hover {
+            background-color: #75997D;
+            color: #fff; 
+        }
+        .center-align-buttons {
+            text-align: center;
+        }
+
+    </style>
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
@@ -26,7 +44,7 @@
                 <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
 
                     <div class="row">
-                        {{--<div class="col-sm-12">--}}
+                        <!-- {{--<div class="col-sm-12">--}}
                             {{--<div class="text-center bg-body-light py-2 mb-2">--}}
                                 {{--<div class="dt-buttons">--}}
                                     {{--<button class="dt-button buttons-copy buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onClick="copytable()" value="Copy to Clipboard"><span>Copy</span></button>--}}
@@ -35,7 +53,7 @@
                                     {{--<button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="window.print()"><span>Print</span></button>--}}
                                 {{--</div>--}}
                             {{--</div>--}}
-                        {{--</div>--}}
+                        {{--</div>--}} -->
 
                     </div>
 
@@ -175,9 +193,32 @@
 
                 dom: 'Bfrtip',
                 retrieve: true,
+               
+                "order": [[ 0, "asc" ]],
 
-                // "order": [[ 0, "asc" ]],
+                buttons : [{
+                    extend: 'copy',
+                    text: 'Copy',
+                    className: 'button' 
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    className: 'button' 
+                },
+                {
+                    extend: 'print',
+                    text: 'Print',
+                    className: 'button' 
+                },
+            ],
+
             });
+
+            dtable.buttons().container().addClass('center-align-buttons');
+           
+          
+            
         });
 
         function show_status_modal(id, msg) {
@@ -201,7 +242,7 @@
             $('#restore-modal').modal('show');
         }
     </script>
-    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>--}}
+    <!-- {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>--}}
     {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>--}}
     {{--<script type="text/javascript">--}}
         {{--function Export() {--}}
@@ -259,5 +300,5 @@
             {{--link.click();--}}
             {{--document.body.removeChild(link);--}}
         {{--}--}}
-    {{--</script>--}}
+    {{--</script>--}} -->
 @endsection

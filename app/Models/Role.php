@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Role;
+use App\Models\Permission;
 
-class Permission extends Model
+class Role extends Model
 {
     use HasFactory, softDeletes;
 
     protected $fillable = [
         'name',
-        'slug',
         'description',
+        'sl_no',
     ];
-    public function roles()
+    public function permissions()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Permission::class);
     }
 }

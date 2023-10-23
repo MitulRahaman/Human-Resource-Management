@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Branch\BranchController;
 use App\Http\Controllers\Permission\PermissionController;
+use App\Http\Controllers\Role\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,5 +58,23 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
     });
+        Route::prefix('role')->group(function() {
+
+            Route::get('/', [RoleController::class, 'index']);
+            Route::get('/get_role_data', [RoleController::class, 'fetchData']);
+
+            Route::get('/add', [RoleController::class, 'create']);
+            Route::post('/store', [RoleController::class, 'store']);
+
+            Route::post('/validate_inputs', [RoleController::class, 'validate_inputs']);
+            Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit_role');
+            Route::post('/{id}/update', [RoleController::class, 'update']);
+
+
+        });
+
+
     });
+
+
 });

@@ -109,6 +109,11 @@
                                 <span class="nav-main-link-name">Branches</span>
                             </a>
                         </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, "Roles") == 0 ? 'active' : '' }}" href="{{ url('role') }}">
+                                <span class="nav-main-link-name">Roles</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-main-heading">Admin Console</li>
@@ -117,6 +122,7 @@
                         <span class="nav-main-link-name">Permissions</span>
                     </a>
                 </li>
+
             </ul>
         </div>
         <!-- END Side Navigation -->

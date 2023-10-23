@@ -43,24 +43,28 @@ class RoleService
                 'success' => true,
                 'name_msg' => $name_msg,
             ];
-        }
+        } 
     }
     public function fetchData()
     {
         $result = $this->roleRepository->getAllRoleData();
-    dd($result);
+        //  dd($result);
         if ($result->count() > 0) {
             $data = array();
 
             foreach ($result as $key=>$row) {
-
-
+                // dd($row->permissions[0].', '.$row->permissions[1]);
+               
                 $id = $row->id;
                 $name = $row->name;
                 $description = $row->description;
                 $sl_no = $row->sl_no;
                 $created_at = $row->created_at;
-//                $permissions= $this->roleRepository->getPermission($id);
+                $permissions = '';
+                foreach ($row->permissions as $p) {
+                    $permissions .= ($permissions ? ', ' : '') . $p;
+                }
+                // dd($permissions);
 
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";
@@ -88,11 +92,6 @@ class RoleService
                 $toggle_btn
                 $toggle_delete_btn
                 ";
-//                $permission='';
-//                foreach ($permissions as $p)
-//                {
-//                    $permission.= $p .', ';
-//                }
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
@@ -104,7 +103,7 @@ class RoleService
                 array_push($temp, $description);
                 array_push($temp, $sl_no);
                 array_push($temp, $status);
-//                array_push($temp, $permissions);
+                array_push($temp, $permissions);
                 if ($row->deleted_at) {
                     array_push($temp, ' <span class="badge badge-danger" >Yes</span>');
                 } else {

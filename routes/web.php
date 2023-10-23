@@ -37,23 +37,23 @@ Route::group(['middleware'=> 'auth'], function() {
     Route::prefix('permission')->group(function() {
 
         Route::get('/', [PermissionController::class, 'index']);
+        Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
+
         Route::get('/add', [PermissionController::class, 'create']);
         Route::post('/store', [PermissionController::class, 'store']);
+
          Route::post('/change_status', [PermissionController::class, 'changeStatus']);
-        Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
 
         Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
         Route::post('/{id}/update', [PermissionController::class, 'update']);
-
-        Route::post('/restore', [PermissionController::class, 'restore']);
 
         Route::post('/validate_inputs', [PermissionController::class, 'validate_inputs']);
         Route::post('/{id}/validate_name',[PermissionController::class, 'validate_name']);
         Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
 
-
-        Route::match(['get', 'post'], '/delete', [PermissionController::class, 'delete']);
-
+        Route::post('/delete', [PermissionController::class, 'delete']);
+        Route::post('/restore', [PermissionController::class, 'restore']);
+       
         Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
     });

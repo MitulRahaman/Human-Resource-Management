@@ -4,9 +4,9 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <style >
         .button {
-            background-color: white;
+            /* background-color: white;
             color: #999999;
-            padding: 5px 10px;
+            padding: 5px 10px; */
             /* border-color: #999999; */
             border-radius: 10px;
            
@@ -43,22 +43,10 @@
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                 <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
 
-                    <div class="row">
-                        <!-- {{--<div class="col-sm-12">--}}
-                            {{--<div class="text-center bg-body-light py-2 mb-2">--}}
-                                {{--<div class="dt-buttons">--}}
-                                    {{--<button class="dt-button buttons-copy buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onClick="copytable()" value="Copy to Clipboard"><span>Copy</span></button>--}}
-                                    {{--<button class="dt-button buttons-csv buttons-html5 btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="download_table_as_csv('permission_table');"><span>CSV</span></button>--}}
-                                    {{--<button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" value="Export" onclick="Export()"><span>PDF</span></button>--}}
-                                    {{--<button class="dt-button buttons-print btn btn-sm btn-alt-primary" tabindex="0" aria-controls="DataTables_Table_3" type="button" onclick="window.print()"><span>Print</span></button>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</div>--}} -->
+                    
 
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
+                    <!-- <div class="row">
+                        <div class="col-sm-12"> -->
                             <thead>
                             <tr>
                                 <th class="text-center ">#</th>
@@ -75,8 +63,9 @@
                             <tbody>
 
                             </tbody>
-                        </div>
-                    </div>
+                            
+                        <!-- </div>
+                    </div> -->
                 </table>
                 <!-- Vertically Centered Block Modal -->
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
@@ -190,8 +179,8 @@
                 responsive: true,
                 ajax: '{{ url('permission/get_permission_data') }}',
                 paging: true,
-
-                dom: 'Bfrtip',
+                // dom: '<"top"lBfrtip>',
+                dom: 'Bflrtip',
                 retrieve: true,
                
                 "order": [[ 0, "asc" ]],
@@ -212,6 +201,7 @@
                     className: 'button' 
                 },
             ],
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
 
             });
 
@@ -225,6 +215,7 @@
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";
             $('#permission_id').val(id);
+          
             $('#status-modal').modal('show');
         }
 

@@ -69,6 +69,7 @@
                             <th class="d-none d-sm-table-cell " style="width: 20%;">Description</th>
                             <th >Sl_no</th>
                             <th class="d-none d-sm-table-cell ">Status</th>
+                            <th >Permissions</th>
                             <th >Deleted</th>
                             <th >Created At</th>
                             <th >Action</th>

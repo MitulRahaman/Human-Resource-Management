@@ -34,12 +34,22 @@ class RoleRepository
     {
         return Permission::get();
     }
+    public function getPermission(int $id)
+    {
+//        $permission=DB::table('role_permissions')->where('role_id',$id)->get();
+
+        return Permission::findOrFail($id)->get();
+    }
+    public function getRole(int $id)
+    {
+        return Role::findOrFail($id);
+    }
     public function create(array $data)
     {
-//       dd(Role::create($data));
+        dd($data);
         if(Role::create($data))
         {
-            dd('2');
+//            dd($data->permissions);
             foreach ($data->permissions as $p)
             {
                 DB::table('role_permissions')->insert([
@@ -49,7 +59,7 @@ class RoleRepository
             }
             return response()->json(['message' => 'Role added successfully']);
         }
-        dd('3');
+
 
         return response()->json(['error' => 'Bad request: Role not added']);
 

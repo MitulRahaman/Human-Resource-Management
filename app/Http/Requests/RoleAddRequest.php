@@ -26,7 +26,7 @@ class RoleAddRequest extends FormRequest
         return [
             'sl_no' => 'required',
             'name' => 'required|unique:permissions,name',
-            'permission'=> 'nullable',
+            'permissions'=> 'nullable',
             'description' => 'nullable',
         ];
     }

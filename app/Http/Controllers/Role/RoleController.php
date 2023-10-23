@@ -27,6 +27,7 @@ class RoleController extends Controller
     }
     public function fetchData()
     {
+
         return $this->roleService->fetchData();
     }
     public function create()
@@ -53,5 +54,10 @@ class RoleController extends Controller
         $response = $this->roleService->validateInputs($request->all());
         return $response;
 
+    }
+    public function edit(int $id )
+    {
+        $role_info = $this->roleService->getRole($id);
+        return \view('backend.pages.role.edit',compact('role_info'));
     }
 }

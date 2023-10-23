@@ -99,5 +99,20 @@ class RoleRepository
 
             }
     }
+    public function delete(int $id)
+    {
+        $role= Role::findOrFail($id);
+        if($role->delete())
+                return response()->json(['message' => 'Role deleted successfully']);
+    
+        return response()->json(['error' => 'Bad request: Role not deleted']);
+    }
+    public function restore(int $id)
+    {
+       
+        if( Role::withTrashed()->where('id', $id)->restore())
+                return response()->json(['message' => 'Role restored successfully']);
+        return response()->json(['error' => 'Bad request: Role not restored']);
+    }
 
 }

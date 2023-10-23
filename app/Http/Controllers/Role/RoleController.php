@@ -72,4 +72,31 @@ class RoleController extends Controller
             }
 
     }
+    public function delete(Request $request)
+    {
+        try{
+            $id = (int)$request->delete_role_id;
+            $role= $this->roleService->delete($id);
+            return redirect('role/')->with('success', $role->getData()->message);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Role could not be deleted.");
+
+        }
+
+    }
+    public function restore(Request $request)
+    {
+        try{
+            $id = (int)$request->restore_role_id;
+            $role= $this->roleService->restore($id);
+            return redirect('role/')->with('success', $role->getData()->message);
+
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Role could not be restored.");
+
+
+        }
+
+    }
 }

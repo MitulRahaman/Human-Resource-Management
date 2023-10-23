@@ -49,6 +49,14 @@ class RoleService
     {
         return $this->roleRepository->change($data);
     }
+    public function delete(int $data)
+    {
+        return $this->roleRepository->delete($data);
+    }
+    public function restore(int $id)
+    {
+        return $this->roleRepository->restore($id);
+    }
     public function fetchData()
     {
         $result = $this->roleRepository->getAllRoleData();

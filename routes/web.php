@@ -73,6 +73,8 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit_role');
             Route::post('/{id}/update', [RoleController::class, 'update']);
 
+            Route::post('/delete', [RoleController::class, 'delete']);
+            Route::post('/restore', [RoleController::class, 'restore']);
 
         });
 

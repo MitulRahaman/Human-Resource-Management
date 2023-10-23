@@ -43,7 +43,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/add', [PermissionController::class, 'create']);
         Route::post('/store', [PermissionController::class, 'store']);
 
-         Route::post('/change_status', [PermissionController::class, 'changeStatus']);
+        Route::post('/change_status', [PermissionController::class, 'changeStatus']);
 
         Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
         Route::post('/{id}/update', [PermissionController::class, 'update']);
@@ -67,6 +67,8 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/store', [RoleController::class, 'store']);
 
             Route::post('/validate_inputs', [RoleController::class, 'validate_inputs']);
+
+            Route::post('/change_status', [RoleController::class, 'changeStatus']);
 
             Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit_role');
             Route::post('/{id}/update', [RoleController::class, 'update']);

@@ -45,6 +45,10 @@ class RoleService
             ];
         } 
     }
+    public function changeStatus(int $data)
+    {
+        return $this->roleRepository->change($data);
+    }
     public function fetchData()
     {
         $result = $this->roleRepository->getAllRoleData();

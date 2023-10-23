@@ -76,5 +76,28 @@ class RoleRepository
         return response()->json(['error' => 'Bad request: Role not added']);
 
     }
+    public function change(int $data)
+    {
+        $role = Role::findOrFail($data);
+        $old=$role->status;
+        $status= config('variable_constants.activation');
+            if($old==$status['active'])
+            {
+                $role->status=$status['inactive'];
+                if($role->save())
+                    return response()->json(['message' => 'Role status changed successfully']);
+                return response()->json(['error' => 'Bad request: Role status not changed']);
+
+            }
+            else
+            {
+                $role->status=$status['active'];
+                if($role->save())
+                    return response()->json(['message' => 'Role status changed successfully']);
+    
+                return response()->json(['error' => 'Bad request: Role status not changed']);
+
+            }
+    }
 
 }

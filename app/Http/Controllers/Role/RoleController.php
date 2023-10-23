@@ -60,4 +60,16 @@ class RoleController extends Controller
         $role_info = $this->roleService->getRole($id);
         return \view('backend.pages.role.edit',compact('role_info'));
     }
+    public function changeStatus(Request $request)
+    {
+        try{
+            $id = $request->role_id;
+            $role = $this->roleService->changeStatus($id);
+            return redirect('role/')->with('success', $role->getData()->message);
+        } catch (\Exception $exception) {
+                return redirect()->back()->with('error', "OOPS! Role status could not be saved.");
+
+            }
+
+    }
 }

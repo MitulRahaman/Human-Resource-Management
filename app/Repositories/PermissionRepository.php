@@ -45,6 +45,7 @@ class PermissionRepository
         $status= config('variable_constants.activation');
             if($old==$status['active'])
             {
+               
                 $permission->status=$status['inactive'];
                 if($permission->save())
                     return response()->json(['message' => 'Permission status changed successfully']);
@@ -53,6 +54,7 @@ class PermissionRepository
             }
             else
             {
+                $permission->status=$status['active'];
                 if($permission->save())
                     return response()->json(['message' => 'Permission status changed successfully']);
     

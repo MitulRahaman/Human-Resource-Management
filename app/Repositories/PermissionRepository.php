@@ -33,9 +33,9 @@ class PermissionRepository
     public function create(array $data)
     {
        if(Permission::create($data))
-           return response()->json(['message' => 'Permission added successfully'], 201);
+           return response()->json(['message' => 'Permission added successfully']);
     
-       return response()->json(['error' => 'Bad request: Permission not added'], 400);
+       return response()->json(['error' => 'Bad request: Permission not added']);
 
     }
     public function change(int $data)
@@ -47,17 +47,16 @@ class PermissionRepository
             {
                 $permission->status=$status['inactive'];
                 if($permission->save())
-                    return response()->json(['message' => 'Permission status changed successfully'], 204);
-    
-                return response()->json(['error' => 'Bad request: Permission status not changed'], 400);
+                    return response()->json(['message' => 'Permission status changed successfully']);
+                return response()->json(['error' => 'Bad request: Permission status not changed']);
 
             }
             else
             {
                 if($permission->save())
-                    return response()->json(['message' => 'Permission status changed successfully'], 204);
+                    return response()->json(['message' => 'Permission status changed successfully']);
     
-                return response()->json(['error' => 'Bad request: Permission status not changed'], 400);
+                return response()->json(['error' => 'Bad request: Permission status not changed']);
 
             }
     }
@@ -65,9 +64,9 @@ class PermissionRepository
     {
         $permission= Permission::findOrFail($id);
         if($permission->delete())
-                return response()->json(['message' => 'Permission deleted successfully'], 204);
+                return response()->json(['message' => 'Permission deleted successfully']);
     
-        return response()->json(['error' => 'Bad request: Permission not deleted'], 400);
+        return response()->json(['error' => 'Bad request: Permission not deleted']);
     }
     public function getPermission(int $id)
     {
@@ -77,15 +76,15 @@ class PermissionRepository
     {
         $permission= Permission:: findorFail($id);
         if( $permission->update($data))
-                return response()->json(['message' => 'Permission edited successfully'], 204);
-        return response()->json(['error' => 'Bad request: Permission not edited'], 400);
+                return response()->json(['message' => 'Permission edited successfully']);
+        return response()->json(['error' => 'Bad request: Permission not edited']);
     }
     public function restore(int $id)
     {
        
         if( Permission::withTrashed()->where('id', $id)->restore())
-                return response()->json(['message' => 'Permission restored successfully'], 204);
-        return response()->json(['error' => 'Bad request: Permission not restored'], 400);
+                return response()->json(['message' => 'Permission restored successfully']);
+        return response()->json(['error' => 'Bad request: Permission not restored']);
     }
     public function isSlugExists()
     {

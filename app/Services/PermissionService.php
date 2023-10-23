@@ -17,19 +17,15 @@ class PermissionService
 
     public function createPermission($data)
     {
-        // You can add any business logic or validation here before saving
-        // dd($this->permissionRepository->create($data));
         return $this->permissionRepository->create($data);
     }
 
     public function changeStatus(int $data)
     {
-        // You can add any business logic or validation here before saving
         return $this->permissionRepository->change($data);
     }
     public function delete(int $data)
     {
-        // You can add any business logic or validation here before saving
         return $this->permissionRepository->delete($data);
     }
 
@@ -76,7 +72,6 @@ class PermissionService
                 } else {
                     $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_delete_modal(\"$id\", \"$name\")'>Delete</a>";
                 }
-
                 $action_btn = "<div class=\"col-sm-6 col-xl-4\">
                                     <div class=\"dropdown\">
                                         <button type=\"button\" class=\"btn btn-success dropdown-toggle\" id=\"dropdown-default-success\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">

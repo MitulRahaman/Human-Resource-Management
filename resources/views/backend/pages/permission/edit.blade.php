@@ -17,9 +17,6 @@
                 <h3 class="block-title">Edit Permission</h3>
             </div>
 
-            <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-            {{--action="{{ url('permission/' . $permission_info->id . '/update') }}"--}}
             <form class="js-validation" id='form' action='{{ url('permission/' . $permission_info->id . '/update')}}' method="POST" onsubmit="return validate_name(event)">
                 @csrf
                 <div class="block block-rounded">
@@ -36,7 +33,6 @@
                                     <label for="val-suggestions">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ $permission_info->description ?? "" }}</textarea>
                                 </div>
-                                {{--<input type="hidden" name="id" id="id" value="{{ $permission_info->id }}">--}}
                             </div>
                         </div>
                         <!-- END Regular -->

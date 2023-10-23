@@ -49,8 +49,7 @@ class PermissionController extends Controller
                 return redirect('permission/')->with('success', $permission->getData()->message);
             
         } catch (\Exception $exception) {
-            // return redirect()->back()->with('error', $exception->getMessage());
-            return redirect()->back()->with('error', "OOPS! Your Permission could not be stored.");
+            return redirect()->back()->with('error', "OOPS! Permission could not be stored.");
 
         }
 
@@ -62,8 +61,7 @@ class PermissionController extends Controller
             $permission = $this->permissionService->changeStatus($id);
             return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
-                // return redirect()->back()->with('error', $exception->getMessage());
-                return redirect()->back()->with('error', "OOPS! Your Permission status could not be saved.");
+                return redirect()->back()->with('error', "OOPS! Permission status could not be saved.");
 
             }
 
@@ -75,8 +73,7 @@ class PermissionController extends Controller
             $permission= $this->permissionService->delete($id);
             return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
-            // return redirect()->back()->with('error', $exception->getMessage());
-            return redirect()->back()->with('error', "OOPS! Your Permission could not be deleted.");
+            return redirect()->back()->with('error', "OOPS! Permission could not be deleted.");
 
         }
 
@@ -92,8 +89,7 @@ class PermissionController extends Controller
             $permission = $this->permissionService->edit($request->validated(),(int)$request->id);
             return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
-            // return redirect()->back()->with('error', $exception->getMessage());
-            return redirect()->back()->with('error', "OOPS! Your Permission could not be updated.");
+            return redirect()->back()->with('error', "OOPS! Permission could not be updated.");
 
         }
     }
@@ -106,8 +102,7 @@ class PermissionController extends Controller
 
 
         } catch (\Exception $exception) {
-            // return redirect()->back()->with('error', $exception->getMessage());
-            return redirect()->back()->with('error', "OOPS! Your Permission could not be restored.");
+            return redirect()->back()->with('error', "OOPS! Permission could not be restored.");
 
 
         }

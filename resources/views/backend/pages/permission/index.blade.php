@@ -19,6 +19,20 @@
         .center-align-buttons {
             text-align: center;
         }
+        .left-col {
+            float: left;
+            width: 50%;
+        }
+
+        .center-col {
+            float: left;
+            width: 50%;
+        }
+
+        .right-col {
+            float: left;
+            width: 50%;
+        }
 
     </style>
 @endsection
@@ -41,6 +55,7 @@
             <div class="block-content block-content-full">
 
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
+                <div class="table-responsive">
                 <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
 
                     
@@ -67,11 +82,13 @@
                         <!-- </div>
                     </div> -->
                 </table>
+                </div>
                 <!-- Vertically Centered Block Modal -->
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <form action="{{ url('permission/change_status') }}" method="post">
+
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -157,9 +174,6 @@
 @endsection
 
 @section('js_after')
-    {{--<script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>--}}
-    {{--<script src="{{ asset('backend/js/oneui.core.min.js') }}"></script>--}}
-
     <script src="{{ asset('backend/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/dataTables.buttons.min.js') }}"></script>
@@ -179,10 +193,10 @@
                 responsive: true,
                 ajax: '{{ url('permission/get_permission_data') }}',
                 paging: true,
-                // dom: '<"top"lBfrtip>',
-                dom: 'Bflrtip',
+                dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
+
                 retrieve: true,
-               
+
                 "order": [[ 0, "asc" ]],
 
                 buttons : [{
@@ -194,9 +208,6 @@
                     extend: 'csv',
                     text: 'CSV',
                     className: 'button' ,
-                    // exportOptions:  {
-                    //                     columns: ':not(:last-child)' 
-                    //                 }
                     exportOptions:  {
                                         columns: [0, 1,2,3,4,5]
                                     },
@@ -209,9 +220,6 @@
                     exportOptions:  {
                                         columns: [0, 1,2,3,4,5]
                                     },
-                    // exportOptions:  {
-                    //                     columns: ':not(:last-child)' 
-                    //                 }
                 },
             ],
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
@@ -247,63 +255,4 @@
             $('#restore-modal').modal('show');
         }
     </script>
-    <!-- {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>--}}
-    {{--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>--}}
-    {{--<script type="text/javascript">--}}
-        {{--function Export() {--}}
-            {{--html2canvas(document.getElementById('permission_table'), {--}}
-                {{--onrendered: function (canvas) {--}}
-                    {{--var data = canvas.toDataURL();--}}
-                    {{--var docDefinition = {--}}
-                        {{--content: [{--}}
-                            {{--image: data,--}}
-                            {{--width: 500--}}
-                        {{--}]--}}
-                    {{--};--}}
-                    {{--pdfMake.createPdf(docDefinition).download("PermissionTable.pdf");--}}
-                {{--}--}}
-            {{--});--}}
-        {{--}--}}
-    {{--</script>--}}
-    {{--<script type="text/javascript">--}}
-
-        {{--function copytable() {--}}
-            {{--var urlField = document.getElementById('permission_table')--}}
-            {{--var range = document.createRange()--}}
-            {{--range.selectNode(urlField)--}}
-            {{--window.getSelection().addRange(range)--}}
-            {{--document.execCommand('copy')--}}
-        {{--}--}}
-    {{--</script>--}}
-    {{--<script>--}}
-        {{--function download_table_as_csv(table_id, separator = ',') {--}}
-            {{--// Select rows from table_id--}}
-            {{--var rows = document.querySelectorAll('table#' + table_id + ' tr');--}}
-            {{--// Construct csv--}}
-            {{--var csv = [];--}}
-            {{--for (var i = 0; i < rows.length; i++) {--}}
-                {{--var row = [], cols = rows[i].querySelectorAll('td, th');--}}
-                {{--for (var j = 0; j < cols.length-2; j++) {--}}
-                    {{--// Clean innertext to remove multiple spaces and jumpline (break csv)--}}
-                    {{--var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')--}}
-                    {{--// Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)--}}
-                    {{--data = data.replace(/"/g, '""');--}}
-                    {{--// Push escaped string--}}
-                    {{--row.push('"' + data + '"');--}}
-                {{--}--}}
-                {{--csv.push(row.join(separator));--}}
-            {{--}--}}
-            {{--var csv_string = csv.join('\n');--}}
-            {{--// Download it--}}
-            {{--var filename = 'export_' + table_id + '_' + new Date().toLocaleDateString() + '.csv';--}}
-            {{--var link = document.createElement('a');--}}
-            {{--link.style.display = 'none';--}}
-            {{--link.setAttribute('target', '_blank');--}}
-            {{--link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));--}}
-            {{--link.setAttribute('download', filename);--}}
-            {{--document.body.appendChild(link);--}}
-            {{--link.click();--}}
-            {{--document.body.removeChild(link);--}}
-        {{--}--}}
-    {{--</script>--}} -->
 @endsection

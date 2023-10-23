@@ -193,15 +193,29 @@
                 {
                     extend: 'csv',
                     text: 'CSV',
-                    className: 'button' 
+                    className: 'button' ,
+                    // exportOptions:  {
+                    //                     columns: ':not(:last-child)' 
+                    //                 }
+                    exportOptions:  {
+                                        columns: [0, 1,2,3,4,5]
+                                    },
+                    //             }
                 },
                 {
                     extend: 'print',
                     text: 'Print',
-                    className: 'button' 
+                    className: 'button' ,
+                    exportOptions:  {
+                                        columns: [0, 1,2,3,4,5]
+                                    },
+                    // exportOptions:  {
+                    //                     columns: ':not(:last-child)' 
+                    //                 }
                 },
             ],
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
+           
 
             });
 

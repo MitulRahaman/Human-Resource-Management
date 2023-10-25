@@ -22,6 +22,10 @@ class RoleService
     {
         return $this->roleRepository->getAllPermissions();
     }
+    public function getPermission($id)
+    {
+        return $this->roleRepository->getPermission($id);
+    }
     public function getRole(int $id)
     {
         return $this->roleRepository->getRole($id);
@@ -57,16 +61,35 @@ class RoleService
     {
         return $this->roleRepository->restore($id);
     }
+    public function edit($data, int $id)
+    {
+        return $this->roleRepository->edit($data,$id);
+    }
+    public function validateName($data,$id)
+    {
+        $this->roleRepository->setName($data['name']);
+        $is_name_exists = $this->roleRepository->isNameUnique($id);
+        $name_msg = $is_name_exists ? 'Name already taken' : null;
+        if(!$data['name']) $name_msg = 'Name is required';
+        if ( $is_name_exists) {
+            return [
+                'success' => false,
+                'name_msg' => $name_msg,
+            ];
+        } else {
+            return [
+                'success' => true,
+                'name_msg' => $name_msg,
+            ];
+        }
+    }
     public function fetchData()
     {
         $result = $this->roleRepository->getAllRoleData();
-        //  dd($result);
         if ($result->count() > 0) {
             $data = array();
 
             foreach ($result as $key=>$row) {
-                // dd($row->permissions[0].', '.$row->permissions[1]);
-               
                 $id = $row->id;
                 $name = $row->name;
                 $description = $row->description;
@@ -76,8 +99,6 @@ class RoleService
                 foreach ($row->permissions as $p) {
                     $permissions .= ($permissions ? ', ' : '') . $p;
                 }
-                // dd($permissions);
-
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";
                     $status_msg = "Deactivate";
@@ -85,7 +106,6 @@ class RoleService
                     $status = "<span class=\"badge badge-danger\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
-                $deleted = $row->deleted_at;
                 $edit_url = route('edit_role', ['role'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";

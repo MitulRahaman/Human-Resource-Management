@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\RoleService;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\RoleAddRequest;
+use App\Http\Requests\RoleEditRequest;
 
 
 
@@ -48,17 +49,28 @@ class RoleController extends Controller
         }
 
     }
+
     public function validate_inputs(Request $request)
     {
-
-        $response = $this->roleService->validateInputs($request->all());
-        return $response;
+        return $this->roleService->validateInputs($request->all());
 
     }
     public function edit(int $id )
     {
         $role_info = $this->roleService->getRole($id);
-        return \view('backend.pages.role.edit',compact('role_info'));
+        $permissions = $this->roleService->getAllPermissions();
+        $permission_id = $this->roleService->getPermission($id);
+        return \view('backend.pages.role.edit',compact('role_info','permissions','permission_id'));
+    }
+    public function update(RoleEditRequest $request)
+    {
+        try{
+            $role = $this->roleService->edit($request->validated(),(int)$request->id);
+            return redirect('role/')->with('success', $role->getData()->message);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Role could not be updated.");
+
+        }
     }
     public function changeStatus(Request $request)
     {
@@ -97,6 +109,11 @@ class RoleController extends Controller
 
 
         }
+
+    }
+    public function validate_name(Request $request, int $id)
+    {
+        return $this->roleService->validateName($request->all(),$id);
 
     }
 }

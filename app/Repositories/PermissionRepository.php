@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PermissionRepository
 {
-    private $slug, $name;
+    private $slug, $name, $id, $description, $status, $created_at, $updated_at, $deleted_at;
 
     public function setSlug($slug)
     {
@@ -21,6 +21,65 @@ class PermissionRepository
     {
         $this->name = $name;
         return $this;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+        return $this;
+    }
+
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
+        return $this;
+    }
+
+    public function setDeletedAt($deleted_at)
+    {
+        $this->deleted_at = $deleted_at;
+        return $this;
+    }
+
+    public function save()
+    {
+        return DB::table('permissions')
+            ->insertGetId([
+                'slug' => $this->slug,
+                'name' => $this->name,
+                'description' => $this->description,
+                'status' => $this->status,
+                'created_at' => $this->created_at
+            ]);
+    }
+
+    public function update()
+    {
+        return DB::table('permissions')
+            ->where('id', '=', $this->id)
+            ->update([
+                'name' => $this->name,
+                'description' => $this->description ? $this->description : null,
+                'updated_at' => $this->updated_at
+            ]);
     }
 
 
@@ -104,10 +163,8 @@ class PermissionRepository
             return false;
         }
     }
-    public function isNameUnique($data)
+    public function isNameUnique($id)
     {
-        $id=$data["id"];
-        $id=(int)$id;
         if (Permission::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name) {
             return true;
         } else {

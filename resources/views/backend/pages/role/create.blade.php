@@ -104,7 +104,7 @@
                 $.ajax({
                     type: 'POST',
                     async:false,
-                    url: '{{ url('role/validate_inputs') }}',
+                    url: '{{ url('role/validate_role_inputs') }}',
                     data: $('#form').serialize(),
                     success: function (response) {
 

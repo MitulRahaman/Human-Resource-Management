@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Branch\BranchController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\Menu\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
     });
-        Route::prefix('role')->group(function() {
+    Route::prefix('role')->group(function() {
 
             Route::get('/', [RoleController::class, 'index']);
             Route::get('/get_role_data', [RoleController::class, 'fetchData']);
@@ -66,7 +67,8 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/add', [RoleController::class, 'create']);
             Route::post('/store', [RoleController::class, 'store']);
 
-            Route::post('/validate_inputs', [RoleController::class, 'validate_inputs']);
+            Route::post('/validate_role_inputs', [RoleController::class, 'validate_inputs']);
+            Route::post('/{id}/validate_role_name',[RoleController::class, 'validate_name']);
 
             Route::post('/change_status', [RoleController::class, 'changeStatus']);
 
@@ -76,6 +78,14 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/delete', [RoleController::class, 'delete']);
             Route::post('/restore', [RoleController::class, 'restore']);
 
+        });
+        Route::prefix('menu')->group(function() {
+
+            Route::get('/', [MenuController::class, 'index']);
+            Route::get('/get_menu_data', [MenuController::class, 'fetchData']);
+
+            Route::get('/add', [MenuController::class, 'create']);
+            Route::post('/store', [MenuController::class, 'store']);
         });
 
 

@@ -5,7 +5,6 @@ namespace App\Repositories;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role;
-use Illuminate\Support\Facades\Validator;
 
 
 class RoleRepository
@@ -24,6 +23,14 @@ class RoleRepository
             return false;
         }
     }
+    public function isNameUnique($id)
+    {
+        if (Role::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public function getAllRoleData()
     {
         $var=DB::table('roles as r')
@@ -35,12 +42,9 @@ class RoleRepository
         ->get();
         foreach ($var as $role) {
             $role->permissions = explode(',', $role->permissions);
-        }        
-        // dd($var);
+        }
+
         return $var;
-        // return DB::table('roles as r')
-        //     ->select('r.id',  'r.name', 'r.description', 'r.sl_no','r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
-        //     ->get();
     }
     public function getAllPermissions()
     {
@@ -48,9 +52,7 @@ class RoleRepository
     }
     public function getPermission(int $id)
     {
-       $permission=DB::table('role_permissions')->where('role_id',$id)->get();
-        // dd($permission);
-        return Permission::findOrFail($id)->get();
+        return DB::table('role_permissions')->where('role_id',$id)->pluck('permission_id')->toArray();
     }
     public function getRole(int $id)
     {
@@ -58,17 +60,20 @@ class RoleRepository
     }
     public function create(array $data)
     {
-        //  dd(DB::table('roles')->where('name', 'vvfd')->value('id'));
+//        dd($data);
         if(Role::create($data))
         {
-//            dd($data->permissions);
+//            dd($data);
+
+            if(isset($data['permissions']))
+            {
             foreach ($data['permissions'] as $p)
             {
                 DB::table('role_permissions')->insert([
                     'role_id'=>DB::table('roles')->where('name', $data['name'])->value('id'),
                     'permission_id'=>(int)$p,
                 ]);
-            }
+            }}
             return response()->json(['message' => 'Role added successfully']);
         }
 
@@ -114,5 +119,27 @@ class RoleRepository
                 return response()->json(['message' => 'Role restored successfully']);
         return response()->json(['error' => 'Bad request: Role not restored']);
     }
+    public function edit( $data, int $id)
+    {
+        $role= Role:: findorFail($id);
+        if( $role->update($data))
+        {
+            DB::table('role_permissions')->where('role_id',$id)->delete();
+            if(sizeof($data)>2)
+            {
+                foreach ($data['permissions'] as $p)
+                {
+                    DB::table('role_permissions')->insert([
+                        'role_id'=>DB::table('roles')->where('name', $data['name'])->value('id'),
+                        'permission_id'=>(int)$p,
+                    ]);
+                }
+            }
+
+            return response()->json(['message' => 'Role updated successfully']);
+        }
+        return response()->json(['error' => 'Bad request: Role not updated']);
+    }
+
 
 }

@@ -9,7 +9,6 @@ use App\Http\Requests\PermissionEditRequest;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Validator;
 use Excel;
 
 //use App\Exports\ExportPermissions;
@@ -44,12 +43,15 @@ class PermissionController extends Controller
     public function store(PermissionAddRequest $request)
     {
         try{
-            $permission = $this->permissionService->createPermission($request->validated(),(int)$request->id);
-           
-                return redirect('permission/')->with('success', $permission->getData()->message);
+            $response = $this->permissionService->createPermission($request->validated());
+            if (is_int($response)) {
+                return redirect('permission/')->with('success', 'Permission saved successfully.');
+            } else {
+                return redirect()->back()->with('error', $response);
+            }
             
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Permission could not be stored.");
+            return redirect()->back()->with('error', $exception->getMessage());
 
         }
 
@@ -111,16 +113,12 @@ class PermissionController extends Controller
 
     public function validate_inputs(Request $request)
     {
-
-        $response = $this->permissionService->validateInputs($request->all());
-        return $response;
+        return $this->permissionService->validateInputs($request->all());
 
     }
-    public function validate_name(Request $request)
+    public function validate_name(Request $request, int $id)
     {
-
-        $response = $this->permissionService->validateName($request->all());
-        return $response;
+        return $this->permissionService->validateName($request->all(),$id);
 
     }
     public function exportPermissionsData(){

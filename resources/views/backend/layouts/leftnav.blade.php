@@ -98,7 +98,7 @@
                     </a>
                 </li>
                 <li class="nav-main-heading">User Interface</li>
-                <li class="nav-main-item {{ strcasecmp($sub_menu, "Branches") == 0 ? 'open' : '' }}">
+                <li class="nav-main-item {{ strcasecmp($sub_menu, "Branches") == 0 || strcasecmp($sub_menu, "Roles") == 0 ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-settings"></i>
                         <span class="nav-main-link-name">System Settings</span>
@@ -117,6 +117,11 @@
                     </ul>
                 </li>
                 <li class="nav-main-heading">Admin Console</li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, "Menu") == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
+                        <span class="nav-main-link-name">Menu</span>
+                    </a>
+                </li>
                 <li class="nav-main-item">
                     <a class="nav-main-link {{ strcasecmp($sub_menu, "Permissions") == 0 ? 'active' : '' }}" href="{{ url('permission') }}">
                         <span class="nav-main-link-name">Permissions</span>

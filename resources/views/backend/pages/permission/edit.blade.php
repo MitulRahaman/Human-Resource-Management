@@ -93,7 +93,7 @@
 
                 },
                 error: function() {
-                    // e.preventDefault();
+                    e.preventDefault();
                     return false;
                 }
             });

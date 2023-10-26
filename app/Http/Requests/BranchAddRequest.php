@@ -25,7 +25,7 @@ class BranchAddRequest extends FormRequest
     {
         return [
             'name' => ['required', 'unique:branches,name', 'string', 'max:255'],  
-            'address' => 'required|regex:/([- ,\/0-9a-zA-Z]+)/',
+            'address' => 'nullable|regex:/([- ,\/0-9a-zA-Z]+)/',
         ];
     }
 }

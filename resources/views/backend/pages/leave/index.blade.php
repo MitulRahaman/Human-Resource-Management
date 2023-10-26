@@ -5,13 +5,17 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis2.css') }}">
-
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href="{{ url('branch/add') }}">
+        <a href="{{ url('leave/manage') }}">
+            <button type="button" class="btn btn-dark mr-3 mb-3">  
+            <i class="fa fa-cog mr-1"></i> Manage Leave
+            </button>
+        </a>
+        <a href="{{ url('leave/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Add Branch
+                <i class="fa fa-fw fa-key mr-1"></i> Add Leave Type
             </button>
         </a>
     </div>
@@ -25,6 +29,7 @@
                 </div>
                 <div class="block-content block-content-full">
                         <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js --> 
+
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons" id="dataTable">
                         <thead>
                             <tr>
@@ -32,52 +37,48 @@
                                 <th>Name</th>
                                 <th>Status</th>
                                 <th>Deleted?</th>
-                                <th class="d-none d-sm-table-cell" style="width: 50%;">Address</th>
                                 <th class="d-none d-sm-table-cell" style="width: 20%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php $x = 1 ?>
-                            @forelse ($branches as $b)
+                            @forelse ($leaves as $leave)
                                 <tr>
                                     <td class="text-center font-size-sm">{{$x++}}</td>
                                     <td class="font-w600 font-size-sm">
-                                        <a href="#">{{$b->name}}</a>
+                                        <a href="#">{{$leave->name}}</a>
                                     </td>
                                     <td class="font-w600 font-size-sm">
-                                        @if ($b->status == 1 && $b->deleted_at == null)
-                                            <a href="{{ route('branch.status', $b->id) }}">
+                                        @if ($leave->status == 1 && $leave->deleted_at == null)
+                                            <a href="{{ route('leave.status', $leave->id) }}">
                                                 <span class="badge badge-success">Active</span>
                                             </a>
                                         @else
-                                            <a href="{{ route('branch.status', $b->id) }}">
+                                            <a href="{{ route('leave.status', $leave->id) }}">
                                                 <span class="badge badge-warning">Inactive</span>
                                             </a>
                                         @endif
                                     </td>
                                     <td class="font-w600 font-size-sm">
-                                        @if ($b->deleted_at)
+                                        @if ($leave->deleted_at)
                                         <span class="badge badge-danger">Deleted</span>
                                         @endif
-                                    </td>
-                                    <td class="d-none d-sm-table-cell font-size-sm">
-                                    {{$b->address}}<em class="text-muted"></em>
                                     </td>
                                     <td class="d-none d-sm-table-cell">
                                         <span class="badge">
                                             <div class="row"> 
                                                 <div class="col"> 
                                                     <a  class="btn btn-sm btn-light " href="#">
-                                                        @if ($b->deleted_at)
-                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromleft_{{$b->id}}"> <i class="fas fa-trash-restore text-warning mr-1"></i> Restore</button>
+                                                        @if ($leave->deleted_at)
+                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromleft_{{$leave->id}}"> <i class="fas fa-trash-restore text-warning mr-1"></i> Restore</button>
                                                         @else
-                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromright_{{$b->id}}"> <i class="fa fa-trash text-danger mr-1"></i> Delete</button>
+                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromright_{{$leave->id}}"> <i class="fa fa-trash text-danger mr-1"></i> Delete</button>
                                                         @endif
                                                     </a>
                                                 </div>
-                                                @if (!$b->deleted_at)
+                                                @if (!$leave->deleted_at)
                                                 <div class="col"> 
-                                                    <a class="btn btn-sm btn-light" href="{{ route('branch.edit', $b->id) }}">
+                                                    <a class="btn btn-sm btn-light" href="{{ route('leave.edit', $leave->id) }}">
                                                         <i class="fas fa-edit text-success mr-1"></i> Edit
                                                     </a>
                                                 </div>
@@ -87,7 +88,7 @@
                                     </td>
                                 </tr>
                                 <!-- Delete Confirmation Modal -->
-                                <div class="modal fade" id="modal-block-fromright_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
+                                <div class="modal fade" id="modal-block-fromright_{{$leave->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromright" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -106,7 +107,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('branch.destroy', $b->id) }}" method="post"> 
+                                                    <form action ="{{ route('leave.destroy', $leave->id) }}" method="post"> 
                                                         @csrf
                                                         @method('delete')
                                                             <button type="submit" class="btn btn-primary">Ok</button>
@@ -118,7 +119,7 @@
                                 </div>
                                 <!-- END Delete Confirmation Modal -->
                                 <!-- Restore Confirmation Modal -->
-                                <div class="modal fade" id="modal-block-fromleft_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
+                                <div class="modal fade" id="modal-block-fromleft_{{$leave->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromleft" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -137,7 +138,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('branch.restore', $b->id) }}" method="post"> 
+                                                    <form action ="{{ route('leave.restore', $leave->id) }}" method="post"> 
                                                         @csrf
                                                             <button type="submit" class="btn btn-primary">Ok</button>
                                                     </form>
@@ -148,7 +149,7 @@
                                 </div>
                                 <!-- END Restore Confirmation Modal -->
                             @empty
-                            <h4 class="text-info">No branches available</h4>
+                            <h4 class="text-info">No leaves available</h4>
                             @endforelse
                         </tbody>
                     </table>
@@ -174,7 +175,29 @@
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.flash.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.js') }}"></script>
+
+<!-- 
+    <script> 
+        $(document).ready(function() {
+            $('#dataTable').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    'colvis'
+                ],
+                columnDefs: [ {
+                    targets: -1,
+                    visible: false
+                } ]
+            } );
+        } );
+    </script> -->
+   
 
     <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>
 

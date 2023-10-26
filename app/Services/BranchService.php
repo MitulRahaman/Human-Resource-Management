@@ -70,6 +70,41 @@ class BranchService
         }
     }
 
+    public function indexBranch()
+    {
+        return $this->branchRepository->indexBranch();
+    }
+
+    public function storeBranch($data)
+    {
+        return $this->branchRepository->storeBranch($data);
+    }
+
+    public function editBranch($id)
+    {
+        return $this->branchRepository->editBranch($id);
+    }
+
+    public function updateBranch($data, $id)
+    {
+        return $this->branchRepository->updateBranch($data, $id);
+    }
+
+    public function updateStatus($id)
+    {
+        return $this->branchRepository->updateStatus($id);
+    }
+
+    public function destroyBranch($id)
+    {
+        return $this->branchRepository->destroyBranch($id);
+    }
+
+    public function restoreBranch($id)
+    {
+        return $this->branchRepository->restoreBranch($id);
+    }
+
     public function validateInputs($data)
     {
         $this->branchRepository->setName($data['name']);
@@ -88,7 +123,7 @@ class BranchService
         }
     }
 
-    public function updateInputs($data)
+    public function UpdateInputs($data)
     {
         $this->branchRepository->updateName($data['name']);
         $is_name_exists_for_update = $this->branchRepository->isNameExistsForUpdate($data['current_name']);

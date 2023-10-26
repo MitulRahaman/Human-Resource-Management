@@ -25,6 +25,52 @@ class BranchRepository
         $this->name = $name;
     }
 
+    public function indexBranch()
+    {
+        return DB::table('branches')->get();
+    }
+
+    public function storeBranch($data)
+    {
+       return Branch::create([
+                'name' => $data->name,
+                'address' => $data->address,
+                'status' => 1,
+       ]);
+    }
+
+    public function editBranch($id)
+    {
+        return Branch::find($id);
+    }
+
+    public function updateBranch($data, $id)
+    {
+        $branch = Branch::find($id);
+        return $branch->update($data->validated());
+    }
+
+    public function updateStatus($id)
+    {
+        $data = Branch::find($id);
+                if($data->status)
+                    $data->update(array('status' => 0));
+                else
+                    $data->update(array('status' => 1));
+    }
+
+    public function destroyBranch($id)
+    {
+        $data = Branch::find($id);
+        $data->update(array('status' => 0));
+        $data->delete();
+    }
+
+    public function restoreBranch($id)
+    {
+        DB::table('branches')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+    }
+
     public function isNameExists()
     {
         if(DB::table('branches')->where('name', '=', $this->name)->first())
@@ -35,9 +81,7 @@ class BranchRepository
 
     public function isNameExistsForUpdate($current_name)
     {
-        $available_name = DB::table('branches')->where('name', '!=', $current_name)->get('name');
- 
-        if($available_name->where('name', $this->name)->first())
+        if(DB::table('branches')->where('name', '!=', $current_name)->where('name', $this->name)->first())
             return false;
         else
             return true;

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Branch;
 
 use Validator;
-use Response;
 use App\Models\Branch;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BranchAddRequest;
@@ -26,7 +25,7 @@ class BranchController extends Controller
 
     public function index()
     {
-        $branches = DB::table('branches')->get();
+        $branches = $this->branchService->indexBranch();
         return \view('backend.pages.branch.index', compact('branches'));
     }
 
@@ -35,81 +34,83 @@ class BranchController extends Controller
         return \view('backend.pages.branch.create');
     }
 
-    public function edit($branch)
+    public function store(BranchAddRequest $request)
     {
-        $data = Branch::find($branch);
+        try {
+            if(!is_object($this->branchService->storeBranch($request)))
+                return redirect('branch')->with('error', 'Failed to add branch');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect('branch')->with('success', 'Branch added successfully');
+    }
+
+    public function edit($id)
+    {
+        try {
+            $data = $this->branchService->editBranch($id);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
         return \view('backend.pages.branch.edit', compact('data'));
     }
 
-    public function store(BranchAddRequest $request)
+    public function update(BranchUpdateRequest $request, $id)
     {
-        try{
-            $branch = Branch::create([
-                'name' => $request->name,
-                'address' => $request->address,
-                'status' => auth()->user()->status,
-            ]);
-        }catch (\Exception $exception) {
+        try {
+            if(!$this->branchService->updateBranch($request, $id))
+                return redirect('branch')->with('error', 'Failed to update branch');
+        } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('branch');
-    }
-
-    public function update(BranchUpdateRequest $request, $branch)
-    {
-        try{
-            $data = Branch::find($branch);
-            $data->update($request->validated());
-        }catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
-        }
-        
-        return redirect('/branch');
+        return redirect('/branch')->with('success', 'Branch updated successfully');
     }
 
     public function status($id)
     {
-        try{
-            $data = Branch::find($id);
-                if($data->status)
-                    $data->update(array('status' => 0));
-                else
-                    $data->update(array('status' => 1));
-        }catch (\Exception $exception) {
+        try {
+            $this->branchService->updateStatus($id);
+        } catch (\Exception $exception) {
             return redirect()->back()->with('error', 'You need to restore the branch first');
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Status has been changed');
     }
 
     public function destroy($id)
     {
-        try{
-            $data = Branch::find($id);
-            $data->delete();
-        }catch (\Exception $exception) {
+        try {
+            $this->branchService->destroyBranch($id);  
+        } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Branch deleted successfully');
     }
 
-    public function restore($branch)
+    public function restore($id)
     {
-        try{
-            DB::table('branches')->where('id', $branch)->limit(1)->update(array('deleted_at' => NULL));
-            
-        }catch (\Exception $exception) {
+        try {
+            $this->branchService->restoreBranch($id);  
+        } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Branch restored successfully');
     }
 
     public function verifydata(Request $request)
     {
-        return $this->branchService->validateInputs($request->all());
+        try {
+            return $this->branchService->validateInputs($request->all());
+        } catch(\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 
     public function updatedata(Request $request)
     {
-        return $this->branchService->updateInputs($request->all());
+        try {
+            return $this->branchService->updateInputs($request->all());
+        } catch(\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 }

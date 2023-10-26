@@ -53,11 +53,33 @@ class MenuController extends Controller
     {
         try{
             $id = $request->menu_id;
-            $menu = $this->menuService->changeStatus($id);
+            $this->menuService->changeStatus($id);
             return redirect('menu/')->with('success', 'Menu status changed successfully!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu status could not be saved.");
 
+        }
+
+    }
+    public function delete(Request $request)
+    {
+        try{
+            $id = (int)$request->delete_menu_id;
+            $this->menuService->delete($id);
+            return redirect('menu/')->with('success', "Menu deleted successfully!");
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Menu could not be deleted.");
+        }
+    }
+    public function restore(Request $request)
+    {
+        try{
+            $id = (int)$request->restore_menu_id;
+            $this->menuService->restore($id);
+            return redirect('menu/')->with('success', "Menu restored successfully!");
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Menu could not be restored.");
         }
 
     }

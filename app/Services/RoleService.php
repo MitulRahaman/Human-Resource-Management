@@ -49,19 +49,19 @@ class RoleService
             ];
         } 
     }
-    public function changeStatus(int $data)
+    public function changeStatus($data)
     {
         return $this->roleRepository->change($data);
     }
-    public function delete(int $data)
+    public function delete($data)
     {
         return $this->roleRepository->delete($data);
     }
-    public function restore(int $id)
+    public function restore($id)
     {
         return $this->roleRepository->restore($id);
     }
-    public function edit($data, int $id)
+    public function edit($data, $id)
     {
         return $this->roleRepository->edit($data,$id);
     }

@@ -38,9 +38,17 @@ class MenuService
 
         return $this->menuRepository->create($data, $id);
     }
-    public function changeStatus(int $data)
+    public function changeStatus($data)
     {
         return $this->menuRepository->change($data);
+    }
+    public function delete($data)
+    {
+        return $this->menuRepository->delete($data);
+    }
+    public function restore($id)
+    {
+        return $this->menuRepository->restore($id);
     }
     public function fetchData()
     {

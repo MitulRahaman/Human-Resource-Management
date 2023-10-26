@@ -170,4 +170,13 @@ class MenuRepository
             return $menu->save();
         }
     }
+    public function delete(int $id)
+    {
+        $menu= Menu::findOrFail($id);
+        return $menu->delete();
+    }
+    public function restore($id)
+    {
+        return Menu::withTrashed()->where('id', $id)->restore();
+    }
 }

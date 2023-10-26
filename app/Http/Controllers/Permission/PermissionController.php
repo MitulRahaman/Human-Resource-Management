@@ -24,22 +24,18 @@ class PermissionController extends Controller
         View::share('main_menu', 'Permissions');
         View::share('sub_menu', 'Permissions');
     }
-
     public function index()
     {
         return \view('backend.pages.permission.index');
     }
-
     public function create()
     {
         return \view('backend.pages.permission.create');
     }
-
     public function fetchData()
     {
         return $this->permissionService->fetchData();
     }
-
     public function store(PermissionAddRequest $request)
     {
         try{
@@ -49,38 +45,31 @@ class PermissionController extends Controller
             } else {
                 return redirect()->back()->with('error', $response);
             }
-            
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
-
         }
-
     }
     public function changeStatus(Request $request)
     {
         try{
             $id = $request->permission_id;
-            $permission = $this->permissionService->changeStatus($id);
-            return redirect('permission/')->with('success', $permission->getData()->message);
+            $this->permissionService->changeStatus($id);
+            return redirect('permission/')->with('success', "Permission status changed successfully.");
         } catch (\Exception $exception) {
-                return redirect()->back()->with('error', "OOPS! Permission status could not be saved.");
-
+                return redirect()->back()->with('error', "OOPS! Permission status could not be changed.");
             }
-
     }
     public function delete(Request $request)
     {
         try{
             $id = (int)$request->delete_permission_id;
-            $permission= $this->permissionService->delete($id);
-            return redirect('permission/')->with('success', $permission->getData()->message);
+            $this->permissionService->delete($id);
+            return redirect('permission/')->with('success', "Permission deleted successfully.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be deleted.");
-
         }
-
     }
-    public function edit(int $id )
+    public function edit($id )
     {
         $permission_info = $this->permissionService->getPermission($id);
         return \view('backend.pages.permission.edit',compact('permission_info'));
@@ -92,38 +81,29 @@ class PermissionController extends Controller
             return redirect('permission/')->with('success', $permission->getData()->message);
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be updated.");
-
         }
     }
     public function restore(Request $request)
     {
         try{
             $id = (int)$request->restore_permission_id;
-            $permission= $this->permissionService->restore($id);
-            return redirect('permission/')->with('success', $permission->getData()->message);
-
-
+            $this->permissionService->restore($id);
+            return redirect('permission/')->with('success', "Permission restored successfully.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be restored.");
-
-
         }
-
     }
 
     public function validate_inputs(Request $request)
     {
         return $this->permissionService->validateInputs($request->all());
-
     }
     public function validate_name(Request $request, int $id)
     {
         return $this->permissionService->validateName($request->all(),$id);
-
     }
     public function exportPermissionsData(){
         $permissionData = 'permissions.xlsx';
         return Excel::download(new ExportPermissions, $permissionData);
     }
-
 }

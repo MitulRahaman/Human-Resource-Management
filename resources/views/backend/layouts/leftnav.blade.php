@@ -118,7 +118,7 @@
                 </li>
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($sub_menu, "Menu") == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, "Menus") == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
                         <span class="nav-main-link-name">Menu</span>
                     </a>
                 </li>

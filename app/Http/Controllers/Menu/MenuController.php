@@ -7,10 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use App\Services\MenuService;
 use App\Http\Requests\MenuAddRequest;
-
-
-
-
+use App\Http\Requests\MenuEditRequest;
 
 class MenuController extends Controller
 {
@@ -28,7 +25,6 @@ class MenuController extends Controller
     }
     public function fetchData()
     {
-//        dd('fkjg');
         return $this->menuService->fetchData();
     }
     public function create()
@@ -40,14 +36,10 @@ class MenuController extends Controller
     {
         try{
             $menu = $this->menuService->create($request->validated(),(int)$request->id);
-
             return redirect('menu/')->with('success', $menu->getData()->message);
-
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu  could not be stored.");
-
         }
-
     }
     public function changeStatus(Request $request)
     {
@@ -57,9 +49,7 @@ class MenuController extends Controller
             return redirect('menu/')->with('success', 'Menu status changed successfully!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu status could not be saved.");
-
         }
-
     }
     public function delete(Request $request)
     {
@@ -77,11 +67,24 @@ class MenuController extends Controller
             $id = (int)$request->restore_menu_id;
             $this->menuService->restore($id);
             return redirect('menu/')->with('success', "Menu restored successfully!");
-
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu could not be restored.");
         }
-
     }
-
+    public function edit($id )
+    {
+        $menu_info = $this->menuService->getMenu($id);
+        $permissions = $this->menuService->getAllPermissions();
+        $permission_id = $this->menuService->getPermission($id);
+        return \view('backend.pages.menu.edit',compact('menu_info','permissions','permission_id'));
+    }
+    public function update(MenuEditRequest $request)
+    {
+        try{
+            $menu = $this->menuService->update($request->validated(),(int)$request->id);
+            return redirect('menu/')->with('success', $menu->getData()->message);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Menu could not be updated.");
+        }
+    }
 }

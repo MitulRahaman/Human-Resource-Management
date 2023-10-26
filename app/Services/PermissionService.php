@@ -13,8 +13,6 @@ class PermissionService
     {
         $this->permissionRepository = $permissionRepository;
     }
-
-
     public function createPermission($data)
     {
         return $this->permissionRepository->setSlug($data['slug'])
@@ -24,22 +22,21 @@ class PermissionService
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->save();
     }
-
-    public function changeStatus(int $data)
+    public function changeStatus($data)
     {
         return $this->permissionRepository->change($data);
     }
-    public function delete(int $data)
+    public function delete($data)
     {
         return $this->permissionRepository->delete($data);
     }
 
-    public function getPermission(int $id)
+    public function getPermission($id)
     {
         return $this->permissionRepository->getPermission($id);
     }
 
-    public function edit($data, int $id)
+    public function edit($data, $id)
     {
         return $this->permissionRepository->setId($id)
             ->setName($data['name'])
@@ -47,11 +44,10 @@ class PermissionService
             ->setUpdatedAt(date('Y-m-d H:i:s'))
             ->update();
     }
-    public function restore(int $id)
+    public function restore($id)
     {
         return $this->permissionRepository->restore($id);
     }
-
     public function fetchData()
     {
         $result = $this->permissionRepository->getAllPermissionData();
@@ -94,7 +90,6 @@ class PermissionService
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
-
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $name);
@@ -121,7 +116,6 @@ class PermissionService
                 }';
         }
     }
-
     public function validateInputs($data)
     {
         $this->permissionRepository->setSlug($data['slug']);
@@ -153,10 +147,7 @@ class PermissionService
     public function validateName($data,$id)
     {
         $this->permissionRepository->setName($data['name']);
-
         $is_name_exists = $this->permissionRepository->isNameUnique($id);
-
-
         $name_msg = $is_name_exists ? 'Name already taken' : null;
         if(!$data['name']) $name_msg = 'Name is required';
         if ( $is_name_exists) {

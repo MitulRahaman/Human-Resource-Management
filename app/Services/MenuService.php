@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Config;
 class MenuService
 {
     private $menuRepository;
-
     public function __construct(MenuRepository $menuRepository)
     {
         $this->menuRepository = $menuRepository;
@@ -17,26 +16,18 @@ class MenuService
     {
         return $this->menuRepository->getAllPermissions();
     }
-    public function createMenu($data)
+    public function create($data, $id)
     {
-        if( $this->menuRepository->setTitle($data['title'])
+        return $this->menuRepository->setTitle($data['title'])
             ->setUrl($data['url'])
             ->setIcon($data['icon'])
             ->setDescription($data['description'])
             ->setMenu_order($data['menu_order'])
             ->setParent_menu($data['parent_menu'])
+            ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
             ->setStatus(Config::get('variable_constants.activation.active'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
-            ->setPermission_ids($data['permissions'])
-            ->save())
-        {
-
-        }
-    }
-    public function create($data, $id)
-    {
-
-        return $this->menuRepository->create($data, $id);
+            ->create();
     }
     public function changeStatus($data)
     {
@@ -50,13 +41,23 @@ class MenuService
     {
         return $this->menuRepository->restore($id);
     }
+    public function getMenu($id)
+    {
+        return $this->menuRepository->getMenu($id);
+    }
+    public function getPermission($id)
+    {
+        return $this->menuRepository->getPermission($id);
+    }
+    public function update($data, $id)
+    {
+        return $this->menuRepository->update($data,$id);
+    }
     public function fetchData()
     {
         $result = $this->menuRepository->getAllMenuData();
-//        dd($result);
         if ($result->count() > 0) {
             $data = array();
-
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $title = $row->title;
@@ -98,7 +99,6 @@ class MenuService
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
-
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $title);
@@ -114,7 +114,6 @@ class MenuService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-
                 array_push($temp, $created_at);
                 array_push($temp, $action_btn);
                 array_push($data, $temp);
@@ -129,5 +128,4 @@ class MenuService
                 }';
         }
     }
-
 }

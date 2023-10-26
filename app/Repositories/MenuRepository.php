@@ -6,8 +6,6 @@ use App\Models\Menu;
 use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
 
-
-
 class MenuRepository
 {
     private $id, $title, $url, $icon, $description, $menu_order, $parent_menu, $status, $created_at, $updated_at, $deleted_at, $permission_ids;
@@ -80,59 +78,33 @@ class MenuRepository
         return $this;
     }
 
-//    public function save()
-//    {
-//        if (DB::table('menus')
-//            ->insertGetId([
-//                'title' => $this->title,
-//                'url' => $this->url,
-//                'icon' => $this->icon,
-//                'description' => $this->description,
-//                'menu_order' => $this->menu_order,
-//                'parent_menu' => $this->parent_menu,
-//                'status' => $this->status,
-//                'created_at' => $this->created_at
-//            ]))
-//        {
-//            if($this->permission_ids)
-//            {
-//                foreach ($this->permission_ids as $p)
-//                {
-//                    DB::table('menu_permissions')->insert([
-//                        'menu_id'=> $this->id,
-//                        'permission_id' => (int)$p
-//                    ]);
-//                }
-//            }
-//            return response()->json(['message' => 'Role added successfully']);
-//
-//        }
-//    }
-
-    public function create(array $data, $id)
+    public function create()
     {
-//        dd($id);
-        $menus = Menu::create($data);
-//        dd($menus->id);
+        $menus = DB::table('menus')
+            ->insertGetId([
+                'title' => $this->title,
+                'url' => $this->url,
+                'icon' => $this->icon,
+                'description' => $this->description,
+                'menu_order' => $this->menu_order,
+                'parent_menu' => $this->parent_menu,
+                'status' => $this->status,
+                'created_at' => $this->created_at
+            ]);
         if($menus)
         {
-//            dd($data);
-
-            if(isset($data['permissions']))
+            if($this->permission_ids)
             {
-                foreach ($data['permissions'] as $p)
+                foreach ($this->permission_ids as $p)
                 {
                     DB::table('menu_permissions')->insert([
-                        'menu_id'=> $menus->id,
+                        'menu_id'=> $menus,
                         'permission_id'=>(int)$p,
                     ]);
                 }}
             return response()->json(['message' => 'Menu added successfully']);
         }
-
-
         return response()->json(['error' => 'Bad request: Menu not added']);
-
     }
     public function getAllMenuData()
     {
@@ -143,11 +115,9 @@ class MenuRepository
             ->leftJoin('permissions as p', 'mp.permission_id', '=', 'p.id')
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->get();
-//        dd($var);
         foreach ($var as $menu) {
             $menu->permissions = explode(',', $menu->permissions);
         }
-
         return $var;
     }
     public function getAllPermissions()
@@ -178,5 +148,34 @@ class MenuRepository
     public function restore($id)
     {
         return Menu::withTrashed()->where('id', $id)->restore();
+    }
+    public function getMenu($id)
+    {
+        return Menu::findOrFail($id);
+    }
+    public function getPermission($id)
+    {
+        return DB::table('menu_permissions')->where('menu_id',$id)->pluck('permission_id')->toArray();
+    }
+    public function update( $data, $id)
+    {
+        $menu = Menu::findorFail($id);
+        if( $menu->update($data))
+        {
+            DB::table('menu_permissions')->where('menu_id',$id)->delete();
+            if(isset($data['permissions']))
+            {
+                foreach ($data['permissions'] as $p)
+                {
+                    DB::table('menu_permissions')->insert([
+                        'menu_id'=> $id,
+                        'permission_id'=>(int)$p,
+                    ]);
+                }
+            }
+
+            return response()->json(['message' => 'Menu updated successfully']);
+        }
+        return response()->json(['error' => 'Bad request: Menu not updated']);
     }
 }

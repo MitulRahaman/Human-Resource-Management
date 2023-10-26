@@ -6,7 +6,6 @@ use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 
-
 class RoleRepository
 {
     private $name;
@@ -43,28 +42,24 @@ class RoleRepository
         foreach ($var as $role) {
             $role->permissions = explode(',', $role->permissions);
         }
-
         return $var;
     }
     public function getAllPermissions()
     {
         return Permission::get();
     }
-    public function getPermission(int $id)
+    public function getPermission($id)
     {
         return DB::table('role_permissions')->where('role_id',$id)->pluck('permission_id')->toArray();
     }
-    public function getRole(int $id)
+    public function getRole($id)
     {
         return Role::findOrFail($id);
     }
     public function create(array $data)
     {
-//        dd($data);
         if(Role::create($data))
         {
-//            dd($data);
-
             if(isset($data['permissions']))
             {
             foreach ($data['permissions'] as $p)
@@ -76,12 +71,9 @@ class RoleRepository
             }}
             return response()->json(['message' => 'Role added successfully']);
         }
-
-
         return response()->json(['error' => 'Bad request: Role not added']);
-
     }
-    public function change(int $data)
+    public function change($data)
     {
         $role = Role::findOrFail($data);
         $old=$role->status;
@@ -89,37 +81,24 @@ class RoleRepository
             if($old==$status['active'])
             {
                 $role->status=$status['inactive'];
-                if($role->save())
-                    return response()->json(['message' => 'Role status changed successfully']);
-                return response()->json(['error' => 'Bad request: Role status not changed']);
-
+                return $role->save();
             }
             else
             {
                 $role->status=$status['active'];
-                if($role->save())
-                    return response()->json(['message' => 'Role status changed successfully']);
-    
-                return response()->json(['error' => 'Bad request: Role status not changed']);
-
+                return $role->save();
             }
     }
-    public function delete(int $id)
+    public function delete($id)
     {
         $role= Role::findOrFail($id);
-        if($role->delete())
-                return response()->json(['message' => 'Role deleted successfully']);
-    
-        return response()->json(['error' => 'Bad request: Role not deleted']);
+        return $role->delete();
     }
-    public function restore(int $id)
+    public function restore($id)
     {
-       
-        if( Role::withTrashed()->where('id', $id)->restore())
-                return response()->json(['message' => 'Role restored successfully']);
-        return response()->json(['error' => 'Bad request: Role not restored']);
+       return Role::withTrashed()->where('id', $id)->restore();
     }
-    public function edit( $data, int $id)
+    public function edit($data, $id)
     {
         $role= Role:: findorFail($id);
         if( $role->update($data))
@@ -135,11 +114,8 @@ class RoleRepository
                     ]);
                 }
             }
-
             return response()->json(['message' => 'Role updated successfully']);
         }
         return response()->json(['error' => 'Bad request: Role not updated']);
     }
-
-
 }

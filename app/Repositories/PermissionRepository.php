@@ -4,8 +4,6 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
-use Illuminate\Support\Facades\Validator;
-
 
 class PermissionRepository
 {
@@ -16,49 +14,41 @@ class PermissionRepository
         $this->slug = $slug;
         return $this;
     }
-
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
-
     public function setId($id)
     {
         $this->id = $id;
         return $this;
     }
-
     public function setDescription($description)
     {
         $this->description = $description;
         return $this;
     }
-
     public function setStatus($status)
     {
         $this->status = $status;
         return $this;
     }
-
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
         return $this;
     }
-
     public function setUpdatedAt($updated_at)
     {
         $this->updated_at = $updated_at;
         return $this;
     }
-
     public function setDeletedAt($deleted_at)
     {
         $this->deleted_at = $deleted_at;
         return $this;
     }
-
     public function save()
     {
         return DB::table('permissions')
@@ -70,7 +60,6 @@ class PermissionRepository
                 'created_at' => $this->created_at
             ]);
     }
-
     public function update()
     {
         return DB::table('permissions')
@@ -81,94 +70,51 @@ class PermissionRepository
                 'updated_at' => $this->updated_at
             ]);
     }
-
-
     public function getAllPermissionData()
     {
         return DB::table('permissions as p')
             ->select('p.id', 'p.slug', 'p.name', 'p.description', 'p.status', DB::raw('date_format(p.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(p.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->get();
     }
-    public function create(array $data)
-    {
-       if(Permission::create($data))
-           return response()->json(['message' => 'Permission added successfully']);
-    
-       return response()->json(['error' => 'Bad request: Permission not added']);
-
-    }
-    public function change(int $data)
+    public function change($data)
     {
         $permission = Permission::findOrFail($data);
         $old=$permission->status;
         $status= config('variable_constants.activation');
             if($old==$status['active'])
             {
-               
                 $permission->status=$status['inactive'];
-                if($permission->save())
-                    return response()->json(['message' => 'Permission status changed successfully']);
-                return response()->json(['error' => 'Bad request: Permission status not changed']);
-
+                return $permission->save();
             }
             else
             {
                 $permission->status=$status['active'];
-                if($permission->save())
-                    return response()->json(['message' => 'Permission status changed successfully']);
-    
-                return response()->json(['error' => 'Bad request: Permission status not changed']);
-
+                return $permission->save();
             }
     }
-    public function delete(int $id)
+    public function delete($id)
     {
         $permission= Permission::findOrFail($id);
-        if($permission->delete())
-                return response()->json(['message' => 'Permission deleted successfully']);
-    
-        return response()->json(['error' => 'Bad request: Permission not deleted']);
+        return $permission->delete();
     }
-    public function getPermission(int $id)
+    public function getPermission($id)
     {
         return Permission::findOrFail($id);
     }
-    public function edit( $data, int $id)
+    public function restore($id)
     {
-        $permission= Permission:: findorFail($id);
-        if( $permission->update($data))
-                return response()->json(['message' => 'Permission edited successfully']);
-        return response()->json(['error' => 'Bad request: Permission not edited']);
-    }
-    public function restore(int $id)
-    {
-       
-        if( Permission::withTrashed()->where('id', $id)->restore())
-                return response()->json(['message' => 'Permission restored successfully']);
-        return response()->json(['error' => 'Bad request: Permission not restored']);
+       return Permission::withTrashed()->where('id', $id)->restore();
     }
     public function isSlugExists()
     {
-        if (Permission::where('slug', $this->slug)->exists() || !$this->slug) {
-            return true;
-        } else {
-            return false;
-        }
+        return Permission::where('slug', $this->slug)->exists() || !$this->slug;
     }
     public function isNameExists()
     {
-        if (Permission::where('name', $this->name)->exists() || !$this->name) {
-            return true;
-        } else {
-            return false;
-        }
+        return Permission::where('name', $this->name)->exists() || !$this->name;
     }
     public function isNameUnique($id)
     {
-        if (Permission::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name) {
-            return true;
-        } else {
-            return false;
-        }
+        return Permission::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name;
     }
 }

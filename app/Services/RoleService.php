@@ -127,7 +127,6 @@ class RoleService
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
-
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $name);
@@ -141,7 +140,6 @@ class RoleService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-
                 array_push($temp, $created_at);
                 array_push($temp, $action_btn);
                 array_push($data, $temp);
@@ -156,7 +154,4 @@ class RoleService
                 }';
         }
     }
-
-
-
 }

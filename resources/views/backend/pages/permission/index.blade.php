@@ -4,13 +4,7 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <style >
         .button {
-            /* background-color: white;
-            color: #999999;
-            padding: 5px 10px; */
-            /* border-color: #999999; */
             border-radius: 10px;
-           
-
         }
         .button:hover {
             background-color: #999999;
@@ -23,17 +17,14 @@
             float: left;
             width: 50%;
         }
-
         .center-col {
             float: left;
             width: 50%;
         }
-
         .right-col {
             float: left;
             width: 50%;
         }
-
     </style>
 @endsection
 @section('page_action')
@@ -53,13 +44,9 @@
                 <h3 class="block-title">Manage Permissions</h3>
             </div>
             <div class="block-content block-content-full">
-
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                 <div class="table-responsive">
                 <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
-
-                    
-
                     <!-- <div class="row">
                         <div class="col-sm-12"> -->
                             <thead>
@@ -76,9 +63,7 @@
                             </tr>
                             </thead>
                             <tbody>
-
                             </tbody>
-                            
                         <!-- </div>
                     </div> -->
                 </table>
@@ -87,7 +72,7 @@
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('permission/change_status') }}" method="post">
+                            <form id="change_status" action="" method="post">
 
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
@@ -115,7 +100,7 @@
                 <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('permission/delete') }}" method="post">
+                            <form id="delete" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -142,7 +127,7 @@
                 <div class="modal" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('permission/restore') }}" method="post">
+                            <form id="restore" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -236,22 +221,24 @@
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";
-            $('#permission_id').val(id);
-          
+            const url = "{{ url('permission/:id/change_status') }}".replace(':id', id);
+            $('#change_status').attr('action', url);
             $('#status-modal').modal('show');
         }
 
         function show_delete_modal(id, name) {
             var x = document.getElementById('permission_name');
             x.innerHTML = name;
-            $('#delete_permission_id').val(id);
+            const url = "{{ url('permission/:id/delete') }}".replace(':id', id);
+            $('#delete').attr('action', url);
             $('#delete-modal').modal('show');
         }
 
         function show_restore_modal(id, name) {
             var x = document.getElementById('restore_permission_name');
             x.innerHTML = name;
-            $('#restore_permission_id').val(id);
+            const url = "{{ url('permission/:id/restore') }}".replace(':id', id);
+            $('#restore').attr('action', url);
             $('#restore-modal').modal('show');
         }
     </script>

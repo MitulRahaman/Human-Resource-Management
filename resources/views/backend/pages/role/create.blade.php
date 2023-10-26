@@ -120,22 +120,26 @@
                             else {
                                 document.getElementById('error_name').innerHTML = '';
                             }
+                            e.preventDefault();
+                            return false;
 
                         } else {
-                            validated = true;
+                            return true;
+                            // validated = true;
                         }
 
                     },
                     error: function() {
-
+                        e.preventDefault();
+                        return false;
                     }
                 });
-                if (validated) {
-                    return true;
-                } else {
-
-                    return false;
-                }
+                // if (validated) {
+                //     return true;
+                // } else {
+                //
+                //     return false;
+                // }
             }
         }
     </script>

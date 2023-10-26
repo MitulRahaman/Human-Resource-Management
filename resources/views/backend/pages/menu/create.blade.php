@@ -45,12 +45,21 @@
                                     <input type="text" class="form-control" id="icon" name="icon" value="{{ old('icon') }}"  placeholder="Enter a icon.." >
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Menu_order </label>
+                                    <label for="val-username">Menu order </label>
                                     <input type="text" class="form-control" id="menu_order" name="menu_order" value="{{ old('menu_order') }}"  placeholder="Enter a menu_order.." >
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Parent_menu </label>
-                                    <input type="text" class="form-control" id="parent_menu" name="parent_menu" value="{{ old('parent_menu') }}"  placeholder="Enter a parent_menu.." >
+                                    <label for="val-username">Parent menu </label>
+                                    <div class="form-group">
+                                        <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
+                                            <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                            @foreach ($menus as $menu)
+
+                                                <option value='{{ $menu->id }}' style="color:black"> {{ $menu->id }} </option>
+
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>

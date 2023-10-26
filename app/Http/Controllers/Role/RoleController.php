@@ -57,36 +57,36 @@ class RoleController extends Controller
     public function update(RoleEditRequest $request)
     {
         try{
-            $role = $this->roleService->edit($request->validated(),(int)$request->id);
+            $role = $this->roleService->update($request->validated(),(int)$request->id);
             return redirect('role/')->with('success', $role->getData()->message);
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Role could not be updated.");
         }
     }
-    public function changeStatus(Request $request)
+    public function changeStatus($id)
     {
         try{
-            $id = $request->role_id;
+            $id = (int) $id;
             $this->roleService->changeStatus($id);
             return redirect('role/')->with('success', "Role status changed successfully.");
         } catch (\Exception $exception) {
                 return redirect()->back()->with('error', "OOPS! Role status could not be changed.");
         }
     }
-    public function delete(Request $request)
+    public function delete($id)
     {
         try{
-            $id = (int)$request->delete_role_id;
+            $id = (int) $id;
             $this->roleService->delete($id);
             return redirect('role/')->with('success', "Role deleted successfully.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Role could not be deleted.");
         }
     }
-    public function restore(Request $request)
+    public function restore($id)
     {
         try{
-            $id = (int)$request->restore_role_id;
+            $id = (int) $id;
             $this->roleService->restore($id);
             return redirect('role/')->with('success', "Role restored successfully.");
         } catch (\Exception $exception) {

@@ -107,14 +107,14 @@ class PermissionRepository
     }
     public function isSlugExists()
     {
-        return Permission::where('slug', $this->slug)->exists() || !$this->slug;
+        return Permission::withTrashed()->where('slug', $this->slug)->exists() ;
     }
     public function isNameExists()
     {
-        return Permission::where('name', $this->name)->exists() || !$this->name;
+        return Permission::withTrashed()->where('name', $this->name)->exists() ;
     }
     public function isNameUnique($id)
     {
-        return Permission::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name;
+        return Permission::withTrashed()->where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name;
     }
 }

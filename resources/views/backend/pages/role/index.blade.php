@@ -87,7 +87,7 @@
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('role/change_status') }}" method="post">
+                            <form id="change_status" action="" method="post">
 
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
@@ -115,7 +115,7 @@
                 <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('role/delete') }}" method="post">
+                            <form id="delete" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -142,7 +142,7 @@
                 <div class="modal" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('role/restore') }}" method="post">
+                            <form id="restore" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -236,22 +236,24 @@
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";
-            $('#role_id').val(id);
-
+            const url = "{{ url('role/:id/change_status') }}".replace(':id', id);
+            $('#change_status').attr('action', url);
             $('#status-modal').modal('show');
         }
 
         function show_delete_modal(id, name) {
             var x = document.getElementById('role_name');
             x.innerHTML = name;
-            $('#delete_role_id').val(id);
+            const url = "{{ url('role/:id/delete') }}".replace(':id', id);
+            $('#delete').attr('action', url);
             $('#delete-modal').modal('show');
         }
 
         function show_restore_modal(id, name) {
             var x = document.getElementById('restore_role_name');
             x.innerHTML = name;
-            $('#restore_role_id').val(id);
+            const url = "{{ url('role/:id/restore') }}".replace(':id', id);
+            $('#restore').attr('action', url);
             $('#restore-modal').modal('show');
         }
     </script>

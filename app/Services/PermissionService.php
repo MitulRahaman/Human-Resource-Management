@@ -122,6 +122,7 @@ class PermissionService
         $this->permissionRepository->setName($data['name']);
 
         $is_slug_exists = $this->permissionRepository->isSlugExists();
+//        dd($is_slug_exists);
         $is_name_exists = $this->permissionRepository->isNameExists();
 
 

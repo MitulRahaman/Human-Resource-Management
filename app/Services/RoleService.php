@@ -15,8 +15,14 @@ class RoleService
     }
     public function createRole($data)
     {
+        return $this->roleRepository->setName($data['name'])
+            ->setSl_no($data['sl_no'])
+            ->setDescription($data['description'])
+            ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
+            ->setStatus(Config::get('variable_constants.activation.active'))
+            ->setCreatedAt(date('Y-m-d H:i:s'))
+            ->create();
 
-        return $this->roleRepository->create($data);
     }
     public function getAllPermissions()
     {
@@ -26,7 +32,7 @@ class RoleService
     {
         return $this->roleRepository->getPermission($id);
     }
-    public function getRole(int $id)
+    public function getRole($id)
     {
         return $this->roleRepository->getRole($id);
     }
@@ -61,14 +67,19 @@ class RoleService
     {
         return $this->roleRepository->restore($id);
     }
-    public function edit($data, $id)
+    public function update($data, $id)
     {
-        return $this->roleRepository->edit($data,$id);
+        return $this->roleRepository->setId($id)
+            ->setName($data['name'])
+            ->setDescription($data['description'])
+            ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->update();
     }
     public function validateName($data,$id)
     {
         $this->roleRepository->setName($data['name']);
-        $is_name_exists = $this->roleRepository->isNameUnique($id);
+        $is_name_exists = $this->roleRepository->isNameUnique($data['name'],$id);
         $name_msg = $is_name_exists ? 'Name already taken' : null;
         if(!$data['name']) $name_msg = 'Name is required';
         if ( $is_name_exists) {
@@ -97,7 +108,7 @@ class RoleService
                 $created_at = $row->created_at;
                 $permissions = '';
                 foreach ($row->permissions as $p) {
-                    $permissions .= ($permissions ? ', ' : '') . $p;
+                    $permissions.="<span class=\"badge badge-success\">$p</span><br>";
                 }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";

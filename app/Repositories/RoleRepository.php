@@ -8,27 +8,63 @@ use App\Models\Role;
 
 class RoleRepository
 {
-    private $name;
+    private $name, $id, $description, $sl_no, $status, $created_at, $updated_at, $deleted_at, $permission_ids;
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+    public function setPermission_ids($permission_ids)
+    {
+        $this->permission_ids = $permission_ids;
+        return $this;
+    }
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
+    public function setSl_no($sl_no)
+    {
+        $this->sl_no = $sl_no;
+        return $this;
+    }
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+        return $this;
+    }
+
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
+        return $this;
+    }
+
+    public function setDeletedAt($deleted_at)
+    {
+        $this->deleted_at = $deleted_at;
+        return $this;
+    }
     public function isNameExists()
     {
-        if (Role::where('name', $this->name)->exists() || !$this->name) {
-            return true;
-        } else {
-            return false;
-        }
+        return Role::withTrashed()->where('name', $this->name)->exists() || !$this->name;
     }
     public function isNameUnique($id)
     {
-        if (Role::where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name) {
-            return true;
-        } else {
-            return false;
-        }
+        return Role::withTrashed()->where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name;
     }
     public function getAllRoleData()
     {
@@ -56,19 +92,27 @@ class RoleRepository
     {
         return Role::findOrFail($id);
     }
-    public function create(array $data)
+    public function create()
     {
-        if(Role::create($data))
+        $roles = DB::table('roles')
+            ->insertGetId([
+                'name' => $this->name,
+                'sl_no' => $this->sl_no,
+                'description' => $this->description,
+                'status' => $this->status,
+                'created_at' => $this->created_at
+            ]);
+        if($roles)
         {
-            if(isset($data['permissions']))
+            if($this->permission_ids)
             {
-            foreach ($data['permissions'] as $p)
-            {
-                DB::table('role_permissions')->insert([
-                    'role_id'=>DB::table('roles')->where('name', $data['name'])->value('id'),
-                    'permission_id'=>(int)$p,
-                ]);
-            }}
+                foreach ($this->permission_ids as $p)
+                {
+                    DB::table('role_permissions')->insert([
+                        'role_id'=> $roles,
+                        'permission_id'=>(int)$p,
+                    ]);
+                }}
             return response()->json(['message' => 'Role added successfully']);
         }
         return response()->json(['error' => 'Bad request: Role not added']);
@@ -98,24 +142,32 @@ class RoleRepository
     {
        return Role::withTrashed()->where('id', $id)->restore();
     }
-    public function edit($data, $id)
+    public function update()
     {
-        $role= Role:: findorFail($id);
-        if( $role->update($data))
+        $role = Role::findorFail($this->id);
+        $roles = DB::table('roles')
+            ->where('id', '=', $this->id)
+            ->update([
+                'name' => $this->name,
+                'description' => $this->description,
+                'updated_at' => $this->updated_at
+            ]);
+        if( $roles)
         {
-            DB::table('role_permissions')->where('role_id',$id)->delete();
-            if(sizeof($data)>2)
+            DB::table('role_permissions')->where('role_id',$this->id)->delete();
+            if($this->permission_ids)
             {
-                foreach ($data['permissions'] as $p)
+                foreach ($this->permission_ids as $p)
                 {
                     DB::table('role_permissions')->insert([
-                        'role_id'=>DB::table('roles')->where('name', $data['name'])->value('id'),
+                        'role_id'=> $this->id,
                         'permission_id'=>(int)$p,
                     ]);
-                }
-            }
+                }}
+
             return response()->json(['message' => 'Role updated successfully']);
         }
         return response()->json(['error' => 'Bad request: Role not updated']);
+
     }
 }

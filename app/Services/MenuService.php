@@ -16,6 +16,10 @@ class MenuService
     {
         return $this->menuRepository->getAllPermissions();
     }
+    public function getParentMenu()
+    {
+        return $this->menuRepository->getParentMenu();
+    }
     public function create($data, $id)
     {
         return $this->menuRepository->setTitle($data['title'])
@@ -78,7 +82,7 @@ class MenuService
                 $created_at = $row->created_at;
                 $permissions = '';
                 foreach ($row->permissions as $p) {
-                    $permissions .= ($permissions ? ', ' : '') . $p;
+                    $permissions.="<span class=\"badge badge-success\">$p</span><br>";
                 }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";

@@ -64,8 +64,8 @@
                             <th >URL</th>
                             <th >Icon</th>
                             <th class="d-none d-sm-table-cell " style="width: 10%;">Description</th>
-                            <th >Menu_order</th>
-                            <th >Parent_order</th>
+                            <th >Menu order</th>
+                            <th >Parent menu</th>
                             <th class="d-none d-sm-table-cell ">Status</th>
                             <th >Permissions</th>
                             <th >Deleted</th>
@@ -86,7 +86,7 @@
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('menu/change_status') }}" method="post">
+                            <form id="change_status" action="" method="post">
 
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
@@ -115,7 +115,7 @@
                 <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('menu/delete') }}" method="post">
+                            <form id="delete" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="menu_name"></span> Menu will be deleted. Are you sure?</p>
+                                        <p class="text-center"><span id="menu_title"></span> Menu will be deleted. Are you sure?</p>
                                         <input type="hidden" name="delete_menu_id" id="delete_menu_id">
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
@@ -143,7 +143,7 @@
                 <div class="modal" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form action="{{ url('menu/restore') }}" method="post">
+                            <form id="restore" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="restore_menu_name"></span> Menu will be restored. Are you sure?</p>
+                                        <p class="text-center"><span id="restore_menu_title"></span> Menu will be restored. Are you sure?</p>
                                         <input type="hidden" name="restore_menu_id" id="restore_menu_id">
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
@@ -238,22 +238,24 @@
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";
-            $('#menu_id').val(id);
-
+            const url = "{{ url('menu/:id/change_status') }}".replace(':id', id);
+            $('#change_status').attr('action', url);
             $('#status-modal').modal('show');
         }
 
-        function show_delete_modal(id, name) {
-            var x = document.getElementById('menu_name');
-            x.innerHTML = name;
-            $('#delete_menu_id').val(id);
+        function show_delete_modal(id, title) {
+            var x = document.getElementById('menu_title');
+            x.innerHTML = title;
+            const url = "{{ url('menu/:id/delete') }}".replace(':id', id);
+            $('#delete').attr('action', url);
             $('#delete-modal').modal('show');
         }
 
-        function show_restore_modal(id, name) {
-            var x = document.getElementById('restore_menu_name');
-            x.innerHTML = name;
-            $('#restore_menu_id').val(id);
+        function show_restore_modal(id, title) {
+            var x = document.getElementById('restore_menu_title');
+            x.innerHTML = title;
+            const url = "{{ url('menu/:id/restore') }}".replace(':id', id);
+            $('#restore').attr('action', url);
             $('#restore-modal').modal('show');
         }
     </script>

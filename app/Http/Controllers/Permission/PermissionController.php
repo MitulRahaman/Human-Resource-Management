@@ -49,20 +49,20 @@ class PermissionController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-    public function changeStatus(Request $request)
+    public function changeStatus($id)
     {
         try{
-            $id = $request->permission_id;
+            $id = (int) $id;
             $this->permissionService->changeStatus($id);
             return redirect('permission/')->with('success', "Permission status changed successfully.");
         } catch (\Exception $exception) {
                 return redirect()->back()->with('error', "OOPS! Permission status could not be changed.");
             }
     }
-    public function delete(Request $request)
+    public function delete($id)
     {
         try{
-            $id = (int)$request->delete_permission_id;
+            $id = (int) $id;
             $this->permissionService->delete($id);
             return redirect('permission/')->with('success', "Permission deleted successfully.");
         } catch (\Exception $exception) {
@@ -77,16 +77,16 @@ class PermissionController extends Controller
     public function update(PermissionEditRequest $request)
     {
         try{
-            $permission = $this->permissionService->edit($request->validated(),(int)$request->id);
-            return redirect('permission/')->with('success', $permission->getData()->message);
+            $this->permissionService->edit($request->validated(),(int)$request->id);
+            return redirect('permission/')->with('success', "Permission updated successfully.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be updated.");
         }
     }
-    public function restore(Request $request)
+    public function restore($id)
     {
         try{
-            $id = (int)$request->restore_permission_id;
+            $id = (int) $id;
             $this->permissionService->restore($id);
             return redirect('permission/')->with('success', "Permission restored successfully.");
         } catch (\Exception $exception) {

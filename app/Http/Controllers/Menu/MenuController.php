@@ -30,7 +30,8 @@ class MenuController extends Controller
     public function create()
     {
         $permissions=$this->menuService->getAllPermissions();
-        return \view('backend.pages.menu.create', compact('permissions'));
+        $menus=$this->menuService->getParentMenu();
+        return \view('backend.pages.menu.create', compact('permissions', 'menus'));
     }
     public function store(MenuAddRequest $request)
     {
@@ -41,30 +42,30 @@ class MenuController extends Controller
             return redirect()->back()->with('error', "OOPS! Menu  could not be stored.");
         }
     }
-    public function changeStatus(Request $request)
+    public function changeStatus($id)
     {
         try{
-            $id = $request->menu_id;
+            $id = (int)$id;
             $this->menuService->changeStatus($id);
             return redirect('menu/')->with('success', 'Menu status changed successfully!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu status could not be saved.");
         }
     }
-    public function delete(Request $request)
+    public function delete($id)
     {
         try{
-            $id = (int)$request->delete_menu_id;
+            $id = (int)$id;
             $this->menuService->delete($id);
             return redirect('menu/')->with('success', "Menu deleted successfully!");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu could not be deleted.");
         }
     }
-    public function restore(Request $request)
+    public function restore($id)
     {
         try{
-            $id = (int)$request->restore_menu_id;
+            $id = (int)$id;
             $this->menuService->restore($id);
             return redirect('menu/')->with('success', "Menu restored successfully!");
         } catch (\Exception $exception) {
@@ -76,15 +77,16 @@ class MenuController extends Controller
         $menu_info = $this->menuService->getMenu($id);
         $permissions = $this->menuService->getAllPermissions();
         $permission_id = $this->menuService->getPermission($id);
-        return \view('backend.pages.menu.edit',compact('menu_info','permissions','permission_id'));
+        $menus=$this->menuService->getParentMenu();
+        return \view('backend.pages.menu.edit',compact('menu_info','permissions','permission_id','menus'));
     }
     public function update(MenuEditRequest $request)
     {
-//        try{
+        try{
             $menu = $this->menuService->update($request->validated(),(int)$request->id);
             return redirect('menu/')->with('success', $menu->getData()->message);
-//        } catch (\Exception $exception) {
-//            return redirect()->back()->with('error', "OOPS! Menu could not be updated.");
-//        }
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Menu could not be updated.");
+        }
     }
 }

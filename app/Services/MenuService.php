@@ -38,9 +38,14 @@ class MenuService
 
         return $this->menuRepository->create($data, $id);
     }
+    public function changeStatus(int $data)
+    {
+        return $this->menuRepository->change($data);
+    }
     public function fetchData()
     {
         $result = $this->menuRepository->getAllMenuData();
+//        dd($result);
         if ($result->count() > 0) {
             $data = array();
 
@@ -68,9 +73,9 @@ class MenuService
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {
-                    $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a>";
+                    $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$title\")'>Restore</a>";
                 } else {
-                    $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_delete_modal(\"$id\", \"$name\")'>Delete</a>";
+                    $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_delete_modal(\"$id\", \"$title\")'>Delete</a>";
                 }
                 $action_btn = "<div class=\"col-sm-6 col-xl-4\">
                                     <div class=\"dropdown\">

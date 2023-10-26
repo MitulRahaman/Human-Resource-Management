@@ -111,8 +111,10 @@ class MenuRepository
 
     public function create(array $data, $id)
     {
-//        dd($data);
-        if(Menu::create($data))
+//        dd($id);
+        $menus = Menu::create($data);
+//        dd($menus->id);
+        if($menus)
         {
 //            dd($data);
 
@@ -121,7 +123,7 @@ class MenuRepository
                 foreach ($data['permissions'] as $p)
                 {
                     DB::table('menu_permissions')->insert([
-                        'menu_id'=> $id,
+                        'menu_id'=> $menus->id,
                         'permission_id'=>(int)$p,
                     ]);
                 }}
@@ -141,6 +143,7 @@ class MenuRepository
             ->leftJoin('permissions as p', 'mp.permission_id', '=', 'p.id')
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->get();
+//        dd($var);
         foreach ($var as $menu) {
             $menu->permissions = explode(',', $menu->permissions);
         }
@@ -150,5 +153,21 @@ class MenuRepository
     public function getAllPermissions()
     {
         return Permission::get();
+    }
+    public function change(int $data)
+    {
+        $menu = Menu::findOrFail($data);
+        $old=$menu->status;
+        $status= config('variable_constants.activation');
+        if($old==$status['active'])
+        {
+            $menu->status=$status['inactive'];
+            return $menu->save();
+        }
+        else
+        {
+            $menu->status=$status['active'];
+            return $menu->save();
+        }
     }
 }

@@ -40,6 +40,7 @@
     </div>
 @endsection
 @section('content')
+
     <div class="content">
         @include('backend.layouts.error_msg')
         <div class="block block-rounded">
@@ -80,6 +81,7 @@
                     </div> -->
                     </table>
                 </div>
+
                 <!-- Vertically Centered Block Modal -->
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -109,6 +111,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -136,6 +139,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -184,6 +188,7 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
+            // console.log('fdhg');
             $('#menu_table').DataTable().destroy();
 
             var dtable = $('#menu_table').DataTable({
@@ -206,16 +211,16 @@
                         text: 'CSV',
                         className: 'button' ,
                         exportOptions:  {
-                            columns: [0, 1,2,3,4,5,6]
+                            columns: [0, 1,2,3,4,5,6,7,8,9]
                         },
-                        //             }
+
                     },
                     {
                         extend: 'print',
                         text: 'Print',
                         className: 'button' ,
                         exportOptions:  {
-                            columns: [0, 1,2,3,4,5,6]
+                            columns: [0, 1,2,3,4,5,6,7,8,9]
                         },
                     },
                 ],

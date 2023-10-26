@@ -86,6 +86,11 @@ Route::group(['middleware'=> 'auth'], function() {
 
             Route::get('/add', [MenuController::class, 'create']);
             Route::post('/store', [MenuController::class, 'store']);
+
+            Route::post('/change_status', [MenuController::class, 'changeStatus']);
+
+            Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
+            Route::post('/{id}/update', [MenuController::class, 'update']);
         });
 
 

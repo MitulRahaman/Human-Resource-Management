@@ -28,6 +28,7 @@ class MenuController extends Controller
     }
     public function fetchData()
     {
+//        dd('fkjg');
         return $this->menuService->fetchData();
     }
     public function create()
@@ -35,24 +36,6 @@ class MenuController extends Controller
         $permissions=$this->menuService->getAllPermissions();
         return \view('backend.pages.menu.create', compact('permissions'));
     }
-//    public function store(MenuAddRequest $request)
-//    {
-////        dd($request->all());
-//        try{
-//            $response = $this->menuService->createMenu($request->validated());
-//            if (is_int($response)) {
-//                return redirect('menu/')->with('success', 'Menu saved successfully.');
-//            } else {
-//                return redirect()->back()->with('error', $response);
-//            }
-//
-//        } catch (\Exception $exception) {
-//            return redirect()->back()->with('error', $exception->getMessage());
-//
-//        }
-//
-//    }
-
     public function store(MenuAddRequest $request)
     {
         try{
@@ -62,6 +45,18 @@ class MenuController extends Controller
 
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu  could not be stored.");
+
+        }
+
+    }
+    public function changeStatus(Request $request)
+    {
+        try{
+            $id = $request->menu_id;
+            $menu = $this->menuService->changeStatus($id);
+            return redirect('menu/')->with('success', 'Menu status changed successfully!');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Menu status could not be saved.");
 
         }
 

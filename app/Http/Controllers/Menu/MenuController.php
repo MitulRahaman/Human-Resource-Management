@@ -80,11 +80,11 @@ class MenuController extends Controller
     }
     public function update(MenuEditRequest $request)
     {
-        try{
+//        try{
             $menu = $this->menuService->update($request->validated(),(int)$request->id);
             return redirect('menu/')->with('success', $menu->getData()->message);
-        } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Menu could not be updated.");
-        }
+//        } catch (\Exception $exception) {
+//            return redirect()->back()->with('error', "OOPS! Menu could not be updated.");
+//        }
     }
 }

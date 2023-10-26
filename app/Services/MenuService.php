@@ -51,7 +51,16 @@ class MenuService
     }
     public function update($data, $id)
     {
-        return $this->menuRepository->update($data,$id);
+        return $this->menuRepository->setId($id)
+            ->setTitle($data['title'])
+            ->setUrl($data['url'])
+            ->setIcon($data['icon'])
+            ->setDescription($data['description'])
+            ->setMenu_order($data['menu_order'])
+            ->setParent_menu($data['parent_menu'])
+            ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->update();
     }
     public function fetchData()
     {

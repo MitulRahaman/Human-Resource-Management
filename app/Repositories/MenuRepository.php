@@ -157,22 +157,32 @@ class MenuRepository
     {
         return DB::table('menu_permissions')->where('menu_id',$id)->pluck('permission_id')->toArray();
     }
-    public function update( $data, $id)
+    public function update()
     {
-        $menu = Menu::findorFail($id);
-        if( $menu->update($data))
+        $menu = Menu::findorFail($this->id);
+        $menus = DB::table('menus')
+            ->where('id', '=', $this->id)
+            ->update([
+                'title' => $this->title,
+                'url' => $this->url,
+                'icon' => $this->icon,
+                'description' => $this->description,
+                'menu_order' => $this->menu_order,
+                'parent_menu' => $this->parent_menu,
+                'updated_at' => $this->updated_at
+            ]);
+        if( $menus)
         {
-            DB::table('menu_permissions')->where('menu_id',$id)->delete();
-            if(isset($data['permissions']))
+            DB::table('menu_permissions')->where('menu_id',$this->id)->delete();
+            if($this->permission_ids)
             {
-                foreach ($data['permissions'] as $p)
+                foreach ($this->permission_ids as $p)
                 {
                     DB::table('menu_permissions')->insert([
-                        'menu_id'=> $id,
+                        'menu_id'=> $this->id,
                         'permission_id'=>(int)$p,
                     ]);
-                }
-            }
+                }}
 
             return response()->json(['message' => 'Menu updated successfully']);
         }

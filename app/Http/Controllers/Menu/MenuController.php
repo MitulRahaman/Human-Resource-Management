@@ -31,7 +31,7 @@ class MenuController extends Controller
     {
         $permissions=$this->menuService->getAllPermissions();
         $menus=$this->menuService->getParentMenu();
-        return \view('backend.pages.menu.create', compact('permissions', 'menus', 'parent_menus'));
+        return \view('backend.pages.menu.create', compact('permissions', 'menus'));
     }
     public function store(MenuAddRequest $request)
     {

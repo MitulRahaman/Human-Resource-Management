@@ -4,13 +4,7 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <style >
         .button {
-            /* background-color: white;
-            color: #999999;
-            padding: 5px 10px; */
-            /* border-color: #999999; */
             border-radius: 10px;
-
-
         }
         .button:hover {
             background-color: #999999;
@@ -23,12 +17,10 @@
             float: left;
             width: 50%;
         }
-
         .center-col {
             float: left;
             width: 50%;
         }
-
         .right-col {
             float: left;
             width: 50%;
@@ -57,11 +49,6 @@
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="role_table">
-
-
-
-                        <!-- <div class="row">
-                            <div class="col-sm-12"> -->
                         <thead>
                         <tr>
                             <th class="text-center ">#</th>
@@ -78,9 +65,6 @@
                         <tbody>
 
                         </tbody>
-
-                        <!-- </div>
-                    </div> -->
                     </table>
                 </div>
                 <!-- Vertically Centered Block Modal -->

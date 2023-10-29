@@ -9,10 +9,6 @@ use App\Http\Requests\PermissionEditRequest;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
-use Excel;
-
-//use App\Exports\ExportPermissions;
-
 
 class PermissionController extends Controller
 {
@@ -52,9 +48,9 @@ class PermissionController extends Controller
     public function changeStatus($id)
     {
         try{
-            $id = (int) $id;
-            $this->permissionService->changeStatus($id);
-            return redirect('permission/')->with('success', "Permission status changed successfully.");
+            if($this->permissionService->changeStatus($id))
+                return redirect('permission/')->with('success', "Permission status changed successfully.");
+            return redirect('permission/')->with('error', "Permission status not changed.");
         } catch (\Exception $exception) {
                 return redirect()->back()->with('error', "OOPS! Permission status could not be changed.");
             }
@@ -62,9 +58,9 @@ class PermissionController extends Controller
     public function delete($id)
     {
         try{
-            $id = (int) $id;
-            $this->permissionService->delete($id);
-            return redirect('permission/')->with('success', "Permission deleted successfully.");
+            if($this->permissionService->delete($id))
+                return redirect('permission/')->with('success', "Permission deleted successfully.");
+            return redirect('permission/')->with('error', "Permission not deleted.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be deleted.");
         }
@@ -77,8 +73,9 @@ class PermissionController extends Controller
     public function update(PermissionEditRequest $request)
     {
         try{
-            $this->permissionService->edit($request->validated(),(int)$request->id);
-            return redirect('permission/')->with('success', "Permission updated successfully.");
+            if($this->permissionService->edit($request->validated()))
+                return redirect('permission/')->with('success', "Permission updated successfully.");
+            return redirect('permission/')->with('success', "Permission not updated.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be updated.");
         }
@@ -86,9 +83,9 @@ class PermissionController extends Controller
     public function restore($id)
     {
         try{
-            $id = (int) $id;
-            $this->permissionService->restore($id);
-            return redirect('permission/')->with('success', "Permission restored successfully.");
+            if($this->permissionService->restore($id))
+                return redirect('permission/')->with('success', "Permission restored successfully.");
+            return redirect('permission/')->with('success', "Permission not restored.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Permission could not be restored.");
         }
@@ -101,9 +98,5 @@ class PermissionController extends Controller
     public function validate_name(Request $request, int $id)
     {
         return $this->permissionService->validateName($request->all(),$id);
-    }
-    public function exportPermissionsData(){
-        $permissionData = 'permissions.xlsx';
-        return Excel::download(new ExportPermissions, $permissionData);
     }
 }

@@ -53,10 +53,6 @@
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="menu_table">
 
-
-
-                        <!-- <div class="row">
-                            <div class="col-sm-12"> -->
                         <thead>
                         <tr>
                             <th class="text-center ">#</th>
@@ -77,8 +73,6 @@
 
                         </tbody>
 
-                        <!-- </div>
-                    </div> -->
                     </table>
                 </div>
 

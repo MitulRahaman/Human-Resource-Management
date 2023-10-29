@@ -167,7 +167,7 @@ class MenuRepository
     }
     public function update()
     {
-        $menu = Menu::findorFail($this->id);
+//        $menu = Menu::findorFail($this->id);
         $menus = DB::table('menus')
             ->where('id', '=', $this->id)
             ->update([

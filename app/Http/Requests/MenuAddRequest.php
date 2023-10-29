@@ -24,6 +24,7 @@ class MenuAddRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required',
             'title' => 'required',
             'url' => 'nullable',
             'icon' => 'nullable',

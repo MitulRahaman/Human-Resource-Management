@@ -8,7 +8,7 @@
         }
         .button:hover {
             background-color: #999999;
-            color: #fff; 
+            color: #fff;
         }
         .center-align-buttons {
             text-align: center;
@@ -47,8 +47,6 @@
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                 <div class="table-responsive">
                 <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
-                    <!-- <div class="row">
-                        <div class="col-sm-12"> -->
                             <thead>
                             <tr>
                                 <th class="text-center ">#</th>
@@ -64,8 +62,6 @@
                             </thead>
                             <tbody>
                             </tbody>
-                        <!-- </div>
-                    </div> -->
                 </table>
                 </div>
                 <!-- Vertically Centered Block Modal -->
@@ -187,7 +183,7 @@
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
-                    className: 'button' 
+                    className: 'button'
                 },
                 {
                     extend: 'csv',
@@ -196,7 +192,6 @@
                     exportOptions:  {
                                         columns: [0, 1,2,3,4,5]
                                     },
-                    //             }
                 },
                 {
                     extend: 'print',
@@ -208,14 +203,14 @@
                 },
             ],
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
-           
+
 
             });
 
             dtable.buttons().container().addClass('center-align-buttons');
-           
-          
-            
+
+
+
         });
 
         function show_status_modal(id, msg) {

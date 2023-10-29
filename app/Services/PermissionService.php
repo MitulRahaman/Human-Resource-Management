@@ -36,9 +36,9 @@ class PermissionService
         return $this->permissionRepository->getPermission($id);
     }
 
-    public function edit($data, $id)
+    public function edit($data)
     {
-        return $this->permissionRepository->setId($id)
+        return $this->permissionRepository->setId($data['id'])
             ->setName($data['name'])
             ->setDescription($data['description'])
             ->setUpdatedAt(date('Y-m-d H:i:s'))

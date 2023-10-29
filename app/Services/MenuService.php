@@ -20,7 +20,7 @@ class MenuService
     {
         return $this->menuRepository->getParentMenu();
     }
-    public function create($data, $id)
+    public function create($data)
     {
         return $this->menuRepository->setTitle($data['title'])
             ->setUrl($data['url'])
@@ -53,9 +53,9 @@ class MenuService
     {
         return $this->menuRepository->getPermission($id);
     }
-    public function update($data, $id)
+    public function update($data)
     {
-        return $this->menuRepository->setId($id)
+        return $this->menuRepository->setId($data['id'])
             ->setTitle($data['title'])
             ->setUrl($data['url'])
             ->setIcon($data['icon'])

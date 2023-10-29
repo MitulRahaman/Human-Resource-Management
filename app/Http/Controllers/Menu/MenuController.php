@@ -36,7 +36,7 @@ class MenuController extends Controller
     public function store(MenuAddRequest $request)
     {
         try{
-            $menu = $this->menuService->create($request->validated(),(int)$request->id);
+            $menu = $this->menuService->create($request->validated());
             return redirect('menu/')->with('success', $menu->getData()->message);
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu  could not be stored.");
@@ -45,9 +45,9 @@ class MenuController extends Controller
     public function changeStatus($id)
     {
         try{
-            $id = (int)$id;
-            $this->menuService->changeStatus($id);
-            return redirect('menu/')->with('success', 'Menu status changed successfully!');
+            if($this->menuService->changeStatus($id))
+                return redirect('menu/')->with('success', 'Menu status changed successfully!');
+            return redirect('menu/')->with('error', 'Menu status not changed!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu status could not be saved.");
         }
@@ -55,9 +55,9 @@ class MenuController extends Controller
     public function delete($id)
     {
         try{
-            $id = (int)$id;
-            $this->menuService->delete($id);
-            return redirect('menu/')->with('success', "Menu deleted successfully!");
+            if($this->menuService->delete($id))
+                return redirect('menu/')->with('success', "Menu deleted successfully!");
+            return redirect('menu/')->with('error', "Menu not deleted!");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu could not be deleted.");
         }
@@ -65,9 +65,9 @@ class MenuController extends Controller
     public function restore($id)
     {
         try{
-            $id = (int)$id;
-            $this->menuService->restore($id);
-            return redirect('menu/')->with('success', "Menu restored successfully!");
+            if($this->menuService->restore($id))
+                return redirect('menu/')->with('success', "Menu restored successfully!");
+            return redirect('menu/')->with('error', "Menu could not be restored!");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu could not be restored.");
         }
@@ -83,8 +83,9 @@ class MenuController extends Controller
     }
     public function update(MenuEditRequest $request)
     {
+//        dd($request->all());
         try{
-            $menu = $this->menuService->update($request->validated(),(int)$request->id);
+            $menu = $this->menuService->update($request->validated());
             return redirect('menu/')->with('success', $menu->getData()->message);
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Menu could not be updated.");

@@ -27,12 +27,20 @@ class PermissionEditRequest extends FormRequest
     public function rules()
     {
         $id = $this->route('id');
-        $id=(int)$id;
+        $this->merge(['id' => $id]);
             return [
+                'id' => [
+                    'required',
+                    Rule::exists('permissions', 'id'),
+                ],
               'name'=>"required|unique:permissions,name,$id",
               'description'=> 'nullable',
-
             ];
-
+    }
+    public function messages()
+    {
+        return [
+            'id.exists' => 'The specified ID does not exist in menus table.',
+        ];
     }
 }

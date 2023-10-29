@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MenuEditRequest extends FormRequest
 {
@@ -23,7 +24,12 @@ class MenuEditRequest extends FormRequest
      */
     public function rules()
     {
+        $this->merge(['id' => $this->route('id')]);
         return [
+            'id' => [
+                'required',
+                Rule::exists('menus', 'id'),
+            ],
             'title' => 'required',
             'url' => 'nullable',
             'icon' => 'nullable',
@@ -31,6 +37,12 @@ class MenuEditRequest extends FormRequest
             'parent_menu' => 'nullable',
             'permissions'=> 'nullable',
             'description' => 'nullable',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'id.exists' => 'The specified ID does not exist in menus table.',
         ];
     }
 }

@@ -53,7 +53,7 @@ class RoleService
                 'success' => true,
                 'name_msg' => $name_msg,
             ];
-        } 
+        }
     }
     public function changeStatus($data)
     {
@@ -67,9 +67,9 @@ class RoleService
     {
         return $this->roleRepository->restore($id);
     }
-    public function update($data, $id)
+    public function update($data)
     {
-        return $this->roleRepository->setId($id)
+        return $this->roleRepository->setId($data['id'])
             ->setName($data['name'])
             ->setDescription($data['description'])
             ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)

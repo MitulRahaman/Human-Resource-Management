@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('url')->nullable();
             $table->text('icon')->nullable();
             $table->text('description')->nullable();
-            $table->text('menu_order')->nullable();
+            $table->integer('menu_order')->nullable();
             $table->unsignedInteger('parent_menu')->nullable();
             $table->foreign('parent_menu')->references('id')->on('menus')->onDelete('cascade');
             $table->tinyInteger('status')->default(\Illuminate\Support\Facades\Config::get('variable_constants.activation.active'));

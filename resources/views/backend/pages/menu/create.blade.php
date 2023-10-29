@@ -54,9 +54,7 @@
                                         <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
                                             <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
                                             @foreach ($menus as $menu)
-
-                                                <option value='{{ $menu->id }}' style="color:black"> {{ $menu->id }} </option>
-
+                                                    <option value='{{ $menu->id }}' style="color:black"> {{ $menu->id }} </option>
                                             @endforeach
                                         </select>
                                     </div>

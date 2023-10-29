@@ -66,6 +66,7 @@ class MenuService
             ->setUpdatedAt(date('Y-m-d H:i:s'))
             ->update();
     }
+
     public function fetchData()
     {
         $result = $this->menuRepository->getAllMenuData();

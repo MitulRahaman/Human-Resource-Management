@@ -31,7 +31,7 @@ class MenuController extends Controller
     {
         $permissions=$this->menuService->getAllPermissions();
         $menus=$this->menuService->getParentMenu();
-        return \view('backend.pages.menu.create', compact('permissions', 'menus'));
+        return \view('backend.pages.menu.create', compact('permissions', 'menus', 'parent_menus'));
     }
     public function store(MenuAddRequest $request)
     {
@@ -78,6 +78,7 @@ class MenuController extends Controller
         $permissions = $this->menuService->getAllPermissions();
         $permission_id = $this->menuService->getPermission($id);
         $menus=$this->menuService->getParentMenu();
+//        dd($menu_info->parent_menu);
         return \view('backend.pages.menu.edit',compact('menu_info','permissions','permission_id','menus'));
     }
     public function update(MenuEditRequest $request)

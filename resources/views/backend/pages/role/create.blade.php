@@ -26,7 +26,7 @@
                 <h3 class="block-title">Add Roles</h3>
             </div>
 
-            <form class="js-validation" action="{{ url('role/store') }}" id="form" method="POST" onsubmit="return validate_inputs()">
+            <form class="js-validation" action="{{ url('role/store') }}" id="form" method="POST" onsubmit="return validate_inputs(event)">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -91,13 +91,13 @@
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script>
-        function validate_inputs() {
+        function validate_inputs(e) {
             //
 
             var sl_no = $('#sl_no').val();
             var name = $('#name').val();
-            $('#submit').attr('disabled', true);
-            let validated = false;
+            // $('#submit').attr('disabled', true);
+            // let validated = false;
             if (sl_no && name) {
 
 

@@ -53,10 +53,13 @@
                                     <div class="form-group">
                                         <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
                                             <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                            @if ($menu_info->parent_menu)
+                                                <option value='{{ $menu_info->parent_menu }}' selected> {{ $menu_info->parent_menu }} </option>
+                                            @endif
                                             @foreach ($menus as $menu)
-
-                                                <option value='{{ $menu->id }}' style="color:black"> {{ $menu->id }} </option>
-
+                                                @if ($menu_info->parent_menu != $menu->id)
+                                                    <option value='{{ $menu->id }}' style="color:black" > {{ $menu->id }} </option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>                                </div>

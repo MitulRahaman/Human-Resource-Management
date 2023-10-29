@@ -128,9 +128,10 @@ class MenuRepository
     }
     public function getParentMenu()
     {
-//        dd(Menu::where('parent_menu',null)->where('deleted_at',null)->get());
+    //    dd(Menu::where('parent_menu',null)->where('deleted_at',null)->get());
         return Menu::where('parent_menu',null)->get();
     }
+
     public function change(int $data)
     {
         $menu = Menu::findOrFail($data);

@@ -80,22 +80,20 @@ class RoleRepository
         }
         return $roles;
     }
-    public function getAllPermissions()
+    public function getAllPermissions($id)
     {
-        return Permission::get();
+        $id =(int) $id;
+        return DB::table('permissions')
+            ->select('permissions.*', DB::raw('IF(role_permissions.role_id = ' . $id . ', "yes", "no") as selected'))
+            ->leftJoin('role_permissions', function ($join) use ($id) {
+                $join->on('permissions.id', '=', 'role_permissions.permission_id')
+                    ->where('role_permissions.role_id', '=', $id);
+            })
+            ->get();
     }
     public function getRole($id)
     {
-        $roles =DB::table('roles as r')
-            ->where('r.id','=', $id)
-            ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
-            ->selectRaw('GROUP_CONCAT(p.id) as permissions')
-            ->leftJoin('role_permissions as rp', 'r.id', '=', 'rp.role_id')
-            ->leftJoin('permissions as p', 'rp.permission_id', '=', 'p.id')
-            ->groupBy('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', 'r.created_at', 'r.deleted_at')
-            ->first();
-            $roles->permissions =($roles->permissions)? explode(',', $roles->permissions):[];
-        return $roles;
+        return Role::findOrFail($id);
     }
     public function create()
     {

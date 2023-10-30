@@ -50,7 +50,7 @@
                                             @foreach ($permissions as $permission)
 
 
-                                                <option value='{{ $permission->id }}' @if(in_array($permission->id, $role_info->permissions)) selected @endif> {{ $permission->name }} </option>
+                                                <option value='{{ $permission->id }}' @if($permission->selected == "yes") selected @endif> {{ $permission->name }} </option>
 
                                             @endforeach
 

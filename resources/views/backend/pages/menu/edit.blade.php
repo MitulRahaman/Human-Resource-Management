@@ -70,7 +70,7 @@
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Menu.." multiple>
                                             <option></option>
                                             @foreach ($permissions as $permission)
-                                                <option value='{{ $permission->id }}' @if(in_array($permission->id, $menu_info->permissions)) selected @endif> {{ $permission->name }} </option>
+                                                <option value='{{ $permission->id }}' @if($permission->selected == "yes") selected @endif> {{ $permission->name }} </option>
                                             @endforeach
 
                                         </select>

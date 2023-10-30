@@ -49,7 +49,7 @@ class RoleController extends Controller
     public function edit($id )
     {
         $role_info = $this->roleService->getRole($id);
-        $permissions = $this->roleService->getAllPermissions();
+        $permissions = $this->roleService->getAllPermissions($id);
         return \view('backend.pages.role.edit',compact('role_info','permissions'));
     }
     public function update(RoleEditRequest $request)

@@ -74,7 +74,7 @@ class MenuController extends Controller
     public function edit($id )
     {
         $menu_info = $this->menuService->getMenu($id);
-        $permissions = $this->menuService->getAllPermissions();
+        $permissions = $this->menuService->getAllPermissions($id);
         $menus=$this->menuService->getParentMenu();
         return \view('backend.pages.menu.edit',compact('menu_info','permissions','menus'));
     }

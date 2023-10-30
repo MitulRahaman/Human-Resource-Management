@@ -121,9 +121,16 @@ class MenuRepository
 
         return $menus;
     }
-    public function getAllPermissions()
+    public function getAllPermissions($id)
     {
-        return Permission::get();
+        $id =(int) $id;
+        return DB::table('permissions')
+            ->select('permissions.*', DB::raw('IF(menu_permissions.menu_id = ' . $id . ', "yes", "no") as selected'))
+            ->leftJoin('menu_permissions', function ($join) use ($id) {
+                $join->on('permissions.id', '=', 'menu_permissions.permission_id')
+                    ->where('menu_permissions.menu_id', '=', $id);
+            })
+            ->get();
     }
     public function getParentMenu()
     {
@@ -166,7 +173,7 @@ class MenuRepository
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->first();
         $menus->permissions =($menus->permissions)? explode(',', $menus->permissions):[];
-        return $menus;
+        return Menu::findOrFail($id);
     }
     public function update()
     {

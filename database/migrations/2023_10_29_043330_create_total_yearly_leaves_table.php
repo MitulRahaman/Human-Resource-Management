@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('leaves', function (Blueprint $table) {
+        Schema::create('total_yearly_leaves', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 255)->unique();
-            $table->tinyInteger('status')->default(\Illuminate\Support\Facades\Config::get('variable_constants.activation.inactive'));
+            $table->unsignedInteger('leave_type_id');
+            $table->foreign('leave_type_id')->references('id')->on('leave_types');
+            $table->integer('year');
+            $table->integer('total_leaves');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('leaves');
+        Schema::dropIfExists('total_yearly_leaves');
     }
 };

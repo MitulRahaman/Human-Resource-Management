@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class LeaveAddRequest extends FormRequest
+class LeaveTypeUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,7 @@ class LeaveAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'unique:leaves,name', 'string', 'max:255'],  
+            'name' => ['required', 'string', 'max:255', Rule::unique('leave_types', 'name')->ignore($this->id)],
         ];
     }
 }

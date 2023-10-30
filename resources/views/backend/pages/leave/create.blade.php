@@ -13,7 +13,7 @@
     @include('backend.layouts.error_msg')
         <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
-                <h3 class="block-title">Add Leave</h3>
+                <h3 class="block-title">Add Leave Type</h3>
             </div>
             
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->

@@ -19,6 +19,11 @@ class LeaveService
         return $this->leaveRepository->indexLeave();
     }
 
+    public function manageLeave()
+    {
+        return $this->leaveRepository->manageLeave();
+    }
+
     public function storeLeave($data)
     {
         return $this->leaveRepository->storeLeave($data);
@@ -93,6 +98,40 @@ class LeaveService
                 'success' => true,
                 'name_msg' => null,
             ];
+        }
+    }
+
+    public function getTypeWiseTotalLeavesData($year)
+    {
+        $result = $this->leaveRepository->setYear($year)->getTypeWiseTotalLeavesData();
+        if ($result->count() > 0) {
+            $data = array();
+            foreach ($result as $key=>$row) {
+                $id = $row->id;
+                $name = $row->name;
+                $total_leaves = $row->total_leaves;
+               
+                $add_url = url('leave\addTotalLeave',$id);
+                $update_url = url('leave\updateTotalLeave',$id);
+                
+                if ($total_leaves > 0) {
+                    $action_btn = "<td> <button type=\"button\" class=\"d-none d-sm-table-cell font-size-sm border-0\"   data-toggle=\"modal\"  data-target=\"#modal-block-fadein\"> 
+                    <i class=\"fas fa-edit text-success mr-1\"></i>   Update </td>";
+                    
+                } else {
+                    $action_btn = "<td> <button type=\"button\" class=\"d-none d-sm-table-cell font-size-sm border-0\"   data-toggle=\"modal\"  data-target=\"#modal-block-slideup\"> 
+                    <i class=\"fas fa-plus text-success mr-1\"></i>   Add </td>";
+                }
+                
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $name);
+                array_push($temp, $year);
+                array_push($temp, $total_leaves);
+                array_push($temp, $action_btn);
+                array_push($data, $temp);
+            }
+            return json_encode(array('data'=>$data));
         }
     }
  }

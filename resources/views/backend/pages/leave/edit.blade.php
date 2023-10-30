@@ -14,7 +14,7 @@
         <div class="block block-rounded block-content col-sm-6">
         @include('backend.layouts.error_msg')
             <div class="block-header">
-                <h3 class="block-title">Update Leave</h3>
+                <h3 class="block-title">Update Leave Type</h3>
             </div>
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <form class="js-validation" action="{{ route('leave.update', $data->id) }}" method="POST" onsubmit="return verify_inputs()">

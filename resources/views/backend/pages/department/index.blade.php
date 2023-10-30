@@ -61,7 +61,6 @@
                                         @endif
                                     </td>
                                     <td class="font-w600 font-size-sm">
-                                        
                                         <span>{{$department->branches}}</span>
                                     </td>
                                     <td class="d-none d-sm-table-cell font-size-sm">
@@ -178,28 +177,6 @@
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.flash.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.min.js') }}"></script>
-
-<!-- 
-    <script> 
-        $(document).ready(function() {
-            $('#dataTable').DataTable( {
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    'colvis'
-                ],
-                columnDefs: [ {
-                    targets: -1,
-                    visible: false
-                } ]
-            } );
-        } );
-    </script> -->
    
 
     <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>

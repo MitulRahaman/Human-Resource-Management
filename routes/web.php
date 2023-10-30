@@ -30,6 +30,7 @@ Route::post('login', [AuthController::class, 'authenticate'])->name('login');
 Route::group(['middleware'=> 'auth'], function() {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('leave_types/get_data', [LeaveController::class, 'getTypeWiseTotalLeavesData']);
 
     Route::prefix('branch')->group(function() {
         Route::get('/', [BranchController::class, 'index']);
@@ -69,6 +70,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('{id}/status', [LeaveController::class, 'status'])->name('leave.status');
         Route::post('verifyleave', [LeaveController::class, 'verifyleave'])->name('verifyleave');
         Route::patch('/updateleave', [LeaveController::class, 'updateleave'])->name('updateleave');
+        
     });
+    
 
 });

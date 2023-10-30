@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Leave;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\LeaveAddRequest;
-use App\Http\Requests\LeaveUpdateRequest;
+use App\Http\Requests\LeaveTypeAddRequest;
+use App\Http\Requests\LeaveTypeUpdateRequest;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use App\Services\LeaveService;
@@ -24,8 +24,8 @@ class LeaveController extends Controller
 
     public function index()
     {
-        $leaves = $this->leaveService->indexLeave();
-        return \view('backend.pages.leave.index', compact('leaves'));
+        //$leaves = $this->leaveService->indexLeave();
+        return \view('backend.pages.leave.index');
     }
 
     public function create()
@@ -33,15 +33,15 @@ class LeaveController extends Controller
         return \view('backend.pages.leave.create');
     }
 
-    public function store(LeaveAddRequest $request)
+    public function store(LeaveTypeAddRequest $request)
     {
         try {
-            if(!is_object($this->leaveService->storeLeave($request)))
-                return redirect('leave')->with('error', 'Failed to add leave');
+            if(!($this->leaveService->storeLeave($request)))
+                return redirect('leave')->with('error', 'Failed to add leave type');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('leave')->with('success', 'Leave added successfully');
+        return redirect('leave')->with('success', 'Leave type added successfully');
     }
 
     public function edit($id)
@@ -54,15 +54,15 @@ class LeaveController extends Controller
         return \view('backend.pages.leave.edit', compact('data'));
     }
 
-    public function update(LeaveUpdateRequest $request, $id)
+    public function update(LeaveTypeUpdateRequest $request, $id)
     {
         try {
             if(!$this->leaveService->updateLeave($request, $id))
-                return redirect('leave')->with('error', 'Failed to update leave');
+                return redirect('leave')->with('error', 'Failed to update leave type');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('/leave')->with('success', 'Leave updated successfully');
+        return redirect('/leave')->with('success', 'Leave type updated successfully');
     }
 
     public function status($id)
@@ -70,7 +70,7 @@ class LeaveController extends Controller
         try {
             $this->leaveService->updateStatus($id);
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', 'You need to restore leave first');
+            return redirect()->back()->with('error', 'You need to restore leave type first');
         }
         return redirect()->back()->with('success', 'Status has been changed');
     }
@@ -82,7 +82,7 @@ class LeaveController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect()->back()->with('success', 'Leave deleted successfully');
+        return redirect()->back()->with('success', 'Leave type deleted successfully');
     }
 
     public function restore($id)
@@ -92,7 +92,7 @@ class LeaveController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect()->back()->with('success', 'Leave restored successfully');
+        return redirect()->back()->with('success', 'Leave type restored successfully');
     }
 
     public function verifyleave(Request $request)
@@ -115,7 +115,12 @@ class LeaveController extends Controller
 
     public function manage()
     {
-        $leaves = $this->leaveService->indexLeave();
+        $leaves = $this->leaveService->manageLeave();
         return \view('backend.pages.leave.manage', compact('leaves'));
+    }
+
+    public function getTypeWiseTotalLeavesData(Request $request)
+    {
+        return $this->leaveService->getTypeWiseTotalLeavesData($request->year);
     }
 }

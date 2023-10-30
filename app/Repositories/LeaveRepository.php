@@ -3,16 +3,16 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\Leave;
+use App\Models\LeaveType;
+use App\Models\TotalYearlyLeave;
 
 class LeaveRepository
 {
-    private $name;
-    public function getAllLeaveData()
+    private $name, $year;
+    public function setYear($year)
     {
-        return DB::table('leaves as l')
-            ->select('l.id', 'l.name', 'l.status', DB::raw('date_format(l.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(l.deleted_at, "%d/%m/%Y") as deleted_at'))
-            ->get();
+        $this->year = $year;
+        return $this;
     }
     
     public function setName($name)
@@ -27,31 +27,44 @@ class LeaveRepository
 
     public function indexLeave()
     {
-        return DB::table('leaves')->get();
+        return DB::table('total_yearly_leaves as tyl')
+        ->rightjoin('leave_types as lt', 'lt.id', '=', 'tyl.leave_type_id')
+        ->select('tyl.*', 'lt.name')
+        ->get();
+    }
+
+    public function manageLeave()
+    {
+        return DB::table('leave_types')->get();
     }
 
     public function storeLeave($data)
     {
-        return Leave::create([
+        $data = LeaveType::create([
             'name' => $data->name,
             'status' => 1,
         ]);
+
+        if(TotalYearlyLeave::create(['leave_type_id' => $data->id]))
+        {
+            return true;
+        }
     }
 
     public function editLeave($id)
     {
-        return Leave::find($id);
+        return LeaveType::find($id);
     }
 
     public function updateLeave($data, $id)
     {
-        $leave = Leave::find($id);
+        $leave = LeaveType::find($id);
         return $leave->update($data->validated());
     }
 
     public function updateStatus($id)
     {
-        $data = Leave::find($id);
+        $data = LeaveType::find($id);
                 if($data->status)
                     $data->update(array('status' => 0));
                 else
@@ -60,19 +73,19 @@ class LeaveRepository
 
     public function destroyLeave($id)
     {
-        $data = Leave::find($id);
+        $data = LeaveType::find($id);
         $data->update(array('status' => 0));
         $data->delete();
     }
 
     public function restoreLeave($id)
     {
-        DB::table('leaves')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+        DB::table('leave_types')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
     }
 
     public function isNameExists()
     {
-        if(DB::table('leaves')->where('name', '=', $this->name)->first())
+        if(DB::table('leave_types')->where('name', '=', $this->name)->first())
             return true;
         else
             return false;
@@ -80,9 +93,23 @@ class LeaveRepository
 
     public function isNameExistsForUpdate($current_name)
     {
-        if(DB::table('leaves')->where('name', '!=', $current_name)->where('name', $this->name)->first())
+        if(DB::table('leave_types')->where('name', '!=', $current_name)->where('name', $this->name)->first())
             return false;
         else
             return true;
+    }
+
+    public function getTypeWiseTotalLeavesData()
+    {
+        return DB::table('leave_types as lt')
+        ->leftJoin('total_yearly_leaves as tyl', function ($join) {
+            $join->on('lt.id', '=', 'tyl.leave_type_id');
+            $join->where('tyl.year', '=', $this->year);
+            $join->whereNull('tyl.deleted_at');
+        })
+        ->whereNull('lt.deleted_at')
+        ->groupBy('lt.id')
+        ->select('lt.id', 'lt.name', DB::raw('ifnull(tyl.total_leaves, 0) as total_leaves'))
+        ->get();
     }
 }

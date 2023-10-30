@@ -16,7 +16,6 @@
             <div class="block-header">
                 <h3 class="block-title">Edit Permission</h3>
             </div>
-
             <form class="js-validation" id='form' action='{{ url('permission/' . $permission_info->id . '/update')}}' method="POST" onsubmit="return validate_name(event)">
                 @csrf
                 <div class="block block-rounded">
@@ -64,18 +63,14 @@
 
     <script>
         function validate_name(e) {
-
-            var name = $('#name').val();
             $.ajax({
                 type: 'POST',
                 async:false,
                 url: '{{ url('permission/'. $permission_info->id .'/validate_name') }}',
                 data: $('#form').serialize(),
                 success: function (response) {
-                    // console.log(response.success);
                     var name_msg = response.name_msg;
                     var success = response.success;
-                    // console.log(success);
                     if (!success) {
                         if (name_msg) {
                             document.getElementById('error_name').innerHTML = name_msg;
@@ -85,21 +80,14 @@
                         }
                         e.preventDefault();
                         return false;
-
                     }
-
                     return true;
-
-
                 },
                 error: function() {
                     e.preventDefault();
                     return false;
                 }
             });
-
         }
     </script>
-
-
 @endsection

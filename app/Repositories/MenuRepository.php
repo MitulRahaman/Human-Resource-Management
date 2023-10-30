@@ -115,7 +115,6 @@ class MenuRepository
             ->leftJoin('permissions as p', 'mp.permission_id', '=', 'p.id')
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->get();
-//        dd($menus);
         foreach ($menus as $menu) {
             $menu->permissions = explode(',', $menu->permissions);
         }
@@ -128,7 +127,6 @@ class MenuRepository
     }
     public function getParentMenu()
     {
-    //    dd(Menu::where('parent_menu',null)->where('deleted_at',null)->get());
         return Menu::where('parent_menu',null)->get();
     }
 
@@ -159,15 +157,19 @@ class MenuRepository
     }
     public function getMenu($id)
     {
-        return Menu::findOrFail($id);
-    }
-    public function getPermission($id)
-    {
-        return DB::table('menu_permissions')->where('menu_id',$id)->pluck('permission_id')->toArray();
+        $menus=DB::table('menus as m')
+            ->where('m.id','=', $id)
+            ->select('m.id', 'm.title', 'm.url', 'm.icon', 'm.description', 'm.menu_order', 'm.parent_menu', 'm.status', DB::raw('date_format(m.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(m.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->selectRaw('GROUP_CONCAT(p.id) as permissions')
+            ->leftJoin('menu_permissions as mp', 'm.id', '=', 'mp.menu_id')
+            ->leftJoin('permissions as p', 'mp.permission_id', '=', 'p.id')
+            ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
+            ->first();
+        $menus->permissions =($menus->permissions)? explode(',', $menus->permissions):[];
+        return $menus;
     }
     public function update()
     {
-//        $menu = Menu::findorFail($this->id);
         $menus = DB::table('menus')
             ->where('id', '=', $this->id)
             ->update([

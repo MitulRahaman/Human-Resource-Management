@@ -17,12 +17,10 @@
             float: left;
             width: 50%;
         }
-
         .center-col {
             float: left;
             width: 50%;
         }
-
         .right-col {
             float: left;
             width: 50%;
@@ -182,19 +180,14 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
-            // console.log('fdhg');
             $('#menu_table').DataTable().destroy();
-
             var dtable = $('#menu_table').DataTable({
                 responsive: true,
                 ajax: '{{ url('menu/get_menu_data') }}',
                 paging: true,
                 dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
-
                 retrieve: true,
-
                 "order": [[ 0, "asc" ]],
-
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
@@ -219,14 +212,8 @@
                     },
                 ],
                 lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
-
-
             });
-
             dtable.buttons().container().addClass('center-align-buttons');
-
-
-
         });
 
         function show_status_modal(id, msg) {
@@ -236,7 +223,6 @@
             $('#change_status').attr('action', url);
             $('#status-modal').modal('show');
         }
-
         function show_delete_modal(id, title) {
             var x = document.getElementById('menu_title');
             x.innerHTML = title;
@@ -244,7 +230,6 @@
             $('#delete').attr('action', url);
             $('#delete-modal').modal('show');
         }
-
         function show_restore_modal(id, title) {
             var x = document.getElementById('restore_menu_title');
             x.innerHTML = title;

@@ -49,10 +49,6 @@ class MenuService
     {
         return $this->menuRepository->getMenu($id);
     }
-    public function getPermission($id)
-    {
-        return $this->menuRepository->getPermission($id);
-    }
     public function update($data)
     {
         return $this->menuRepository->setId($data['id'])

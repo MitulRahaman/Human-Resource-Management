@@ -52,7 +52,7 @@
                                     <label for="val-username">Parent_menu</label>
                                     <div class="form-group">
                                         <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
-                                            <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                            <option></option>
                                             @if ($menu_info->parent_menu)
                                                 <option value='{{ $menu_info->parent_menu }}' selected> {{ $menu_info->parent_menu }} </option>
                                             @endif
@@ -62,17 +62,15 @@
                                                 @endif
                                             @endforeach
                                         </select>
-                                    </div>                                </div>
-
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>
                                     <div class="form-group">
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Menu.." multiple>
                                             <option></option>
                                             @foreach ($permissions as $permission)
-
-                                                <option value='{{ $permission->id }}' @if(in_array($permission->id, $permission_id)) selected @endif> {{ $permission->name }} </option>
-
+                                                <option value='{{ $permission->id }}' @if(in_array($permission->id, $menu_info->permissions)) selected @endif> {{ $permission->name }} </option>
                                             @endforeach
 
                                         </select>

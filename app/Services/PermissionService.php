@@ -30,12 +30,10 @@ class PermissionService
     {
         return $this->permissionRepository->delete($data);
     }
-
     public function getPermission($id)
     {
         return $this->permissionRepository->getPermission($id);
     }
-
     public function edit($data)
     {
         return $this->permissionRepository->setId($data['id'])
@@ -120,15 +118,10 @@ class PermissionService
     {
         $this->permissionRepository->setSlug($data['slug']);
         $this->permissionRepository->setName($data['name']);
-
         $is_slug_exists = $this->permissionRepository->isSlugExists();
-//        dd($is_slug_exists);
         $is_name_exists = $this->permissionRepository->isNameExists();
-
-
         $slug_msg = $is_slug_exists ? 'Slug already taken' : null;
         $name_msg = $is_name_exists ? 'Name already taken' : null;
-
         if(!$data['slug']) $slug_msg = 'Slug is required';
         if(!$data['name']) $name_msg = 'Name is required';
         if ($is_slug_exists || $is_name_exists) {

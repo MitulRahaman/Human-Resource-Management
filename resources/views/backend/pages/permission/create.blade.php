@@ -32,7 +32,6 @@
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"  placeholder="Enter a name.." required>
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
-
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>
@@ -67,15 +66,9 @@
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script>
         function validate_inputs(e) {
-           //
-
             var slug = $('#slug').val();
             var name = $('#name').val();
-            // $('#submit').attr('disabled', true);
-            // let validated = false;
             if (slug && name) {
-
-
                 $.ajax({
                     type: 'POST',
                     async:false,
@@ -85,12 +78,9 @@
                         var slug_msg = response.slug_msg;
                         var name_msg = response.name_msg;
                         var success = response.success;
-
                         if (!success) {
-
                             if (slug_msg) {
                                 document.getElementById('error_slug').innerHTML = slug_msg;
-
                             }
                             else {
                                 document.getElementById('error_slug').innerHTML = '';
@@ -106,26 +96,14 @@
 
                         } else {
                             return true;
-                            // validated = true;
                         }
-
                     },
                     error: function() {
                         e.preventDefault();
                         return false;
                     }
                 });
-                // if (validated) {
-                //
-                //     return true;
-                // } else {
-                //
-                //     return false;
-                // }
             }
         }
     </script>
-
-
-
 @endsection

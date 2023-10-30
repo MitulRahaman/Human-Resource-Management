@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Menu;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use App\Services\MenuService;
@@ -76,14 +75,11 @@ class MenuController extends Controller
     {
         $menu_info = $this->menuService->getMenu($id);
         $permissions = $this->menuService->getAllPermissions();
-        $permission_id = $this->menuService->getPermission($id);
         $menus=$this->menuService->getParentMenu();
-//        dd($menu_info->parent_menu);
-        return \view('backend.pages.menu.edit',compact('menu_info','permissions','permission_id','menus'));
+        return \view('backend.pages.menu.edit',compact('menu_info','permissions','menus'));
     }
     public function update(MenuEditRequest $request)
     {
-//        dd($request->all());
         try{
             $menu = $this->menuService->update($request->validated());
             return redirect('menu/')->with('success', $menu->getData()->message);

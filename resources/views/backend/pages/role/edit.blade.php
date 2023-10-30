@@ -28,6 +28,7 @@
 
             <form class="js-validation" id='form' action='{{ url('role/' . $role_info->id . '/update')}}' method="POST" onsubmit="return validate_name(event)">
                 @csrf
+
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push ml-10">
@@ -42,11 +43,14 @@
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>
                                     <div class="form-group">
+
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
                                             <option></option>
+
                                             @foreach ($permissions as $permission)
 
-                                                <option value='{{ $permission->id }}' @if(in_array($permission->id, $permission_id)) selected @endif> {{ $permission->name }} </option>
+
+                                                <option value='{{ $permission->id }}' @if(in_array($permission->id, $role_info->permissions)) selected @endif> {{ $permission->name }} </option>
 
                                             @endforeach
 
@@ -108,12 +112,8 @@
                         }
                         e.preventDefault();
                         return false;
-
                     }
-
                     return true;
-
-
                 },
                 error: function() {
                     e.preventDefault();

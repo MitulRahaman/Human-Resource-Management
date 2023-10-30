@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Permission;
 
-use App\Exports\ExportPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionAddRequest;
 use App\Http\Requests\PermissionEditRequest;

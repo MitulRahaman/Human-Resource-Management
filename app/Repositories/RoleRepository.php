@@ -68,29 +68,34 @@ class RoleRepository
     }
     public function getAllRoleData()
     {
-        $var=DB::table('roles as r')
+        $roles=DB::table('roles as r')
         ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
         ->selectRaw('GROUP_CONCAT(p.name) as permissions')
         ->leftJoin('role_permissions as rp', 'r.id', '=', 'rp.role_id')
         ->leftJoin('permissions as p', 'rp.permission_id', '=', 'p.id')
         ->groupBy('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', 'r.created_at', 'r.deleted_at')
         ->get();
-        foreach ($var as $role) {
+        foreach ($roles as $role) {
             $role->permissions = explode(',', $role->permissions);
         }
-        return $var;
+        return $roles;
     }
     public function getAllPermissions()
     {
         return Permission::get();
     }
-    public function getPermission($id)
-    {
-        return DB::table('role_permissions')->where('role_id',$id)->pluck('permission_id')->toArray();
-    }
     public function getRole($id)
     {
-        return Role::findOrFail($id);
+        $roles =DB::table('roles as r')
+            ->where('r.id','=', $id)
+            ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->selectRaw('GROUP_CONCAT(p.id) as permissions')
+            ->leftJoin('role_permissions as rp', 'r.id', '=', 'rp.role_id')
+            ->leftJoin('permissions as p', 'rp.permission_id', '=', 'p.id')
+            ->groupBy('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', 'r.created_at', 'r.deleted_at')
+            ->first();
+            $roles->permissions =($roles->permissions)? explode(',', $roles->permissions):[];
+        return $roles;
     }
     public function create()
     {

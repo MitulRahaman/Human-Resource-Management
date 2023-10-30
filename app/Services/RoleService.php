@@ -28,10 +28,6 @@ class RoleService
     {
         return $this->roleRepository->getAllPermissions();
     }
-    public function getPermission($id)
-    {
-        return $this->roleRepository->getPermission($id);
-    }
     public function getRole($id)
     {
         return $this->roleRepository->getRole($id);

@@ -178,11 +178,8 @@
                 ajax: '{{ url('role/get_role_data') }}',
                 paging: true,
                 dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
-
                 retrieve: true,
-
                 "order": [[ 0, "asc" ]],
-
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
@@ -195,7 +192,6 @@
                         exportOptions:  {
                             columns: [0, 1,2,3,4,5,6]
                         },
-                        //             }
                     },
                     {
                         extend: 'print',
@@ -210,11 +206,7 @@
 
 
             });
-
             dtable.buttons().container().addClass('center-align-buttons');
-
-
-
         });
 
         function show_status_modal(id, msg) {

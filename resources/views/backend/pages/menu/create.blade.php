@@ -52,7 +52,7 @@
                                     <label for="val-username">Parent menu </label>
                                     <div class="form-group">
                                         <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
-                                            <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                            <option></option>
                                             @foreach ($menus as $menu)
                                                     <option value='{{ $menu->id }}' style="color:black"> {{ $menu->id }} </option>
                                             @endforeach

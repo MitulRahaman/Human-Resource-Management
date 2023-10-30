@@ -41,7 +41,6 @@
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"  placeholder="Enter a name.." required>
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
-
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>
@@ -49,9 +48,7 @@
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
                                             <option></option>
                                             @foreach ($permissions as $permission)
-
                                                 <option value='{{ $permission->id }}'> {{ $permission->name }} </option>
-
                                             @endforeach
 
                                         </select>
@@ -92,15 +89,10 @@
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script>
         function validate_inputs(e) {
-            //
 
             var sl_no = $('#sl_no').val();
             var name = $('#name').val();
-            // $('#submit').attr('disabled', true);
-            // let validated = false;
             if (sl_no && name) {
-
-
                 $.ajax({
                     type: 'POST',
                     async:false,
@@ -110,10 +102,7 @@
 
                         var name_msg = response.name_msg;
                         var success = response.success;
-
                         if (!success) {
-
-
                             if (name_msg) {
                                 document.getElementById('error_name').innerHTML = name_msg;
                             }
@@ -125,7 +114,6 @@
 
                         } else {
                             return true;
-                            // validated = true;
                         }
 
                     },
@@ -134,12 +122,6 @@
                         return false;
                     }
                 });
-                // if (validated) {
-                //     return true;
-                // } else {
-                //
-                //     return false;
-                // }
             }
         }
     </script>

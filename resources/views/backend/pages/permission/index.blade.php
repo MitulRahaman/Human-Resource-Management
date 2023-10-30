@@ -52,7 +52,6 @@
                                 <th class="text-center ">#</th>
                                 <th >Name</th>
                                 <th >Slug</th>
-
                                 <th class="d-none d-sm-table-cell " style="width: 20%;">Description</th>
                                 <th class="d-none d-sm-table-cell ">Status</th>
                                 <th >Deleted</th>
@@ -61,6 +60,7 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             </tbody>
                 </table>
                 </div>
@@ -69,7 +69,6 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <form id="change_status" action="" method="post">
-
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
@@ -165,7 +164,6 @@
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_tables_datatables.min.js') }}"></script>
-
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $('#permission_table').DataTable().destroy();
@@ -175,11 +173,8 @@
                 ajax: '{{ url('permission/get_permission_data') }}',
                 paging: true,
                 dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
-
                 retrieve: true,
-
                 "order": [[ 0, "asc" ]],
-
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
@@ -203,16 +198,9 @@
                 },
             ],
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
-
-
             });
-
             dtable.buttons().container().addClass('center-align-buttons');
-
-
-
         });
-
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";
@@ -220,7 +208,6 @@
             $('#change_status').attr('action', url);
             $('#status-modal').modal('show');
         }
-
         function show_delete_modal(id, name) {
             var x = document.getElementById('permission_name');
             x.innerHTML = name;
@@ -228,7 +215,6 @@
             $('#delete').attr('action', url);
             $('#delete-modal').modal('show');
         }
-
         function show_restore_modal(id, name) {
             var x = document.getElementById('restore_permission_name');
             x.innerHTML = name;

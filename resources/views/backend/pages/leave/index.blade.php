@@ -30,7 +30,7 @@
                             <input type="text" class="yearpicker form-control bg-white" id="year" value="">
                         </div>
                         <div class="form-group col-xl-5">
-                        <button type="button" class="btn btn-dark ml-4" id="find" onclick="checkYear()">
+                        <button type="button" class="btn btn-dark ml-4" id="find">
                              Find
                         </button>
                         </div>
@@ -124,42 +124,13 @@
     <script src="{{ asset('backend/js/yearpicker.js') }}"></script>
 
        
-    <script>
+    <script> 
+        //create table
         jQuery(function(){
-            var year = $('#year').val();
-            
-            $('#updateYear').attr('placeholder', year);
-            $('#updateYear').attr('placeholder', year);
-            $('#updateYear').attr('value', year);
-
-            $('#dataTable').DataTable( {
-                dom: 'Bfrtip',
-                ajax: {
-                    type: 'POST',
-                    url: '{{ url("leave_types/get_data") }}',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        year: year
-                    }
-                },
-                buttons: [
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    'colvis'
-                ]
-            });
-
-            document.getElementById('find').addEventListener("click", function() { 
-                $('#dataTable').DataTable().destroy();
-
+            function createTable(){
                 var year = $('#year').val();
                 $('#updateYear').attr('placeholder', year);
                 $('#updateYear').attr('value', year);
-
                 $('#dataTable').DataTable( {
                     dom: 'Bfrtip',
                     ajax: {
@@ -180,12 +151,17 @@
                         'colvis'
                     ]
                 });
+            }
+            createTable();
+            document.getElementById('find').addEventListener("click", function() { 
+                $('#dataTable').DataTable().destroy();
+                createTable();
+                
             }); 
         });
-    
-    </script>
+        //end create table
 
-    <script> 
+        // select year 
         $('.yearpicker').yearpicker({
             year: null,
             startYear: null,
@@ -209,22 +185,13 @@
                     </div>
             `,
         });
+        // end select year
 
-
-        function openmodal(id) {
+        function openmodal(id){
             var addUrl = "{{ url('leave/addTotalLeave/:id') }}".replace(':id', id);
             $('#modalForm').attr('action', addUrl);
         }
 
-        function checkYear(){
-            var year = $('#year').val();
-            const d = new Date();
-            let currentYear = d.getFullYear();
-            if(year >= currentYear) {
-                console.log("ok");
-
-                }
-            }
     </script>
 
     <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>

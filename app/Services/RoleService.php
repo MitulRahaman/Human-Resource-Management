@@ -71,6 +71,7 @@ class RoleService
     public function update($data)
     {
         return $this->roleRepository->setId($data['id'])
+            ->setSl_no($data['sl_no'])
             ->setName($data['name'])
             ->setDescription($data['description'])
             ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)

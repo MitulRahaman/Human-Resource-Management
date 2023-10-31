@@ -24,6 +24,10 @@ class MenuService
     {
         return $this->menuRepository->getParentMenu();
     }
+    public function getMenuTitle($id)
+    {
+        return $this->menuRepository->getMenuTitle($id);
+    }
     public function create($data)
     {
         return $this->menuRepository->setTitle($data['title'])

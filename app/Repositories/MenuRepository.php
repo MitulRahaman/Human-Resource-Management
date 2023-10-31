@@ -125,6 +125,8 @@ class MenuRepository
     {
         $id =(int) $id;
         return DB::table('permissions')
+            ->where('permissions.status',1)
+            ->where('permissions.deleted_at',null)
             ->select('permissions.*', DB::raw('IF(menu_permissions.menu_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('menu_permissions', function ($join) use ($id) {
                 $join->on('permissions.id', '=', 'menu_permissions.permission_id')
@@ -134,13 +136,16 @@ class MenuRepository
     }
     public function getPermissions()
     {
-        return Permission::get();
+        return Permission::where('status',1)->get();
     }
     public function getParentMenu()
     {
-        return Menu::where('parent_menu',null)->get();
+        return Menu::where('parent_menu',null)->where('status',1)->get();
     }
-
+    public function getMenuTitle($id)
+    {
+        return Menu::where('id', $id)->pluck('title');
+    }
     public function change(int $data)
     {
         $menu = Menu::findOrFail($data);

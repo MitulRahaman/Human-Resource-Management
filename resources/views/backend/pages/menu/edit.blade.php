@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Menu_order</label>
-                                    <input type="text" class="form-control" id="menu_order" name="menu_order" value="{{ $menu_info->menu_order }}" placeholder="Enter a menu_order.." >
+                                    <input type="number" step="1" class="form-control" id="menu_order" name="menu_order" value="{{ $menu_info->menu_order }}" placeholder="Enter a menu_order.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Parent_menu</label>
@@ -54,11 +54,11 @@
                                         <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
                                             <option></option>
                                             @if ($menu_info->parent_menu)
-                                                <option value='{{ $menu_info->parent_menu }}' selected> {{ $menu_info->parent_menu }} </option>
+                                                <option value='{{ $menu_info->parent_menu }}' selected> {{ $parent_menu_title[0] }} </option>
                                             @endif
                                             @foreach ($menus as $menu)
                                                 @if ($menu_info->parent_menu != $menu->id)
-                                                    <option value='{{ $menu->id }}' style="color:black" > {{ $menu->id }} </option>
+                                                    <option value='{{ $menu->id }}' style="color:black" > {{ $menu->title }} </option>
                                                 @endif
                                             @endforeach
                                         </select>

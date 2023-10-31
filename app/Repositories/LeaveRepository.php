@@ -14,13 +14,20 @@ class LeaveRepository
         $this->year = $year;
         return $this;
     }
-    
-    public function setName($name)
+
+    public function setUpdateYear($updateYear)
     {
-        $this->name = $name;
+        $this->updateYear = $updateYear;
+        return $this;
     }
 
-    public function updateName($name)
+    public function setTotalLeave($totalLeave)
+    {
+        $this->totalLeave = $totalLeave;
+        return $this;
+    }
+    
+    public function setName($name)
     {
         $this->name = $name;
     }
@@ -111,5 +118,28 @@ class LeaveRepository
         ->groupBy('lt.id')
         ->select('lt.id', 'lt.name', DB::raw('ifnull(tyl.total_leaves, 0) as total_leaves'))
         ->get();
+    }
+
+    public function isTypeAndYearExist($data, $id)
+    {
+        return DB::table('total_yearly_leaves')->where('year', $data->updateYear)->where('leave_type_id', $id)->exists();  
+    }
+
+    public function addTotalLeave($is_type_and_year_exist, $data, $id)
+    {
+        if($is_type_and_year_exist) {
+            if($this->totalLeave != null) {
+                return DB::table('total_yearly_leaves')->where('year',$this->updateYear)->where('leave_type_id', $id)->update(['total_leaves'=>$this->totalLeave]);
+            }
+            
+        } else {
+            if($this->totalLeave != null) {
+                return TotalYearlyLeave::create([
+                    'leave_type_id' => $id,
+                    'year' => $this->updateYear,
+                    'total_leaves'=> $this->totalLeave
+                ]);
+            } 
+        }
     }
 }

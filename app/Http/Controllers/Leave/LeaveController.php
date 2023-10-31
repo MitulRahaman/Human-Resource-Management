@@ -123,4 +123,15 @@ class LeaveController extends Controller
     {
         return $this->leaveService->getTypeWiseTotalLeavesData($request->year);
     }
+
+    public function addTotalLeave(Request $request, $id)
+    {
+        try {
+            if(!($this->leaveService->addTotalLeave($request, $id)))
+                return redirect()->back()->with('error', 'Failed to add total leave');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect()->back()->with('success', 'Total leave added successfully');
+    }
 }

@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis2.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">   
+    <link rel="stylesheet" href="{{ asset('backend/js/yearpicker.css') }}"> 
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
@@ -24,13 +24,13 @@
                     <h3 class="block-title mt-4">{{ $sub_menu }}</h3>
                 </div>
                 <div class="block-content block-content-full">
-                <label for="example-flatpickr-custom">Choose a year</label>
+                <label>Choose a year</label>
                     <div class="form-row">
                         <div class="form-group col-xl-7">    
-                            <input type="text" class="js-flatpickr form-control bg-white" id="year" name="example-flatpickr-custom" placeholder="YYYY" data-date-format="Y" value="{{ date('Y') }}">
+                            <input type="text" class="yearpicker form-control bg-white" id="year" value="">
                         </div>
                         <div class="form-group col-xl-5">
-                        <button type="button" class="btn btn-dark ml-4" id="find">
+                        <button type="button" class="btn btn-dark ml-4" id="find" onclick="checkYear()">
                              Find
                         </button>
                         </div>
@@ -50,13 +50,13 @@
                         </tbody>
                     </table>
                     <!-- Add total leave Modal -->
-                    <div class="modal fade" id="modal-block-fadein" tabindex="-1" role="dialog" aria-labelledby="modal-block-slideup" aria-hidden="true">
+                    <div class="modal fade" id="modal-block-slideup" tabindex="-1" role="dialog" aria-labelledby="modal-block-slideup" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-slideup" role="document">
                             <div class="modal-content">
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
                                         <div>
-                                            <h3 class="block-title text-white">Add total leave</h3> 
+                                            <h3 class="block-title text-white">Confirmation</h3> 
                                         </div>
                                         <div class="block-options">
                                             <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
@@ -65,64 +65,38 @@
                                         </div>
                                     </div>
                                     
-                                    <form class="js-validation" action="{{ url('leave/addTotalLeave') }}" method="POST">
+                                    <form class="js-validation" action="" method="POST" id="modalForm">
                                         @csrf
                                         <div class="block block-rounded">
                                             <div class="block-content block-content-full">
                                                 <div class="row items-push">
-                                                    <div class="col-lg-8 col-xl-5">
+                                                    <div class="col-lg-7 col-xl-7">
                                                         <div class="form-group">
                                                             <label for="val-title">Total Leave <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" value="{{ old('totalLeave') }}" placeholder="Enter total leave.."> 
+                                                            <input type="number" class="form-control" id="totalLeave" name="totalLeave" value="" placeholder="Enter total leave.."> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-5 col-xl-5">
+                                                        <div class="form-group">
+                                                            <label for="val-title">Year</label>
+                                                            <input type="number" class="form-control" id="updateYear" name="updateYear" value="" placeholder="" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row items-push">
                                                     <div class="col-lg-7 offset-lg-4">
-                                                        <button type="submit" class="btn btn-alt-primary" id="submit">Add</button>
+                                                        <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </form>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- END Add total leave Modal -->
-                    <!-- Update total leave Modal -->
-                    <div class="modal fade" id="modal-block-fadein" tabindex="-1" role="dialog" aria-labelledby="modal-block-fadein" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-fadein" role="document">
-                            <div class="modal-content">
-                                <div class="block block-rounded block-themed block-transparent mb-0">
-                                    <div class="block-header bg-primary-dark">
-                                        <div>
-                                            <h3 class="block-title text-white">Update total Leave</h3> 
-                                        </div>
-                                        <div class="block-options">
-                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
-                                                <i class="fa fa-fw fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="block-content font-size-sm">
-                                        <p>Are you sure want to delete? </p>
-                                    </div>
-                                    <div class="d-flex justify-content-between p-4 border-top">
-                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                        <form  method="post"> 
-                                            @csrf
-                                            @method('delete')
-                                                <button type="submit" class="btn btn-primary">Ok</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END Update total leave Modal -->
+                   
                 </div>
             </div>
         </div>
@@ -146,13 +120,18 @@
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.flash.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.min.js') }}"></script>
 
-    <script src="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.js') }}"></script>
+    <!-- year picker -->
+    <script src="{{ asset('backend/js/yearpicker.js') }}"></script>
 
        
     <script>
         jQuery(function(){
-            One.helpers('flatpickr');
-            $("#datestart").flatpickr();
+            var year = $('#year').val();
+            
+            $('#updateYear').attr('placeholder', year);
+            $('#updateYear').attr('placeholder', year);
+            $('#updateYear').attr('value', year);
+
             $('#dataTable').DataTable( {
                 dom: 'Bfrtip',
                 ajax: {
@@ -160,7 +139,7 @@
                     url: '{{ url("leave_types/get_data") }}',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        year: $('#year').val()
+                        year: year
                     }
                 },
                 buttons: [
@@ -176,8 +155,11 @@
 
             document.getElementById('find').addEventListener("click", function() { 
                 $('#dataTable').DataTable().destroy();
-                One.helpers('flatpickr');
-                $("#datestart").flatpickr();
+
+                var year = $('#year').val();
+                $('#updateYear').attr('placeholder', year);
+                $('#updateYear').attr('value', year);
+
                 $('#dataTable').DataTable( {
                     dom: 'Bfrtip',
                     ajax: {
@@ -185,7 +167,7 @@
                         url: '{{ url("leave_types/get_data") }}',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            year: $('#year').val()
+                            year: year
                         }
                     },
                     buttons: [
@@ -198,12 +180,53 @@
                         'colvis'
                     ]
                 });
-            });  
+            }); 
         });
     
     </script>
 
-    <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>
+    <script> 
+        $('.yearpicker').yearpicker({
+            year: null,
+            startYear: null,
+            endYear: null,
+            itemTag: 'li',
 
+            selectedClass: 'selected',
+            disabledClass: 'disabled',
+            hideClass: 'hide',
+
+            template: `<div class="yearpicker-container">
+                        <div class="yearpicker-header">
+                            <div class="yearpicker-prev" data-view="yearpicker-prev">&lsaquo;</div>
+                            <div class="yearpicker-current" data-view="yearpicker-current">SelectedYear</div>
+                            <div class="yearpicker-next" data-view="yearpicker-next">&rsaquo;</div>
+                        </div>
+                        <div class="yearpicker-body">
+                            <ul class="yearpicker-year" data-view="years">
+                            </ul>
+                        </div>
+                    </div>
+            `,
+        });
+
+
+        function openmodal(id) {
+            var addUrl = "{{ url('leave/addTotalLeave/:id') }}".replace(':id', id);
+            $('#modalForm').attr('action', addUrl);
+        }
+
+        function checkYear(){
+            var year = $('#year').val();
+            const d = new Date();
+            let currentYear = d.getFullYear();
+            if(year >= currentYear) {
+                console.log("ok");
+
+                }
+            }
+    </script>
+
+    <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>
 
 @endsection

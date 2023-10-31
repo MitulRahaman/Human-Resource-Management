@@ -70,7 +70,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('{id}/status', [LeaveController::class, 'status'])->name('leave.status');
         Route::post('verifyleave', [LeaveController::class, 'verifyleave'])->name('verifyleave');
         Route::patch('/updateleave', [LeaveController::class, 'updateleave'])->name('updateleave');
-        
+        Route::post('/addTotalLeave/{id}', [LeaveController::class, 'addTotalLeave']);
     });
     
 

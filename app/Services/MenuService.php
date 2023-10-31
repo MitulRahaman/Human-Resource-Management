@@ -83,7 +83,7 @@ class MenuService
                 $icon = $row->icon;
                 $description = $row->description;
                 $menu_order = $row->menu_order;
-                $parent_menu = $row->parent_menu;
+                $parent_menu = $this->menuRepository->getMenuTitle($row->parent_menu);
                 $created_at = $row->created_at;
                 $permissions = '';
                 foreach ($row->permissions as $p) {

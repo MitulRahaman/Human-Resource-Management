@@ -63,7 +63,7 @@ class LeaveService
                 'success' => false,
                 'name_null_msg' => 'Please select a name',
             ];
-        } else if($is_name_exists) {
+        } else if($is_name_exists != null) {
             return [
                 'success' => false,
                 'name_msg' => 'Name already taken',
@@ -79,15 +79,14 @@ class LeaveService
 
     public function UpdateInputs($data)
     {
-        $this->leaveRepository->updateName($data['name']);
+        $this->leaveRepository->setName($data['name']);
         $is_name_exists_for_update = $this->leaveRepository->isNameExistsForUpdate($data['current_name']);
-        
         if ($data->name == null) {
             return [
                 'success' => false,
                 'name_null_msg' => 'Please select a name',
             ];
-        } else if(!$is_name_exists_for_update) {
+        } else if($is_name_exists_for_update != null) {
                 return [
                     'success' => false,
                     'name_msg' => 'Name already taken',

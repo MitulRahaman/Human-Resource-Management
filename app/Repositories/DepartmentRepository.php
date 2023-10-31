@@ -22,11 +22,6 @@ class DepartmentRepository
         $this->name = $name;
     }
 
-    public function updateName($name)
-    {
-        $this->name = $name;
-    }
-
     public function indexDepartment()
     {
         return DB::table('departments as d')
@@ -110,17 +105,11 @@ class DepartmentRepository
 
     public function isNameExists()
     {
-        if(DB::table('departments')->where('name', '=', $this->name)->first())
-            return true;
-        else
-            return false;
+        return DB::table('departments')->where('name', '=', $this->name)->first();
     }
 
     public function isNameExistsForUpdate($current_name)
     {
-        if(DB::table('departments')->where('name', '!=', $current_name)->where('name', $this->name)->first())
-            return false;
-        else
-            return true;
+        return DB::table('departments')->where('name', '!=', $current_name)->where('name', $this->name)->first();
     }
 }

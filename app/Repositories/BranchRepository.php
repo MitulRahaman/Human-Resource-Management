@@ -20,11 +20,6 @@ class BranchRepository
         $this->name = $name;
     }
 
-    public function updateName($name)
-    {
-        $this->name = $name;
-    }
-
     public function indexBranch()
     {
         return DB::table('branches')->get();
@@ -73,17 +68,11 @@ class BranchRepository
 
     public function isNameExists()
     {
-        if(DB::table('branches')->where('name', '=', $this->name)->first())
-            return true;
-        else
-            return false;
+        return DB::table('branches')->where('name', '=', $this->name)->first();
     }
 
     public function isNameExistsForUpdate($current_name)
     {
-        if(DB::table('branches')->where('name', '!=', $current_name)->where('name', $this->name)->first())
-            return false;
-        else
-            return true;
+        return DB::table('branches')->where('name', '!=', $current_name)->where('name', $this->name)->first();
     }
 }

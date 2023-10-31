@@ -74,7 +74,7 @@ class DepartmentService
                 'name_null_msg' => 'Please select a name',
             ];
         } else {
-            if($is_name_exists){
+            if($is_name_exists != null){
                 $flag = 0;
                 return [
                     'success' => false,
@@ -99,7 +99,7 @@ class DepartmentService
 
     public function UpdateInputs($data)
     {
-        $this->departmentRepository->updateName($data['name']);
+        $this->departmentRepository->setName($data['name']);
         $is_name_exists_for_update = $this->departmentRepository->isNameExistsForUpdate($data['current_name']);
         
         if ($data->name == null) {
@@ -107,7 +107,7 @@ class DepartmentService
                 'success' => false,
                 'name_null_msg' => 'Please select a name',
             ];
-        } else if(!$is_name_exists_for_update) {
+        } else if($is_name_exists_for_update != null) {
                 return [
                     'success' => false,
                     'name_msg' => 'Name already taken',

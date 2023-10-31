@@ -25,8 +25,9 @@
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name.." required> 
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name.."> 
                                     <span id="error_name" style="font-size:13px; color:red"></span>
+                                    <span id="name_null_msg" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-description">Address</label>
@@ -72,8 +73,20 @@
                 context: this,
                 success: function(response) {
                     if (!response.success) {
-                        document.getElementById('error_name').innerHTML = response.name_msg;
-                        flag = 0;
+                        if(response.name_null_msg){
+                            flag = 0;
+                            document.getElementById('error_name').innerHTML = "";
+                            document.getElementById('name_null_msg').innerHTML = response.name_null_msg;
+                        } else {
+                            document.getElementById('name_null_msg').innerHTML = "";
+                        }
+                        if(response.name_msg){
+                            flag = 0;
+                            document.getElementById('name_null_msg').innerHTML = "";
+                            document.getElementById('error_name').innerHTML = response.name_msg;
+                        } else {
+                            document.getElementById('error_name').innerHTML = "";
+                        }
                     }
                     else{
                         flag = 1;

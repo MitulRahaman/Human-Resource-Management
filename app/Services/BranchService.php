@@ -109,13 +109,18 @@ class BranchService
     {
         $this->branchRepository->setName($data['name']);
         $is_name_exists = $this->branchRepository->isNameExists();
-        
-        if ($is_name_exists) {
+        if ($data['name'] == null) {
+            return [
+                'success' => false,
+                'name_null_msg' => 'Please select a name',
+            ];
+        } else if($is_name_exists != null) {
             return [
                 'success' => false,
                 'name_msg' => 'Name already taken',
             ];
-        } else {
+        }
+        else {
             return [
                 'success' => true,
                 'name_msg' => null,
@@ -125,10 +130,15 @@ class BranchService
 
     public function UpdateInputs($data)
     {
-        $this->branchRepository->updateName($data['name']);
+        $this->branchRepository->setName($data['name']);
         $is_name_exists_for_update = $this->branchRepository->isNameExistsForUpdate($data['current_name']);
-        
-        if ($is_name_exists_for_update) {
+        if ($data->name == null) {
+            return [
+                'success' => false,
+                'name_msg' => 'Please select a name',
+            ];
+        }
+        else if ($is_name_exists_for_update) {
             return [
                 'success' => true,
             ];

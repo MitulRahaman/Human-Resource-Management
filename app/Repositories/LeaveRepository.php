@@ -72,10 +72,10 @@ class LeaveRepository
     public function updateStatus($id)
     {
         $data = LeaveType::find($id);
-                if($data->status)
-                    $data->update(array('status' => 0));
-                else
-                    $data->update(array('status' => 1));
+        if($data->status)
+            $data->update(array('status' => 0));
+        else
+            $data->update(array('status' => 1));
     }
 
     public function destroyLeave($id)
@@ -92,18 +92,12 @@ class LeaveRepository
 
     public function isNameExists()
     {
-        if(DB::table('leave_types')->where('name', '=', $this->name)->first())
-            return true;
-        else
-            return false;
+        return DB::table('leave_types')->where('name', '=', $this->name)->first();
     }
 
     public function isNameExistsForUpdate($current_name)
     {
-        if(DB::table('leave_types')->where('name', '!=', $current_name)->where('name', $this->name)->first())
-            return false;
-        else
-            return true;
+        return DB::table('leave_types')->where('name', '!=', $current_name)->where('name', $this->name)->first();
     }
 
     public function getTypeWiseTotalLeavesData()

@@ -24,7 +24,6 @@ class LeaveController extends Controller
 
     public function index()
     {
-        //$leaves = $this->leaveService->indexLeave();
         return \view('backend.pages.leave.index');
     }
 
@@ -41,7 +40,7 @@ class LeaveController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('leave')->with('success', 'Leave type added successfully');
+        return redirect('leave/manage')->with('success', 'Leave type added successfully');
     }
 
     public function edit($id)
@@ -62,7 +61,7 @@ class LeaveController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('/leave')->with('success', 'Leave type updated successfully');
+        return redirect('/leave/manage')->with('success', 'Leave type updated successfully');
     }
 
     public function status($id)

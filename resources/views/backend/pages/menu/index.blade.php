@@ -191,7 +191,8 @@
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
-                    className: 'button'
+                    className: 'button',
+                    title: "Menu Table"
                 },
                     {
                         extend: 'csv',
@@ -200,6 +201,7 @@
                         exportOptions:  {
                             columns: [0, 1,2,3,4,5,6,7,8,9]
                         },
+                        title: "Menu Table"
 
                     },
                     {
@@ -209,6 +211,7 @@
                         exportOptions:  {
                             columns: [0, 1,2,3,4,5,6,7,8,9]
                         },
+                        title: "Menu Table"
                     },
                 ],
                 lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],

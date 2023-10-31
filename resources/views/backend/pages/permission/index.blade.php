@@ -178,7 +178,8 @@
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
-                    className: 'button'
+                    className: 'button',
+                    title: "Permission Table"
                 },
                 {
                     extend: 'csv',
@@ -187,6 +188,7 @@
                     exportOptions:  {
                                         columns: [0, 1,2,3,4,5]
                                     },
+                    title: "Permission Table"
                 },
                 {
                     extend: 'print',
@@ -195,6 +197,7 @@
                     exportOptions:  {
                                         columns: [0, 1,2,3,4,5]
                                     },
+                    title: "Permission Table"
                 },
             ],
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],

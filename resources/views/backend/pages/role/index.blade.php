@@ -183,7 +183,8 @@
                 buttons : [{
                     extend: 'copy',
                     text: 'Copy',
-                    className: 'button'
+                    className: 'button',
+                    title: "Role Table"
                 },
                     {
                         extend: 'csv',
@@ -192,6 +193,7 @@
                         exportOptions:  {
                             columns: [0, 1,2,3,4,5,6]
                         },
+                        title: "Role Table"
                     },
                     {
                         extend: 'print',
@@ -200,6 +202,7 @@
                         exportOptions:  {
                             columns: [0, 1,2,3,4,5,6]
                         },
+                        title: "Role Table"
                     },
                 ],
                 lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],

@@ -2,64 +2,115 @@
 
 namespace App\Services;
 
-use App\Repositories\PermissionRepository;
+use App\Repositories\RoleRepository;
 use Illuminate\Support\Facades\Config;
 
-class PermissionService
+class RoleService
 {
-    private $permissionRepository;
+    private $roleRepository;
 
-    public function __construct(PermissionRepository $permissionRepository)
+    public function __construct(RoleRepository $roleRepository)
     {
-        $this->permissionRepository = $permissionRepository;
+        $this->roleRepository = $roleRepository;
     }
-    public function createPermission($data)
+    public function createRole($data)
     {
-        return $this->permissionRepository->setSlug($data['slug'])
-            ->setName($data['name'])
+        return $this->roleRepository->setName($data['name'])
+            ->setSl_no($data['sl_no'])
             ->setDescription($data['description'])
+            ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
             ->setStatus(Config::get('variable_constants.activation.active'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
-            ->save();
+            ->create();
+
+    }
+    public function getAllPermissions($id)
+    {
+        return $this->roleRepository->getAllPermissions($id);
+    }
+
+    public function getPermissions()
+    {
+        return $this->roleRepository->getPermissions();
+    }
+    public function getRole($id)
+    {
+        return $this->roleRepository->getRole($id);
+    }
+    public function validateInputs($data)
+    {
+
+        $this->roleRepository->setName($data['name']);
+        $is_name_exists = $this->roleRepository->isNameExists();
+        $name_msg = $is_name_exists ? 'Name already taken' : null;
+        if(!$data['name']) $name_msg = 'Name is required';
+        if ( $is_name_exists) {
+            return [
+                'success' => false,
+                'name_msg' => $name_msg,
+            ];
+        } else {
+            return [
+                'success' => true,
+                'name_msg' => $name_msg,
+            ];
+        }
     }
     public function changeStatus($data)
     {
-        return $this->permissionRepository->change($data);
+        return $this->roleRepository->change($data);
     }
     public function delete($data)
     {
-        return $this->permissionRepository->delete($data);
-    }
-    public function getPermission($id)
-    {
-        return $this->permissionRepository->getPermission($id);
-    }
-    public function edit($data)
-    {
-        return $this->permissionRepository->setId($data['id'])
-            ->setName($data['name'])
-            ->setDescription($data['description'])
-            ->setUpdatedAt(date('Y-m-d H:i:s'))
-            ->update();
+        return $this->roleRepository->delete($data);
     }
     public function restore($id)
     {
-        return $this->permissionRepository->restore($id);
+        return $this->roleRepository->restore($id);
+    }
+    public function update($data)
+    {
+        return $this->roleRepository->setId($data['id'])
+            ->setName($data['name'])
+            ->setDescription($data['description'])
+            ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->update();
+    }
+    public function validateName($data,$id)
+    {
+        $this->roleRepository->setName($data['name']);
+        $is_name_exists = $this->roleRepository->isNameUnique($id);
+        $name_msg = $is_name_exists ? 'Name already taken' : null;
+        if(!$data['name']) $name_msg = 'Name is required';
+        if ( $is_name_exists) {
+            return [
+                'success' => false,
+                'name_msg' => $name_msg,
+            ];
+        } else {
+            return [
+                'success' => true,
+                'name_msg' => $name_msg,
+            ];
+        }
     }
     public function fetchData()
     {
-        $result = $this->permissionRepository->getAllPermissionData();
+        $result = $this->roleRepository->getAllRoleData();
         if ($result->count() > 0) {
             $data = array();
 
             foreach ($result as $key=>$row) {
-
                 $id = $row->id;
-                $slug = $row->slug;
                 $name = $row->name;
                 $description = $row->description;
+                $sl_no = $row->sl_no;
                 $created_at = $row->created_at;
-
+                $permissions = '';
+                foreach ($row->permissions as $p) {
+                    $permissions.="<span class=\"badge badge-success\">$p</span><br>";
+                }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";
                     $status_msg = "Deactivate";
@@ -67,7 +118,7 @@ class PermissionService
                     $status = "<span class=\"badge badge-danger\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
-                $edit_url = route('edit_permission', ['permission'=>$id]);
+                $edit_url = route('edit_role', ['role'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {
@@ -91,15 +142,16 @@ class PermissionService
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $name);
-                array_push($temp, $slug);
+
                 array_push($temp, $description);
+                array_push($temp, $sl_no);
                 array_push($temp, $status);
+                array_push($temp, $permissions);
                 if ($row->deleted_at) {
                     array_push($temp, ' <span class="badge badge-danger" >Yes</span>');
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-
                 array_push($temp, $created_at);
                 array_push($temp, $action_btn);
                 array_push($data, $temp);
@@ -112,48 +164,6 @@ class PermissionService
                     "iTotalDisplayRecords": "0",
                     "aaData": []
                 }';
-        }
-    }
-    public function validateInputs($data)
-    {
-        $this->permissionRepository->setSlug($data['slug']);
-        $this->permissionRepository->setName($data['name']);
-        $is_slug_exists = $this->permissionRepository->isSlugExists();
-        $is_name_exists = $this->permissionRepository->isNameExists();
-        $slug_msg = $is_slug_exists ? 'Slug already taken' : null;
-        $name_msg = $is_name_exists ? 'Name already taken' : null;
-        if(!$data['slug']) $slug_msg = 'Slug is required';
-        if(!$data['name']) $name_msg = 'Name is required';
-        if ($is_slug_exists || $is_name_exists) {
-            return [
-                'success' => false,
-                'slug_msg' => $slug_msg,
-                'name_msg' => $name_msg,
-            ];
-        } else {
-            return [
-                'success' => true,
-                'slug_msg' => $slug_msg,
-                'name_msg' => $name_msg,
-            ];
-        }
-    }
-    public function validateName($data,$id)
-    {
-        $this->permissionRepository->setName($data['name']);
-        $is_name_exists = $this->permissionRepository->isNameUnique($id);
-        $name_msg = $is_name_exists ? 'Name already taken' : null;
-        if(!$data['name']) $name_msg = 'Name is required';
-        if ( $is_name_exists) {
-            return [
-                'success' => false,
-                'name_msg' => $name_msg,
-            ];
-        } else {
-            return [
-                'success' => true,
-                'name_msg' => $name_msg,
-            ];
         }
     }
 }

@@ -16,6 +16,10 @@ class MenuService
     {
         return $this->menuRepository->getAllPermissions($id);
     }
+    public function getPermissions()
+    {
+        return $this->menuRepository->getPermissions();
+    }
     public function getParentMenu()
     {
         return $this->menuRepository->getParentMenu();

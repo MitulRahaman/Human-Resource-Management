@@ -46,12 +46,8 @@
 
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
                                             <option></option>
-
                                             @foreach ($permissions as $permission)
-
-
                                                 <option value='{{ $permission->id }}' @if($permission->selected == "yes") selected @endif> {{ $permission->name }} </option>
-
                                             @endforeach
 
                                         </select>
@@ -93,7 +89,6 @@
 
     <script>
         function validate_name(e) {
-
             var name = $('#name').val();
             $.ajax({
                 type: 'POST',

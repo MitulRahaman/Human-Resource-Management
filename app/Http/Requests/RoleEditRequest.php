@@ -37,10 +37,5 @@ class RoleEditRequest extends FormRequest
 
         ];
     }
-    public function messages()
-    {
-        return [
-            'id.exists' => 'The specified ID does not exist in menus table.',
-        ];
-    }
+
 }

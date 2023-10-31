@@ -28,6 +28,11 @@ class RoleService
     {
         return $this->roleRepository->getAllPermissions($id);
     }
+
+    public function getPermissions()
+    {
+        return $this->roleRepository->getPermissions();
+    }
     public function getRole($id)
     {
         return $this->roleRepository->getRole($id);
@@ -75,7 +80,7 @@ class RoleService
     public function validateName($data,$id)
     {
         $this->roleRepository->setName($data['name']);
-        $is_name_exists = $this->roleRepository->isNameUnique($data['name'],$id);
+        $is_name_exists = $this->roleRepository->isNameUnique($id);
         $name_msg = $is_name_exists ? 'Name already taken' : null;
         if(!$data['name']) $name_msg = 'Name is required';
         if ( $is_name_exists) {

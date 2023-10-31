@@ -64,7 +64,7 @@ class RoleRepository
     }
     public function isNameUnique($id)
     {
-        return Role::withTrashed()->where('name',$this->name)->where('id', '!=', $id)->first() || !$this->name;
+        return Role::withTrashed()->where('name',$this->name)->where('id', '!=', $id)->first() ;
     }
     public function getAllRoleData()
     {
@@ -90,6 +90,10 @@ class RoleRepository
                     ->where('role_permissions.role_id', '=', $id);
             })
             ->get();
+    }
+    public function getPermissions()
+    {
+        return Permission::get();
     }
     public function getRole($id)
     {

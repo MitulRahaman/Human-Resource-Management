@@ -132,6 +132,10 @@ class MenuRepository
             })
             ->get();
     }
+    public function getPermissions()
+    {
+        return Permission::get();
+    }
     public function getParentMenu()
     {
         return Menu::where('parent_menu',null)->get();

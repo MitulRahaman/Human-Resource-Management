@@ -29,7 +29,7 @@ class RoleController extends Controller
     }
     public function create()
     {
-        $permissions=$this->roleService->getAllPermissions();
+        $permissions=$this->roleService->getPermissions();
         return \view('backend.pages.role.create', compact('permissions'));
     }
     public function store(RoleAddRequest $request)

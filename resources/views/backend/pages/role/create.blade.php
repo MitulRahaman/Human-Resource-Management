@@ -34,7 +34,7 @@
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-username">sl_no <span class="text-danger">*</span></label>
-                                    <input type="text"  class="form-control" id="sl_no" name="sl_no" value="{{ old('sl_no') }}" placeholder="Enter a serial number.." required>
+                                    <input type="number" step="1" class="form-control" id="sl_no" name="sl_no" value="{{ old('sl_no') }}" placeholder="Enter a serial number.." required>
                                     <span id="error_sl_no"  class="m-2" style="color:red;  font-size: 14px;"></span>
                                 </div>
                                 <div class="form-group">

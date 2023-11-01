@@ -125,6 +125,8 @@ class MenuRepository
     {
         $id =(int) $id;
         return DB::table('permissions')
+            ->where('permissions.status',1)
+            ->where('permissions.deleted_at',null)
             ->select('permissions.*', DB::raw('IF(menu_permissions.menu_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('menu_permissions', function ($join) use ($id) {
                 $join->on('permissions.id', '=', 'menu_permissions.permission_id')
@@ -134,13 +136,16 @@ class MenuRepository
     }
     public function getPermissions()
     {
-        return Permission::get();
+        return Permission::where('status',1)->get();
     }
     public function getParentMenu()
     {
-        return Menu::where('parent_menu',null)->get();
+        return Menu::where('parent_menu',null)->where('status',1)->get();
     }
-
+    public function getMenuTitle($id)
+    {
+        return Menu::where('id', $id)->pluck('title');
+    }
     public function change(int $data)
     {
         $menu = Menu::findOrFail($data);
@@ -168,7 +173,10 @@ class MenuRepository
     }
     public function getMenu($id)
     {
-        $menus=DB::table('menus as m')
+        $menus = Menu::onlyTrashed()->find($id);
+        if($menus)
+            return "Restore first";
+        $menus = DB::table('menus as m')
             ->where('m.id','=', $id)
             ->select('m.id', 'm.title', 'm.url', 'm.icon', 'm.description', 'm.menu_order', 'm.parent_menu', 'm.status', DB::raw('date_format(m.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(m.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->selectRaw('GROUP_CONCAT(p.id) as permissions')
@@ -177,7 +185,7 @@ class MenuRepository
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->first();
         $menus->permissions =($menus->permissions)? explode(',', $menus->permissions):[];
-        return Menu::findOrFail($id);
+        return $menus;
     }
     public function update()
     {

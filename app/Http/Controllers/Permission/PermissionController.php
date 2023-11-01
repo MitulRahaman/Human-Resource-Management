@@ -67,6 +67,8 @@ class PermissionController extends Controller
     public function edit($id )
     {
         $permission_info = $this->permissionService->getPermission($id);
+        if($permission_info=="Restore first")
+            return redirect()->back()->with('error', $permission_info);
         return \view('backend.pages.permission.edit',compact('permission_info'));
     }
     public function update(PermissionEditRequest $request)

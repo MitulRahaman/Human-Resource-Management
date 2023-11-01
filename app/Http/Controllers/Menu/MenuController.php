@@ -74,9 +74,12 @@ class MenuController extends Controller
     public function edit($id )
     {
         $menu_info = $this->menuService->getMenu($id);
+        if($menu_info=="Restore first")
+            return redirect()->back()->with('error', $menu_info);
         $permissions = $this->menuService->getAllPermissions($id);
         $menus=$this->menuService->getParentMenu();
-        return \view('backend.pages.menu.edit',compact('menu_info','permissions','menus'));
+        $parent_menu_title = $this->menuService->getMenuTitle($menu_info->parent_menu);
+        return \view('backend.pages.menu.edit',compact('menu_info','permissions','menus', 'parent_menu_title'));
     }
     public function update(MenuEditRequest $request)
     {

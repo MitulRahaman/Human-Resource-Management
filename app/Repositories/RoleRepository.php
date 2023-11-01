@@ -84,6 +84,8 @@ class RoleRepository
     {
         $id =(int) $id;
         return DB::table('permissions')
+            ->where('permissions.status',1)
+            ->where('permissions.deleted_at',null)
             ->select('permissions.*', DB::raw('IF(role_permissions.role_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('role_permissions', function ($join) use ($id) {
                 $join->on('permissions.id', '=', 'role_permissions.permission_id')
@@ -93,10 +95,13 @@ class RoleRepository
     }
     public function getPermissions()
     {
-        return Permission::get();
+        return Permission::where('status',1)->get();
     }
     public function getRole($id)
     {
+        $roles = Role::onlyTrashed()->find($id);
+        if($roles)
+            return "Restore first";
         return Role::findOrFail($id);
     }
     public function create()
@@ -151,10 +156,10 @@ class RoleRepository
     }
     public function update()
     {
-        $role = Role::findorFail($this->id);
         $roles = DB::table('roles')
             ->where('id', '=', $this->id)
             ->update([
+                'sl_no' => $this->sl_no,
                 'name' => $this->name,
                 'description' => $this->description,
                 'updated_at' => $this->updated_at

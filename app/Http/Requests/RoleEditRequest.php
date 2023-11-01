@@ -31,6 +31,7 @@ class RoleEditRequest extends FormRequest
                 'required',
                 Rule::exists('roles', 'id'),
             ],
+            'sl_no' => 'required',
             'name'=>"required|unique:permissions,name,$id",
             'permissions' => 'nullable',
             'description'=> 'nullable',

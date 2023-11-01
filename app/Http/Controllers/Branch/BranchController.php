@@ -99,7 +99,7 @@ class BranchController extends Controller
     public function verifydata(Request $request)
     {
         try {
-            return $this->branchService->validateInputs($request->all());
+            return $this->branchService->validateInputs($request);
         } catch(\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
@@ -108,7 +108,7 @@ class BranchController extends Controller
     public function updatedata(Request $request)
     {
         try {
-            return $this->branchService->updateInputs($request->all());
+            return $this->branchService->updateInputs($request);
         } catch(\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

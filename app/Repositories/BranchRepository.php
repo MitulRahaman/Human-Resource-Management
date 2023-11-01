@@ -8,12 +8,12 @@ use App\Models\Branch;
 class BranchRepository
 {
     private $name;
-    public function getAllBranchData()
-    {
-        return DB::table('branches as b')
-            ->select('b.id', 'b.name', 'b.address', 'b.status', DB::raw('date_format(p.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(p.deleted_at, "%d/%m/%Y") as deleted_at'))
-            ->get();
-    }
+    // public function getAllBranchData()
+    // {
+    //     return DB::table('branches as b')
+    //         ->select('b.id', 'b.name', 'b.address', 'b.status', DB::raw('date_format(p.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(p.deleted_at, "%d/%m/%Y") as deleted_at'))
+    //         ->get();
+    // }
 
     public function setName($name)
     {
@@ -48,10 +48,10 @@ class BranchRepository
     public function updateStatus($id)
     {
         $data = Branch::find($id);
-                if($data->status)
-                    $data->update(array('status' => 0));
-                else
-                    $data->update(array('status' => 1));
+        if($data->status)
+            $data->update(array('status' => 0));
+        else
+            $data->update(array('status' => 1));
     }
 
     public function destroyBranch($id)
@@ -63,7 +63,7 @@ class BranchRepository
 
     public function restoreBranch($id)
     {
-        DB::table('branches')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+        return DB::table('branches')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
     }
 
     public function isNameExists()

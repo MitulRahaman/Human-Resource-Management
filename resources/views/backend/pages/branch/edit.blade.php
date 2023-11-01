@@ -26,7 +26,7 @@
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $data->name }}"  required>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $data->name }}">
                                     <span id="error_name" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">

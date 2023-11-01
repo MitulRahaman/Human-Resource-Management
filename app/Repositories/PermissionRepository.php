@@ -99,6 +99,9 @@ class PermissionRepository
     }
     public function getPermission($id)
     {
+        $permissions = Permission::onlyTrashed()->find($id);
+        if($permissions)
+            return "Restore first";
         return Permission::findOrFail($id);
     }
     public function restore($id)

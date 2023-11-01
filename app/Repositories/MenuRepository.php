@@ -173,7 +173,10 @@ class MenuRepository
     }
     public function getMenu($id)
     {
-        $menus=DB::table('menus as m')
+        $menus = Menu::onlyTrashed()->find($id);
+        if($menus)
+            return "Restore first";
+        $menus = DB::table('menus as m')
             ->where('m.id','=', $id)
             ->select('m.id', 'm.title', 'm.url', 'm.icon', 'm.description', 'm.menu_order', 'm.parent_menu', 'm.status', DB::raw('date_format(m.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(m.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->selectRaw('GROUP_CONCAT(p.id) as permissions')
@@ -182,7 +185,7 @@ class MenuRepository
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->first();
         $menus->permissions =($menus->permissions)? explode(',', $menus->permissions):[];
-        return Menu::findOrFail($id);
+        return $menus;
     }
     public function update()
     {

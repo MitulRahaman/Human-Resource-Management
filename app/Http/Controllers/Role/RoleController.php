@@ -49,6 +49,8 @@ class RoleController extends Controller
     public function edit($id )
     {
         $role_info = $this->roleService->getRole($id);
+        if($role_info=="Restore first")
+            return redirect()->back()->with('error', $role_info);
         $permissions = $this->roleService->getAllPermissions($id);
         return \view('backend.pages.role.edit',compact('role_info','permissions'));
     }

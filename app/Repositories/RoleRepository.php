@@ -99,6 +99,9 @@ class RoleRepository
     }
     public function getRole($id)
     {
+        $roles = Role::onlyTrashed()->find($id);
+        if($roles)
+            return "Restore first";
         return Role::findOrFail($id);
     }
     public function create()

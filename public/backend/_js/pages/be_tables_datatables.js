@@ -67,9 +67,17 @@ class pageTablesDatatables {
             buttons: [
                 { extend: 'copy', className: 'btn btn-sm btn-alt-primary' },
                 { extend: 'csv', className: 'btn btn-sm btn-alt-primary' },
-                { extend: 'print', className: 'btn btn-sm btn-alt-primary' }
+                
+                {
+                    extend: 'print', className: 'btn btn-sm btn-alt-primary',
+                    exportOptions: {
+                        columns: ':visible',
+                    },
+                },
+                'colvis'
             ],
-            dom: "<'row'<'col-sm-12'<'text-center bg-body-light py-2 mb-2'B>>>" +
+            
+            dom: "<'row'<'col-sm-12'<'text-center my-4 mb-2' B>>>" +
                 "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
         });
     }

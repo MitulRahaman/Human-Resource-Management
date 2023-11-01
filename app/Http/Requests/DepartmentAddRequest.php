@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BranchAddRequest extends FormRequest
+class DepartmentAddRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class BranchAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'unique:branches,name', 'string', 'max:255'],  
-            'address' => 'nullable|regex:/([- ,\/0-9a-zA-Z]+)/',
+            'name' => ['required', 'unique:departments,name', 'string', 'max:255'],  
+            'description' => 'nullable|regex:/([- ,\/0-9a-zA-Z]+)/',
         ];
     }
 }

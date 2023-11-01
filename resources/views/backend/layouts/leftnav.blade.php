@@ -92,24 +92,31 @@
         <div class="content-side">
             <ul class="nav-main">
                 <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($main_menu, "Dashboard") == 0 ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                    <a class="nav-main-link {{ strcasecmp($main_menu, 'Dashboard') == 0 ? 'active' : '' }}" href="{{ route('dashboard') }}">
                         <i class="nav-main-link-icon si si-speedometer"></i>
                         <span class="nav-main-link-name">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-main-heading">User Interface</li>
-                <li class="nav-main-item {{ strcasecmp($sub_menu, "Branches") == 0 || strcasecmp($sub_menu, "Roles") == 0 ? 'open' : '' }}">
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Branches') == 0 || strcasecmp($sub_menu, 'Departments') == 0 || strcasecmp($sub_menu, 'Leaves') == 0 || strcasecmp($sub_menu, 'Roles') == 0 ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-settings"></i>
                         <span class="nav-main-link-name">System Settings</span>
                     </a>
                     <ul class="nav-main-submenu">
                         <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, "Branches") == 0 ? 'active' : '' }}" href="{{ url('branch') }}">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Branches') == 0 ? 'active' : '' }}" href="{{ url('branch') }}">
                                 <span class="nav-main-link-name">Branches</span>
                             </a>
                         </li>
                         <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Departments') == 0 ? 'active' : '' }}" href="{{ url('department') }}">
+                                <span class="nav-main-link-name">Departments</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Leaves') == 0 ? 'active' : '' }}" href="{{ url('leave') }}">
+                                <span class="nav-main-link-name">Leaves</span>
                             <a class="nav-main-link {{ strcasecmp($sub_menu, "Roles") == 0 ? 'active' : '' }}" href="{{ url('role') }}">
                                 <span class="nav-main-link-name">Roles</span>
                             </a>

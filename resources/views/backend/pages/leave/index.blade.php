@@ -24,10 +24,11 @@
                     <h3 class="block-title mt-4">{{ $sub_menu }}</h3>
                 </div>
                 <div class="block-content block-content-full">
-                <label>Choose a year</label>
+                <label>Choose a year <span class="text-danger">*</span>(between 2000-2100)</label>
                     <div class="form-row">
                         <div class="form-group col-xl-7">    
-                            <input type="text" class="yearpicker form-control bg-white" id="year" value="">
+                            <input type="number" class="yearpicker form-control bg-white" min="2000" max="2100" onKeyPress="if(this.value.length==4) return false;" id="year" value="">
+                            <span id="error_year" style="font-size:13px; color:red"></span>
                         </div>
                         <div class="form-group col-xl-5">
                         <button type="button" class="btn btn-dark ml-4" id="find">
@@ -73,7 +74,8 @@
                                                     <div class="col-lg-7 col-xl-7">
                                                         <div class="form-group">
                                                             <label for="val-title">Total Leave <span class="text-danger">*</span></label>
-                                                            <input type="number" class="form-control" id="totalLeave" name="totalLeave" value="" placeholder="Enter total leave.."> 
+                                                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" value="" placeholder="Enter total leave.."> 
+                                                            <span id="error_total_leave" style="font-size:13px; color:red"></span>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-5 col-xl-5">
@@ -129,34 +131,36 @@
         jQuery(function(){
             function createTable(){
                 var year = $('#year').val();
-                $('#updateYear').attr('placeholder', year);
-                $('#updateYear').attr('value', year);
-                $('#dataTable').DataTable( {
-                    dom: 'Bfrtip',
-                    ajax: {
-                        type: 'POST',
-                        url: '{{ url("leave_types/get_data") }}',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            year: year
-                        }
-                    },
-                    buttons: [
-                        {
-                            extend: 'print',
-                            exportOptions: {
-                                columns: ':visible'
+                if(year >= 2000) {
+                    $('#updateYear').attr('placeholder', year);
+                    $('#updateYear').attr('value', year);
+                    $('#dataTable').DataTable( {
+                        dom: 'Bfrtip',
+                        ajax: {
+                            type: 'POST',
+                            url: '{{ url("leave_types/get_data") }}',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                year: year
                             }
                         },
-                        'colvis'
-                    ]
-                });
+                        buttons: [
+                            {
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            },
+                            'colvis'
+                        ]
+                    });
+                }
+                
             }
             createTable();
             document.getElementById('find').addEventListener("click", function() { 
                 $('#dataTable').DataTable().destroy();
                 createTable();
-                
             }); 
         });
         //end create table
@@ -172,7 +176,7 @@
             disabledClass: 'disabled',
             hideClass: 'hide',
 
-            template: `<div class="yearpicker-container">
+            template:`<div class="yearpicker-container">
                         <div class="yearpicker-header">
                             <div class="yearpicker-prev" data-view="yearpicker-prev">&lsaquo;</div>
                             <div class="yearpicker-current" data-view="yearpicker-current">SelectedYear</div>
@@ -182,8 +186,7 @@
                             <ul class="yearpicker-year" data-view="years">
                             </ul>
                         </div>
-                    </div>
-            `,
+                    </div>`,
         });
         // end select year
 
@@ -191,6 +194,35 @@
             var addUrl = "{{ url('leave/addTotalLeave/:id') }}".replace(':id', id);
             $('#modalForm').attr('action', addUrl);
         }
+
+        document.getElementById("year").onkeyup = function() {
+            var val = $('#year').val();
+            if(val < 2000 || val > 2100) {
+                document.getElementById('error_year').innerHTML = "Year must be between 2000-2100";
+                $('#find').attr('disabled', true);
+            } else {
+                document.getElementById('error_year').innerHTML = " ";
+                $('#find').attr('disabled', false);
+            }
+        };
+
+        var digitPeriodRegExp = new RegExp('\\d|\\.');
+        var totalLeave = document.getElementById('totalLeave');
+        totalLeave.addEventListener('keydown', function(event) {
+            if(event.ctrlKey
+            || event.altKey
+            || typeof event.key !== 'string'
+            || event.key.length !== 1) {
+                return;
+            }
+            
+            if(!digitPeriodRegExp.test(event.key) || event.key==='.') {
+                document.getElementById('error_total_leave').innerHTML = "Please select only numbers";
+                event.preventDefault();
+            } else {
+                document.getElementById('error_total_leave').innerHTML = "";
+            }
+        }, false);
 
     </script>
 

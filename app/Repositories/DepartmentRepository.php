@@ -95,12 +95,12 @@ class DepartmentRepository
     {
         $data = Department::find($id);
         $data->update(array('status' => 0));
-        $data->delete();
+        return $data->delete();
     }
 
     public function restoreDepartment($id)
     {
-        DB::table('departments')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+        return DB::table('departments')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
     }
 
     public function isNameExists()

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Branch\BranchController;
 use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\Leave\LeaveController;
+use App\Http\Controllers\User\UserController;
 
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
@@ -75,32 +76,38 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('/updateleave', [LeaveController::class, 'updateleave'])->name('updateleave');
         Route::post('/addTotalLeave/{id}', [LeaveController::class, 'addTotalLeave']);
     });
+
+    Route::prefix('user')->group(function() {
+        Route::get('/', [UserController::class, 'addUserIndex']);
+        Route::post('get_table_data', [UserController::class, 'getTableData']);
+        
+    });
     
     Route::group(['middleware'=> 'superUser'], function() {
-    Route::prefix('permission')->group(function() {
+        Route::prefix('permission')->group(function() {
 
-        Route::get('/', [PermissionController::class, 'index']);
-        Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
+            Route::get('/', [PermissionController::class, 'index']);
+            Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
 
-        Route::get('/add', [PermissionController::class, 'create']);
-        Route::post('/store', [PermissionController::class, 'store']);
+            Route::get('/add', [PermissionController::class, 'create']);
+            Route::post('/store', [PermissionController::class, 'store']);
 
-        Route::post('/{id}/change_status', [PermissionController::class, 'changeStatus']);
+            Route::post('/{id}/change_status', [PermissionController::class, 'changeStatus']);
 
-        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
-        Route::post('/{id}/update', [PermissionController::class, 'update']);
+            Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
+            Route::post('/{id}/update', [PermissionController::class, 'update']);
 
-        Route::post('/validate_inputs', [PermissionController::class, 'validate_inputs']);
-        Route::post('/{id}/validate_name',[PermissionController::class, 'validate_name']);
-        Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
+            Route::post('/validate_inputs', [PermissionController::class, 'validate_inputs']);
+            Route::post('/{id}/validate_name',[PermissionController::class, 'validate_name']);
+            Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
 
-        Route::post('/{id}/delete', [PermissionController::class, 'delete']);
-        Route::post('/{id}/restore', [PermissionController::class, 'restore']);
-       
-        Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
+            Route::post('/{id}/delete', [PermissionController::class, 'delete']);
+            Route::post('/{id}/restore', [PermissionController::class, 'restore']);
+        
+            Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
-    });
-    Route::prefix('role')->group(function() {
+        });
+        Route::prefix('role')->group(function() {
 
             Route::get('/', [RoleController::class, 'index']);
             Route::get('/get_role_data', [RoleController::class, 'fetchData']);
@@ -136,9 +143,5 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
             Route::post('/{id}/update', [MenuController::class, 'update']);
         });
-
-
     });
-
-
 });

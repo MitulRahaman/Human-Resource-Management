@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class RoleAddRequest extends FormRequest
+class DesignationEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +24,17 @@ class RoleAddRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route('id');
+        $this->merge(['id' => $id]);
         return [
-            'sl_no' => 'required',
-            'name' => 'required|unique:roles,name',
-            'permissions'=> 'nullable',
-            'description' => 'nullable',
+            'id' => [
+                'required',
+                Rule::exists('designations', 'id'),
+            ],
+            'name'=>"required|unique:designations,name,$id",
+            'branches' => 'nullable',
+            'description'=> 'nullable',
+
         ];
     }
 }

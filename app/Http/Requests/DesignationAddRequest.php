@@ -25,7 +25,7 @@ class DesignationAddRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:designations,name',
-            'branches'=> 'nullable',
+            'branches'=> 'required',
             'description' => 'nullable',
         ];
     }

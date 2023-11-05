@@ -10,6 +10,7 @@ use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Menu\MenuController;
+use App\Http\Controllers\Designation\DesignationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +76,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('/updateleave', [LeaveController::class, 'updateleave'])->name('updateleave');
         Route::post('/addTotalLeave/{id}', [LeaveController::class, 'addTotalLeave']);
     });
-    
+
     Route::group(['middleware'=> 'superUser'], function() {
     Route::prefix('permission')->group(function() {
 
@@ -96,7 +97,7 @@ Route::group(['middleware'=> 'auth'], function() {
 
         Route::post('/{id}/delete', [PermissionController::class, 'delete']);
         Route::post('/{id}/restore', [PermissionController::class, 'restore']);
-       
+
         Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
     });
@@ -135,6 +136,23 @@ Route::group(['middleware'=> 'auth'], function() {
 
             Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
             Route::post('/{id}/update', [MenuController::class, 'update']);
+        });
+        Route::prefix('designation')->group(function() {
+            Route::get('/', [DesignationController::class, 'index']);
+            Route::get('/get_designation_data', [DesignationController::class, 'fetchData']);
+
+            Route::get('/add', [DesignationController::class, 'create']);
+            Route::post('/store', [DesignationController::class, 'store']);
+            Route::post('/validate_designation_inputs', [DesignationController::class, 'validate_inputs']);
+
+            Route::post('/{id}/change_status', [DesignationController::class, 'changeStatus']);
+
+            Route::post('/{id}/delete', [DesignationController::class, 'delete']);
+            Route::post('/{id}/restore', [DesignationController::class, 'restore']);
+
+            Route::get('/{designation}/edit', [DesignationController::class, 'edit'])->name('edit_designation');
+            Route::post('/{id}/validate_designation_name',[DesignationController::class, 'validate_name']);
+            Route::post('/{id}/update', [DesignationController::class, 'update']);
         });
 
 

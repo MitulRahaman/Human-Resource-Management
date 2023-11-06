@@ -160,8 +160,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::prefix('calender')->group(function() {
             Route::get('/', [CalenderController::class, 'index']);
             Route::get('/manage', [CalenderController::class, 'manage']);
-            Route::post('/get-dates',  [CalenderController::class, 'getDates']);
+            Route::post('/get_dates',  [CalenderController::class, 'getDates']);
             Route::post('/store', [CalenderController::class, 'store']);
+            Route::get('/get_events', [CalenderController::class, 'getEvents']);
         });
 
 

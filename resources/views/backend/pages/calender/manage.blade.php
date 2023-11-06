@@ -81,8 +81,6 @@
 
     <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/jquery-validation/additional-methods.js') }}"></script>
-
-    <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script>
             function loadDates() {
@@ -91,7 +89,7 @@
                 if (selectedYear && selectedMonth) {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ url('calender/get-dates') }}',
+                        url: '{{ url('calender/get_dates') }}',
                         async: false,
                         data: {
                             year: selectedYear,
@@ -99,33 +97,60 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function (response) {
-                            var dates = response;
+                            var dates = response['dates'];
+                            var calender = response['calender'];
+                            // console.log(response['calender']);
                             $('#date-output').empty();
                             $('#date-output').append('<div class="row m-2" > <div class="col-2">Date</div><div class="col-2">Day</div><div class="col-3"></div><div class="col-2">Title</div><div class="col-3">Description</div><br>');
-
                             for (var i = 0; i < dates.length; i++) {
-                                // $('#date-output').append('<div> ' + dates[i] + '</div><br>');
                                 var date = new Date(dates[i]);
                                 var dayOfWeek = date.getDay();
                                 var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                                 var dayName = dayNames[dayOfWeek];
-                                $('#date-output').append('<div class="row m-2" id="div_'+i+'" > ' +
-                                                            '<div class="col-2">'  +dates[i] + '</div>' +
-                                                            '<input type="hidden" class="form-control" id="date" name="date[]" value="' +dates[i] + '">'+
-                                                            '<div class="col-2"> ' + dayName + '</div>' +
-                                                            '<div class="col-3"> ' +
-                                                            '<select class="js-select2 form-control" id="day" name="day[]"  >'+
-                                                                '<option value="0" style="color:black" selected > working day </option>'+
-                                                                '<option value="1" style="color:black" > off day </option>'+
-                                                            ' </select>'+
-                                                            '</div>'+
-                                                            '<div class="col-2"> ' +
-                                                            ' <input type="text" class="form-control" id="title" name="title[]"  >'+
-                                                            '</div>'+
-                                                            '<div class="col-3"> ' +
-                                                            ' <input type="text" class="form-control" id="description" name="description[]"  >'+
-                                                            '</div>'+
-                                                                '<br>');
+                                var exists = calender.some(obj => obj.hasOwnProperty('date') && obj['date'] === dates[i]);
+                                if(exists)
+                                {
+                                    var title = calender.filter(obj => obj.date === dates[i]).map(filteredObj => filteredObj.title);
+                                    var data = calender.find(obj => obj.date === dates[i]);
+                                    console.log(data.description);
+                                    $('#date-output').append('<div class="row m-2" id="div_'+i+'" > ' +
+                                        '<div class="col-2">'  +dates[i] + '</div>' +
+                                        '<input type="hidden" class="form-control" id="date" name="date[]" value="' +dates[i] + '">'+
+                                        '<div class="col-2"> ' + dayName + '</div>' +
+                                        '<div class="col-3"> ' +
+                                        '<select class="js-select2 form-control" id="day" name="day[]"  >'+
+                                        '<option value="0" style="color:black"  > working day </option>'+
+                                        '<option value="1" style="color:black" selected > off day </option>'+
+                                        ' </select>'+
+                                        '</div>'+
+                                        '<div class="col-2"> ' +
+                                        ' <input type="text" class="form-control" id="title" name="title[]" value="'+data.title+'">'+
+                                        '</div>'+
+                                        '<div class="col-3"> ' +
+                                        ' <input type="text" class="form-control" id="description" name="description[]"  value="'+data.description+'">'+
+                                        '</div>'+
+                                        '<br>');
+                                }
+                                else{
+                                    $('#date-output').append('<div class="row m-2" id="div_'+i+'" > ' +
+                                        '<div class="col-2">'  +dates[i] + '</div>' +
+                                        '<input type="hidden" class="form-control" id="date" name="date[]" value="' +dates[i] + '">'+
+                                        '<div class="col-2"> ' + dayName + '</div>' +
+                                        '<div class="col-3"> ' +
+                                        '<select class="js-select2 form-control" id="day" name="day[]"  >'+
+                                        '<option value="0" style="color:black" selected > working day </option>'+
+                                        '<option value="1" style="color:black" > off day </option>'+
+                                        ' </select>'+
+                                        '</div>'+
+                                        '<div class="col-2"> ' +
+                                        ' <input type="text" class="form-control" id="title" name="title[]"  >'+
+                                        '</div>'+
+                                        '<div class="col-3"> ' +
+                                        ' <input type="text" class="form-control" id="description" name="description[]"  >'+
+                                        '</div>'+
+                                        '<br>');
+                                }
+
                             }
                         },
                         error: function (xhr, status, error) {

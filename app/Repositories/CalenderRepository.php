@@ -5,10 +5,20 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\DB;
 class CalenderRepository
 {
-    private $date, $day, $title, $description, $created_at, $updated_at, $deleted_at;
+    private $date, $month, $year, $day, $title, $description, $created_at, $updated_at, $deleted_at;
     public function setDate($date)
     {
         $this->date = $date;
+        return $this;
+    }
+    public function setMonth($month)
+    {
+        $this->month = $month;
+        return $this;
+    }
+    public function setYear($year)
+    {
+        $this->year = $year;
         return $this;
     }
     public function setDay($day)
@@ -70,6 +80,22 @@ class CalenderRepository
                 }
 
             }
+        $indexes = array_keys($this->day, 0);
+        foreach ($indexes as $i)
+        {
+            DB::table('calender')->where('date',$this->date[$i])->delete();
+        }
         return $date;
+    }
+    public function getDates()
+    {
+        return DB::table('calender')->select('date','title', 'description')
+            ->whereYear('date', $this->year)
+            ->whereMonth('date', $this->month)
+            ->get();
+    }
+    public function getEvents()
+    {
+        return DB::table('calender')->select('date as start', 'title')->get();
     }
 }

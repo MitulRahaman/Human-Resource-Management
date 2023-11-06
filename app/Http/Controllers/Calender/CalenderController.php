@@ -35,18 +35,26 @@ class CalenderController extends Controller
             $date = Carbon::create($year, $month, $day);
             $dates[] = $date->toDateString();
         }
-        return response()->json($dates);
+        $calender = $this->calenderService->getDates($year,$month);
+        $data=
+            [
+                'dates' => $dates,
+                'calender' => $calender,
+            ];
+        return response()->json($data);
     }
     public function store(Request $request)
     {
         try{
-            $calender = $this->calenderService->createCalender($request->all());
-            if($calender)
+            $this->calenderService->createCalender($request->all());
             return redirect('calender/')->with('success', "Calender Updated");
-            else
-                return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
         }
+    }
+    public function getEvents()
+    {
+        $events = $this->calenderService->getEvents();
+        return response()->json($events);
     }
 }

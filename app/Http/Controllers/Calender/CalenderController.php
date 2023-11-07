@@ -7,6 +7,8 @@ use App\Services\CalenderService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use App\Http\Requests\ExcelFileAddRequest;
+
 
 class CalenderController extends Controller
 {
@@ -56,5 +58,64 @@ class CalenderController extends Controller
     {
         $events = $this->calenderService->getEvents();
         return response()->json($events);
+    }
+    public function saveEvent(Request $request)
+    {
+        try{
+            $this->calenderService->saveEvent($request->all());
+            return redirect('calender/')->with('success', "Calender Updated");
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
+        }
+    }
+    public function upload()
+    {
+        return \view('backend.pages.calender.upload');
+    }
+    public function saveExcel(ExcelFileAddRequest $request)
+    {
+        try{
+            $this->calenderService->saveExcel($request->all());
+            return redirect('calender/')->with('success', "Calender Updated");
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
+        }
+    }
+    public function updateTitle(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required',
+        ]);
+        if($validated)
+        {
+
+            try{
+                $this->calenderService->updateTitle($request->all());
+                return redirect('calender/')->with('success', "Calender Updated");
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
+            }
+        }
+        else
+            return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
+    }
+    public function addEvent(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required',
+            'description' => 'nullable',
+        ]);
+        if($validated)
+        {
+
+            try{
+                $this->calenderService->addEvent($request->all());
+                return redirect('calender/')->with('success', "Calender Updated");
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
+            }
+        }
+        else
+            return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
     }
 }

@@ -99,7 +99,6 @@
                         success: function (response) {
                             var dates = response['dates'];
                             var calender = response['calender'];
-                            // console.log(response['calender']);
                             $('#date-output').empty();
                             $('#date-output').append('<div class="row m-2" > <div class="col-2">Date</div><div class="col-2">Day</div><div class="col-3"></div><div class="col-2">Title</div><div class="col-3">Description</div><br>');
                             for (var i = 0; i < dates.length; i++) {

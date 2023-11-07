@@ -5,7 +5,7 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\DB;
 class CalenderRepository
 {
-    private $date, $month, $year, $day, $title, $description, $created_at, $updated_at, $deleted_at;
+    private $date, $month, $year, $day, $title, $description, $created_at, $updated_at, $deleted_at, $oldDate, $newDate;
     public function setDate($date)
     {
         $this->date = $date;
@@ -14,6 +14,16 @@ class CalenderRepository
     public function setMonth($month)
     {
         $this->month = $month;
+        return $this;
+    }
+    public function setOldDate($oldDate)
+    {
+        $this->oldDate = $oldDate;
+        return $this;
+    }
+    public function setNewDate($newDate)
+    {
+        $this->newDate = $newDate;
         return $this;
     }
     public function setYear($year)
@@ -97,5 +107,96 @@ class CalenderRepository
     public function getEvents()
     {
         return DB::table('calender')->select('date as start', 'title')->get();
+    }
+    public  function saveEvent()
+    {
+        DB::table('calender')->where('date',$this->oldDate)->delete();
+        $date= DB::table('calender')->select('id')->where('date',$this->newDate)->first();
+        if($date)
+        {
+            $date = DB::table('calender')
+                ->where('id', $date->id)
+                ->update([
+                    'title' => ($this->title)?  $this->title:'',
+                    'updated_at' => $this->updated_at,
+                ]);
+        }
+        else
+        {
+            $date = DB::table('calender')
+                ->insertGetId([
+                    'date' => $this->newDate,
+                    'title' => ($this->title)?  $this->title:'',
+                    'created_at' => $this->created_at
+                ]);
+        }
+        return $date;
+    }
+    public function saveExcel($file)
+    {
+        $f= file($file);
+        array_splice($f, 0, 1);
+        $date="";
+        foreach($f as $line) {
+            $l = explode(',', $line);
+            $date= DB::table('calender')->select('id')->where('date',$l[0])->first();
+            if($date)
+            {
+                $date = DB::table('calender')
+                    ->where('id', $date->id)
+                    ->update([
+                        'title' => ($l[1])?  $l[1]:'',
+                        'description' => ($l[2])?  $l[2]:'',
+                        'updated_at' => $this->updated_at,
+                    ]);
+            }
+            else
+            {
+                $date = DB::table('calender')
+                    ->insertGetId([
+                        'date' => $l[0],
+                        'title' => ($l[1])?  $l[1]:'',
+                        'description' => ($l[2])?  $l[2]:'',
+                        'created_at' => $this->created_at
+                    ]);
+            }
+        }
+        return $date;
+
+    }
+    public function updateTitle()
+    {
+        return DB::table('calender')
+            ->where('date',$this->date)
+            ->update([
+                'title' => $this->title,
+                'updated_at' => $this->updated_at,
+            ]);
+
+    }
+    public function addEvent()
+    {
+        $date= DB::table('calender')->select('id')->where('date',$this->date)->first();
+        if($date)
+        {
+            $date = DB::table('calender')
+                ->where('id', $date->id)
+                ->update([
+                    'title' => ($this->title)?  $this->title:'',
+                    'description' => ($this->description)?  $this->description:'',
+                    'updated_at' => $this->updated_at,
+                ]);
+        }
+        else
+        {
+            $date = DB::table('calender')
+                ->insertGetId([
+                    'date' => $this->date,
+                    'title' => ($this->title)?  $this->title:'',
+                    'description' => ($this->description)?  $this->description:'',
+                    'created_at' => $this->created_at
+                ]);
+        }
+        return $date;
     }
 }

@@ -43,5 +43,36 @@ class CalenderService
         }
         return $formattedEvents;
     }
+    public function saveEvent($data)
+    {
+        return $this->calenderRepository->setOldDate($data['oldDate'])
+            ->setNewDate($data['newDate'])
+            ->settitle($data['title'])
+            ->setCreatedAt(date('Y-m-d H:i:s'))
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->saveEvent();
+    }
+    public  function saveExcel($data)
+    {
+        return $this->calenderRepository->setCreatedAt(date('Y-m-d H:i:s'))
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->saveExcel($data['file']);
+    }
+    public function updateTitle($data)
+    {
+        return $this->calenderRepository->setDate($data['date'])
+            ->setTitle($data['title'])
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->updateTitle();
+    }
+    public function addEvent($data)
+    {
+        return $this->calenderRepository->setDate($data['day'])
+            ->setTitle($data['title'])
+            ->setDescription($data['description'])
+            ->setCreatedAt(date('Y-m-d H:i:s'))
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->addEvent();
+    }
 
 }

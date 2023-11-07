@@ -163,6 +163,11 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/get_dates',  [CalenderController::class, 'getDates']);
             Route::post('/store', [CalenderController::class, 'store']);
             Route::get('/get_events', [CalenderController::class, 'getEvents']);
+            Route::get('/save_event', [CalenderController::class, 'saveEvent']);
+            Route::get('/upload', [CalenderController::class, 'upload']);
+            Route::post('/save_excel', [CalenderController::class, 'saveExcel']);
+            Route::post('/update_title', [CalenderController::class, 'updateTitle']);
+            Route::post('/add_event', [CalenderController::class, 'addEvent']);
         });
 
 

@@ -26,7 +26,9 @@
                                     <div class="col-lg-6 col-xl-6">
                                         <div class="form-group">
                                             <label for="val-username">Only Excel File <span class="text-danger">*</span></label>
+                                            <p> must have - Date (YYYY-MM-DD), Title, Description </p>
                                             <input type="file"  class="form-control" id="file" name="file" placeholder="..." required>
+
                                         </div>
                                     </div>
                                 </div>

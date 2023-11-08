@@ -27,6 +27,7 @@ class RoleAddRequest extends FormRequest
             'sl_no' => 'required',
             'name' => 'required|unique:roles,name',
             'permissions'=> 'nullable',
+            'branches'=> 'nullable',
             'description' => 'nullable',
         ];
     }

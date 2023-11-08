@@ -3,16 +3,22 @@
 namespace App\Repositories;
 
 use App\Models\Branch;
+use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Support\Facades\DB;
 
 class DesignationRepository
 {
-    private $id, $name, $branch_ids, $description, $status, $created_at, $updated_at, $deleted_at;
+    private $id, $department, $name, $branch_ids, $description, $status, $created_at, $updated_at, $deleted_at;
 
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+    public function setDepartment($department)
+    {
+        $this->department = $department;
         return $this;
     }
     public function setName($name)
@@ -82,19 +88,35 @@ class DesignationRepository
     {
         return Designation::withTrashed()->where('id', $id)->restore();
     }
+    public function fetchDepartments($data)
+    {
+        $branches = $data['branches'];
+        $dep = [];
+
+        foreach ($branches as $b)
+        {
+            $d= DB::table('branch_departments')->where('branch_id',$b)
+                ->pluck('department_id')->toArray();
+            $dep = array_unique(array_merge($dep, $d));
+        }
+        $departments = Department::whereIn('id', $dep)->get();
+//        dd($departments[1]->id);
+        return $departments;
+
+    }
     public function getAllDesignationData()
     {
-        $designations=DB::table('designations as d')
-            ->select('d.id', 'd.name', 'd.description', 'd.status', DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
+        $designations = DB::table('designations as d')
+            ->select('d.id', 'd.name', 'd.description', 'd.status', 'd.department_id', DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'), 'departments.name as department')
             ->selectRaw('GROUP_CONCAT(b.name) as branches')
             ->leftJoin('branch_designations as bd', 'd.id', '=', 'bd.designation_id')
             ->leftJoin('branches as b', 'bd.branch_id', '=', 'b.id')
-            ->groupBy('d.id', 'd.name', 'd.description', 'd.status', 'd.created_at', 'd.deleted_at')
+            ->leftJoin('departments', 'd.department_id', '=', 'departments.id') // Join the departments table
+            ->groupBy('d.id', 'd.name', 'd.description', 'd.status', 'd.department_id', 'd.created_at', 'd.deleted_at', 'departments.name')
             ->get();
         foreach ($designations as $designation) {
             $designation->branches = explode(',', $designation->branches);
         }
-
         return $designations;
     }
     public function create()
@@ -103,6 +125,7 @@ class DesignationRepository
             ->insertGetId([
                 'name' => $this->name,
                 'description' => $this->description,
+                'department_id' => $this->department,
                 'status' => $this->status,
                 'created_at' => $this->created_at
             ]);
@@ -127,12 +150,14 @@ class DesignationRepository
         if($designation)
             return "Restore first";
         $designations = DB::table('designations as d')
-            ->where('d.id','=', $id)
-            ->select('d.id', 'd.name',  'd.description', 'd.status', DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->where('d.id', $id)
+            ->select('d.id', 'd.name', 'd.description', 'd.department_id', 'd.status', DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->selectRaw('GROUP_CONCAT(b.id) as branches')
+            ->selectRaw('departments.name as department_name')
             ->leftJoin('branch_designations as bd', 'd.id', '=', 'bd.designation_id')
             ->leftJoin('branches as b', 'bd.branch_id', '=', 'b.id')
-            ->groupBy('d.id', 'd.name', 'd.description', 'd.status', 'd.created_at', 'd.deleted_at')
+            ->leftJoin('departments', 'd.department_id', '=', 'departments.id') // Join the departments table
+            ->groupBy('d.id', 'd.name', 'd.description', 'd.department_id', 'd.status', 'd.created_at', 'd.deleted_at', 'department_name')
             ->first();
         $designations->branches =($designations->branches)? explode(',', $designations->branches):[];
         return $designations;
@@ -161,6 +186,7 @@ class DesignationRepository
             ->update([
                 'name' => $this->name,
                 'description' => $this->description,
+                'department_id' => $this->department,
                 'updated_at' => $this->updated_at
             ]);
         if($designations)

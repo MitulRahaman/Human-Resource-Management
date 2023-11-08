@@ -34,6 +34,7 @@ class DesignationEditRequest extends FormRequest
             ],
             'name'=>"required|unique:designations,name,$id",
             'branches' => 'required',
+            'department' => 'required',
             'description'=> 'nullable',
 
         ];

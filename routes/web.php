@@ -144,6 +144,7 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/get_designation_data', [DesignationController::class, 'fetchData']);
 
             Route::get('/add', [DesignationController::class, 'create']);
+            Route::post('/fetch_departments', [DesignationController::class, 'fetchDepartments']);
             Route::post('/store', [DesignationController::class, 'store']);
             Route::post('/validate_designation_inputs', [DesignationController::class, 'validate_inputs']);
 

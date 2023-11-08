@@ -30,7 +30,8 @@ class RoleController extends Controller
     public function create()
     {
         $permissions=$this->roleService->getPermissions();
-        return \view('backend.pages.role.create', compact('permissions'));
+        $branches=$this->roleService->getBranches();
+        return \view('backend.pages.role.create', compact('permissions','branches'));
     }
     public function store(RoleAddRequest $request)
     {
@@ -52,7 +53,8 @@ class RoleController extends Controller
         if($role_info=="Restore first")
             return redirect()->back()->with('error', $role_info);
         $permissions = $this->roleService->getAllPermissions($id);
-        return \view('backend.pages.role.edit',compact('role_info','permissions'));
+        $branches = $this->roleService->getAllBranches($id);
+        return \view('backend.pages.role.edit',compact('role_info','permissions','branches'));
     }
     public function update(RoleEditRequest $request)
     {

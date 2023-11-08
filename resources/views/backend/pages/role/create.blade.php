@@ -56,6 +56,19 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="val-suggestions">Branches</label>
+                                    <div class="form-group">
+                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Branches for the Role.." multiple>
+                                            <option></option>
+                                            @foreach ($branches as $branch)
+                                                <option value='{{ $branch->id }}'> {{ $branch->name }} </option>
+                                            @endforeach
+
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="val-suggestions">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ old('description') }}</textarea>
                                 </div>

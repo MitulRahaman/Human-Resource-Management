@@ -19,6 +19,7 @@ class RoleService
             ->setSl_no($data['sl_no'])
             ->setDescription($data['description'])
             ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
+            ->setBranch_ids(isset($data['branches']) ? $data['branches']:null)
             ->setStatus(Config::get('variable_constants.activation.active'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->create();
@@ -28,10 +29,17 @@ class RoleService
     {
         return $this->roleRepository->getAllPermissions($id);
     }
-
+    public function getAllBranches($id)
+    {
+        return $this->roleRepository->getAllBranches($id);
+    }
     public function getPermissions()
     {
         return $this->roleRepository->getPermissions();
+    }
+    public function getBranches()
+    {
+        return $this->roleRepository->getBranches();
     }
     public function getRole($id)
     {
@@ -75,6 +83,7 @@ class RoleService
             ->setName($data['name'])
             ->setDescription($data['description'])
             ->setPermission_ids(isset($data['permissions']) ? $data['permissions']:null)
+            ->setBranch_ids(isset($data['branches']) ? $data['branches']:null)
             ->setUpdatedAt(date('Y-m-d H:i:s'))
             ->update();
     }
@@ -110,7 +119,11 @@ class RoleService
                 $created_at = $row->created_at;
                 $permissions = '';
                 foreach ($row->permissions as $p) {
-                    $permissions.="<span class=\"badge badge-success\">$p</span><br>";
+                    $permissions.="<span class=\"badge badge-primary\">$p</span><br>";
+                }
+                $branches = '';
+                foreach ($row->branches as $b) {
+                    $branches.="<span class=\"badge badge-primary\">$b</span><br>";
                 }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";
@@ -148,6 +161,7 @@ class RoleService
                 array_push($temp, $sl_no);
                 array_push($temp, $status);
                 array_push($temp, $permissions);
+                array_push($temp, $branches);
                 if ($row->deleted_at) {
                     array_push($temp, ' <span class="badge badge-danger" >Yes</span>');
                 } else {

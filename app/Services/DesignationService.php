@@ -40,6 +40,7 @@ class DesignationService
         return $this->designationRepository->setName($data['name'])
             ->setDescription($data['description'])
             ->setBranch_ids(isset($data['branches']) ? $data['branches']:null)
+            ->setDepartment($data['department'])
             ->setStatus(Config::get('variable_constants.activation.active'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->create();
@@ -88,8 +89,13 @@ class DesignationService
             ->setName($data['name'])
             ->setDescription($data['description'])
             ->setBranch_ids(isset($data['branches']) ? $data['branches']:null)
+            ->setDepartment($data['department'])
             ->setUpdatedAt(date('Y-m-d H:i:s'))
             ->update();
+    }
+    public function fetchDepartments($data)
+    {
+        return $this->designationRepository->fetchDepartments($data);
     }
     public function fetchData()
     {
@@ -100,6 +106,7 @@ class DesignationService
                 $id = $row->id;
                 $name= $row->name;
                 $description = $row->description;
+                $department = $row->department;
                 $created_at = $row->created_at;
                 $branches = '';
                 foreach ($row->branches as $b) {
@@ -139,6 +146,7 @@ class DesignationService
                 array_push($temp, $description);
                 array_push($temp, $status);
                 array_push($temp, $branches);
+                array_push($temp, $department);
                 if ($row->deleted_at) {
                     array_push($temp, ' <span class="badge badge-danger" >Yes</span>');
                 } else {

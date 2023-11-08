@@ -64,7 +64,9 @@ class CalenderRepository
     public function update()
     {
         $date ='';
-        $indexes = array_keys($this->day, 1);
+        DB::transaction(function ()
+        {
+            $indexes = array_keys($this->day, 1);
             foreach ($indexes as $i)
             {
                 $date= DB::table('calender')->select('id')->where('date',$this->date[$i])->first();
@@ -73,10 +75,10 @@ class CalenderRepository
                     $date = DB::table('calender')
                         ->where('id', $date->id)
                         ->update([
-                                'title' => ($this->title[$i])?  $this->title[$i]:'',
-                                'description' => ($this->description[$i])? $this->description[$i]:'',
-                                'updated_at' => $this->updated_at,
-                            ]);
+                            'title' => ($this->title[$i])?  $this->title[$i]:'',
+                            'description' => ($this->description[$i])? $this->description[$i]:'',
+                            'updated_at' => $this->updated_at,
+                        ]);
                 }
                 else
                 {
@@ -88,13 +90,13 @@ class CalenderRepository
                             'created_at' => $this->created_at
                         ]);
                 }
-
             }
-        $indexes = array_keys($this->day, 0);
-        foreach ($indexes as $i)
-        {
-            DB::table('calender')->where('date',$this->date[$i])->delete();
-        }
+            $indexes = array_keys($this->day, 0);
+            foreach ($indexes as $i)
+            {
+                DB::table('calender')->where('date',$this->date[$i])->delete();
+            }
+        });
         return $date;
     }
     public function getDates()
@@ -110,26 +112,30 @@ class CalenderRepository
     }
     public  function saveEvent()
     {
-        DB::table('calender')->where('date',$this->oldDate)->delete();
-        $date= DB::table('calender')->select('id')->where('date',$this->newDate)->first();
-        if($date)
+        $date='';
+        DB::transaction(function ()
         {
-            $date = DB::table('calender')
-                ->where('id', $date->id)
-                ->update([
-                    'title' => ($this->title)?  $this->title:'',
-                    'updated_at' => $this->updated_at,
-                ]);
-        }
-        else
-        {
-            $date = DB::table('calender')
-                ->insertGetId([
-                    'date' => $this->newDate,
-                    'title' => ($this->title)?  $this->title:'',
-                    'created_at' => $this->created_at
-                ]);
-        }
+            DB::table('calender')->where('date',$this->oldDate)->delete();
+            $date= DB::table('calender')->select('id')->where('date',$this->newDate)->first();
+            if($date)
+            {
+                $date = DB::table('calender')
+                    ->where('id', $date->id)
+                    ->update([
+                        'title' => ($this->title)?  $this->title:'',
+                        'updated_at' => $this->updated_at,
+                    ]);
+            }
+            else
+            {
+                $date = DB::table('calender')
+                    ->insertGetId([
+                        'date' => $this->newDate,
+                        'title' => ($this->title)?  $this->title:'',
+                        'created_at' => $this->created_at
+                    ]);
+            }
+        });
         return $date;
     }
     public function saveExcel($file)

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DesignationAddRequest extends FormRequest
+class ExcelFileAddRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class DesignationAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:designations,name',
-            'branches'=> 'required',
-            'description' => 'nullable',
+            'file' => 'required|mimes:xlsx,csv,txt',
         ];
     }
 }

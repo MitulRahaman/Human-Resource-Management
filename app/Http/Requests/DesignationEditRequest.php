@@ -22,6 +22,7 @@ class DesignationEditRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
+
     public function rules()
     {
         $id = $this->route('id');
@@ -32,7 +33,7 @@ class DesignationEditRequest extends FormRequest
                 Rule::exists('designations', 'id'),
             ],
             'name'=>"required|unique:designations,name,$id",
-            'branches' => 'nullable',
+            'branches' => 'required',
             'description'=> 'nullable',
 
         ];

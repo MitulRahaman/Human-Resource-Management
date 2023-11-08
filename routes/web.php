@@ -11,6 +11,8 @@ use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\Designation\DesignationController;
+use App\Http\Controllers\Calender\CalenderController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -153,6 +155,19 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/{designation}/edit', [DesignationController::class, 'edit'])->name('edit_designation');
             Route::post('/{id}/validate_designation_name',[DesignationController::class, 'validate_name']);
             Route::post('/{id}/update', [DesignationController::class, 'update']);
+        });
+
+        Route::prefix('calender')->group(function() {
+            Route::get('/', [CalenderController::class, 'index']);
+            Route::get('/manage', [CalenderController::class, 'manage']);
+            Route::post('/get_dates',  [CalenderController::class, 'getDates']);
+            Route::post('/store', [CalenderController::class, 'store']);
+            Route::get('/get_events', [CalenderController::class, 'getEvents']);
+            Route::get('/save_event', [CalenderController::class, 'saveEvent']);
+            Route::get('/upload', [CalenderController::class, 'upload']);
+            Route::post('/save_excel', [CalenderController::class, 'saveExcel']);
+            Route::post('/update_title', [CalenderController::class, 'updateTitle']);
+            Route::post('/add_event', [CalenderController::class, 'addEvent']);
         });
 
 

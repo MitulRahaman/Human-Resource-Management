@@ -115,15 +115,12 @@
                     var title = event.event._def.title;
                     date = moment(date).format('YYYY-MM-DD');
                     $('#date').val(date);
-                    // $('#title').val(title);
                     document.getElementById('title').setAttribute('value',title);
                     $('#eventModal').modal();
                 },
                 dateClick : function(date, allDay, jsEvent, view) {
                     date = moment(date.date).format('YYYY-MM-DD');
                     $('#day').val(date);
-
-                    console.log($('#date').val());
                     $('#dayModal').modal();
                 },
                 eventDrop: function (event) {
@@ -146,7 +143,7 @@
                             One.helpers('notify', {type: 'success', icon: 'fa fa-check mr-1', message: 'Event updated!'});
                         },
                         error: function() {
-
+                            One.helpers('notify', {type: 'error', icon: 'fa fa-check mr-1', message: 'Event not updated!'});
                         }
                     });
                 }

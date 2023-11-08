@@ -22,7 +22,7 @@
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push">
-                            <div class="col-lg-8 col-xl-5">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a Leave Type.."> 

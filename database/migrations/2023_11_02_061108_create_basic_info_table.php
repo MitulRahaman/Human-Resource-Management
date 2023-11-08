@@ -17,14 +17,14 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedInteger('department_id');
-            $table->foreign('department_id')->references('id')->on('departments')->nullable();
+            $table->unsignedInteger('department_id')->nullable();
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->string('personal_email')->unique();
             $table->string('preferred_email')->unique()->nullable();;
             $table->date('joining_date');
             $table->date('career_start_date');
-            $table->unsignedInteger('last_organization_id');
-            $table->foreign('last_organization_id')->references('id')->on('organizations')->nullable();
+            $table->unsignedInteger('last_organization_id')->nullable();
+            $table->foreign('last_organization_id')->references('id')->on('organizations');
             $table->timestamps();
             $table->softDeletes(); 
         });

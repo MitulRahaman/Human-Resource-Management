@@ -9,7 +9,7 @@
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href=#>
+        <a href="{{ url('user/create') }}">  
             <button type="button" class="btn btn-dark mr-1 mb-3">
                 <i class="fa fa-fw fa-key mr-1"></i> Add User
             </button>
@@ -88,6 +88,7 @@
             createTable(); 
         });
         //end create table
+
      </script>
 
     <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>

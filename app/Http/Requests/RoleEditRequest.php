@@ -34,6 +34,7 @@ class RoleEditRequest extends FormRequest
             'sl_no' => 'required',
             'name'=>"required|unique:roles,name,$id",
             'permissions' => 'nullable',
+            'branches' => 'required|exists:branches,id',
             'description'=> 'nullable',
 
         ];

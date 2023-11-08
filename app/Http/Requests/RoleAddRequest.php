@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Branch;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoleAddRequest extends FormRequest
@@ -27,6 +28,7 @@ class RoleAddRequest extends FormRequest
             'sl_no' => 'required',
             'name' => 'required|unique:roles,name',
             'permissions'=> 'nullable',
+            'branches' => 'required|exists:branches,id',
             'description' => 'nullable',
         ];
     }

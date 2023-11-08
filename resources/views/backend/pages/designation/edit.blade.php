@@ -55,6 +55,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="val-username">Department </label>
+                                    <div class="form-group">
+                                        <select class="js-select2 form-control" id="department" name="department" style="width: 100%;" data-placeholder="Choose parent menu..">
+                                            <option value="{{$designation_info->department_id}}" selected>{{$designation_info->department_name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="val-suggestions">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ $designation_info->description ?? "" }}</textarea>
                                 </div>
@@ -117,6 +125,30 @@
             });
 
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#branches').on('change', function() {
+                var selectedBranches = $(this).val();
+                $.ajax({
+                    url: '{{ url('designation/fetch_departments') }}',
+                    type: 'POST',
+                    data: {
+                        branches: selectedBranches,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        $('#department').empty();
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            $('#department').append(
+                                '<option value="' + data[i]['id'] + '" style="color:black">' + data[i]['name'] + '</option>'
+                            );
+                        }
+                    }
+                });
+            });
+        });
     </script>
     <!-- Page JS Plugins -->
 

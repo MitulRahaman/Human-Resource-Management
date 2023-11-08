@@ -55,9 +55,10 @@
                         <tr>
                             <th class="text-center ">#</th>
                             <th >Name</th>
-                            <th class="d-none d-sm-table-cell " style="width: 10%;">Description</th>
+                            <th class="d-none d-sm-table-cell " >Description</th>
                             <th class="d-none d-sm-table-cell ">Status</th>
                             <th >Branches</th>
+                            <th >Department</th>
                             <th >Deleted</th>
                             <th >Created At</th>
                             <th >Action</th>

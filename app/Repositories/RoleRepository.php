@@ -2,13 +2,14 @@
 
 namespace App\Repositories;
 
+use App\Models\Branch;
 use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 
 class RoleRepository
 {
-    private $name, $id, $description, $sl_no, $status, $created_at, $updated_at, $deleted_at, $permission_ids;
+    private $name, $branch_ids, $id, $description, $sl_no, $status, $created_at, $updated_at, $deleted_at, $permission_ids;
     public function setId($id)
     {
         $this->id = $id;
@@ -17,6 +18,11 @@ class RoleRepository
     public function setPermission_ids($permission_ids)
     {
         $this->permission_ids = $permission_ids;
+        return $this;
+    }
+    public function setBranch_ids($branch_ids)
+    {
+        $this->branch_ids = $branch_ids;
         return $this;
     }
     public function setName($name)
@@ -68,15 +74,19 @@ class RoleRepository
     }
     public function getAllRoleData()
     {
-        $roles=DB::table('roles as r')
-        ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
-        ->selectRaw('GROUP_CONCAT(p.name) as permissions')
-        ->leftJoin('role_permissions as rp', 'r.id', '=', 'rp.role_id')
-        ->leftJoin('permissions as p', 'rp.permission_id', '=', 'p.id')
-        ->groupBy('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', 'r.created_at', 'r.deleted_at')
-        ->get();
+        $roles = DB::table('roles as r')
+            ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->selectRaw('GROUP_CONCAT(p.name) as permissions')
+            ->leftJoin('role_permissions as rp', 'r.id', '=', 'rp.role_id')
+            ->leftJoin('permissions as p', 'rp.permission_id', '=', 'p.id')
+            ->selectRaw('GROUP_CONCAT(b.name) as branches')
+            ->leftJoin('role_branches as rb', 'r.id', '=', 'rb.role_id')
+            ->leftJoin('branches as b', 'rb.branch_id', '=', 'b.id')
+            ->groupBy('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', 'r.created_at', 'r.deleted_at')
+            ->get();
         foreach ($roles as $role) {
             $role->permissions = explode(',', $role->permissions);
+            $role->branches = explode(',', $role->branches);
         }
         return $roles;
     }
@@ -93,9 +103,26 @@ class RoleRepository
             })
             ->get();
     }
+    public function getAllBranches($id)
+    {
+        $id =(int) $id;
+        return DB::table('branches')
+            ->where('branches.status',1)
+            ->where('branches.deleted_at',null)
+            ->select('branches.*', DB::raw('IF(role_branches.role_id = ' . $id . ', "yes", "no") as selected'))
+            ->leftJoin('role_branches', function ($join) use ($id) {
+                $join->on('branches.id', '=', 'role_branches.branch_id')
+                    ->where('role_branches.role_id', '=', $id);
+            })
+            ->get();
+    }
     public function getPermissions()
     {
         return Permission::where('status',1)->get();
+    }
+    public function getBranches()
+    {
+        return Branch::where('status',1)->get();
     }
     public function getRole($id)
     {
@@ -123,6 +150,15 @@ class RoleRepository
                     DB::table('role_permissions')->insert([
                         'role_id'=> $roles,
                         'permission_id'=>(int)$p,
+                    ]);
+                }}
+            if($this->branch_ids)
+            {
+                foreach ($this->branch_ids as $b)
+                {
+                    DB::table('role_branches')->insert([
+                        'role_id'=> $roles,
+                        'branch_id'=>(int)$b,
                     ]);
                 }}
             return response()->json(['message' => 'Role added successfully']);
@@ -176,7 +212,17 @@ class RoleRepository
                         'permission_id'=>(int)$p,
                     ]);
                 }}
+            DB::table('role_branches')->where('role_id',$this->id)->delete();
+            if($this->branch_ids)
+            {
 
+                foreach ($this->branch_ids as $b)
+                {
+                    DB::table('role_branches')->insert([
+                        'role_id'=> $this->id,
+                        'branch_id'=>(int)$b,
+                    ]);
+                }}
             return response()->json(['message' => 'Role updated successfully']);
         }
         return response()->json(['error' => 'Bad request: Role not updated']);

@@ -143,7 +143,7 @@
                             One.helpers('notify', {type: 'success', icon: 'fa fa-check mr-1', message: 'Event updated!'});
                         },
                         error: function() {
-                            One.helpers('notify', {type: 'error', icon: 'fa fa-check mr-1', message: 'Event not updated!'});
+                            One.helpers('notify', {type: 'danger', icon: 'fa fa-check mr-1', message: 'Event not updated!'});
                         }
                     });
                 }

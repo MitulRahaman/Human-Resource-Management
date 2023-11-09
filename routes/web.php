@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Degree\DegreeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
@@ -88,7 +89,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('verifydata', [UserController::class, 'verifydata']);
         Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
     });
-    
+
     Route::group(['middleware'=> 'superUser'], function() {
         Route::prefix('permission')->group(function() {
 
@@ -109,7 +110,7 @@ Route::group(['middleware'=> 'auth'], function() {
 
             Route::post('/{id}/delete', [PermissionController::class, 'delete']);
             Route::post('/{id}/restore', [PermissionController::class, 'restore']);
-        
+
             Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
         });
@@ -179,6 +180,20 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/save_excel', [CalenderController::class, 'saveExcel']);
             Route::post('/update_title', [CalenderController::class, 'updateTitle']);
             Route::post('/add_event', [CalenderController::class, 'addEvent']);
+        });
+
+        Route::prefix('degree')->group(function() {
+            Route::get('/', [DegreeController::class, 'index']);
+            Route::get('/get_degree_data', [DegreeController::class, 'fetchData']);
+            Route::get('/add', [DegreeController::class, 'create']);
+            Route::post('/validate_inputs', [DegreeController::class, 'validate_inputs']);
+            Route::post('/store', [DegreeController::class, 'store']);
+            Route::get('/{degree}/edit', [DegreeController::class, 'edit'])->name('edit_degree');
+            Route::post('/{id}/update', [DegreeController::class, 'update']);
+            Route::post('/{id}/validate_name',[DegreeController::class, 'validate_name']);
+            Route::post('/{id}/delete', [DegreeController::class, 'delete']);
+            Route::post('/{id}/restore', [DegreeController::class, 'restore']);
+
         });
 
 

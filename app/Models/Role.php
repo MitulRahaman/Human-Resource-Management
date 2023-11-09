@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Permission;
 
 class Role extends Model
 {
@@ -19,5 +18,9 @@ class Role extends Model
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
+    }
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class);
     }
 }

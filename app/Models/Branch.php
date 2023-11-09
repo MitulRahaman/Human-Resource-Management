@@ -11,5 +11,8 @@ class Branch extends Model
     use HasFactory, softDeletes;
 
     protected $fillable = ['name', 'address', 'status'];
-
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }

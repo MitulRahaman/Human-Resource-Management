@@ -96,4 +96,8 @@ class DesignationController extends Controller
     {
         return $this->designationService->fetchData();
     }
+    public function fetchDepartments(Request $request)
+    {
+        return $this->designationService->fetchDepartments($request->all());
+    }
 }

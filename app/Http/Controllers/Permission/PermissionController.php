@@ -16,7 +16,7 @@ class PermissionController extends Controller
     public function __construct(PermissionService $permissionService)
     {
         $this->permissionService = $permissionService;
-        View::share('main_menu', 'Permissions');
+        View::share('main_menu', 'System Settings');
         View::share('sub_menu', 'Permissions');
     }
     public function index()

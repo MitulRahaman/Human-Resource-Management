@@ -28,10 +28,16 @@
                     <thead>
                         <tr>
                             <th class="text-center">Sl no.</th>
-                            <th style="width: 40%;">Name</th>
-                            <th class="text-center" style="width: 15%;">for Year</th>
-                            <th class="text-center">Total leave</th> 
-                            <th class="text-center">Action</th> 
+                            <th class="text-center">Photo</th>
+                            <th class="text-center">Employee ID</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Phone No.</th>
+                            <th class="text-center">Branch</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">Designation</th>
+                            <th class="text-center">Joining Date</th>
+                            <th class="text-center">Action</th>
                     </thead>
                     <tbody>
 

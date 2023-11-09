@@ -17,12 +17,7 @@ class UserController extends Controller
     {
         $this->userService = $userService;
         View::share('main_menu', 'Users');
-        View::share('sub_menu', 'User Info');
-    }
-
-    public function addUserIndex()
-    {
-        return \view('backend.pages.addUser.index');
+        View::share('sub_menu', 'Add User');
     }
 
     public function getTableData()
@@ -37,6 +32,11 @@ class UserController extends Controller
         return \view('backend.pages.addUser.create', compact('branches', 'organizations'));
     }
 
+    public function manage()
+    {
+        return \view('backend.pages.addUser.manage');
+    }
+
     public function getDeptDesg(Request $request)
     {
         return $this->userService->getDeptDesg($request);
@@ -46,11 +46,11 @@ class UserController extends Controller
     {
         try {
             if(!($this->userService->storeUser($request)))
-                return redirect('user')->with('error', 'Failed to add user');
+                return redirect('user/create')->with('error', 'Failed to add user');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('user')->with('success', 'User added successfully');
+        return redirect('user/create')->with('success', 'User added successfully');
     }
 
     public function verifydata(Request $request)

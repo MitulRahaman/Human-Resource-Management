@@ -58,42 +58,56 @@ class UserService
     {
         $result = $this->userRepository->getTableData();
         if ($result->count() > 0) {
+            //dd($result);
             $data = array();
-            // foreach ($result as $key=>$row) {
-            //     $id = $row->id;
-            //     $name = $row->name;
-            //     $total_leaves = $row->total_leaves;
-                
-            //     $currentYear = date("Y"); 
-                
-            //     if($year >= $currentYear) {
-            //         if ($total_leaves > 0) {
-            //             $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\"> 
-            //             <i class=\"fas fa-edit text-success mr-1\"></i>Update</td>";
-                        
-            //         } else {
-            //             $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\"> 
-            //             <i class=\"fas fa-plus text-success mr-1\"></i>Add</td>";
-            //         }
-            //     } else {
-            //         if ($total_leaves > 0) {
-            //             $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\"disabled=\"true\"> 
-            //             <i class=\"fas fa-edit text-success mr-1\"></i>Update</td>";
-                        
-            //         } else {
-            //             $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\"disabled=\"true\"> 
-            //             <i class=\"fas fa-plus text-success mr-1\"></i>Add</td>";
-            //         }
-            //     }
-                
-            //     $temp = array();
-            //     array_push($temp, $key+1);
-            //     array_push($temp, $name);
-            //     array_push($temp, $year);
-            //     array_push($temp, $total_leaves);
-            //     array_push($temp, $action_btn);
-            //     array_push($data, $temp);
-            // }
+            foreach ($result as $key=>$row) {
+                $id = $row->id;
+                $imgName = $row->image;
+                $employee_id = $row->employee_id;
+                $name = $row->full_name;
+                $email = $row->email;
+                $phone_number = $row->phone_number;
+                $branch_name = $this->userRepository->getBranchNameForTable($row->branch_id);
+                $department_name = $this->userRepository->getDepartmentNameForTable($row->department_id);
+                $designation_name = $this->userRepository->getDesignationNameForTable($row->designation_id);
+                $joining_date = $row->joining_date;
+
+                $url = asset('storage/userImg/'. $imgName);
+                $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"...\"></td>";
+
+
+                // $edit_url = route('edit_user', [$id]);
+                $edit_btn = "<a class=\"dropdown-item\" href=\"#\">Edit</a>";
+                $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\"  </a>";
+                $action_btn = "<div class=\"col-sm-6 col-xl-4\">
+                                    <div class=\"dropdown\">
+                                        <button type=\"button\" class=\"btn btn-success dropdown-toggle\" id=\"dropdown-default-success\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+                                            Action
+                                        </button>
+                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-success\">";
+                $action_btn .= "$edit_btn
+                $toggle_btn
+                ";
+                $action_btn .= "</div>
+                                    </div>
+                                </div>";
+
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $img);
+                array_push($temp, $employee_id);
+                array_push($temp, $name);
+                array_push($temp, $email);
+                array_push($temp, $phone_number);
+                array_push($temp, $branch_name);
+                array_push($temp, $department_name);
+                array_push($temp, $designation_name);
+                array_push($temp, $joining_date);
+                array_push($temp, $action_btn);
+                array_push($data, $temp);
+            }
+
+
             return json_encode(array('data'=>$data));
         } else {
             return '{

@@ -46,6 +46,30 @@ class UserRepository
         return [$deptId, $deptName, $desgId, $desgName];
     }
 
+    public function getBranchNameForTable($branchId)
+    {
+        if($branchId == null)
+            return null;
+        $branchName = DB::table('branches')->where('id', '=', $branchId)->first('name');
+        return $branchName->name;
+    }
+
+    public function getDepartmentNameForTable($deptId)
+    {
+        if($deptId == null)
+            return null;
+        $deptName = DB::table('departments')->where('id', '=', $deptId)->first('name');
+        return $deptName->name;
+    }
+
+    public function getDesignationNameForTable($desgId)
+    {
+        if($desgId == null)
+            return null;
+        $desgName = DB::table('designations')->where('id', '=', $desgId)->first('name');
+        return $desgName->name;
+    }
+
     public function getOrganizations()
     {
         return Organization::all();
@@ -104,8 +128,15 @@ class UserRepository
     }
 
     public function getTableData()
-    {
-        return DB::table('basic_info')->get();
+    {    
+        return DB::table('users as u')
+        ->leftJoin('basic_info as bi', function ($join) {
+            $join->on('u.id', '=', 'bi.user_id');
+        })
+        ->whereNull('u.deleted_at')
+        ->groupBy('u.id')
+        ->select('u.id', 'u.image', 'u.employee_id', 'u.full_name', 'u.email', 'u.phone_number', 'bi.branch_id', 'bi.department_id', 'bi.designation_id', 'bi.joining_date')
+        ->get();
     }
 
     public function isEmployeeIdExists($employee_id)

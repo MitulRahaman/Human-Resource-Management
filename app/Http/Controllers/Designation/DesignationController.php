@@ -16,7 +16,7 @@ class DesignationController extends Controller
     public function __construct(DesignationService $designationService)
     {
         $this->designationService = $designationService;
-        View::share('main_menu', 'Designations');
+        View::share('main_menu', 'System Settings');
         View::share('sub_menu', 'Designations');
     }
     public function index()

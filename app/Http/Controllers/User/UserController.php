@@ -61,4 +61,13 @@ class UserController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
+    public function show(int $id=null)
+    {
+        View::share('sub_menu', 'Profile');
+        $user = $this->userService->getUserInfo($id);
+        //dd($user);
+        abort_if(!$user, 404);
+        return \view('backend.pages.addUser.profile', compact('user'));
+    }
 }

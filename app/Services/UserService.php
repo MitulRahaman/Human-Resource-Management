@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class UserService
@@ -126,7 +127,7 @@ class UserService
         $is_personalEmail_exists = $this->userRepository->isPersonalEmailExists($data->personal_email);
         $is_preferredEmail_exists = $this->userRepository->isPreferredEmailExists($data->preferred_email);
         $is_phone_exists = $this->userRepository->isPhoneExists($data->phone);
-        
+
         if($is_employeeId_exists != null) {
             $flag = 0;
             return [
@@ -160,6 +161,16 @@ class UserService
                 'success' => true,
             ];
         }
-        
+
+    }
+
+    public function getUserInfo($id=null)
+    {
+        if (!$id) {
+            $this->userRepository->setId(Auth::id());
+        } else {
+            $this->userRepository->setId($id);
+        }
+        return $this->userRepository->getUserInfo();
     }
 }

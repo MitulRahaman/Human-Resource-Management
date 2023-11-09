@@ -13,4 +13,23 @@ class BasicInfo extends Model
     protected $table = 'basic_info';
     protected $fillable = ['user_id', 'branch_id', 'department_id', 'designation_id', 'personal_email', 'preferred_email', 'joining_date', 'career_start_date',  'last_organization_id'];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'designation_id', 'id');
+    }
+
+    public function lastOrganization()
+    {
+        return $this->belongsTo(Organization::class, 'last_organization_id', 'id');
+    }
 }

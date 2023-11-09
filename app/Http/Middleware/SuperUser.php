@@ -16,8 +16,9 @@ class SuperUser
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->user()->is_super_user)
+        if (!$request->user()->is_super_user) {
+            abort(403, 'You don\'t have permission!');
+        }
         return $next($request);
-
     }
 }

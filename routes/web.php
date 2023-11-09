@@ -90,6 +90,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('store', [UserController::class, 'store']);
         Route::post('verifydata', [UserController::class, 'verifydata']);
         Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
+
+        Route::get('profile/{id?}', [UserController::class, 'show']);
     });
 
     Route::group(['middleware'=> 'superUser'], function() {

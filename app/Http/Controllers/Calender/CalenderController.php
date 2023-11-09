@@ -22,6 +22,7 @@ class CalenderController extends Controller
     }
     public function index()
     {
+        dd('asdasd');
         return \view('backend.pages.calender.index');
     }
     public function manage()

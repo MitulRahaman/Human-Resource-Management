@@ -12,7 +12,13 @@ use App\Models\Organization;
 
 class UserRepository
 {
-    private $name;
+    private $name, $id;
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     public function getBranches()
     {
@@ -79,7 +85,7 @@ class UserRepository
     {
         if($data->career_start_date == null)
             $data->career_start_date = $data->joining_date;
-        
+
         $create_user = User::create([
             'employee_id' => $data->employee_id,
             'full_name' => $data->full_name,
@@ -128,7 +134,7 @@ class UserRepository
     }
 
     public function getTableData()
-    {    
+    {
         return DB::table('users as u')
         ->leftJoin('basic_info as bi', function ($join) {
             $join->on('u.id', '=', 'bi.user_id');
@@ -159,4 +165,18 @@ class UserRepository
         return DB::table('users')->where('phone_number', '=', $phone)->first();
     }
 
+    public function getUserInfo()
+    {
+        return User::with(['personalInfo', 'academicInfo', 'bankingInfo', 'emergencyContacts', 'basicInfo'])
+            ->with('academicInfo.degree')
+            ->with('academicInfo.institute')
+            ->with('bankingInfo.bank')
+            ->with('bankingInfo.nominees')
+            ->with('basicInfo.branch')
+            ->with('basicInfo.department')
+            ->with('basicInfo.designation')
+            ->with('basicInfo.lastOrganization')
+            ->where('id', $this->id)
+            ->first();
+    }
 }

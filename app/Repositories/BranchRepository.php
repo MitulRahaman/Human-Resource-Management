@@ -58,7 +58,7 @@ class BranchRepository
     {
         $data = Branch::find($id);
         $data->update(array('status' => 0));
-        $data->delete();
+        return $data->delete();
     }
 
     public function restoreBranch($id)

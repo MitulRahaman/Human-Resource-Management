@@ -127,24 +127,41 @@
                         <li class="nav-main-item">
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Leaves') == 0 ? 'active' : '' }}" href="{{ url('leave') }}">
                                 <span class="nav-main-link-name">Leaves</span>
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, "Roles") == 0 ? 'active' : '' }}" href="{{ url('role') }}">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Roles') == 0 ? 'active' : '' }}" href="{{ url('role') }}">
                                 <span class="nav-main-link-name">Roles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add User') == 0 || strcasecmp($sub_menu, 'ManageUsers') == 0) ? 'open' : '' }}">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon si si-users"></i>
+                        <span class="nav-main-link-name">Users</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Add User') == 0 ? 'active' : '' }}" href="{{ url('user/create') }}">   
+                                <span class="nav-main-link-name">Add User</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'ManageUsers') == 0 ? 'active' : '' }}" href="{{ url('user/manage') }}">
+                                <span class="nav-main-link-name">Manage Users</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($sub_menu, "Menus") == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Menus') == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
                         <span class="nav-main-link-name">Menu</span>
                     </a>
                 </li>
                 <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($sub_menu, "Permissions") == 0 ? 'active' : '' }}" href="{{ url('permission') }}">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Permissions') == 0 ? 'active' : '' }}" href="{{ url('permission') }}">
                         <span class="nav-main-link-name">Permissions</span>
                     </a>
                 </li>
-
             </ul>
         </div>
         <!-- END Side Navigation -->

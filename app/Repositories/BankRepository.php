@@ -2,26 +2,26 @@
 
 namespace App\Repositories;
 
-use App\Models\Degree;
+use App\Models\Bank;
 use Illuminate\Support\Facades\DB;
 
-class DegreeRepository
+class BankRepository
 {
-    private  $name, $id, $description, $created_at, $updated_at, $deleted_at;
+    private  $name, $id, $address,  $created_at, $updated_at, $deleted_at;
 
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
     public function setId($id)
     {
         $this->id = $id;
-        return $this;
-    }
-    public function setDescription($description)
-    {
-        $this->description = $description;
         return $this;
     }
     public function setCreatedAt($created_at)
@@ -39,54 +39,54 @@ class DegreeRepository
         $this->deleted_at = $deleted_at;
         return $this;
     }
-    public function getAllDegreeData()
+    public function getAllBankData()
     {
-        return DB::table('degrees as d')
-            ->select('d.id', 'd.name', 'd.description',  DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
+        return DB::table('banks as b')
+            ->select('b.id', 'b.name', 'b.address',  DB::raw('date_format(b.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(b.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->get();
     }
     public function isNameExists()
     {
-        return Degree::withTrashed()->where('name', $this->name)->exists() ;
+        return Bank::withTrashed()->where('name', $this->name)->exists() ;
     }
     public function save()
     {
-        return DB::table('degrees')
+        return DB::table('banks')
             ->insertGetId([
                 'name' => $this->name,
-                'description' => $this->description,
+                'address' => $this->address,
                 'created_at' => $this->created_at
             ]);
     }
-    public function getDegree($id)
+    public function getBank($id)
     {
-        $degree = Degree::onlyTrashed()->find($id);
-        if($degree)
+        $bank = Bank::onlyTrashed()->find($id);
+        if($bank)
             return "Restore first";
-        return Degree::findOrFail($id);
+        return Bank::findOrFail($id);
     }
     public function isNameUnique($id)
     {
-        return Degree::withTrashed()->where('name',$this->name)->where('id', '!=', $id)->first() ;
+        return Bank::withTrashed()->where('name',$this->name)->where('id', '!=', $id)->first() ;
     }
     public function update()
     {
-        return DB::table('degrees')
+        return DB::table('banks')
             ->where('id', '=', $this->id)
             ->update([
                 'name' => $this->name,
-                'description' => $this->description ? $this->description : null,
+                'address' => $this->address ? $this->address : null,
                 'updated_at' => $this->updated_at
             ]);
     }
     public function delete($id)
     {
-        $degree= Degree::findOrFail($id);
-        return $degree->delete();
+        $bank= Bank::findOrFail($id);
+        return $bank->delete();
     }
     public function restore($id)
     {
-        return Degree::withTrashed()->where('id', $id)->restore();
+        return Bank::withTrashed()->where('id', $id)->restore();
     }
 
 }

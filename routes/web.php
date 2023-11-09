@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Bank\BankController;
 use App\Http\Controllers\Degree\DegreeController;
+use App\Http\Controllers\Institute\InstituteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
@@ -196,6 +198,33 @@ Route::group(['middleware'=> 'auth'], function() {
 
         });
 
+        Route::prefix('bank')->group(function() {
+            Route::get('/', [BankController::class, 'index']);
+            Route::get('/get_bank_data', [BankController::class, 'fetchData']);
+            Route::get('/add', [BankController::class, 'create']);
+            Route::post('/validate_inputs', [BankController::class, 'validate_inputs']);
+            Route::post('/store', [BankController::class, 'store']);
+            Route::get('/{bank}/edit', [BankController::class, 'edit'])->name('edit_bank');
+            Route::post('/{id}/update', [BankController::class, 'update']);
+            Route::post('/{id}/validate_name',[BankController::class, 'validate_name']);
+            Route::post('/{id}/delete', [BankController::class, 'delete']);
+            Route::post('/{id}/restore', [BankController::class, 'restore']);
+
+        });
+
+        Route::prefix('institute')->group(function() {
+            Route::get('/', [InstituteController::class, 'index']);
+            Route::get('/get_institute_data', [InstituteController::class, 'fetchData']);
+            Route::get('/add', [InstituteController::class, 'create']);
+            Route::post('/validate_inputs', [InstituteController::class, 'validate_inputs']);
+            Route::post('/store', [InstituteController::class, 'store']);
+            Route::get('/{institute}/edit', [InstituteController::class, 'edit'])->name('edit_institute');
+            Route::post('/{id}/update', [InstituteController::class, 'update']);
+            Route::post('/{id}/validate_name',[InstituteController::class, 'validate_name']);
+            Route::post('/{id}/delete', [InstituteController::class, 'delete']);
+            Route::post('/{id}/restore', [InstituteController::class, 'restore']);
+            Route::post('/{id}/change_status', [InstituteController::class, 'changeStatus']);
+        });
 
     });
 });

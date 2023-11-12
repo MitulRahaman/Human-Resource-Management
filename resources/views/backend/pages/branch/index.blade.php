@@ -160,13 +160,7 @@
 
 @section('js_after')
 
-    
-
-    <script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>    
-    <script src="{{ asset('backend/js/oneui.core.min.js') }}"></script>
-
     <!-- Page JS Code -->
-
     <script src="{{ asset('backend/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/dataTables.buttons.min.js') }}"></script>

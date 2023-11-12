@@ -85,10 +85,10 @@ class DepartmentRepository
     public function updateStatus($id)
     {
         $data = Department::find($id);
-                if($data->status)
-                    $data->update(array('status' => 0));
-                else
-                    $data->update(array('status' => 1));
+        if($data->status)
+            $data->update(array('status' => 0));
+        else
+            $data->update(array('status' => 1));
     }
 
     public function destroyDepartment($id)

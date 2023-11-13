@@ -31,12 +31,12 @@ class UserController extends Controller
     {
         $branches = $this->userService->getBranches();
         $organizations = $this->userService->getOrganizations();
-        return \view('backend.pages.addUser.create', compact('branches', 'organizations'));
+        return \view('backend.pages.user.create', compact('branches', 'organizations'));
     }
 
     public function manage()
     {
-        return \view('backend.pages.addUser.manage');
+        return \view('backend.pages.user.manage');
     }
 
     public function getDeptDesg(Request $request)
@@ -134,7 +134,7 @@ class UserController extends Controller
 //        dd($emergency_contacts[0]->name);
 //        dd($user->basicInfo);
         abort_if(!$user, 404);
-        return \view('backend.pages.addUser.profile', compact('user', 'emergency_contacts', 'banking'));
+        return \view('backend.pages.user.profile', compact('user', 'emergency_contacts', 'banking'));
     }
     public function editData($id)
     {
@@ -145,7 +145,7 @@ class UserController extends Controller
         $degree = $this->userService->getDegree();
         $bank = $this->userService->getBank();
         abort_if(!$user, 404);
-        return \view('backend.pages.addUser.profileEdit', compact('user', 'bank','degree','institutes','const_variable'));
+        return \view('backend.pages.user.profileEdit', compact('user', 'bank','degree','institutes','const_variable'));
     }
     public function updateData(ProfileEditRequest $request)
     {

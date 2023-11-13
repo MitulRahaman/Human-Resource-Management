@@ -18,8 +18,6 @@ class UserController extends Controller
     {
         $this->userService = $userService;
         View::share('main_menu', 'Users');
-        View::share('sub_menu', 'Add User');
-        //View::share('sub_menu', 'Manage Users');
     }
 
     public function getTableData()
@@ -29,6 +27,7 @@ class UserController extends Controller
 
     public function create()
     {
+        View::share('sub_menu', 'Add User');
         $branches = $this->userService->getBranches();
         $organizations = $this->userService->getOrganizations();
         return \view('backend.pages.user.create', compact('branches', 'organizations'));
@@ -36,6 +35,7 @@ class UserController extends Controller
 
     public function manage()
     {
+        View::share('sub_menu', 'Manage Users');
         return \view('backend.pages.user.manage');
     }
 

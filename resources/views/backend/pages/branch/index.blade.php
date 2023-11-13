@@ -17,14 +17,14 @@
     </div>
 @endsection
 @section('content')
-        <div class="content"> 
+        <div class="content">
             <div class="block block-rounded">
             @include('backend.layouts.error_msg')
                 <div class="block-header">
                     <h3 class="block-title mt-4">{{ $sub_menu }}</h3>
                 </div>
                 <div class="block-content block-content-full">
-                        <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js --> 
+                        <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons" id="dataTable">
                         <thead>
                             <tr>
@@ -65,8 +65,8 @@
                                     </td>
                                     <td class="d-none d-sm-table-cell">
                                         <span class="badge">
-                                            <div class="row"> 
-                                                <div class="col"> 
+                                            <div class="row">
+                                                <div class="col">
                                                     <a  class="btn btn-sm btn-light " href="#">
                                                         @if ($b->deleted_at)
                                                         <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromleft_{{$b->id}}"> <i class="fas fa-trash-restore text-warning mr-1"></i> Restore</button>
@@ -76,7 +76,7 @@
                                                     </a>
                                                 </div>
                                                 @if (!$b->deleted_at)
-                                                <div class="col"> 
+                                                <div class="col">
                                                     <a class="btn btn-sm btn-light" href="{{ route('branch.edit', $b->id) }}">
                                                         <i class="fas fa-edit text-success mr-1"></i> Edit
                                                     </a>
@@ -93,7 +93,7 @@
                                             <div class="block block-rounded block-themed block-transparent mb-0">
                                                 <div class="block-header bg-primary-dark">
                                                     <div>
-                                                        <h3 class="block-title text-white">Warning</h3> 
+                                                        <h3 class="block-title text-white">Warning</h3>
                                                     </div>
                                                     <div class="block-options">
                                                         <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
@@ -106,7 +106,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('branch.destroy', $b->id) }}" method="post"> 
+                                                    <form action ="{{ route('branch.destroy', $b->id) }}" method="post">
                                                         @csrf
                                                         @method('delete')
                                                             <button type="submit" class="btn btn-primary">Ok</button>
@@ -124,7 +124,7 @@
                                             <div class="block block-rounded block-themed block-transparent mb-0">
                                                 <div class="block-header bg-primary-dark">
                                                     <div>
-                                                        <h3 class="block-title text-white">Warning</h3> 
+                                                        <h3 class="block-title text-white">Warning</h3>
                                                     </div>
                                                     <div class="block-options">
                                                         <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
@@ -137,7 +137,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('branch.restore', $b->id) }}" method="post"> 
+                                                    <form action ="{{ route('branch.restore', $b->id) }}" method="post">
                                                         @csrf
                                                             <button type="submit" class="btn btn-primary">Ok</button>
                                                     </form>
@@ -155,14 +155,14 @@
                 </div>
             </div>
         </div>
-   
+
 @endsection
 
 @section('js_after')
 
-    
 
-    <script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>    
+
+    <script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>
     <script src="{{ asset('backend/js/oneui.core.min.js') }}"></script>
 
     <!-- Page JS Code -->

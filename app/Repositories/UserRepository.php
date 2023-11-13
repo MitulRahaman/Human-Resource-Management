@@ -2,6 +2,15 @@
 
 namespace App\Repositories;
 
+use App\Models\AcademicInfo;
+use App\Models\Bank;
+use App\Models\BankingInfo;
+use App\Models\Degree;
+use App\Models\EmergencyContact;
+use App\Models\Institute;
+use App\Models\Nominee;
+use App\Models\PersonalInfo;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -178,5 +187,128 @@ class UserRepository
             ->with('basicInfo.lastOrganization')
             ->where('id', $this->id)
             ->first();
+    }
+    public function getInstitutes()
+    {
+        return Institute::where('status',1)->get();
+    }
+    public function getDegree()
+    {
+        return Degree::get();
+    }
+    public function getBank()
+    {
+        return Bank::get();
+    }
+    public function getEmergencyContacts()
+    {
+        return EmergencyContact::get();
+    }
+    public function getBankInfo($id)
+    {
+        return DB::table('banking_info as b')
+            ->where('b.user_id',$id)
+            ->join('nominees as n', 'b.id', '=', 'n.banking_info_id')
+            ->select('b.*', 'n.*')
+            ->first();
+    }
+    public function updateProfile($data)
+    {
+        $d = date('Y-m-d H:i:s');
+//        dd($d);
+        DB::transaction(function () use ($data,$d){
+            try{
+                $personal_info = PersonalInfo::where('user_id',$data['id'])->first();
+                if(!$personal_info)
+                {
+                    $personal_info = new PersonalInfo();
+                    $personal_info->user_id = $data['id'];
+                    $personal_info->created_at = $d;
+                }
+                else
+                {
+                    $personal_info->updated_at = $d;
+                }
+                $personal_info->father_name = $data['father_name'];
+                $personal_info->mother_name	 = $data['mother_name']	;
+                $personal_info->nid = $data['nid'];
+                $personal_info->birth_certificate = ($data['birth_certificate'])?  $data['birth_certificate']:'';
+                $personal_info->passport_no = $data['passport_no']? $data['passport_no']:'';
+                $personal_info->gender = $data['gender'];
+                $personal_info->religion = $data['religion'];
+                $personal_info->blood_group = $data['blood_group'];
+                $personal_info->dob = $data['dob'];
+                $personal_info->marital_status = $data['marital_status'];
+                $personal_info->no_of_children = $data['no_of_children']? $data['no_of_children']:'';
+                $personal_info->save();
+
+                $emergency_contact = new EmergencyContact();
+                $emergency_contact->user_id = $data['id'];
+                $emergency_contact->name  =$data['emergency_contact_name'];
+                $emergency_contact->relation = $data['relation'];
+                $emergency_contact->phone_number = $data['emergency_contact'];
+                $emergency_contact->created_at = $d;
+                $emergency_contact->save();
+
+                $academic_info = AcademicInfo::where('user_id',$data['id'])->first();
+                if(!$academic_info)
+                {
+                    $academic_info = new AcademicInfo();
+                    $academic_info->user_id = $data['id'];
+                    $academic_info->created_at = $d;
+                }
+                else
+                {
+                    $academic_info->updated_at = $d;
+                }
+                $academic_info->institute_id = $data['institute_id'];
+                $academic_info->degree_id = $data['degree_id'];
+                $academic_info->major = $data['major'];
+                $academic_info->passing_year = $data['year'];
+                $academic_info->save();
+
+                $bank_info = BankingInfo::where('user_id',$data['id'])->first();
+                if(!$bank_info)
+                {
+                    $bank_info = new BankingInfo();
+                    $bank_info->user_id = $data['id'];
+                    $bank_info->created_at = $d;
+                }
+                else
+                {
+                    $bank_info->updated_at = $d;
+                }
+                $bank_info->bank_id =$data['bank_id'];
+                $bank_info->account_name =$data['account_name'];
+                $bank_info->account_number =$data['account_number'];
+                $bank_info->branch =$data['branch'];
+                $bank_info->routing_no =$data['routing_number']? $data['routing_number']:'';
+                $bank_info->save();
+
+                $nominee = Nominee::where('banking_info_id',$bank_info->id)->first();
+                if(!$nominee)
+                {
+                    $nominee = new Nominee();
+                    $nominee->banking_info_id = $bank_info->id;
+                    $nominee->created_at = $d;
+                }
+                else
+                {
+                    $nominee->updated_at = $d;
+                }
+                $nominee->name = $data['nominee_name'];
+                $nominee->nid = $data['nominee_nid'];
+                $nominee->photo = $data['nominee_photo'];
+                $nominee->relation = $data['nominee_relation'];
+                $nominee->phone_number = $data['nominee_phone_number']? $data['nominee_phone_number']:'';
+                $nominee->email = $data['nominee_email']? $data['nominee_email']:'';
+                $nominee->save();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return $e;
+            }
+           return "success";
+        });
+        return "success";
     }
 }

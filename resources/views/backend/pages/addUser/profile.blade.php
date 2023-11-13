@@ -4,13 +4,14 @@
 @endsection
 @section('content')
     <div class="content">
+        @include('backend.layouts.error_msg')
         <!-- Quick Actions -->
         <div class="row">
             <div class="col-6">
-                <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                <a class="block block-rounded block-link-shadow text-center" href="{{url('user/profile/' . $user->id . '/edit')}}">
                     <div class="block-content block-content-full">
                         <div class="font-size-h2 text-dark">
-                            <i class="fa fa-pencil-alt"></i>
+                            <i class="fa fa-pencil-alt" ></i>
                         </div>
                     </div>
                     <div class="block-content py-2 bg-body-light">
@@ -47,7 +48,7 @@
                     <h1 class="font-size-lg mb-0">
                         {{ $user->full_name }} <i class="fa fa-star text-warning" data-toggle="tooltip" title="Premium Member"></i>
                     </h1>
-                    <p class="font-size-sm text-muted">{{ $user->basicInfo->designation->name }}</p>
+{{--                    <p class="font-size-sm text-muted">{{ $user->basicInfo->designation->name }}</p>--}}
                 </div>
             </div>
             <div class="block-content bg-body-light text-center">
@@ -72,6 +73,91 @@
             </div>
         </div>
         <!-- END User Info -->
+
+        <!-- User Information -->
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">User Information</h3>
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!-- Billing Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Official Information</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">John Parker</div>
+                                <address class="font-size-sm">
+                                    Sunrise Str 620<br>
+                                    Melbourne<br>
+                                    Australia, 11-587<br><br>
+                                    <i class="fa fa-phone"></i> (999) 888-55555<br>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>
+                                </address>
+                            </div>
+                        </div>
+                        <!-- END Billing Address -->
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Shipping Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Personal Information</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">John Parker</div>
+                                <address class="font-size-sm">
+                                    Sunrise Str 620<br>
+                                    Melbourne<br>
+                                    Australia, 11-587<br><br>
+                                    <i class="fa fa-phone"></i> (999) 888-55555<br>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>
+                                </address>
+                            </div>
+                        </div>
+                        <!-- END Shipping Address -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END User Information -->
+
+        <!-- Emergency Contact -->
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Emergency Contact </h3>
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Billing Address -->
+
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Contact Information</h3>
+                            </div>
+                            @foreach($emergency_contacts as $em)
+                                <div class="block-content">
+                                    <div class="font-size-h4 mb-1">{{$em->name}}</div>
+                                    <address class="font-size-sm">
+                                        {{$em->relation}}<br>
+
+                                        <i class="fa fa-phone"></i>  {{$em->phone_number}}<br>
+                                    </address>
+                                </div>
+                                <hr>
+                            @endforeach
+                        </div>
+
+
+                        <!-- END Billing Address -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Emergency Contact -->
 
         <!-- Addresses -->
         <div class="block block-rounded">
@@ -123,6 +209,40 @@
         </div>
         <!-- END Addresses -->
 
+        <!-- Banking -->
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Banking </h3>
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Billing Address -->
+
+                            <div class="block block-rounded block-bordered">
+                                <div class="block-header border-bottom">
+                                    <h3 class="block-title">Contact Information</h3>
+                                </div>
+                                @foreach($emergency_contacts as $em)
+                                <div class="block-content">
+                                    <div class="font-size-h4 mb-1">{{$em->name}}</div>
+                                    <address class="font-size-sm">
+                                        {{$em->relation}}<br>
+
+                                        <i class="fa fa-phone"></i>  {{$em->phone_number}}<br>
+                                    </address>
+                                </div>
+                                    <hr>
+                                @endforeach
+                            </div>
+
+
+                        <!-- END Billing Address -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Banking -->
         <!-- Shopping Cart -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">

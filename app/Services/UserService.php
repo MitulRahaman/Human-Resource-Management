@@ -173,4 +173,28 @@ class UserService
         }
         return $this->userRepository->getUserInfo();
     }
+    public function getInstitutes()
+    {
+        return $this->userRepository->getInstitutes();
+    }
+    public function getDegree()
+    {
+        return $this->userRepository->getDegree();
+    }
+    public function getBank()
+    {
+        return $this->userRepository->getBank();
+    }
+    public function updateProfile($data)
+    {
+        return $this->userRepository->updateProfile($data);
+    }
+    public function getEmergencyContacts($id)
+    {
+        return $this->userRepository->getEmergencyContacts($id);
+    }
+    public function getBankInfo($id)
+    {
+        return $this->userRepository->getBankInfo($id);
+    }
 }

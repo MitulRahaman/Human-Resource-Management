@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BranchAddRequest extends FormRequest
+class LeaveTypeAddRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class BranchAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'unique:branches,name', 'string', 'max:255'],  
-            'address' => 'nullable|regex:/([- ,\/0-9a-zA-Z]+)/',
+            'name' => ['required', 'unique:leave_types,name', 'string', 'max:255'],  
         ];
     }
 }

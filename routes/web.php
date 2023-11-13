@@ -98,8 +98,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('updateData', [UserController::class, 'updateData']);
 
         Route::get('profile/{id?}', [UserController::class, 'show']);
-        Route::get('profile/{id?}/edit', [UserController::class, 'edit']);
-        Route::post('profile/{id?}/update', [UserController::class, 'update']);
+        Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
+        Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
     });
 
     Route::group(['middleware'=> 'superUser'], function() {

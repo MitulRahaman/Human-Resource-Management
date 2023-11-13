@@ -98,7 +98,7 @@
                     </a>
                 </li>
                 <li class="nav-main-heading">User Interface</li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Banks') == 0 || strcasecmp($sub_menu, 'Institutes') == 0 || strcasecmp($sub_menu, 'Branches') == 0 || strcasecmp($sub_menu, 'Degree') == 0 || strcasecmp($sub_menu, 'Calender') == 0 || strcasecmp($sub_menu, 'Designations') == 0 || strcasecmp($sub_menu, 'Departments') == 0 || strcasecmp($sub_menu, 'Designation') == 0 || strcasecmp($sub_menu, 'Leaves') == 0 || strcasecmp($sub_menu, 'Roles') == 0) ? 'open' : '' }}">
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Banks') == 0 || strcasecmp($sub_menu, 'Institutes') == 0 || strcasecmp($sub_menu, 'Branches') == 0 || strcasecmp($sub_menu, 'Degree') == 0 || strcasecmp($sub_menu, 'Calender') == 0 || strcasecmp($sub_menu, 'Designations') == 0 || strcasecmp($sub_menu, 'Departments') == 0 || strcasecmp($sub_menu, 'Leaves') == 0 || strcasecmp($sub_menu, 'Roles') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-settings"></i>
                         <span class="nav-main-link-name">System Settings</span>

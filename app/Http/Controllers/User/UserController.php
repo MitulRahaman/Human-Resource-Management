@@ -55,7 +55,67 @@ class UserController extends Controller
         return redirect('user/create')->with('success', 'User added successfully');
     }
 
-    public function verifydata(Request $request)
+    public function edit($id)
+    {
+        View::share('sub_menu', 'Add User');
+        try {
+            $branches = $this->userService->getBranches();
+            $organizations = $this->userService->getOrganizations();
+            $data = $this->userService->editUser($id);
+            $currentBranchName = $this->userService->getCurrentBranchName($data->branch_id);
+            $currentDepartmentName = $this->userService->getCurrentDepartmentName($data->department_id);
+            $currentDesignationName = $this->userService->getCurrentDesignationName($data->designation_id);
+            $currentOrganizationName = $this->userService->getCurrentOrganizationName($data->last_organization_id);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return \view('backend.pages.user.edit', compact('data', 'branches', 'organizations', 'currentBranchName', 'currentDepartmentName', 'currentDesignationName', 'currentOrganizationName'));
+    }
+
+    public function update(UserUpdateRequest $request, $id)
+    {
+        try {
+            if(!$this->userService->updateUser($request, $id))
+                return redirect('user/manage')->with('error', 'Failed to update user');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect('user/manage')->with('success', 'User updated successfully');
+    }
+
+    public function destroy($id)
+    {
+        try {
+            if(!$this->userService->destroyUser($id))
+                return redirect('user')->with('error', 'Failed to delete user');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect()->back()->with('success', 'User deleted successfully');
+    }
+
+    public function restore($id)
+    {
+        try {
+            if(!$this->userService->restoreUser($id))
+                return redirect('user')->with('error', 'Failed to restore user');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect()->back()->with('success', 'User restored successfully');
+    }
+
+    public function changeStatus($id)
+    {
+        try {
+            $this->userService->updateStatus($id);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', 'You need to restore the user first');
+        }
+        return redirect()->back()->with('success', 'Status has been changed');
+    }
+
+    public function verifyData(Request $request)
     {
         try {
             return $this->userService->validateInputs($request);
@@ -76,7 +136,7 @@ class UserController extends Controller
         abort_if(!$user, 404);
         return \view('backend.pages.addUser.profile', compact('user', 'emergency_contacts', 'banking'));
     }
-    public function edit($id)
+    public function editData($id)
     {
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
@@ -87,7 +147,7 @@ class UserController extends Controller
         abort_if(!$user, 404);
         return \view('backend.pages.addUser.profileEdit', compact('user', 'bank','degree','institutes','const_variable'));
     }
-    public function update(ProfileEditRequest $request)
+    public function updateData(ProfileEditRequest $request)
     {
         try{
             $user = $this->userService->updateProfile($request->validated());
@@ -99,5 +159,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', "OOPS! Profile could not be updated.");
         }
 
+        abort_if(!$user, 404);
+        return \view('backend.pages.user.profile', compact('user'));
     }
 }

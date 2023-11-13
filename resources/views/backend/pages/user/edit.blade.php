@@ -7,7 +7,7 @@
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('user') }}">Users</a></li>
-            <li class="breadcrumb-item">Add</li>
+            <li class="breadcrumb-item">Edit</li>
         </ol>
     </nav>
 @endsection
@@ -16,73 +16,80 @@
     @include('backend.layouts.error_msg')
         <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
-                <h3 class="block-title">Add User</h3>
+                <h3 class="block-title">Update User</h3>
             </div>
             
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ url('user/store') }}" method="POST" onsubmit="return verify_inputs()" id="form" enctype="multipart/form-data">
+            <form class="js-validation" action="{{ url('user/update', $data->user_id) }}" method="POST" onsubmit="return verify_inputs()" id="form" enctype="multipart/form-data">
                 @csrf
+                @method('patch')
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push">
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val_employee_id">Employee ID <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required> 
-                                    <span id="error_employee_id" style="font-size:13px; color:red"></span>
+                                    <input type="number" class="form-control" id="employee_id" name="employee_id" value="{{ $data->employee_id }}" readonly > 
                                 </div>
                                 <div class="form-group">
                                     <label for="val-branchId">Branch<span class="text-danger">*</span></label>
                                     <select class="form-control" id="branchId" name="branchId" style="width: 100%" required>
-                                        <option></option>
+                                        <option value="{{ $data->branch_id }}">{{ $currentBranchName }}</option>
                                         @forelse ($branches as $branch)
-                                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                            @if($data->branch_id != $branch->id)
+                                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                            @endif
                                         @empty
                                         <p> </p>
                                         @endforelse
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-departmentId">Department</label>
+                                <label for="val-departmentId">Department</label>
                                     <select class="form-control" id="departmentId" name="departmentId" style="width: 100%;">
+                                        <option value="{{ $data->department_id }}">{{$currentDepartmentName}}</option>
                                         
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-designationId">Designation</label>
                                     <select class="form-control" id="designationId" name="designationId" style="width: 100%;">
+                                    <option value="{{ $data->designation_id }}">{{$currentDesignationName}}</option>
                                         
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_full_name">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name.." required> 
+                                    <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $data->full_name }}" required> 
                                 </div>
                                 <div class="form-group">
                                     <label for="val_nick_name">Nick Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nick_name" name="nick_name" placeholder="Enter nick name.." required> 
+                                    <input type="text" class="form-control" id="nick_name" name="nick_name" value="{{ $data->nick_name }}" required> 
                                 </div>
                                 <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="name@gmail.com" required> 
+                                    <input type="email" class="form-control" id="personal_email" name="personal_email" value="{{ $data->personal_email }}" required> 
                                     <span id="error_personal_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val_preferred_email">Preferred Email</label>
-                                    <input type="email" class="form-control" id="preferred_email" name="preferred_email" placeholder="name@appnap.io"> 
+                                    <label for="val_preferred_email">Preferred Email<span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="preferred_email" name="preferred_email" value="{{ $data->email }}" required> 
                                     <span id="error_preferred_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Phone Number<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" placeholder="171-000-9999" required>
+                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" value="{{ $data->phone_number }}" required>
                                     <small>Format: 171-000-9999</small><br>
                                     <span id="error_phone" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-organization">Previous Organizations</label>
-                                    <select class="form-control js-tags" id="organizationName" name="organizationName" style="width: 100%;" data-placeholder="Select Organizations..">
+                                    <select class="form-control js-tags" id="organizationName" name="organizationName" style="width: 100%">
+                                        <option value="{{ $data->last_organization_id }}">{{$currentOrganizationName}}</option>
                                         @forelse ($organizations as $organization)
-                                        <option value="{{ $organization->id }}">{{ $organization->name }}</option>
+                                            @if($data->last_organization_id != $organization->id)
+                                                <option value="{{ $organization->id }}">{{ $organization->name }}</option>
+                                            @endif
                                         @empty
                                         <p> </p>
                                         @endforelse
@@ -90,15 +97,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Joining date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="Y-m-d" data-date-format="Y-m-d" required>
+                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" value="{{ $data->joining_date }}" data-date-format="Y-m-d" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_career_start_date">Career start date</label>
-                                    <input type="text" class="js-flatpickr form-control" id="career_start_date" name="career_start_date" placeholder="Y-m-d" data-date-format="Y-m-d">
+                                    <input type="text" class="js-flatpickr form-control" id="career_start_date" name="career_start_date" value="{{ $data->career_start_date }}" data-date-format="Y-m-d">
                                 </div>
                                 <div class="form-group">
                                     <label for="val_photo">Choose a photo</label><br>
-                                    <input type="file" name="photo" id="photo" /><br>
+                                    <input type="file" name="photo" id="photo" value="{{ $data->image }}" /><br>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +113,7 @@
                         <!-- Save -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
+                                <button type="submit" class="btn btn-alt-primary" id="submit">Update</button>
                             </div>
                         </div>
                         <!-- END Save -->
@@ -181,31 +188,30 @@
 
 
         function verify_inputs(e){
-            let employee_id = $('#employee_id').val();
             let personal_email = $('#personal_email').val();
             let preferred_email = $('#preferred_email').val();
             let phone = $('#phone').val();
+
+            let current_personal_email = " <?php echo $data->personal_email; ?>"
+            let current_preferred_email = " <?php echo $data->email; ?>"
+            let current_phone = " <?php echo $data->phone_number; ?>"
             let flag = 0;
             $.ajax({
-                type: 'POST',
+                type: 'PATCH',
                 async:false,
-                url: '{{ url("user/verifydata") }}',
+                url: '{{ url("user/updateData") }}',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    employee_id: employee_id,
                     personal_email: personal_email,
                     preferred_email: preferred_email,
-                    phone: phone
+                    phone: phone,
+                    current_personal_email: current_personal_email,
+                    current_preferred_email: current_preferred_email,
+                    current_phone: current_phone
                 },
                 context: this,
                 success: function(response) {
                     if (!response.success) {
-                        if(response.error_employee_id) {
-                            flag = 0;
-                            document.getElementById('error_employee_id').innerHTML = response.error_employee_id;
-                        } else {
-                            document.getElementById('error_employee_id').innerHTML = "";
-                        }
                         if(response.error_personal_email) {
                             flag = 0;
                             document.getElementById('error_personal_email').innerHTML = response.error_personal_email;
@@ -227,7 +233,6 @@
                     }
                     else{
                         flag = 1;
-                        document.getElementById('error_employee_id').innerHTML = "";
                         document.getElementById('error_personal_email').innerHTML = "";
                         document.getElementById('error_preferred_email').innerHTML = "";
                         document.getElementById('error_phone').innerHTML = "";

@@ -148,7 +148,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add User') == 0 || strcasecmp($sub_menu, 'ManageUsers') == 0) ? 'open' : '' }}">
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add User') == 0 || strcasecmp($sub_menu, 'Manage Users') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-users"></i>
                         <span class="nav-main-link-name">Users</span>
@@ -160,7 +160,7 @@
                             </a>
                         </li>
                         <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'ManageUsers') == 0 ? 'active' : '' }}" href="{{ url('user/manage') }}">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Users') == 0 ? 'active' : '' }}" href="{{ url('user/manage') }}">
                                 <span class="nav-main-link-name">Manage Users</span>
                             </a>
                         </li>

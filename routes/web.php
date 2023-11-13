@@ -54,7 +54,6 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('verifydata', [BranchController::class, 'verifydata'])->name('verifydata');
         Route::patch('/updatedata', [BranchController::class, 'updatedata'])->name('updatedata');
     });
-
     Route::prefix('department')->group(function() {
         Route::get('/', [DepartmentController::class, 'index']);
         Route::get('/add', [DepartmentController::class, 'create']);
@@ -67,7 +66,6 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/verifydept', [DepartmentController::class, 'verifydept'])->name('verifydept');
         Route::patch('/updatedept', [DepartmentController::class, 'updatedept'])->name('updatedept');
     });
-
     Route::prefix('leave')->group(function() {
         Route::get('/', [LeaveController::class, 'index']);
         Route::get('/add', [LeaveController::class, 'create']);
@@ -82,20 +80,19 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('/updateleave', [LeaveController::class, 'updateleave'])->name('updateleave');
         Route::post('/addTotalLeave/{id}', [LeaveController::class, 'addTotalLeave']);
     });
-
     Route::prefix('user')->group(function() {
         Route::post('get_table_data', [UserController::class, 'getTableData']);
         Route::get('create', [UserController::class, 'create']);
         Route::get('manage', [UserController::class, 'manage']);
         Route::post('store', [UserController::class, 'store']);
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::get('edit/{id}', [UserController::class, 'edit']);
         Route::patch('/update/{id}', [UserController::class, 'update']);
         Route::post('/{id}/delete', [UserController::class, 'destroy']);
         Route::post('/{id}/restore', [UserController::class, 'restore']);
         Route::post('/{id}/change_status', [UserController::class, 'changeStatus']);
         Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
-        Route::post('verifyData', [UserController::class, 'verifyData']);
-        Route::patch('updateData', [UserController::class, 'updateData']);
+        Route::post('verifyUser', [UserController::class, 'verifyUser']);
+        Route::patch('updateUser', [UserController::class, 'updateUser']);
 
         Route::get('profile/{id?}', [UserController::class, 'show']);
         Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
@@ -192,7 +189,6 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/update_title', [CalenderController::class, 'updateTitle']);
             Route::post('/add_event', [CalenderController::class, 'addEvent']);
         });
-
         Route::prefix('degree')->group(function() {
             Route::get('/', [DegreeController::class, 'index']);
             Route::get('/get_degree_data', [DegreeController::class, 'fetchData']);
@@ -206,7 +202,6 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/restore', [DegreeController::class, 'restore']);
 
         });
-
         Route::prefix('bank')->group(function() {
             Route::get('/', [BankController::class, 'index']);
             Route::get('/get_bank_data', [BankController::class, 'fetchData']);
@@ -220,7 +215,6 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/restore', [BankController::class, 'restore']);
 
         });
-
         Route::prefix('institute')->group(function() {
             Route::get('/', [InstituteController::class, 'index']);
             Route::get('/get_institute_data', [InstituteController::class, 'fetchData']);
@@ -234,6 +228,5 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/restore', [InstituteController::class, 'restore']);
             Route::post('/{id}/change_status', [InstituteController::class, 'changeStatus']);
         });
-
     });
 });

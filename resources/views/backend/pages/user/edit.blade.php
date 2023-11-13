@@ -199,7 +199,7 @@
             $.ajax({
                 type: 'PATCH',
                 async:false,
-                url: '{{ url("user/updateData") }}',
+                url: '{{ url("user/updateUser") }}',
                 data: {
                     _token: '{{ csrf_token() }}',
                     personal_email: personal_email,

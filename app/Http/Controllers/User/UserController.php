@@ -7,6 +7,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserAddRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\UserService;
 use config;
@@ -19,7 +20,6 @@ class UserController extends Controller
     {
         $this->userService = $userService;
         View::share('main_menu', 'Users');
-        View::share('sub_menu', 'Add User');
     }
 
     public function getTableData()
@@ -29,6 +29,7 @@ class UserController extends Controller
 
     public function create()
     {
+        View::share('sub_menu', 'Add User');
         $branches = $this->userService->getBranches();
         $organizations = $this->userService->getOrganizations();
         return \view('backend.pages.user.create', compact('branches', 'organizations'));
@@ -36,6 +37,7 @@ class UserController extends Controller
 
     public function manage()
     {
+        View::share('sub_menu', 'Manage Users');
         return \view('backend.pages.user.manage');
     }
 
@@ -52,12 +54,12 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('user/create')->with('success', 'User added successfully');
+        return redirect('user/manage')->with('success', 'User added successfully');
     }
 
     public function edit($id)
     {
-        View::share('sub_menu', 'Add User');
+        View::share('sub_menu', 'Manage Users');
         try {
             $branches = $this->userService->getBranches();
             $organizations = $this->userService->getOrganizations();
@@ -115,7 +117,7 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Status has been changed');
     }
 
-    public function verifyData(Request $request)
+    public function verifyUser(Request $request)
     {
         try {
             return $this->userService->validateInputs($request);
@@ -123,6 +125,21 @@ class UserController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
+    public function updateUser(Request $request)
+    {
+        try {
+            return $this->userService->updateInputs($request);
+        } catch(\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
+    
+
+    // -----basic info part-----
+
+
 
     public function show(int $id=null)
     {

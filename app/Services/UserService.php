@@ -239,6 +239,30 @@ class UserService
         }
         return $this->userRepository->getUserInfo();
     }
+    public function getInstitutes()
+    {
+        return $this->userRepository->getInstitutes();
+    }
+    public function getDegree()
+    {
+        return $this->userRepository->getDegree();
+    }
+    public function getBank()
+    {
+        return $this->userRepository->getBank();
+    }
+    public function updateProfile($data)
+    {
+        return $this->userRepository->updateProfile($data);
+    }
+    public function getEmergencyContacts($id)
+    {
+        return $this->userRepository->getEmergencyContacts($id);
+    }
+    public function getBankInfo($id)
+    {
+        return $this->userRepository->getBankInfo($id);
+    }
 
     public function updateInputs($data)
     {
@@ -246,7 +270,7 @@ class UserService
         $is_personalEmail_exists_for_update = $this->userRepository->isPersonalEmailExistsForUpdate($data->personal_email, $data->current_personal_email);
         $is_preferredEmail_exists_for_update = $this->userRepository->isPreferredEmailExistsForUpdate($data->preferred_email, $data->current_preferred_email);
         $is_phone_exists_for_update = $this->userRepository->isPhoneExistsForUpdate($data->phone, $data->current_phone);
-        
+
         if($is_personalEmail_exists_for_update != null) {
             $flag = 0;
             return [
@@ -273,6 +297,5 @@ class UserService
                 'success' => true,
             ];
         }
-        
     }
 }

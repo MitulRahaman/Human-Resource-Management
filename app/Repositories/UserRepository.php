@@ -12,7 +12,13 @@ use App\Models\Organization;
 
 class UserRepository
 {
-    private $name;
+    private $name, $id;
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     public function getBranches()
     {
@@ -107,6 +113,25 @@ class UserRepository
                 'is_password_changed' => 0,
                 'is_onboarding_complete' => 0,
                 'status' => 1
+
+        $create_user = User::create([
+            'employee_id' => $data->employee_id,
+            'full_name' => $data->full_name,
+            'nick_name' => $data->nick_name,
+            'email' => $data->personal_email,
+            'phone_number' => $data->phone,
+            'password' => Hash::make("welcome"),
+            'image' => $fileName,
+            'is_super_user' => 0,
+            'is_registration_complete' => 0,
+            'is_password_changed' => 0,
+            'is_onboarding_complete' => 0,
+            'status' => 1
+        ]);
+        if($create_user && !is_numeric($data->organizationName))
+        {
+            $create_org = Organization::create([
+                'name' => $data->organizationName
             ]);
 
             if($create_user && $data->organizationName!= null && !is_numeric($data->organizationName)) {
@@ -146,6 +171,21 @@ class UserRepository
         }
     }
 
+    public function getTableData()
+    {
+        return DB::table('users as u')
+        ->leftJoin('basic_info as bi', function ($join) {
+            $join->on('u.id', '=', 'bi.user_id');
+        })
+        ->leftJoin('organizations as o', function ($join) {
+            $join->on('bi.last_organization_id', '=', 'o.id');
+        })
+        ->where('u.is_super_user', '0')
+        ->where('u.id', $id)
+        ->select('u.*', 'bi.*', 'o.id', 'o.name')
+        ->first();
+    }
+              
     public function editUser($id)
     {
         return DB::table('users as u')
@@ -291,7 +331,6 @@ class UserRepository
     {
         return DB::table('users')->where('phone_number', '=', $phone)->first();
     }
-
     public function isPersonalEmailExistsForUpdate($personal_email, $current_personal_email)
     {
         return DB::table('basic_info')->where('personal_email', '!=', $current_personal_email)->where('personal_email', '=', $personal_email)->first();
@@ -307,4 +346,18 @@ class UserRepository
         return DB::table('users')->where('phone_number', '!=', $current_phone)->where('phone_number', '=', $phone)->first();
     }
 
+    public function getUserInfo()
+    {
+        return User::with(['personalInfo', 'academicInfo', 'bankingInfo', 'emergencyContacts', 'basicInfo'])
+            ->with('academicInfo.degree')
+            ->with('academicInfo.institute')
+            ->with('bankingInfo.bank')
+            ->with('bankingInfo.nominees')
+            ->with('basicInfo.branch')
+            ->with('basicInfo.department')
+            ->with('basicInfo.designation')
+            ->with('basicInfo.lastOrganization')
+            ->where('id', $this->id)
+            ->first();
+    }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Bank\BankController;
+use App\Http\Controllers\Degree\DegreeController;
+use App\Http\Controllers\Institute\InstituteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
@@ -93,8 +96,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
         Route::post('verifyData', [UserController::class, 'verifyData']);
         Route::patch('updateData', [UserController::class, 'updateData']);
+
+        Route::get('profile/{id?}', [UserController::class, 'show']);
     });
-    
+
     Route::group(['middleware'=> 'superUser'], function() {
         Route::prefix('permission')->group(function() {
 
@@ -115,7 +120,7 @@ Route::group(['middleware'=> 'auth'], function() {
 
             Route::post('/{id}/delete', [PermissionController::class, 'delete']);
             Route::post('/{id}/restore', [PermissionController::class, 'restore']);
-        
+
             Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
 
         });
@@ -186,6 +191,47 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/add_event', [CalenderController::class, 'addEvent']);
         });
 
+        Route::prefix('degree')->group(function() {
+            Route::get('/', [DegreeController::class, 'index']);
+            Route::get('/get_degree_data', [DegreeController::class, 'fetchData']);
+            Route::get('/add', [DegreeController::class, 'create']);
+            Route::post('/validate_inputs', [DegreeController::class, 'validate_inputs']);
+            Route::post('/store', [DegreeController::class, 'store']);
+            Route::get('/{degree}/edit', [DegreeController::class, 'edit'])->name('edit_degree');
+            Route::post('/{id}/update', [DegreeController::class, 'update']);
+            Route::post('/{id}/validate_name',[DegreeController::class, 'validate_name']);
+            Route::post('/{id}/delete', [DegreeController::class, 'delete']);
+            Route::post('/{id}/restore', [DegreeController::class, 'restore']);
+
+        });
+
+        Route::prefix('bank')->group(function() {
+            Route::get('/', [BankController::class, 'index']);
+            Route::get('/get_bank_data', [BankController::class, 'fetchData']);
+            Route::get('/add', [BankController::class, 'create']);
+            Route::post('/validate_inputs', [BankController::class, 'validate_inputs']);
+            Route::post('/store', [BankController::class, 'store']);
+            Route::get('/{bank}/edit', [BankController::class, 'edit'])->name('edit_bank');
+            Route::post('/{id}/update', [BankController::class, 'update']);
+            Route::post('/{id}/validate_name',[BankController::class, 'validate_name']);
+            Route::post('/{id}/delete', [BankController::class, 'delete']);
+            Route::post('/{id}/restore', [BankController::class, 'restore']);
+
+        });
+
+        Route::prefix('institute')->group(function() {
+            Route::get('/', [InstituteController::class, 'index']);
+            Route::get('/get_institute_data', [InstituteController::class, 'fetchData']);
+            Route::get('/add', [InstituteController::class, 'create']);
+            Route::post('/validate_inputs', [InstituteController::class, 'validate_inputs']);
+            Route::post('/store', [InstituteController::class, 'store']);
+            Route::get('/{institute}/edit', [InstituteController::class, 'edit'])->name('edit_institute');
+            Route::post('/{id}/update', [InstituteController::class, 'update']);
+            Route::post('/{id}/validate_name',[InstituteController::class, 'validate_name']);
+            Route::post('/{id}/delete', [InstituteController::class, 'delete']);
+            Route::post('/{id}/restore', [InstituteController::class, 'restore']);
+            Route::post('/{id}/change_status', [InstituteController::class, 'changeStatus']);
+        });
 
     });
 });

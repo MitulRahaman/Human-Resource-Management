@@ -84,13 +84,12 @@ class PermissionRepository
             if($old==$status['active'])
             {
                 $permission->status=$status['inactive'];
-                return $permission->save();
             }
             else
             {
                 $permission->status=$status['active'];
-                return $permission->save();
             }
+        return $permission->save();
     }
     public function delete($id)
     {

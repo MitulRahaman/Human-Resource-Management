@@ -190,7 +190,7 @@
             $.ajax({
                 type: 'POST',
                 async:false,
-                url: '{{ url("user/verifyData") }}',
+                url: '{{ url("user/verifyUser") }}',
                 data: {
                     _token: '{{ csrf_token() }}',
                     employee_id: employee_id,

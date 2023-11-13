@@ -209,7 +209,8 @@ class UserRepository
         return DB::table('banking_info as b')
             ->where('b.user_id',$id)
             ->join('nominees as n', 'b.id', '=', 'n.banking_info_id')
-            ->select('b.*', 'n.*')
+            ->join('banks', 'banks.id', '=', 'b.bank_id')
+            ->select('b.*', 'n.*', 'banks.name as bank_name', 'banks.address as bank_address')
             ->first();
     }
     public function updateProfile($data)

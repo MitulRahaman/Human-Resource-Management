@@ -208,41 +208,56 @@
             </div>
         </div>
         <!-- END Addresses -->
-
-        <!-- Banking -->
+        <!-- Bank Information -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">
-                <h3 class="block-title">Banking </h3>
+                <h3 class="block-title">Bank Information</h3>
             </div>
             <div class="block-content">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
                         <!-- Billing Address -->
-
-                            <div class="block block-rounded block-bordered">
-                                <div class="block-header border-bottom">
-                                    <h3 class="block-title">Contact Information</h3>
-                                </div>
-                                @foreach($emergency_contacts as $em)
-                                <div class="block-content">
-                                    <div class="font-size-h4 mb-1">{{$em->name}}</div>
-                                    <address class="font-size-sm">
-                                        {{$em->relation}}<br>
-
-                                        <i class="fa fa-phone"></i>  {{$em->phone_number}}<br>
-                                    </address>
-                                </div>
-                                    <hr>
-                                @endforeach
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Bank</h3>
                             </div>
-
-
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">J{{$banking->bank_name}}</div>
+                                <address class="font-size-sm">
+                                    Account Name: {{$banking->account_name}}<br>
+                                    Account Number: {{$banking->account_number}}<br>
+                                    Routing no: {{$banking->routing_no}}<br>
+                                    Branch: {{$banking->branch}}<br>
+                                    Address: {{$banking->bank_address}}<br><br>
+{{--                                    <i class="fa fa-phone"></i> (999) 888-55555<br>--}}
+{{--                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>--}}
+                                </address>
+                            </div>
+                        </div>
                         <!-- END Billing Address -->
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Shipping Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Nominee</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$banking->name}}</div>
+                                <address class="font-size-sm">
+                                    Nominee NID: {{$banking->nid}}<br>
+                                    Nominee Relation: {{$banking->relation}}<br><br><br>
+                                    <i class="fa fa-phone"></i> {{$banking->phone_number}}<br>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$banking->email}}</a>
+                                </address>
+                            </div>
+                        </div>
+                        <!-- END Shipping Address -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- END Banking -->
+        <!-- END Bank Information -->
         <!-- Shopping Cart -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">

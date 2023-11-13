@@ -68,13 +68,13 @@ class UserController extends Controller
     {
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
-        $emergency_contacts = $this->userService->getEmergencyContacts($id);
-        $banking = $this->userService->getBankInfo($id);
-        dd($banking);
+        $emergency_contacts = $this->userService->getEmergencyContacts($user->id);
+        $banking = $this->userService->getBankInfo($user->id);
+//        dd($banking);
 //        dd($emergency_contacts[0]->name);
 //        dd($user->basicInfo);
         abort_if(!$user, 404);
-        return \view('backend.pages.addUser.profile', compact('user', 'emergency_contacts'));
+        return \view('backend.pages.addUser.profile', compact('user', 'emergency_contacts', 'banking'));
     }
     public function edit($id)
     {

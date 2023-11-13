@@ -37,19 +37,22 @@
                         </div>
                     </div>
 
-                    <table class="table table-bordered table-striped table-vcenter" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Sl no.</th>
-                                <th style="width: 40%;">Name</th>
-                                <th class="text-center" style="width: 15%;">for Year</th>
-                                <th class="text-center">Total leave</th> 
-                                <th class="text-center">Action</th> 
-                        </thead>
-                        <tbody>
+                    <div class="table-responsive"> 
+                        <table class="table table-bordered table-striped table-vcenter" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sl no.</th>
+                                    <th style="width: 40%;">Name</th>
+                                    <th class="text-center" style="width: 15%;">for Year</th>
+                                    <th class="text-center">Total leave</th> 
+                                    <th class="text-center">Action</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>    
                     <!-- Add total leave Modal -->
                     <div class="modal fade" id="modal-block-slideup" tabindex="-1" role="dialog" aria-labelledby="modal-block-slideup" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-slideup" role="document">
@@ -105,12 +108,7 @@
    
 @endsection
 
-@section('js_after')
-
-    
-
-    <script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>    
-    <script src="{{ asset('backend/js/oneui.core.min.js') }}"></script>
+@section('js_after') 
 
     <!-- Page JS Code -->
 

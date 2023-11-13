@@ -88,8 +88,14 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('create', [UserController::class, 'create']);
         Route::get('manage', [UserController::class, 'manage']);
         Route::post('store', [UserController::class, 'store']);
-        Route::post('verifydata', [UserController::class, 'verifydata']);
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::patch('/update/{id}', [UserController::class, 'update']);
+        Route::post('/{id}/delete', [UserController::class, 'destroy']);
+        Route::post('/{id}/restore', [UserController::class, 'restore']);
+        Route::post('/{id}/change_status', [UserController::class, 'changeStatus']);
         Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
+        Route::post('verifyData', [UserController::class, 'verifyData']);
+        Route::patch('updateData', [UserController::class, 'updateData']);
 
         Route::get('profile/{id?}', [UserController::class, 'show']);
         Route::get('profile/{id?}/edit', [UserController::class, 'edit']);
@@ -174,7 +180,6 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/validate_designation_name',[DesignationController::class, 'validate_name']);
             Route::post('/{id}/update', [DesignationController::class, 'update']);
         });
-
         Route::prefix('calender')->group(function() {
             Route::get('/', [CalenderController::class, 'index']);
             Route::get('/manage', [CalenderController::class, 'manage']);

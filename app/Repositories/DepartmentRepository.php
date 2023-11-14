@@ -85,22 +85,22 @@ class DepartmentRepository
     public function updateStatus($id)
     {
         $data = Department::find($id);
-                if($data->status)
-                    $data->update(array('status' => 0));
-                else
-                    $data->update(array('status' => 1));
+        if($data->status)
+            $data->update(array('status' => 0));
+        else
+            $data->update(array('status' => 1));
     }
 
     public function destroyDepartment($id)
     {
         $data = Department::find($id);
         $data->update(array('status' => 0));
-        $data->delete();
+        return $data->delete();
     }
 
     public function restoreDepartment($id)
     {
-        DB::table('departments')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+        return DB::table('departments')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
     }
 
     public function isNameExists()

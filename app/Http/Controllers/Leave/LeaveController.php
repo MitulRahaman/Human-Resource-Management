@@ -77,7 +77,8 @@ class LeaveController extends Controller
     public function destroy($id)
     {
         try {
-            $this->leaveService->destroyLeave($id);  
+            if(!$this->leaveService->destroyLeave($id))
+                return redirect('leave')->with('error', 'Failed to delete leave type');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
@@ -87,7 +88,8 @@ class LeaveController extends Controller
     public function restore($id)
     {
         try {
-            $this->leaveService->restoreLeave($id);  
+            if(!$this->leaveService->restoreLeave($id))
+                return redirect('leave')->with('error', 'Failed to restore leave type');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

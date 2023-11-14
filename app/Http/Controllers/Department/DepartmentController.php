@@ -86,7 +86,8 @@ class DepartmentController extends Controller
     public function destroy($id)
     {
         try {
-            $this->departmentService->destroyDepartment($id);  
+            if(!$this->departmentService->destroyDepartment($id))
+                return redirect('department')->with('error', 'Failed to delete department');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
@@ -96,7 +97,8 @@ class DepartmentController extends Controller
     public function restore($id)
     {
         try {
-            $this->departmentService->restoreDepartment($id);  
+            if(!$this->departmentService->restoreDepartment($id))
+                return redirect('department')->with('error', 'Failed to restore department');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

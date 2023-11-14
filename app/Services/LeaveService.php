@@ -141,6 +141,13 @@ class LeaveService
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));
+        } else {
+            return '{
+                "sEcho": 1,
+                "iTotalRecords": "0",
+                "iTotalDisplayRecords": "0",
+                "aaData": []
+            }';
         }
     }
 

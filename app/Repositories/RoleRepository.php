@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Branch;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 
@@ -75,14 +76,33 @@ class RoleRepository
     public function getAllRoleData()
     {
         $roles = DB::table('roles as r')
-            ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'))
-            ->selectRaw('GROUP_CONCAT(p.name) as permissions')
-            ->leftJoin('role_permissions as rp', 'r.id', '=', 'rp.role_id')
-            ->leftJoin('permissions as p', 'rp.permission_id', '=', 'p.id')
-            ->selectRaw('GROUP_CONCAT(b.name) as branches')
-            ->leftJoin('role_branches as rb', 'r.id', '=', 'rb.role_id')
-            ->leftJoin('branches as b', 'rb.branch_id', '=', 'b.id')
-            ->groupBy('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', 'r.created_at', 'r.deleted_at')
+            ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'),
+                DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'),
+                DB::raw('GROUP_CONCAT(distinct p.name) as permissions'),
+                DB::raw('GROUP_CONCAT(b.name) as branches'),
+            )
+            ->leftJoin('role_permissions as rp', function ($join) {
+                $join->on('r.id', '=', 'rp.role_id');
+                $join->whereNull('rp.deleted_at');
+                $join->where('rp.status', '=', Config::get('variable_constants.activation.active'));
+            })
+            ->leftJoin('permissions as p', function ($join) {
+                $join->on('rp.permission_id', '=', 'p.id');
+                $join->whereNull('p.deleted_at');
+                $join->where('p.status', '=', Config::get('variable_constants.activation.active'));
+            })
+            ->leftJoin('role_branches as rb', function ($join) {
+                $join->on('r.id', '=', 'rb.role_id');
+                $join->whereNull('rb.deleted_at');
+                $join->where('rb.status', '=', Config::get('variable_constants.activation.active'));
+
+            })
+            ->leftJoin('branches as b', function ($join) {
+                $join->on('rb.branch_id', '=', 'b.id');
+                $join->whereNull('b.deleted_at');
+                $join->where('b.status', '=', Config::get('variable_constants.activation.active'));
+            })
+            ->groupBy('r.id')
             ->get();
         foreach ($roles as $role) {
             $role->permissions = explode(',', $role->permissions);

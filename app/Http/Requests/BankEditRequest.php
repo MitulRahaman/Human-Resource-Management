@@ -26,8 +26,8 @@ class BankEditRequest extends FormRequest
         $id = $this->route('id');
         $this->merge(['id' => $id]);
         return [
-            'id' => 'required|exists:degrees,id',
-            'name'=>"required|unique:degrees,name,$id",
+            'id' => 'required|exists:banks,id',
+            'name'=>"required|unique:banks,name,$id",
             'address'=> 'nullable',
         ];
     }

@@ -24,7 +24,7 @@ class InstituteAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:degrees,name',
+            'name' => 'required|unique:institutes,name',
             'address' => 'nullable',
         ];
     }

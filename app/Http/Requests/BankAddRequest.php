@@ -24,7 +24,7 @@ class BankAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:degrees,name',
+            'name' => 'required|unique:banks,name',
             'address' => 'nullable',
         ];
     }

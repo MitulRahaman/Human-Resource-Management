@@ -26,8 +26,8 @@ class InstituteEditRequest extends FormRequest
         $id = $this->route('id');
         $this->merge(['id' => $id]);
         return [
-            'id' => 'required|exists:degrees,id',
-            'name'=>"required|unique:degrees,name,$id",
+            'id' => 'required|exists:institutes,id',
+            'name'=>"required|unique:institutes,name,$id",
             'address'=> 'nullable',
         ];
     }

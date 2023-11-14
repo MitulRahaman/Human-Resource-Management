@@ -82,12 +82,12 @@ class LeaveRepository
     {
         $data = LeaveType::find($id);
         $data->update(array('status' => 0));
-        $data->delete();
+        return $data->delete();
     }
 
     public function restoreLeave($id)
     {
-        DB::table('leave_types')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+        return DB::table('leave_types')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
     }
 
     public function isNameExists()

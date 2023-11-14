@@ -98,15 +98,30 @@
                     </a>
                 </li>
                 <li class="nav-main-heading">User Interface</li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Branches') || strcasecmp($sub_menu, 'Departments') || strcasecmp($sub_menu, 'Leaves')) == 1 ? 'open' : '' }}">
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Banks') == 0 || strcasecmp($sub_menu, 'Institutes') == 0 || strcasecmp($sub_menu, 'Branches') == 0 || strcasecmp($sub_menu, 'Degree') == 0 || strcasecmp($sub_menu, 'Calender') == 0 || strcasecmp($sub_menu, 'Designations') == 0 || strcasecmp($sub_menu, 'Departments') == 0 || strcasecmp($sub_menu, 'Leaves') == 0 || strcasecmp($sub_menu, 'Roles') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-settings"></i>
                         <span class="nav-main-link-name">System Settings</span>
                     </a>
                     <ul class="nav-main-submenu">
                         <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Banks') == 0 ? 'active' : '' }}" href="{{ url('bank') }}">
+                                <span class="nav-main-link-name">Banks</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Branches') == 0 ? 'active' : '' }}" href="{{ url('branch') }}">
                                 <span class="nav-main-link-name">Branches</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Calender') == 0 ? 'active' : '' }}" href="{{ url('calender') }}">
+                                <span class="nav-main-link-name">Calender</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Degree') == 0 ? 'active' : '' }}" href="{{ url('degree') }}">
+                                <span class="nav-main-link-name">Degree</span>
                             </a>
                         </li>
                         <li class="nav-main-item">
@@ -115,13 +130,48 @@
                             </a>
                         </li>
                         <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Designations') == 0 ? 'active' : '' }}" href="{{ url('designation') }}">
+                                <span class="nav-main-link-name">Designations</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Institutes') == 0 ? 'active' : '' }}" href="{{ url('institute') }}">
+                                <span class="nav-main-link-name">Institutes</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Leaves') == 0 ? 'active' : '' }}" href="{{ url('leave') }}">
                                 <span class="nav-main-link-name">Leaves</span>
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Roles') == 0 ? 'active' : '' }}" href="{{ url('role') }}">
+                                <span class="nav-main-link-name">Roles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add User') == 0 || strcasecmp($sub_menu, 'Manage Users') == 0) ? 'open' : '' }}">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon si si-users"></i>
+                        <span class="nav-main-link-name">Users</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Add User') == 0 ? 'active' : '' }}" href="{{ url('user/create') }}">
+                                <span class="nav-main-link-name">Add User</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Users') == 0 ? 'active' : '' }}" href="{{ url('user/manage') }}">
+                                <span class="nav-main-link-name">Manage Users</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-main-heading">Admin Console</li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Menus') == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
+                        <span class="nav-main-link-name">Menu</span>
+                    </a>
+                </li>
                 <li class="nav-main-item">
                     <a class="nav-main-link {{ strcasecmp($sub_menu, 'Permissions') == 0 ? 'active' : '' }}" href="{{ url('permission') }}">
                         <span class="nav-main-link-name">Permissions</span>

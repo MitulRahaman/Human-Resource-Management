@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Department;
 use App\Models\BranchDepartment;
@@ -16,7 +17,7 @@ class DepartmentRepository
             ->select('d.id', 'd.name', 'd.address', 'd.status', DB::raw('date_format(p.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(p.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->get();
     }
-    
+
     public function setName($name)
     {
         $this->name = $name;
@@ -47,7 +48,7 @@ class DepartmentRepository
 
         $id = $department->id;
 
-        foreach ($data->branchID as $b){ 
+        foreach ($data->branchID as $b){
             $branch_department = new BranchDepartment();
             $branch_department->department_id = $id;
             $branch_department->branch_id = $b;
@@ -72,7 +73,7 @@ class DepartmentRepository
             $branch_department = DB::table('branch_departments')->where('department_id', $id);
             $branch_department->delete();
 
-            foreach ($data->branchID as $b){ 
+            foreach ($data->branchID as $b){
                 $branch_department = new BranchDepartment();
                 $branch_department->department_id = $id;
                 $branch_department->branch_id = $b;
@@ -85,22 +86,22 @@ class DepartmentRepository
     public function updateStatus($id)
     {
         $data = Department::find($id);
-                if($data->status)
-                    $data->update(array('status' => 0));
-                else
-                    $data->update(array('status' => 1));
+        if($data->status)
+            $data->update(array('status' => 0));
+        else
+            $data->update(array('status' => 1));
     }
 
     public function destroyDepartment($id)
     {
         $data = Department::find($id);
         $data->update(array('status' => 0));
-        $data->delete();
+        return $data->delete();
     }
 
     public function restoreDepartment($id)
     {
-        DB::table('departments')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
+        return DB::table('departments')->where('id', $id)->limit(1)->update(array('deleted_at' => NULL));
     }
 
     public function isNameExists()
@@ -111,5 +112,14 @@ class DepartmentRepository
     public function isNameExistsForUpdate($current_name)
     {
         return DB::table('departments')->where('name', '!=', $current_name)->where('name', $this->name)->first();
+    }
+
+    public function getDepartments()
+    {
+        return DB::table('departments as d')
+            ->whereNull('d.deleted_at')
+            ->where('d.status', '=', Config::get('variable_constants.activation.active'))
+            ->select('d.id', 'd.name')
+            ->get();
     }
 }

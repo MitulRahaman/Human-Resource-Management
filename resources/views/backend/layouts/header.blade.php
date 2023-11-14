@@ -33,6 +33,9 @@
                     <p class="mb-0 text-white-50 font-size-sm">Super User</p>
                 </div>
                 <div class="p-2">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{url('user/profile') }}">
+                        <span class="font-size-sm font-w500">My Profile</span>
+                    </a>
                     <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
                         <span class="font-size-sm font-w500">Change Password</span>
                     </a>

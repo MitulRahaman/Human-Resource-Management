@@ -79,7 +79,8 @@ class BranchController extends Controller
     public function destroy($id)
     {
         try {
-            $this->branchService->destroyBranch($id);  
+            if(!$this->branchService->destroyBranch($id))
+                return redirect('branch')->with('error', 'Failed to delete branch');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
@@ -89,7 +90,8 @@ class BranchController extends Controller
     public function restore($id)
     {
         try {
-            $this->branchService->restoreBranch($id);  
+            if(!$this->branchService->restoreBranch($id))
+                return redirect('branch')->with('error', 'Failed to restore branch');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

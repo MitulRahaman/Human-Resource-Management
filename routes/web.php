@@ -88,7 +88,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('create', [UserController::class, 'create']);
         Route::get('manage', [UserController::class, 'manage']);
         Route::post('store', [UserController::class, 'store']);
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::get('/{id}/edit', [UserController::class, 'editBasicInfo']);
         Route::patch('/update/{id}', [UserController::class, 'update']);
         Route::post('/{id}/delete', [UserController::class, 'destroy']);
         Route::post('/{id}/restore', [UserController::class, 'restore']);

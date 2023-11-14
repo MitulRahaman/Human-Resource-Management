@@ -11,6 +11,7 @@ use App\Models\Institute;
 use App\Models\Nominee;
 use App\Models\PersonalInfo;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -18,6 +19,7 @@ use App\Models\BasicInfo;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Organization;
+use Mockery\Exception;
 
 class UserRepository
 {
@@ -31,7 +33,7 @@ class UserRepository
 
     public function getBranches()
     {
-        return Branch::all();
+        return Branch::where('status', Config::get('variable_constants.activation.active'))->get();
     }
 
     public function getDepartments($data)
@@ -87,35 +89,43 @@ class UserRepository
 
     public function getOrganizations()
     {
-        return Organization::all();
+        return Organization::get();
     }
 
     public function storeUser($data, $fileName)
     {
-        if($data->career_start_date == null)
-            $data->career_start_date = $data->joining_date;
+        DB::beginTransaction();
+        try {
+            if ($data->career_start_date == null) {
+                $data->career_start_date = $data->joining_date;
+            }
 
-        $create_user = User::create([
-            'employee_id' => $data->employee_id,
-            'full_name' => $data->full_name,
-            'nick_name' => $data->nick_name,
-            'email' => $data->personal_email,
-            'phone_number' => $data->phone,
-            'password' => Hash::make("welcome"),
-            'image' => $fileName,
-            'is_super_user' => 0,
-            'is_registration_complete' => 0,
-            'is_password_changed' => 0,
-            'is_onboarding_complete' => 0,
-            'status' => 1
-        ]);
-        if($create_user && !is_numeric($data->organizationName))
-        {
-            $create_org = Organization::create([
-                'name' => $data->organizationName
+            $organization_id = null;
+            if ($data['organization_id']) {
+                $organization_id = $data['organization_id'];
+            }
+            if ($data['organization_name']) {
+                $organization = new Organization();
+                $organization->name = $data['organization_name'];
+                $organization->created_at = date('Y-m-d');
+                $organization->save();
+                $organization_id = $organization->id;
+            }
+            $create_user = User::create([
+                'employee_id' => $data->employee_id,
+                'full_name' => $data->full_name,
+                'nick_name' => $data->nick_name,
+                'email' => $data->preferred_email,
+                'phone_number' => $data->phone,
+                'password' => Hash::make("welcome"),
+                'image' => $fileName,
+                'is_super_user' => 0,
+                'is_registration_complete' => 0,
+                'is_password_changed' => 0,
+                'is_onboarding_complete' => 0,
+                'status' => 1
             ]);
-
-            return BasicInfo::create([
+            BasicInfo::create([
                 'user_id' => $create_user->id,
                 'branch_id' => $data->branchId,
                 'department_id' => $data->departmentId,
@@ -124,34 +134,27 @@ class UserRepository
                 'preferred_email' => $data->preferred_email,
                 'joining_date' => $data->joining_date,
                 'career_start_date' => $data->career_start_date,
-                'last_organization_id' => $create_org->id
+                'last_organization_id' => $organization_id
             ]);
-        } else
-        {
-            return BasicInfo::create([
-                'user_id' => $create_user->id,
-                'branch_id' => $data->branchId,
-                'department_id' => $data->departmentId,
-                'designation_id' => $data->designationId,
-                'personal_email' => $data->personal_email,
-                'preferred_email' => $data->preferred_email,
-                'joining_date' => $data->joining_date,
-                'career_start_date' => $data->career_start_date,
-                'last_organization_id' => $data->organizationName
-            ]);
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
     }
 
     public function getTableData()
     {
         return DB::table('users as u')
-        ->leftJoin('basic_info as bi', function ($join) {
-            $join->on('u.id', '=', 'bi.user_id');
-        })
-        ->whereNull('u.deleted_at')
-        ->groupBy('u.id')
-        ->select('u.id', 'u.image', 'u.employee_id', 'u.full_name', 'u.email', 'u.phone_number', 'bi.branch_id', 'bi.department_id', 'bi.designation_id', 'bi.joining_date')
-        ->get();
+            ->leftJoin('basic_info as bi', function ($join) {
+                $join->on('u.id', '=', 'bi.user_id');
+            })
+            ->whereNull('u.deleted_at')
+            ->where('u.is_super_user', '=', Config::get('variable_constants.check.no'))
+            ->groupBy('u.id')
+            ->select('u.id', 'u.image', 'u.status', 'u.deleted_at', 'u.employee_id', 'u.full_name', 'u.email', 'u.phone_number', 'bi.branch_id', 'bi.department_id', 'bi.designation_id', 'bi.joining_date')
+            ->get();
     }
 
     public function isEmployeeIdExists($employee_id)
@@ -311,5 +314,18 @@ class UserRepository
            return "success";
         });
         return "success";
+    }
+
+    public function isPersonalEmailExistsForUpdate($personal_email, $current_personal_email)
+    {
+        return DB::table('basic_info')->where('personal_email', '!=', $current_personal_email)->where('personal_email', '=', $personal_email)->first();
+    }
+    public function isPreferredEmailExistsForUpdate($preferred_email, $current_preferred_email)
+    {
+        return DB::table('users')->where('email', '!=', $current_preferred_email)->where('email', '=', $preferred_email)->first();
+    }
+    public function isPhoneExistsForUpdate($phone, $current_phone)
+    {
+        return DB::table('users')->where('phone_number', '!=', $current_phone)->where('phone_number', '=', $phone)->first();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\DesignationRepository;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class DesignationService
 {
@@ -165,5 +166,10 @@ class DesignationService
                     "aaData": []
                 }';
         }
+    }
+
+    public function getDesignations()
+    {
+        return $this->designationRepository->getDesignations();
     }
 }

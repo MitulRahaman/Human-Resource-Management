@@ -3,22 +3,24 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Requests\ProfileEditRequest;
-use Validator;
 use App\Http\Controllers\Controller;
+use App\Services\DepartmentService;
+use App\Services\DesignationService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserAddRequest;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\UserService;
-use config;
 
 class UserController extends Controller
 {
-    private $userService;
+    private $userService, $departmentService, $designationService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, DepartmentService $departmentService, DesignationService $designationService)
     {
         $this->userService = $userService;
+        $this->departmentService = $departmentService;
+        $this->designationService = $designationService;
         View::share('main_menu', 'Users');
     }
 
@@ -49,12 +51,27 @@ class UserController extends Controller
     public function store(UserAddRequest $request)
     {
         try {
-            if(!($this->userService->storeUser($request)))
-                return redirect('user/create')->with('error', 'Failed to add user');
+            $response = $this->userService->storeUser($request);
+            if ($response === true) {
+                return redirect('user/manage')->with('success', 'User added successfully.');
+            } else {
+                return redirect('user/create')->with('error', $response);
+            }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('user/manage')->with('success', 'User added successfully');
+    }
+    
+    public function editBasicInfo($id) : \Illuminate\View\View
+    {
+        View::share('sub_menu', 'Manage Users');
+        $user = $this->userService->editUser($id);
+        abort_if(!$user, 404);
+        $branches = $this->userService->getBranches();
+        $organizations = $this->userService->getOrganizations();
+        $departments = $this->departmentService->getDepartments();
+        $designations = $this->designationService->getDesignations();
+        return \view('backend.pages.user.edit', compact('user', 'branches', 'organizations', 'departments', 'designations'));
     }
 
     public function edit($id)
@@ -147,9 +164,6 @@ class UserController extends Controller
         $user = $this->userService->getUserInfo($id);
         $emergency_contacts = $this->userService->getEmergencyContacts($user->id);
         $banking = $this->userService->getBankInfo($user->id);
-//        dd($banking);
-//        dd($emergency_contacts[0]->name);
-//        dd($user->basicInfo);
         abort_if(!$user, 404);
         return \view('backend.pages.user.profile', compact('user', 'emergency_contacts', 'banking'));
     }
@@ -175,8 +189,5 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', "OOPS! Profile could not be updated.");
         }
-
-        abort_if(!$user, 404);
-        return \view('backend.pages.user.profile', compact('user'));
     }
 }

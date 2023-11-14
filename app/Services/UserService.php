@@ -57,7 +57,7 @@ class UserService
 
     public function editUser($id)
     {
-        return $this->userRepository->editUser($id);
+        return $this->userRepository->setId($id)->getUserInfo();
     }
 
     public function updateUser($data, $id)
@@ -133,7 +133,7 @@ class UserService
                     $status = "<span class=\"badge badge-danger\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
-                $edit_url = url('user/edit', $id);
+                $edit_url = url('user/'.$id.'/edit');
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {

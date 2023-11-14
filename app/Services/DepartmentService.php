@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\DepartmentRepository;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentService
 {
@@ -101,7 +102,7 @@ class DepartmentService
     {
         $this->departmentRepository->setName($data['name']);
         $is_name_exists_for_update = $this->departmentRepository->isNameExistsForUpdate($data['current_name']);
-        
+
         if ($data->name == null) {
             return [
                 'success' => false,
@@ -120,4 +121,11 @@ class DepartmentService
             ];
         }
     }
+
+    public function getDepartments()
+    {
+        return $this->departmentRepository->getDepartments();
+    }
+
+
  }

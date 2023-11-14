@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Designation;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class DesignationRepository
@@ -206,6 +207,15 @@ class DesignationRepository
         }
         return response()->json(['error' => 'Bad request: Designation not updated']);
 
+    }
+
+    public function getDesignations()
+    {
+        return DB::table('designations as d')
+            ->whereNull('d.deleted_at')
+            ->where('d.status', '=', Config::get('variable_constants.activation.active'))
+            ->select('d.id', 'd.name')
+            ->get();
     }
 
 }

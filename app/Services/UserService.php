@@ -123,8 +123,14 @@ class UserService
                 $designation_name = $this->userRepository->getDesignationNameForTable($row->designation_id);
                 $joining_date = $row->joining_date;
 
-                $url = asset('storage/userImg/'. $imgName);
-                $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"...\"></td>";
+                if($imgName) {
+                    $url = asset('storage/userImg/'. $imgName);
+                    $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                } else {
+                    $img = "<td> <img src=\"https://www.pikpng.com/pngl/b/292-2924795_user-icon-png-transparent-white-user-icon-png.png\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                }
+                
+
 
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";

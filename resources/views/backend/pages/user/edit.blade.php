@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="personal_email" name="personal_email" value="{{ $user->personal_email }}" required>
+                                    <input type="email" class="form-control" id="personal_email" name="personal_email" value="{{ $user->basicInfo->personal_email }}" required>
                                     <span id="error_personal_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Joining date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" value="{{ $user->joining_date }}" data-date-format="Y-m-d" required>
+                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" value="{{ $user->basicInfo->joining_date }}" data-date-format="Y-m-d" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_career_start_date">Career start date</label>
@@ -192,7 +192,7 @@
             let preferred_email = $('#preferred_email').val();
             let phone = $('#phone').val();
 
-            let current_personal_email = " <?php echo $user->personal_email; ?>"
+            let current_personal_email = " <?php echo $user->basicInfo->personal_email; ?>"
             let current_preferred_email = " <?php echo $user->email; ?>"
             let current_phone = " <?php echo $user->phone_number; ?>"
             let flag = 0;

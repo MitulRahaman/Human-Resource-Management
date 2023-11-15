@@ -62,7 +62,7 @@ class UserController extends Controller
         }
     }
     
-    public function editBasicInfo($id) : \Illuminate\View\View
+    public function editBasicInfo($id)
     {
         View::share('sub_menu', 'Manage Users');
         $user = $this->userService->editUser($id);

@@ -30,7 +30,7 @@ class DepartmentController extends Controller
 
     public function create()
     {
-        $branches = $this->departmentService->createDepartment();
+        $branches = $this->branchService->getBranches();
         return \view('backend.pages.department.create', compact('branches'));
     }
 

@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers\Department;
 
-use Validator;
-use App\Models\Branch;
+use App\Services\BranchService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\DepartmentAddRequest;
 use App\Http\Requests\DepartmentUpdateRequest;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\DB;
 use App\Services\DepartmentService;
 
 class DepartmentController extends Controller
 {
-    private $departmentService;
+    private $departmentService, $branchService;
 
-    public function __construct(DepartmentService $departmentService)
+    public function __construct(DepartmentService $departmentService, BranchService $branchService)
     {
         $this->departmentService = $departmentService;
+        $this->branchService = $branchService;
         View::share('main_menu', 'System Settings');
         View::share('sub_menu', 'Departments');
     }
@@ -38,28 +37,23 @@ class DepartmentController extends Controller
     public function store(DepartmentAddRequest $request)
     {
         try {
-            if(!($this->departmentService->storeDepartment($request)))
-                return redirect('department')->with('error', 'Failed to add department');
+            $response = $this->departmentService->storeDepartment($request);
+            if ($response === true) {
+                return redirect('department')->with('success', 'Department added successfully.');
+            } else {
+                return redirect('department')->with('error', $response);
+            }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('department')->with('success', 'department added successfully');
     }
 
     public function edit($id)
     {
-        try {
-            $departments = $this->departmentService->indexDepartment();
-            $current_data = $this->departmentService->editDepartment($id, $departments);
-        } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
-        }
-        $data = $current_data[0];
-        $branch_name = $current_data[1];
-
-        $branches = $this->departmentService->createDepartment();
-
-        return \view('backend.pages.department.edit', compact('data', 'branches', 'branch_name'));
+        $data = $this->departmentService->departmentInfo($id);
+        abort_if(!$data, 404);
+        $branches = $this->branchService->getBranches();
+        return \view('backend.pages.department.edit', compact('data', 'branches'));
     }
 
     public function update(DepartmentUpdateRequest $request, $id)

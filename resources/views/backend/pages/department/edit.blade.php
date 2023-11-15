@@ -14,7 +14,7 @@
         <div class="block block-rounded block-content col-sm-6">
         @include('backend.layouts.error_msg')
             <div class="block-header">
-                <h3 class="block-title">Update Branch</h3>
+                <h3 class="block-title">Update Department</h3>
             </div>
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <form class="js-validation" action="{{ route('department.update', $data->id) }}" method="POST" onsubmit="return verify_inputs()">
@@ -37,9 +37,9 @@
                                 <div class="form-group">
                                     <label for="val-branch">Branch</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="branchID" name="branchID[]" style="width: 100%;" data-placeholder="{{$branch_name}}" multiple>
+                                        <select class="js-select2 form-control" id="branchID" name="branchID[]" style="width: 100%;" multiple>
                                             @forelse ($branches as $branch)
-                                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                            <option value="{{ $branch->id }}" {{ in_array($branch->id, $data->branch_departments->pluck('branch_id')->toArray()) ? 'selected' : '' }}>{{ $branch->name }}</option>
                                             @empty
                                             <p> </p>
                                             @endforelse
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Update -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
@@ -70,11 +70,11 @@
 
     <script src="{{ asset('backend/js/plugins/select2/js/select2.full.js') }}"></script>
     <script>jQuery(function(){One.helpers('select2');});</script>
-    
+
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
 
-    <script> 
+    <script>
         function verify_inputs(e){
             let name = $('#name').val();
             var current_name = " <?php echo $data->name; ?>"
@@ -117,6 +117,6 @@
                 $('#submit').attr('disabled', true);
                 return true;
             }
-        } 
+        }
     </script>
 @endsection

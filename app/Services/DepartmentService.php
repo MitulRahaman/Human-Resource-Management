@@ -19,28 +19,15 @@ class DepartmentService
     {
         return $this->departmentRepository->indexDepartment();
     }
-    public function createDepartment()
-    {
-        return $this->departmentRepository->createDepartment();
-    }
 
     public function storeDepartment($data)
     {
         return $this->departmentRepository->storeDepartment($data);
     }
 
-    public function editDepartment($id, $departments)
+    public function departmentInfo($id)
     {
-        $branchName;
-        foreach ($departments as $d)
-            if($id == $d->id)
-            {
-                $branchName = $d->branches;
-                break;
-            }
-        ;
-
-        return [$this->departmentRepository->editdepartment($id), $branchName];
+        return $this->departmentRepository->departmentInfo($id);
     }
 
     public function updateDepartment($data, $id)

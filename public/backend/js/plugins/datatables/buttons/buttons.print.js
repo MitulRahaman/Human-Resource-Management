@@ -80,7 +80,7 @@ var _relToAbs = function( href ) {
 
 
 DataTable.ext.buttons.print = {
-	className: 'buttons-print',
+	className: 'buttons-print buttons-html5',
 
 	text: function ( dt ) {
 		return dt.i18n( 'buttons.print', 'Print' );

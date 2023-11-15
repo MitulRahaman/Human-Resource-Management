@@ -83,7 +83,7 @@
                                     </td>
                                 </tr>
                                 <!-- Delete Confirmation Modal -->
-                                <div class="modal fade" id="modal-block-fromright_{{$leave->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
+                                <div class="modal" id="modal-block-fromright_{{$leave->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromright" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -114,7 +114,7 @@
                                 </div>
                                 <!-- END Delete Confirmation Modal -->
                                 <!-- Restore Confirmation Modal -->
-                                <div class="modal fade" id="modal-block-fromleft_{{$leave->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
+                                <div class="modal" id="modal-block-fromleft_{{$leave->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromleft" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">

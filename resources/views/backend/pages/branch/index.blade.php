@@ -87,7 +87,7 @@
                                     </td>
                                 </tr>
                                 <!-- Delete Confirmation Modal -->
-                                <div class="modal fade" id="modal-block-fromright_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
+                                <div class="modal" id="modal-block-fromright_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromright" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -118,7 +118,7 @@
                                 </div>
                                 <!-- END Delete Confirmation Modal -->
                                 <!-- Restore Confirmation Modal -->
-                                <div class="modal fade" id="modal-block-fromleft_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
+                                <div class="modal" id="modal-block-fromleft_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromleft" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -160,14 +160,6 @@
 
 @section('js_after')
 
-<<<<<<< HEAD
-
-
-    <script src="{{ asset('backend/js/oneui.app.min.js') }}"></script>
-    <script src="{{ asset('backend/js/oneui.core.min.js') }}"></script>
-
-=======
->>>>>>> upstream/temp-development
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
@@ -177,8 +169,36 @@
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.flash.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.js') }}"></script>
-
     <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>
 
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $('#dataTable').DataTable().destroy();
+            var dtable = $('#dataTable').DataTable({
+                responsive: true,
+                paging: true,
+                dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
+                retrieve: true,
+                buttons : [{
+                        extend: 'copy',
+                        text: 'Copy',
+                        title: "Branch Table"
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV',
+                        title: "Branch Table"
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        title: "Branch Table"
+                    },
+                    'colvis'
+                ],
+            });
+        });
+        
+    </script>
 
 @endsection

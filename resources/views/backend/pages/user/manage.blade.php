@@ -163,6 +163,16 @@
                     },
                     buttons: [
                         {
+                            extend: 'copy',
+                            text: 'Copy',
+                            title: "User Table"
+                        },
+                        {
+                            extend: 'csv',
+                            text: 'CSV',
+                            title: "User Table"
+                        },
+                        {
                             extend: 'print',
                             exportOptions: {
                                 columns: ':visible'

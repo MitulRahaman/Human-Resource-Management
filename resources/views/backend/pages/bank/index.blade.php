@@ -157,7 +157,7 @@
                     text: 'CSV',
                     className: 'button' ,
                     exportOptions:  {
-                                        columns: [0, 1,2,3,4,5]
+                                        columns: [0, 1,2,3]
                                     },
                     title: "Bank Table"
                 },
@@ -166,7 +166,7 @@
                     text: 'Print',
                     className: 'button' ,
                     exportOptions:  {
-                                        columns: [0, 1,2,3,4,5]
+                                        columns: [0, 1,2,3]
                                     },
                     title: "Bank Table"
                 },

@@ -87,7 +87,7 @@ class MenuService
                 $created_at = $row->created_at;
                 $permissions = '';
                 foreach ($row->permissions as $p) {
-                    $permissions.="<span class=\"badge badge-success\">$p</span><br>";
+                    $permissions.="<span class=\"badge badge-primary\">$p</span><br>";
                 }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";

@@ -122,28 +122,34 @@ class DesignationRepository
     }
     public function create()
     {
-        $designation = DB::table('designations')
-            ->insertGetId([
-                'name' => $this->name,
-                'description' => $this->description,
-                'department_id' => $this->department,
-                'status' => $this->status,
-                'created_at' => $this->created_at
-            ]);
-        if($designation)
-        {
-            if($this->branch_ids)
+        DB::beginTransaction();
+        try {
+            $designation = DB::table('designations')
+                ->insertGetId([
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'department_id' => $this->department,
+                    'status' => $this->status,
+                    'created_at' => $this->created_at
+                ]);
+            if($designation)
             {
-                foreach ($this->branch_ids as $b)
+                if($this->branch_ids)
                 {
-                    DB::table('branch_designations')->insert([
-                        'designation_id'=> $designation,
-                        'branch_id'=>(int)$b,
-                    ]);
-                }}
-            return response()->json(['message' => 'Designation added successfully']);
+                    foreach ($this->branch_ids as $b)
+                    {
+                        DB::table('branch_designations')->insert([
+                            'designation_id'=> $designation,
+                            'branch_id'=>(int)$b,
+                        ]);
+                    }}
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
-        return response()->json(['error' => 'Bad request: Designation not added']);
     }
     public function getDesignation($id)
     {
@@ -182,31 +188,35 @@ class DesignationRepository
     }
     public function update()
     {
-        $designations = DB::table('designations')
-            ->where('id', '=', $this->id)
-            ->update([
-                'name' => $this->name,
-                'description' => $this->description,
-                'department_id' => $this->department,
-                'updated_at' => $this->updated_at
-            ]);
-        if($designations)
-        {
-            DB::table('branch_designations')->where('designation_id',$this->id)->delete();
-            if($this->branch_ids)
+        DB::beginTransaction();
+        try {
+            $designations = DB::table('designations')
+                ->where('id', '=', $this->id)
+                ->update([
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'department_id' => $this->department,
+                    'updated_at' => $this->updated_at
+                ]);
+            if($designations)
             {
-                foreach ($this->branch_ids as $b)
+                DB::table('branch_designations')->where('designation_id',$this->id)->delete();
+                if($this->branch_ids)
                 {
-                    DB::table('branch_designations')->insert([
-                        'designation_id'=> $this->id,
-                        'branch_id'=>(int)$b,
-                    ]);
-                }}
-
-            return response()->json(['message' => 'Designation updated successfully']);
+                    foreach ($this->branch_ids as $b)
+                    {
+                        DB::table('branch_designations')->insert([
+                            'designation_id'=> $this->id,
+                            'branch_id'=>(int)$b,
+                        ]);
+                    }}
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
-        return response()->json(['error' => 'Bad request: Designation not updated']);
-
     }
 
     public function getDesignations()

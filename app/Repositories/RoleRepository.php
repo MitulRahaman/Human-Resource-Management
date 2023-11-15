@@ -79,7 +79,7 @@ class RoleRepository
             ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'),
                 DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'),
                 DB::raw('GROUP_CONCAT(distinct p.name) as permissions'),
-                DB::raw('GROUP_CONCAT(b.name) as branches'),
+                DB::raw('GROUP_CONCAT(distinct b.name) as branches'),
             )
             ->leftJoin('role_permissions as rp', function ($join) {
                 $join->on('r.id', '=', 'rp.role_id');

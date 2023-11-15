@@ -25,7 +25,7 @@ class BranchService
     //             $address = $row->address;
     //             $created_at = $row->created_at;
     //             $deleted_at = $row->deleted_at;
-                
+
     //             $edit_url = route('edit_branch', ['branch'=>$id]);
 
     //             $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
@@ -142,7 +142,7 @@ class BranchService
             return [
                 'success' => false,
                 'name_msg' => 'Name already taken',
-                
+
             ];
         } else {
             return [
@@ -150,5 +150,10 @@ class BranchService
                 'name_msg' => null,
             ];
         }
+    }
+
+    public function getBranches()
+    {
+        return $this->branchRepository->getBranches();
     }
 }

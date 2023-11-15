@@ -32,35 +32,36 @@ class DepartmentRepository
         ->select('d.id', 'd.name', 'd.description', 'd.status', 'd.created_at', 'd.deleted_at', DB::raw('group_concat(b.name SEPARATOR ", ") as branches'))
         ->get();
     }
-
-    public function createDepartment()
-    {
-        return Branch::all();
-    }
-
     public function storeDepartment($data)
     {
-        $department = new Department();
-        $department->name = $data->name;
-        $department->description = $data->description;
-        $department->status = 1;
-        $department->save();
+        DB::beginTransaction();
+        try {
+            $department = new Department();
+            $department->name = $data->name;
+            $department->description = $data->description;
+            $department->status = 1;
+            $department->save();
 
-        $id = $department->id;
+            $id = $department->id;
 
-        foreach ($data->branchID as $b){
-            $branch_department = new BranchDepartment();
-            $branch_department->department_id = $id;
-            $branch_department->branch_id = $b;
-            $branch_department->status = 1;
-            $branch_department->save();
+            foreach ($data->branchID as $b){
+                $branch_department = new BranchDepartment();
+                $branch_department->department_id = $id;
+                $branch_department->branch_id = $b;
+                $branch_department->status = 1;
+                $branch_department->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
-        return true;
     }
 
-    public function editDepartment($id)
+    public function departmentInfo($id)
     {
-        return Department::find($id);
+        return Department::with('branch_departments')->with('branch_departments.branch')->where('id', $id)->first();
     }
 
     public function updateDepartment($data, $id)

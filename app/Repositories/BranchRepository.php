@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Branch;
 
@@ -74,5 +75,10 @@ class BranchRepository
     public function isNameExistsForUpdate($current_name)
     {
         return DB::table('branches')->where('name', '!=', $current_name)->where('name', $this->name)->first();
+    }
+
+    public function getBranches()
+    {
+        return Branch::where('status', Config::get('variable_constants.activation.active'))->get();
     }
 }

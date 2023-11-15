@@ -35,12 +35,14 @@ class RoleController extends Controller
     }
     public function store(RoleAddRequest $request)
     {
-        try{
+        try {
             $role = $this->roleService->createRole($request->validated());
-            return redirect('role/')->with('success', $role->getData()->message);
+            if(!$role)
+                return redirect('role')->with('error', 'Failed to add Role');
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Role could not be stored.");
+            return redirect()->back()->with('role', $exception->getMessage());
         }
+        return redirect('/role')->with('success', 'Role add successfully');
     }
 
     public function validate_inputs(Request $request)
@@ -58,12 +60,14 @@ class RoleController extends Controller
     }
     public function update(RoleEditRequest $request)
     {
-        try{
+        try {
             $role = $this->roleService->update($request->validated());
-            return redirect('role/')->with('success', $role->getData()->message);
+            if(!$role)
+                return redirect('role')->with('error', 'Failed to update Role');
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Role could not be updated.");
+            return redirect()->back()->with('role', $exception->getMessage());
         }
+        return redirect('/role')->with('success', 'Role update successfully');
     }
     public function changeStatus($id)
     {

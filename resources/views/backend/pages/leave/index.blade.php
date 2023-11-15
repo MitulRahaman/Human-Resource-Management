@@ -147,7 +147,8 @@
                                 extend: 'print',
                                 exportOptions: {
                                     columns: ':visible'
-                                }
+                                },
+                                title: "Leave Table"
                             },
                             'colvis'
                         ]

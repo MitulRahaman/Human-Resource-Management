@@ -166,7 +166,8 @@
                             extend: 'print',
                             exportOptions: {
                                 columns: ':visible'
-                            }
+                            },
+                            title: "User Table"
                         },
                         'colvis'
                     ]

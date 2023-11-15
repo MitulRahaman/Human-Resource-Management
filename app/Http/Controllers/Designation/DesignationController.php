@@ -34,12 +34,14 @@ class DesignationController extends Controller
     }
     public function store(DesignationAddRequest $request)
     {
-        try{
+        try {
             $designation = $this->designationService->createDesignation($request->validated());
-            return redirect('designation/')->with('success', $designation->getData()->message);
+            if(!$designation)
+                return redirect()->back()->with('error', "Failed to add Designation.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Designation could not be stored.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
+        return redirect('designation/')->with('success', "Designation added successfully.");
     }
     public function changeStatus($id)
     {
@@ -85,12 +87,14 @@ class DesignationController extends Controller
     }
     public function update(DesignationEditRequest $request)
     {
-        try{
+        try {
             $designation = $this->designationService->update($request->validated());
-            return redirect('designation/')->with('success', $designation->getData()->message);
+            if(!$designation)
+                return redirect()->back()->with('error', "Failed to update Designation.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Designation could not be updated.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
+        return redirect('designation/')->with('success', "Designation updated successfully.");
     }
     public function fetchData()
     {

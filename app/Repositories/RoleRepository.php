@@ -79,7 +79,7 @@ class RoleRepository
             ->select('r.id', 'r.name', 'r.description', 'r.sl_no', 'r.status', DB::raw('date_format(r.created_at, "%d/%m/%Y") as created_at'),
                 DB::raw('date_format(r.deleted_at, "%d/%m/%Y") as deleted_at'),
                 DB::raw('GROUP_CONCAT(distinct p.name) as permissions'),
-                DB::raw('GROUP_CONCAT(distinct b.name) as branches'),
+                DB::raw('GROUP_CONCAT(distinct b.name) as branches')
             )
             ->leftJoin('role_permissions as rp', function ($join) {
                 $join->on('r.id', '=', 'rp.role_id');
@@ -153,37 +153,44 @@ class RoleRepository
     }
     public function create()
     {
-        $roles = DB::table('roles')
-            ->insertGetId([
-                'name' => $this->name,
-                'sl_no' => $this->sl_no,
-                'description' => $this->description,
-                'status' => $this->status,
-                'created_at' => $this->created_at
-            ]);
-        if($roles)
-        {
-            if($this->permission_ids)
+        DB::beginTransaction();
+        try {
+            $roles = DB::table('roles')
+                ->insertGetId([
+                    'name' => $this->name,
+                    'sl_no' => $this->sl_no,
+                    'description' => $this->description,
+                    'status' => $this->status,
+                    'created_at' => $this->created_at
+                ]);
+            if($roles)
             {
-                foreach ($this->permission_ids as $p)
+                if($this->permission_ids)
                 {
-                    DB::table('role_permissions')->insert([
-                        'role_id'=> $roles,
-                        'permission_id'=>(int)$p,
-                    ]);
-                }}
-            if($this->branch_ids)
-            {
-                foreach ($this->branch_ids as $b)
+                    foreach ($this->permission_ids as $p)
+                    {
+                        DB::table('role_permissions')->insert([
+                            'role_id'=> $roles,
+                            'permission_id'=>(int)$p,
+                        ]);
+                    }}
+                if($this->branch_ids)
                 {
-                    DB::table('role_branches')->insert([
-                        'role_id'=> $roles,
-                        'branch_id'=>(int)$b,
-                    ]);
-                }}
-            return response()->json(['message' => 'Role added successfully']);
+                    foreach ($this->branch_ids as $b)
+                    {
+                        DB::table('role_branches')->insert([
+                            'role_id'=> $roles,
+                            'branch_id'=>(int)$b,
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
-        return response()->json(['error' => 'Bad request: Role not added']);
     }
     public function change($data)
     {
@@ -212,40 +219,46 @@ class RoleRepository
     }
     public function update()
     {
-        $roles = DB::table('roles')
-            ->where('id', '=', $this->id)
-            ->update([
-                'sl_no' => $this->sl_no,
-                'name' => $this->name,
-                'description' => $this->description,
-                'updated_at' => $this->updated_at
-            ]);
-        if( $roles)
-        {
-            DB::table('role_permissions')->where('role_id',$this->id)->delete();
-            if($this->permission_ids)
+        DB::beginTransaction();
+        try {
+            $roles = DB::table('roles')
+                ->where('id', '=', $this->id)
+                ->update([
+                    'sl_no' => $this->sl_no,
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'updated_at' => $this->updated_at
+                ]);
+            if( $roles)
             {
-                foreach ($this->permission_ids as $p)
+                DB::table('role_permissions')->where('role_id',$this->id)->delete();
+                if($this->permission_ids)
                 {
-                    DB::table('role_permissions')->insert([
-                        'role_id'=> $this->id,
-                        'permission_id'=>(int)$p,
-                    ]);
-                }}
-            DB::table('role_branches')->where('role_id',$this->id)->delete();
-            if($this->branch_ids)
-            {
+                    foreach ($this->permission_ids as $p)
+                    {
+                        DB::table('role_permissions')->insert([
+                            'role_id'=> $this->id,
+                            'permission_id'=>(int)$p,
+                        ]);
+                    }}
+                DB::table('role_branches')->where('role_id',$this->id)->delete();
+                if($this->branch_ids)
+                {
 
-                foreach ($this->branch_ids as $b)
-                {
-                    DB::table('role_branches')->insert([
-                        'role_id'=> $this->id,
-                        'branch_id'=>(int)$b,
-                    ]);
-                }}
-            return response()->json(['message' => 'Role updated successfully']);
+                    foreach ($this->branch_ids as $b)
+                    {
+                        DB::table('role_branches')->insert([
+                            'role_id'=> $this->id,
+                            'branch_id'=>(int)$b,
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
-        return response()->json(['error' => 'Bad request: Role not updated']);
-
     }
 }

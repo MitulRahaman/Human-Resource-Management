@@ -34,12 +34,14 @@ class MenuController extends Controller
     }
     public function store(MenuAddRequest $request)
     {
-        try{
+        try {
             $menu = $this->menuService->create($request->validated());
-            return redirect('menu/')->with('success', $menu->getData()->message);
+            if(!$menu)
+                return redirect('menu')->with('error', 'Failed to add Menu');
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Menu  could not be stored.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
+        return redirect('/menu')->with('success', 'Menu added successfully');
     }
     public function changeStatus($id)
     {
@@ -83,11 +85,13 @@ class MenuController extends Controller
     }
     public function update(MenuEditRequest $request)
     {
-        try{
+        try {
             $menu = $this->menuService->update($request->validated());
-            return redirect('menu/')->with('success', $menu->getData()->message);
+            if(!$menu)
+                return redirect('menu')->with('error', 'Failed to update Menu');
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Menu could not be updated.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
+        return redirect('/menu')->with('success', 'Menu updated successfully');
     }
 }

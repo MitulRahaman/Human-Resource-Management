@@ -66,23 +66,30 @@ class DepartmentRepository
 
     public function updateDepartment($data, $id)
     {
-        $department = Department::find($id);
-        $department->update($data->validated());
+        DB::beginTransaction();
+        try {
+            $department = Department::find($id);
+            $department->update($data->validated());
 
-        if($data->branchID != null)
-        {
-            $branch_department = DB::table('branch_departments')->where('department_id', $id);
-            $branch_department->delete();
+            if($data->branchID != null)
+            {
+                $branch_department = DB::table('branch_departments')->where('department_id', $id);
+                $branch_department->delete();
 
-            foreach ($data->branchID as $b){
-                $branch_department = new BranchDepartment();
-                $branch_department->department_id = $id;
-                $branch_department->branch_id = $b;
-                $branch_department->status = 1;
-                $branch_department->save();
+                foreach ($data->branchID as $b){
+                    $branch_department = new BranchDepartment();
+                    $branch_department->department_id = $id;
+                    $branch_department->branch_id = $b;
+                    $branch_department->status = 1;
+                    $branch_department->save();
+                }
             }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
         }
-        return true;
     }
     public function updateStatus($id)
     {

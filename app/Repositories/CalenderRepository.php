@@ -140,35 +140,42 @@ class CalenderRepository
     }
     public function saveExcel($file)
     {
-        $f= file($file);
-        array_splice($f, 0, 1);
-        $date="";
-        foreach($f as $line) {
-            $l = explode(',', $line);
-            $date= DB::table('calender')->select('id')->where('date',$l[0])->first();
-            if($date)
-            {
-                $date = DB::table('calender')
-                    ->where('id', $date->id)
-                    ->update([
-                        'title' => ($l[1])?  $l[1]:'',
-                        'description' => ($l[2])?  $l[2]:'',
-                        'updated_at' => $this->updated_at,
-                    ]);
-            }
-            else
-            {
-                $date = DB::table('calender')
-                    ->insertGetId([
-                        'date' => $l[0],
-                        'title' => ($l[1])?  $l[1]:'',
-                        'description' => ($l[2])?  $l[2]:'',
-                        'created_at' => $this->created_at
-                    ]);
-            }
-        }
-        return $date;
 
+        DB::beginTransaction();
+        try {
+            $f= file($file);
+            array_splice($f, 0, 1);
+            $date="";
+            foreach($f as $line) {
+                $l = explode(',', $line);
+                $date= DB::table('calender')->select('id')->where('date',$l[0])->first();
+                if($date)
+                {
+                    $date = DB::table('calender')
+                        ->where('id', $date->id)
+                        ->update([
+                            'title' => ($l[1])?  $l[1]:'',
+                            'description' => ($l[2])?  $l[2]:'',
+                            'updated_at' => $this->updated_at,
+                        ]);
+                }
+                else
+                {
+                    $date = DB::table('calender')
+                        ->insertGetId([
+                            'date' => $l[0],
+                            'title' => ($l[1])?  $l[1]:'',
+                            'description' => ($l[2])?  $l[2]:'',
+                            'created_at' => $this->created_at
+                        ]);
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
     }
     public function updateTitle()
     {

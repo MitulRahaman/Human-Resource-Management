@@ -189,15 +189,14 @@
                     {
                         extend: 'csv',
                         text: 'CSV',
-                        exportOptions:  { columns: [0,1,2,3,4,5] },
                         title: "Department Table"
                     },
                     {
                         extend: 'print',
                         text: 'Print',
-                        exportOptions:  { columns: [0,1,2,3,4,5] },
                         title: "Department Table"
                     },
+                    'colvis'
                 ],
             });
         });

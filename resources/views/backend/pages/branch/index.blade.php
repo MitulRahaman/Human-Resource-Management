@@ -187,15 +187,14 @@
                     {
                         extend: 'csv',
                         text: 'CSV',
-                        exportOptions:  { columns: [0,1,2,3,4] },
                         title: "Branch Table"
                     },
                     {
                         extend: 'print',
                         text: 'Print',
-                        exportOptions:  { columns: [0, 1,2,3,4] },
                         title: "Branch Table"
                     },
+                    'colvis'
                 ],
             });
         });

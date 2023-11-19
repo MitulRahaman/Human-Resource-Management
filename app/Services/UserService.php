@@ -141,6 +141,8 @@ class UserService
                 }
                 $edit_url = url('user/'.$id.'/edit');
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                $profile_edit_url = url('user/profile/'.$id.'/edit');
+                $profile_edit_btn= "<a class=\"dropdown-item\" href=\"$profile_edit_url\">Edit Full Profile</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {
                     $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a>";
@@ -154,7 +156,7 @@ class UserService
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
-                $action_btn .= "$edit_btn $toggle_btn $toggle_delete_btn";
+                $action_btn .= "$edit_btn $profile_edit_btn $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
@@ -269,7 +271,10 @@ class UserService
     {
         return $this->userRepository->getBankInfo($id);
     }
-
+    public function deleteAcademicInfo($id)
+    {
+        return $this->userRepository->deleteAcademicInfo($id);
+    }
     public function updateInputs($data)
     {
         $flag = 1;

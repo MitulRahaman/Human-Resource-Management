@@ -139,9 +139,18 @@ class UserController extends Controller
 
     // -----basic info part-----
 
+    public function deleteAcademicInfo($id)
+    {
+        try {
+            $this->userService->deleteAcademicInfo($id);
+            return redirect()->back()->with('success', 'Academic info deleted successfully');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
 
+    }
 
-    public function show(int $id=null)
+    public function show($id=null)
     {
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
@@ -164,13 +173,12 @@ class UserController extends Controller
     public function updateData(ProfileEditRequest $request)
     {
         try{
-            $user = $this->userService->updateProfile($request->validated());
-            if($user=="success")
-                return redirect('user/profile/')->with('success', "Profile updated");
-            else
-                return redirect()->back()->with('error', "Profile could not be updated.");
+            $this->userService->updateProfile($request->validated());
+            return redirect('user/manage')->with('success', 'User profile updated successfully');
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Profile could not be updated.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
+
     }
+
 }

@@ -98,6 +98,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('profile/{id?}', [UserController::class, 'show']);
         Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
         Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
+        Route::delete('profile/{id}/delete_academic_info', [UserController::class, 'deleteAcademicInfo']);
     });
 
     Route::prefix('leaveApply')->group(function() {

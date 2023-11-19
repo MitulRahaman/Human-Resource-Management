@@ -181,11 +181,13 @@ class UserController extends Controller
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
         $const_variable =config('variable_constants');
+        $user_address = $this->userService->getUserAddress($user->id);
+//        dd($user_address);
         $institutes = $this->userService->getInstitutes();
         $degree = $this->userService->getDegree();
         $bank = $this->userService->getBank();
         abort_if(!$user, 404);
-        return \view('backend.pages.user.profileEdit', compact('user', 'bank','degree','institutes','const_variable'));
+        return \view('backend.pages.user.profileEdit', compact('user', 'bank','degree','institutes','const_variable','user_address'));
     }
     public function updateData(ProfileEditRequest $request)
     {

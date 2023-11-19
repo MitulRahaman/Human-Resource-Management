@@ -74,23 +74,6 @@ class UserController extends Controller
         return \view('backend.pages.user.edit', compact('user', 'branches', 'organizations', 'departments', 'designations'));
     }
 
-    public function edit($id)
-    {
-        View::share('sub_menu', 'Manage Users');
-        try {
-            $branches = $this->userService->getBranches();
-            $organizations = $this->userService->getOrganizations();
-            $data = $this->userService->editUser($id);
-            $currentBranchName = $this->userService->getCurrentBranchName($data->branch_id);
-            $currentDepartmentName = $this->userService->getCurrentDepartmentName($data->department_id);
-            $currentDesignationName = $this->userService->getCurrentDesignationName($data->designation_id);
-            $currentOrganizationName = $this->userService->getCurrentOrganizationName($data->last_organization_id);
-        } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
-        }
-        return \view('backend.pages.user.edit', compact('data', 'branches', 'organizations', 'currentBranchName', 'currentDepartmentName', 'currentDesignationName', 'currentOrganizationName'));
-    }
-
     public function update(UserUpdateRequest $request, $id)
     {
         try {

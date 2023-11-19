@@ -9,12 +9,6 @@ use App\Models\Branch;
 class BranchRepository
 {
     private $name;
-    // public function getAllBranchData()
-    // {
-    //     return DB::table('branches as b')
-    //         ->select('b.id', 'b.name', 'b.address', 'b.status', DB::raw('date_format(p.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(p.deleted_at, "%d/%m/%Y") as deleted_at'))
-    //         ->get();
-    // }
 
     public function setName($name)
     {

@@ -177,6 +177,7 @@
             var dtable = $('#dataTable').DataTable({
                 responsive: true,
                 paging: true,
+                "bLengthChange": false,
                 dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
                 retrieve: true,
                 buttons : [{
@@ -187,18 +188,20 @@
                     {
                         extend: 'csv',
                         text: 'CSV',
+                        exportOptions:  { columns: [0,1,2,3,4] },
                         title: "Branch Table"
                     },
                     {
                         extend: 'print',
                         text: 'Print',
+                        exportOptions:  { columns: [0,1,2,3,4] },
                         title: "Branch Table"
                     },
                     'colvis'
                 ],
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
             });
         });
-        
     </script>
 
 @endsection

@@ -222,24 +222,21 @@ class UserRepository
     {
         if($branchId == null)
             return null;
-        $branchName = DB::table('branches')->where('id', '=', $branchId)->first('name');
-        return $branchName->name;
+        return DB::table('branches')->where('id', '=', $branchId)->first()->name;
     }
 
     public function getDepartmentNameForTable($deptId)
     {
         if($deptId == null)
             return null;
-        $deptName = DB::table('departments')->where('id', '=', $deptId)->first('name');
-        return $deptName->name;
+        return DB::table('departments')->where('id', '=', $deptId)->first()->name;
     }
 
     public function getDesignationNameForTable($desgId)
     {
         if($desgId == null)
             return null;
-        $desgName = DB::table('designations')->where('id', '=', $desgId)->first('name');
-        return $desgName->name;
+        return DB::table('designations')->where('id', '=', $desgId)->first()->name;
     }
 
     public function getOrganizations()
@@ -262,11 +259,14 @@ class UserRepository
     public function storeUser($data, $fileName)
     {
         DB::beginTransaction();
-        try {
+            $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
             if ($data->career_start_date == null) {
-                $data->career_start_date = $data->joining_date;
+                $formattedCareerStartDate = $formattedJoiningDate;
+            } else {
+                $formattedCareerStartDate = date("Y-m-d", strtotime($data->career_start_date));
             }
 
+        try {
             $organization_id = null;
             if ($data['organization_id']) {
                 $organization_id = $data['organization_id'];
@@ -299,8 +299,8 @@ class UserRepository
                 'designation_id' => $data->designationId,
                 'personal_email' => $data->personal_email,
                 'preferred_email' => $data->preferred_email,
-                'joining_date' => $data->joining_date,
-                'career_start_date' => $data->career_start_date,
+                'joining_date' => $formattedJoiningDate,
+                'career_start_date' => $formattedCareerStartDate,
                 'last_organization_id' => $organization_id
             ]);
             DB::commit();
@@ -326,8 +326,12 @@ class UserRepository
 
     public function updateUser($data, $id, $fileName)
     {
-        if($data->career_start_date == null)
-            $data->career_start_date = $data->joining_date;
+        $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
+        if ($data->career_start_date == null) {
+            $formattedCareerStartDate = $formattedJoiningDate;
+        } else {
+            $formattedCareerStartDate = date("Y-m-d", strtotime($data->career_start_date));
+        }
         
         try {
             DB::beginTransaction();
@@ -403,36 +407,6 @@ class UserRepository
             $data->update(array('status' => 0));
         else
             $data->update(array('status' => 1));
-    }
-
-    public function getCurrentBranchName($id)
-    {
-        $data =  DB::table('branches')->where('id', $id)->first('name');
-        return $data->name;
-    }
-
-    public function getCurrentDepartmentName($id)
-    {
-        if($id == null)
-            return null;
-        $data =  DB::table('departments')->where('id', $id)->first('name');
-        return $data->name;
-    }
-    
-    public function getCurrentDesignationName($id)
-    {
-        if($id == null)
-            return null;
-        $data =  DB::table('designations')->where('id', $id)->first('name');
-        return $data->name;
-    }
-
-    public function getCurrentOrganizationName($id)
-    {
-        if($id == null)
-            return null;
-        $data =  DB::table('organizations')->where('id', $id)->first('name');
-        return $data->name;
     }
 
     public function isEmployeeIdExists($employee_id)

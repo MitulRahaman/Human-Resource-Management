@@ -88,26 +88,6 @@ class UserService
         return $this->userRepository->updateStatus($id);
     }
 
-    public function getCurrentBranchName($id)
-    {
-        return $this->userRepository->getCurrentBranchName($id);
-    }
-
-    public function getCurrentDepartmentName($id)
-    {
-        return $this->userRepository->getCurrentDepartmentName($id);
-    }
-
-    public function getCurrentDesignationName($id)
-    {
-        return $this->userRepository->getCurrentDesignationName($id);
-    }
-
-    public function getCurrentOrganizationName($id)
-    {
-        return $this->userRepository->getCurrentOrganizationName($id);
-    }
-
     public function getTableData()
     {
         $result = $this->userRepository->getTableData();
@@ -123,7 +103,7 @@ class UserService
                 $branch_name = $this->userRepository->getBranchNameForTable($row->branch_id);
                 $department_name = $this->userRepository->getDepartmentNameForTable($row->department_id);
                 $designation_name = $this->userRepository->getDesignationNameForTable($row->designation_id);
-                $joining_date = $row->joining_date;
+                $joining_date = date("d-m-Y", strtotime($row->joining_date));
 
                 if($imgName) {
                     $url = asset('storage/userImg/'. $imgName);

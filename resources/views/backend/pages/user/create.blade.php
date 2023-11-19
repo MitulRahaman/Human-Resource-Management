@@ -91,11 +91,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Joining date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="Y-m-d" data-date-format="Y-m-d" required>
+                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_career_start_date">Career start date</label>
-                                    <input type="text" class="js-flatpickr form-control" id="career_start_date" name="career_start_date" placeholder="Y-m-d" data-date-format="Y-m-d">
+                                    <input type="text" class="js-flatpickr form-control" id="career_start_date" name="career_start_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y">
                                 </div>
                                 <div class="form-group">
                                     <label for="val_photo">Choose a photo</label><br>

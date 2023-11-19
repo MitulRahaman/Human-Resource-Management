@@ -10,6 +10,7 @@ use App\Http\Controllers\Branch\BranchController;
 use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\LeaveApply\LeaveApplyController;
 
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
@@ -97,6 +98,21 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('profile/{id?}', [UserController::class, 'show']);
         Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
         Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
+    });
+
+    Route::prefix('leaveApply')->group(function() {
+        Route::post('get_table_data', [LeaveApplyController::class, 'getTableData']);
+        Route::get('apply', [LeaveApplyController::class, 'apply']);
+        Route::get('manage', [LeaveApplyController::class, 'manage']);
+        Route::post('store', [LeaveApplyController::class, 'store']);
+        Route::get('/{id}/edit', [LeaveApplyController::class, 'edit']);
+        Route::patch('/update/{id}', [LeaveApplyController::class, 'update']);
+        // Route::post('/{id}/delete', [UserController::class, 'destroy']);
+        // Route::post('/{id}/restore', [UserController::class, 'restore']);
+        // Route::post('/{id}/change_status', [UserController::class, 'changeStatus']);
+        // Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
+        // Route::post('verifyUser', [UserController::class, 'verifyUser']);
+        // Route::patch('updateUser', [UserController::class, 'updateUser']);
     });
 
     Route::group(['middleware'=> 'superUser'], function() {

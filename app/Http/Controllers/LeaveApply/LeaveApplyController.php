@@ -4,6 +4,8 @@ namespace App\Http\Controllers\LeaveApply;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LeaveApplyAddRequest;
+use App\Http\Requests\LeaveApplyUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\LeaveApplyService;
 
@@ -29,11 +31,10 @@ class LeaveApplyController extends Controller
         return \view('backend.pages.leaveApply.apply', compact('leaveTypes'));
     }
 
-    public function store(Request $request)
+    public function store(LeaveApplyAddRequest $request)
     {
         try {
-            $response = $this->leaveApplyService->storeLeaves($request);
-            if ($response === true) {
+            if($this->leaveApplyService->storeLeaves($request)) {
                 return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
             } else {
                 return redirect('leaveApply/apply')->with('error', $response);
@@ -54,10 +55,10 @@ class LeaveApplyController extends Controller
         View::share('sub_menu', 'Manage Users');
         $leave = $this->leaveApplyService->editLeave($id);
         $leaveTypes = $this->leaveApplyService->getLeaveTypes();
-        return \view('backend.pages.leaveApply.edit', compact('leave', 'leaveTypes'));
+        return view('backend.pages.leaveApply.edit', compact('leave', 'leaveTypes'));
     }
 
-    public function update(Request $request, $id)
+    public function update(LeaveApplyUpdateRequest $request, $id)
     {
         try {
             $response = $this->leaveApplyService->updateLeave($request, $id);

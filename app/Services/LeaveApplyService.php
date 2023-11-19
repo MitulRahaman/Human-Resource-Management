@@ -42,7 +42,7 @@ class LeaveApplyService
             $data = array();
             foreach ($result as $key=>$row) {
                 $id = $row->id;
-                $leave_type = $this->leaveApplyRepository->getLeaveTypeForTable($row->leave_type_id);
+                $leave_type = $row->name;
                 $start_date = date("d-m-Y", strtotime($row->start_date));
                 $end_date = date("d-m-Y", strtotime($row->end_date));
                 $total_leave = $row->total;

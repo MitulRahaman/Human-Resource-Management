@@ -27,8 +27,12 @@ class LeaveApplyController extends Controller
     public function apply()
     {
         View::share('sub_menu', 'Apply Leave');
-        $leaveTypes = $this->leaveApplyService->getLeaveTypes();
-        return \view('backend.pages.leaveApply.apply', compact('leaveTypes'));
+        try {
+            $leaveTypes = $this->leaveApplyService->getLeaveTypes();
+            return view('backend.pages.leaveApply.apply', compact('leaveTypes'));
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 
     public function store(LeaveApplyAddRequest $request)

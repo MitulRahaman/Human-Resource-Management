@@ -27,32 +27,31 @@ class LeaveApplyRepository
 
     public function getTableData()
     {    
-        return DB::table('leaves')->get();
-    }
-
-    public function getLeaveTypeForTable($leaveTypeId)
-    {
-        return DB::table('leave_types')->where('id', '=', $leaveTypeId)->first()->name;
+        return DB::table('leaves as l')
+        ->leftJoin('leave_types as lt', function ($join) {
+            $join->on('l.leave_type_id', '=', 'lt.id');
+        })
+        ->where('l.user_id', auth()->user()->id)
+        ->groupBy('l.id')
+        ->select('l.*', 'lt.id as leave_type_id', 'lt.name')
+        ->get();
     }
 
     public function storeLeaves($data)
     {
         $formattedStartDate = date("Y-m-d", strtotime($data->startDate));
         $formattedEndDate = date("Y-m-d", strtotime($data->endDate));
-        try {
-            $create_user = LeaveApply::create([
-                'user_id' => auth()->user()->id,
-                'leave_type_id' => $data->leaveTypeId,
-                'start_date' => $formattedStartDate,
-                'end_date' => $formattedEndDate,
-                'total' => $data->totalLeave,
-                'reason' => $data->reason,
-                'remarks' => "pending"
-            ]);
-            return true;
-        } catch (\Exception $exception) {
-            return $exception->getMessage();
-        }
+
+        $result = LeaveApply::create([
+            'user_id' => auth()->user()->id,
+            'leave_type_id' => $data->leaveTypeId,
+            'start_date' => $formattedStartDate,
+            'end_date' => $formattedEndDate,
+            'total' => $data->totalLeave,
+            'reason' => $data->reason,
+            'remarks' => "pending"
+        ]);
+        return $result;
     }
 
     public function getLeaveInfo()

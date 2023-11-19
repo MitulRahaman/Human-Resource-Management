@@ -159,12 +159,12 @@ class UserController extends Controller
     public function deleteAcademicInfo($id)
     {
         try {
-            if(!$this->userService->deleteAcademicInfo($id))
-                return redirect()->back()->with('error', 'Failed to update delete academic info');
+            $this->userService->deleteAcademicInfo($id);
+            return redirect()->back()->with('success', 'Academic info deleted successfully');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect()->back()->with('success', 'Academic info deleted successfully');
+
     }
 
     public function show($id=null)
@@ -190,13 +190,12 @@ class UserController extends Controller
     public function updateData(ProfileEditRequest $request)
     {
         try{
-            $user = $this->userService->updateProfile($request->validated());
-            if(!$user)
-                return redirect()->back()->with('error', "Profile could not be updated.");
+            $this->userService->updateProfile($request->validated());
+            return redirect('user/manage')->with('success', 'User profile updated successfully');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect('user/manage')->with('success', 'User profile updated successfully');
+
     }
 
 }

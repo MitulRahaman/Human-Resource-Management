@@ -21,7 +21,6 @@ use App\Models\Department;
 use App\Models\Organization;
 use function Symfony\Component\Finder\size;
 use Illuminate\Support\Facades\Storage;
-use DateTime;
 
 class UserRepository
 {
@@ -362,7 +361,8 @@ class UserRepository
     }
     public function updateProfile($data)
     {
-        $d = date('Y-m-d H:i:s');
+        $date = date('Y-m-d H:i:s');
+//        dd($data['institute_id']);
         DB::beginTransaction();
         try {
                 $personal_info = PersonalInfo::where('user_id',$data['id'])->first();
@@ -370,11 +370,11 @@ class UserRepository
                 {
                     $personal_info = new PersonalInfo();
                     $personal_info->user_id = $data['id'];
-                    $personal_info->created_at = $d;
+                    $personal_info->created_at = $date;
                 }
                 else
                 {
-                    $personal_info->updated_at = $d;
+                    $personal_info->updated_at = $date;
                 }
                 $personal_info->father_name = $data['father_name'];
                 $personal_info->mother_name	 = $data['mother_name']	;
@@ -384,7 +384,7 @@ class UserRepository
                 $personal_info->gender = $data['gender'];
                 $personal_info->religion = $data['religion'];
                 $personal_info->blood_group = $data['blood_group'];
-                $personal_info->dob = DateTime::createFromFormat('d-m-Y', $data['dob'])->format('Y-m-d');
+                $personal_info->dob = Carbon::createFromFormat('d-m-Y', $data['dob'])->format('Y-m-d');
                 $personal_info->marital_status = $data['marital_status'];
                 $personal_info->no_of_children = $data['no_of_children']? $data['no_of_children']:'';
                 $personal_info->save();
@@ -394,11 +394,11 @@ class UserRepository
                 {
                     $emergency_contact = new EmergencyContact();
                     $emergency_contact->user_id = $data['id'];
-                    $emergency_contact->created_at = $d;
+                    $emergency_contact->created_at = $date;
                 }
                 else
                 {
-                    $emergency_contact->updated_at = $d;
+                    $emergency_contact->updated_at = $date;
                 }
                 $emergency_contact->name  =$data['emergency_contact_name'];
                 $emergency_contact->relation = $data['relation'];
@@ -410,11 +410,11 @@ class UserRepository
                 {
                     $emergency_contact = new EmergencyContact();
                     $emergency_contact->user_id = $data['id'];
-                    $emergency_contact->created_at = $d;
+                    $emergency_contact->created_at = $date;
                 }
                 else
                 {
-                    $emergency_contact->updated_at = $d;
+                    $emergency_contact->updated_at = $date;
                 }
                 $emergency_contact->name  =$data['emergency_contact_name2'];
                 $emergency_contact->relation = $data['relation2'];
@@ -428,11 +428,11 @@ class UserRepository
                     {
                         $academic_info = new AcademicInfo();
                         $academic_info->user_id = $data['id'];
-                        $academic_info->created_at = $d;
+                        $academic_info->created_at = $date;
                     }
                     else
                     {
-                        $academic_info->updated_at = $d;
+                        $academic_info->updated_at = $date;
                     }
                     $academic_info->institute_id = $data['institute_id'][$i];
                     $academic_info->degree_id = $data['degree_id'][$i];
@@ -447,11 +447,11 @@ class UserRepository
                 {
                     $bank_info = new BankingInfo();
                     $bank_info->user_id = $data['id'];
-                    $bank_info->created_at = $d;
+                    $bank_info->created_at = $date;
                 }
                 else
                 {
-                    $bank_info->updated_at = $d;
+                    $bank_info->updated_at = $date;
                 }
                 $bank_info->bank_id =$data['bank_id'];
                 $bank_info->account_name =$data['account_name'];
@@ -465,11 +465,11 @@ class UserRepository
                 {
                     $nominee = new Nominee();
                     $nominee->banking_info_id = $bank_info->id;
-                    $nominee->created_at = $d;
+                    $nominee->created_at = $date;
                 }
                 else
                 {
-                    $nominee->updated_at = $d;
+                    $nominee->updated_at = $date;
                 }
                 $file_name=null;
                 if ($data['nominee_photo']) {

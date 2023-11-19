@@ -56,7 +56,7 @@ class ProfileEditRequest extends FormRequest
             'routing_number'=> 'nullable',
             'nominee_name' => 'required',
             'nominee_nid' => 'required',
-            'nominee_photo' => 'required|mimes:jpg,jpeg,png',
+            'nominee_photo' => 'nullable|mimes:jpg,jpeg,png',
             'nominee_relation' => 'required',
             'nominee_phone_number' => 'nullable',
             'nominee_email' => 'nullable|email',

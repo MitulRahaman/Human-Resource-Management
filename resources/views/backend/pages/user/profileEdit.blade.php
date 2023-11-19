@@ -51,15 +51,15 @@
                         <!-- Step 1 -->
                         <div class="tab-pane active" id="wizard-progress-step1" role="tabpanel">
                             <div class="form-group">
-                                <label for="wizard-progress-firstname">Father Name</label>
+                                <label for="wizard-progress-firstname">Father Name<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="father_name" name="father_name" value="{{($user->personalInfo)? $user->personalInfo->father_name:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Mother Name</label>
+                                <label for="wizard-progress-lastname">Mother Name<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="mother_name" name="mother_name" value="{{($user->personalInfo)? $user->personalInfo->mother_name:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">NID</label>
+                                <label for="wizard-progress-lastname">NID<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="nid" name="nid" value="{{($user->personalInfo)? $user->personalInfo->nid:''}}">
                             </div>
                             <div class="form-group">
@@ -71,7 +71,7 @@
                                 <input class="form-control" type="text" id="passport_no" name="passport_no" value="{{($user->personalInfo)? $user->personalInfo->passport_no:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Gender</label>
+                                <label for="wizard-progress-skills">Gender<span class="text-danger">*</span></label>
                                 <select class="form-control" id="gender" name="gender">
                                     @foreach ($const_variable["gender"] as $gender => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->gender==$value? 'selected':'') :''}}>{{$gender}}</option>
@@ -79,7 +79,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Religion</label>
+                                <label for="wizard-progress-skills">Religion<span class="text-danger">*</span></label>
                                 <select class="form-control" id="religion" name="religion">
                                 @foreach ($const_variable["religion"] as $religion => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->religion==$value? 'selected':'') :''}}>{{$religion}}</option>
@@ -87,7 +87,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Blood Group</label>
+                                <label for="wizard-progress-skills">Blood Group<span class="text-danger">*</span></label>
                                 <select class="form-control" id="blood_group" name="blood_group">
                                     @foreach ($const_variable["blood_group"] as $blood_group => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->blood_group==$value? 'selected':'') :''}}>{{$blood_group}}</option>
@@ -95,11 +95,11 @@
                                 </select>
                             </div>
                             <div class="form-group ">
-                                <label for="example-flatpickr-default">Date Of Birth</label>
+                                <label for="example-flatpickr-default">Date Of Birth<span class="text-danger">*</span></label>
                                 <input type="text" class="js-flatpickr form-control bg-white " data-date-format="d-m-Y" id="dob" name="dob" placeholder="Y-m-d" value="{{($user->personalInfo)? $user->personalInfo->dob:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Marital Status</label>
+                                <label for="wizard-progress-skills">Marital Status<span class="text-danger">*</span></label>
                                 <select class="form-control" id="marital_status" name="marital_status">
                                     @foreach ($const_variable["marital_status"] as $marital_status => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->blood_group==$value? 'selected':'') :''}}>{{$marital_status}}</option>
@@ -111,31 +111,31 @@
                                 <input class="form-control" type="number" id="no_of_children" name="no_of_children" value="{{($user->personalInfo)? $user->personalInfo->no_of_children:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Emergency Contact Person Name 1</label>
+                                <label for="wizard-progress-lastname">Emergency Contact Person Name 1<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="emergency_contact_name" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->name : '' }}" name="emergency_contact_name" >
                             </div>
                             <div class="form-group">
-                                <label for="phone">Emergency Contact Number 1</label>
+                                <label for="phone">Emergency Contact Number 1<span class="text-danger">*</span></label>
                                 <input type="number" class="js-masked-phone form-control" id="emergency_contact" name="emergency_contact" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->phone_number : '' }}" placeholder="162-000-0000">
                                 <small>Format: 162-000-0000</small><br>
                                 <span id="error_phone" style="font-size:13px; color:red"></span>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Relation with Emergency Contact Person 1</label>
+                                <label for="wizard-progress-lastname">Relation with Emergency Contact Person 1<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="relation" name="relation" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->relation : '' }}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Emergency Contact Person Name 2</label>
+                                <label for="wizard-progress-lastname">Emergency Contact Person Name 2<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="emergency_contact_name2" name="emergency_contact_name2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->name : '' }}">
                             </div>
                             <div class="form-group">
-                                <label for="phone">Emergency Contact Number 2</label>
+                                <label for="phone">Emergency Contact Number 2<span class="text-danger">*</span></label>
                                 <input type="number" class="js-masked-phone form-control" id="emergency_contact2" name="emergency_contact2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->phone_number : '' }}" placeholder="162-000-0000">
                                 <small>Format: 162-000-0000</small><br>
                                 <span id="error_phone2" style="font-size:13px; color:red"></span>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Relation with Emergency Contact Person 2</label>
+                                <label for="wizard-progress-lastname">Relation with Emergency Contact Person 2<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="relation2" name="relation2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->relation : '' }}">
                             </div>
 
@@ -156,7 +156,7 @@
                         <!-- Step 3 -->
                         <div class="tab-pane" id="wizard-progress-step3" role="tabpanel">
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Bank</label>
+                                <label for="wizard-progress-skills">Bank<span class="text-danger">*</span></label>
                                 <select class="form-control" id="bank_id" name="bank_id">
                                     @foreach ($bank as $b)
                                         <option value="{{$b->id}}" {{$user->bankingInfo? ($user->bankingInfo->bank_id == $b->id? 'selected':'') : ''}}>{{$b->name}}</option>
@@ -164,15 +164,15 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Account Name</label>
+                                <label for="wizard-progress-location">Account Name<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="account_name" name="account_name" value="{{$user->bankingInfo? $user->bankingInfo->account_name:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Account Number</label>
+                                <label for="wizard-progress-location">Account Number<span class="text-danger">*</span></label>
                                 <input class="form-control" type="number" id="account_number" name="account_number" value="{{$user->bankingInfo? $user->bankingInfo->account_number:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Branch</label>
+                                <label for="wizard-progress-location">Branch<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="branch" name="branch" value="{{$user->bankingInfo? $user->bankingInfo->branch:''}}">
                             </div>
                             <div class="form-group">
@@ -180,11 +180,11 @@
                                 <input class="form-control" type="text" id="routing_number" name="routing_number" value="{{$user->bankingInfo? $user->bankingInfo->routing_number:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Nominee Name</label>
+                                <label for="wizard-progress-location">Nominee Name<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="nominee_name" name="nominee_name" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->name:''):''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Nominee NID</label>
+                                <label for="wizard-progress-location">Nominee NID<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="nominee_nid" name="nominee_nid" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->nid:''):''}}">
                             </div>
                             <div class="form-group">
@@ -192,7 +192,7 @@
                                 <input class="form-control" type="file" id="nominee_photo" name="nominee_photo">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Relation with Nominee</label>
+                                <label for="wizard-progress-location">Relation with Nominee<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="nominee_relation" name="nominee_relation" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->relation:''):''}}">
                             </div>
                             <div class="form-group">
@@ -337,7 +337,7 @@
                 console.log(academic_info[i].id);
                 var formBlock = '<div class="form-block">' +
                     '<div class="form-group">' +
-                    '<label for="wizard-progress-skills">Institute</label>' +
+                    '<label for="wizard-progress-skills">Institute<span class="text-danger">*</span></label>' +
                     '<select class="form-control" id="institute_id" name="institute_id[]">' +
                     '@foreach ($institutes as $institute)' +
                     '<option value="{{$institute->id}}" ' + (academic_info[i]["institute_id"] == {{$institute->id}} ? "selected" : "") + '>{{$institute->name}}</option>' +
@@ -345,7 +345,7 @@
                     '</select>' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label for="wizard-progress-skills">Degree</label>' +
+                    '<label for="wizard-progress-skills">Degree<span class="text-danger">*</span></label>' +
                     '<select class="form-control" id="degree_id" name="degree_id[]">' +
                     '@foreach ($degree as $d)' +
                     '<option value="{{$d->id}}"' + (academic_info[i]["degree_id"] == {{$d->id}} ? "selected" : "") + '>{{$d->name}}</option>' +
@@ -353,15 +353,15 @@
                     '</select>' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label for="wizard-progress-lastname">Major</label>' +
+                    '<label for="wizard-progress-lastname">Major<span class="text-danger">*</span></label>' +
                     '<input class="form-control" type="text" id="major" value="'+ academic_info[i]["major"] +'" name="major[]">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label for="wizard-progress-lastname">GPA</label>' +
+                    '<label for="wizard-progress-lastname">GPA<span class="text-danger">*</span></label>' +
                     '<input class="form-control" type="text" id="gpa" value="'+ academic_info[i]["gpa"] +'" name="gpa[]">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label for="wizard-progress-lastname">Passing Year</label>' +
+                    '<label for="wizard-progress-lastname">Passing Year<span class="text-danger">*</span></label>' +
                     '<select class="form-control" id="year" name="year[]">';
 
                 for (var year = startYear; year <= endYear; year++) {
@@ -384,7 +384,7 @@
             var endYear = currentYear + 5;
             var formBlock = '<div class="form-block">' +
                 '<div class="form-group">' +
-                '<label for="wizard-progress-skills">Select Institute</label>' +
+                '<label for="wizard-progress-skills">Select Institute<span class="text-danger">*</span></label>' +
                 '<select class="form-control" id="institute_id" name="institute_id[]">' +
                 '@foreach ($institutes as $institute)' +
                 '<option value="{{$institute->id}}">{{$institute->name}}</option>' +
@@ -392,7 +392,7 @@
                 '</select>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="wizard-progress-skills">Degree</label>' +
+                '<label for="wizard-progress-skills">Degree<span class="text-danger">*</span></label>' +
                 '<select class="form-control" id="degree_id" name="degree_id[]">' +
                 '@foreach ($degree as $d)' +
                 '<option value="{{$d->id}}">{{$d->name}}</option>' +
@@ -400,15 +400,15 @@
                 '</select>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="wizard-progress-lastname">Major</label>' +
+                '<label for="wizard-progress-lastname">Major<span class="text-danger">*</span></label>' +
                 '<input class="form-control" type="text" id="major" name="major[]">' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="wizard-progress-lastname">GPA</label>' +
+                '<label for="wizard-progress-lastname">GPA<span class="text-danger">*</span></label>' +
                 '<input class="form-control" type="text" id="gpa" name="gpa[]">' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label for="wizard-progress-lastname">Passing Year</label>' +
+                '<label for="wizard-progress-lastname">Passing Year<span class="text-danger">*</span></label>' +
                 '<select class="form-control" id="year" name="year[]">';
 
             for (var year = startYear; year <= endYear; year++) {

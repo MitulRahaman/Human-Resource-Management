@@ -241,7 +241,62 @@ class UserService
     }
     public function updateProfile($data)
     {
-        return $this->userRepository->updateProfile($data);
+        try {
+            $file_name=null;
+            if (isset($data['nominee_photo'])) {
+
+                $extension = $data['nominee_photo']->getClientOriginalExtension();
+                $file_name = random_int(0001, 9999).'.'.$extension;
+                $file_path = 'nominee/'.$file_name;
+                Storage::disk('public')->put($file_path, file_get_contents($data['nominee_photo']));
+            } else {
+                $file_path = null;
+            }
+         $this->userRepository->setId($data['id'])
+            ->setFatherName($data['father_name'])
+            ->setMotherName($data['mother_name'])
+            ->setNID($data['nid'])
+            ->setBirthCertificate($data['birth_certificate']? $data['birth_certificate']:'')
+            ->setPassportNo($data['passport_no']? $data['passport_no']:'')
+            ->setGender($data['gender'])
+            ->setReligion($data['religion'])
+            ->setBloodGroup($data['blood_group'])
+            ->setDob($data['dob'])
+            ->setMeritalStatus($data['marital_status'])
+            ->setNoOfChildren($data['no_of_children']? $data['no_of_children']:'')
+            ->setCreatedAt(date('Y-m-d H:i:s'))
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->setPresentAddress($data['present_address'])
+            ->setPermanentAddress($data['permanent_address'])
+            ->setEmergencyContactName($data['emergency_contact_name'])
+            ->setEmergencyContactRelation($data['relation'])
+            ->setEmergencyContact($data['emergency_contact'])
+            ->setEmergencyContactName2($data['emergency_contact_name2'])
+            ->setEmergencyContactRelation2($data['relation2'])
+            ->setEmergencyContact2($data['emergency_contact2'])
+            ->setInstituteId($data['institute_id'])
+            ->setDegreeId($data['degree_id'])
+            ->setMajor($data['major'])
+            ->setGPA($data['gpa'])
+            ->setPassingYear($data['year'])
+            ->setBankId($data['bank_id'])
+            ->setAccountName($data['account_name'])
+            ->setAccountNumber($data['account_number'])
+            ->setBranch($data['branch'])
+            ->setRoutingNumber($data['routing_number']? $data['routing_number']:'')
+            ->setNomineeName($data['nominee_name'])
+            ->setNomineeNID($data['nominee_nid'])
+            ->setNomineePhoto($file_name)
+            ->setNomineeRelation($data['nominee_relation'])
+            ->setNomineePhoneNumber($data['nominee_phone_number']? $data['nominee_phone_number']:'')
+            ->setNomineeEmail($data['nominee_email']? $data['nominee_email']:'');
+
+            return  $this->userRepository->saveAllProfileInfo();
+
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+
     }
     public function getEmergencyContacts($id)
     {
@@ -255,6 +310,19 @@ class UserService
     {
         return $this->userRepository->deleteAcademicInfo($id);
     }
+    public function getUserAddress($id)
+    {
+        return $this->userRepository->getUserAddress($id);
+    }
+    public function getOfficialInfo($id)
+    {
+        return $this->userRepository->getOfficialInfo($id);
+    }
+    public function getInstituteDegree($academy)
+    {
+        return $this->userRepository->getInstituteDegree($academy);
+    }
+
     public function updateInputs($data)
     {
         $flag = 1;

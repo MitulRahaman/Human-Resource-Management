@@ -154,27 +154,32 @@ class UserController extends Controller
     {
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
-        $emergency_contacts = $this->userService->getEmergencyContacts($user->id);
+        $user_official_info = $this->userService->getOfficialInfo($user->id);
+        $user_address = $this->userService->getUserAddress($user->id);
+        $userInstituteDegree = $this->userService->getInstituteDegree($user->academicInfo);
         $banking = $this->userService->getBankInfo($user->id);
         abort_if(!$user, 404);
-        return \view('backend.pages.user.profile', compact('user', 'emergency_contacts', 'banking'));
+        return \view('backend.pages.user.profile', compact('user', 'banking', 'user_official_info','user_address', 'userInstituteDegree'));
     }
     public function editData($id)
     {
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
         $const_variable =config('variable_constants');
+        $user_address = $this->userService->getUserAddress($user->id);
         $institutes = $this->userService->getInstitutes();
         $degree = $this->userService->getDegree();
         $bank = $this->userService->getBank();
         abort_if(!$user, 404);
-        return \view('backend.pages.user.profileEdit', compact('user', 'bank','degree','institutes','const_variable'));
+        return \view('backend.pages.user.profileEdit', compact('user', 'bank','degree','institutes','const_variable','user_address'));
     }
     public function updateData(ProfileEditRequest $request)
     {
         try{
-            $this->userService->updateProfile($request->validated());
-            return redirect('user/manage')->with('success', 'User profile updated successfully');
+            if($this->userService->updateProfile($request->validated()))
+                return redirect('user/manage')->with('success', 'User profile updated successfully');
+            else
+                return redirect()->back()->with('error', 'User profile not updated');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

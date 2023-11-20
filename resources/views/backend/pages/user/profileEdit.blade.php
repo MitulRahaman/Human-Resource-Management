@@ -111,6 +111,14 @@
                                 <input class="form-control" type="number" id="no_of_children" name="no_of_children" value="{{($user->personalInfo)? $user->personalInfo->no_of_children:''}}">
                             </div>
                             <div class="form-group">
+                                <label for="wizard-progress-lastname">Present Address<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="present_address" value="{{$user_address && count($user_address)>0 ? $user_address[0]->address:''}}" name="present_address" >
+                            </div>
+                            <div class="form-group">
+                                <label for="wizard-progress-lastname">Permanent Address<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="permanent_address" value="{{$user_address && count($user_address)>1 ? $user_address[1]->address:''}}" name="permanent_address" >
+                            </div>
+                            <div class="form-group">
                                 <label for="wizard-progress-lastname">Emergency Contact Person Name 1<span class="text-danger">*</span></label>
                                 <input class="form-control" type="text" id="emergency_contact_name" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->name : '' }}" name="emergency_contact_name" >
                             </div>

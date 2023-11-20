@@ -11,6 +11,11 @@ return [
         'no' => 0
     ],
 
+    'address' => [
+        'present' => 1,
+        'permanent' => 0
+    ],
+
     'religion' => [
         'islam' => 1,
         'hindu' => 2,

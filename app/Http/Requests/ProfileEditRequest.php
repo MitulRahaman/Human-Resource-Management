@@ -38,6 +38,8 @@ class ProfileEditRequest extends FormRequest
             'dob'=> 'required',
             'marital_status'=> 'required',
             'no_of_children'=> 'nullable',
+            'present_address' => 'required',
+            'permanent_address' => 'required',
             'emergency_contact_name' => 'required',
             'emergency_contact'=> 'required',
             'relation'=> 'required',

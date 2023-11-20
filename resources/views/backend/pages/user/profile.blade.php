@@ -73,10 +73,183 @@
         </div>
         <!-- END User Info -->
 
-        <!-- Addresses -->
+        <!-- User Information -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">
-                <h3 class="block-title">Addresses (2)</h3>
+                <h3 class="block-title">User Information</h3>
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!-- Billing Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Official Information</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$user->full_name}}</div>
+                                <div class="font-size-sm">
+                                    Employee ID: {{$user->employee_id}}<br>
+                                    @if($user_official_info)
+                                    Designation: {{$user_official_info->designation_name}}<br>
+                                    Department: {{$user_official_info->department_name}}<br>
+                                    Branch:{{$user_official_info->branch_name}}<br>
+                                    @endif
+                                    <br>
+                                    <i class="fa fa-phone"></i> {{$user->phone_number}}<br>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->email}}</a><br>
+                                    @if($user->basicInfo)
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->basicInfo->personal_email}}</a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Billing Address -->
+                    </div>
+
+                    <div class="col-lg-6">
+                        <!-- Shipping Address -->
+                        @if($user->personalInfo)
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Personal Information</h3>
+                            </div>
+                            <div class="block-content">
+                                {{--<div class="font-size-h4 mb-1">John Parker</div>--}}
+
+                                <div class="font-size-sm">
+                                    Father name: {{$user->personalInfo->father_name}}<br>
+                                    Mother name: {{$user->personalInfo->mother_name}}<br>
+                                    NID: {{$user->personalInfo->nid}}<br>
+                                    Birth Certificate: {{$user->personalInfo->birth_certificate}}<br>
+                                    Passport No: {{$user->personalInfo->passport_no}}<br>
+                                    Date of Birth: {{$user->personalInfo->dob}}<br> Gender:
+                                    @if(Config::get('variable_constants.gender.male')==$user->personalInfo->gender)
+                                        male<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.gender.female')==$user->personalInfo->gender)
+                                        female<br>
+                                    @endif
+                                    Religion:
+                                    @if(Config::get('variable_constants.religion.islam')==$user->personalInfo->religion)
+                                        islam<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.religion.hindu')==$user->personalInfo->religion)
+                                        hindu<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.religion.christian')==$user->personalInfo->religion)
+                                        christian<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.religion.buddhist')==$user->personalInfo->religion)
+                                        buddhist<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.religion.others')==$user->personalInfo->religion)
+                                        others<br>
+                                    @endif
+                                    Blood group:
+                                    @if(Config::get('variable_constants.blood_group.O+')==$user->personalInfo->blood_group)
+                                        O+<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.O-')==$user->personalInfo->blood_group)
+                                        O-<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.A+')==$user->personalInfo->blood_group)
+                                        A+<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.A-')==$user->personalInfo->blood_group)
+                                        A-<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.B+')==$user->personalInfo->blood_group)
+                                        B+<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.B-')==$user->personalInfo->blood_group)
+                                        B-<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.AB+')==$user->personalInfo->blood_group)
+                                        AB+<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.blood_group.AB-')==$user->personalInfo->blood_group)
+                                        AB-<br>
+                                    @endif
+                                    Marital status:
+                                    @if(Config::get('variable_constants.marital_status.unmarried')==$user->personalInfo->marital_status)
+                                        unmarried<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.marital_status.married')==$user->personalInfo->marital_status)
+                                        married<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.marital_status.divorced')==$user->personalInfo->marital_status)
+                                        divorced<br>
+                                    @endif
+                                    @if(Config::get('variable_constants.marital_status.widowed')==$user->personalInfo->marital_status)
+                                        widowed<br>
+                                    @endif
+                                    No of Children {{$user->personalInfo->no_of_children}}<br>
+                                    <br>
+                                    <i class="fa fa-phone"></i> (999) 888-55555<br>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endif
+                        <!-- END Shipping Address -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END User Information -->
+        <!-- Emergency Contact -->
+        @if(count($user->emergencyContacts)>1)
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Emergency Contact</h3>
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Emergency Contact 1</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$user->emergencyContacts[0]->name}}</div>
+                                <div class="font-size-sm">
+                                    Relation: {{$user->emergencyContacts[0]->relation}}<br>
+                                    <br>
+                                    <i class="fa fa-phone"></i> {{$user->emergencyContacts[0]->phone_number}}<br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Emergency Contact 1</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$user->emergencyContacts[1]->name}}</div>
+                                <div class="font-size-sm">
+                                    Relation: {{$user->emergencyContacts[1]->relation}}<br>
+                                    <br>
+                                    <i class="fa fa-phone"></i> {{$user->emergencyContacts[1]->phone_number}}<br>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        <!-- END Emergency Contact -->
+
+        <!-- Addresses -->
+        @if(count($user_address)>1)
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Addresses</h3>
             </div>
             <div class="block-content">
                 <div class="row">
@@ -87,14 +260,7 @@
                                 <h3 class="block-title">Present Address</h3>
                             </div>
                             <div class="block-content">
-                                <div class="font-size-h4 mb-1">John Parker</div>
-                                <address class="font-size-sm">
-                                    Sunrise Str 620<br>
-                                    Melbourne<br>
-                                    Australia, 11-587<br><br>
-                                    <i class="fa fa-phone"></i> (999) 888-55555<br>
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>
-                                </address>
+                                <div class="font-size-h4 mb-1">{{$user_address[0]->address}}</div>
                             </div>
                         </div>
                         <!-- END Billing Address -->
@@ -106,14 +272,7 @@
                                 <h3 class="block-title">Permanent Address</h3>
                             </div>
                             <div class="block-content">
-                                <div class="font-size-h4 mb-1">John Parker</div>
-                                <address class="font-size-sm">
-                                    Sunrise Str 620<br>
-                                    Melbourne<br>
-                                    Australia, 11-587<br><br>
-                                    <i class="fa fa-phone"></i> (999) 888-55555<br>
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>
-                                </address>
+                                <div class="font-size-h4 mb-1">{{$user_address[1]->address}}</div>
                             </div>
                         </div>
                         <!-- END Shipping Address -->
@@ -121,7 +280,97 @@
                 </div>
             </div>
         </div>
+        @endif
         <!-- END Addresses -->
+
+        <!-- Academic Info -->
+        @if(count($user->academicInfo)>0)
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Academic Information</h3>
+            </div>
+            @foreach($user->academicInfo  as $index=>$academy)
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Billing Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">{{$userInstituteDegree['degree_name'][$index]}}</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$academy->major}}</div>
+                                <div class="font-size-sm">
+                                    GPA: {{$academy->gpa}}<br>
+                                    Institute: {{$userInstituteDegree['institute_name'][$index]}}<br>
+                                    Passing Year: {{$academy->passing_year}}<br><br>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Billing Address -->
+                    </div>
+                </div>
+            </div>
+            @endforeach
+
+        </div>
+        @endif
+
+        <!-- END Academic Info -->
+
+        <!-- Banking -->
+        @if($banking)
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">Banking Information</h3>
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!-- Billing Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Bank Info</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$banking->account_name}}</div>
+                                <div class="font-size-sm">
+                                    Account no: {{$banking->account_number}}<br>
+                                    Routing no: {{$banking->routing_no}}<br>
+                                    Bank: {{$banking->bank_name}}<br>
+                                    Branch: {{$banking->branch}}<br>
+                                    <br><br>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Billing Address -->
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Shipping Address -->
+                        <div class="block block-rounded block-bordered">
+                            <div class="block-header border-bottom">
+                                <h3 class="block-title">Nominee</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="font-size-h4 mb-1">{{$banking->name}}<br></div>
+                                <div class="font-size-sm">
+                                    NID: {{$banking->nid}}<br>
+                                    Relation: {{$banking->relation}}<br>
+                                    <br>
+                                    <i class="fa fa-phone"></i> ({{$banking->phone_number}}<br><br>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$banking->email}}<br></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Shipping Address -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        <!-- END Banking -->
+
 
         <!-- Shopping Cart -->
         <div class="block block-rounded">

@@ -289,21 +289,20 @@
             <div class="block-header block-header-default">
                 <h3 class="block-title">Academic Information</h3>
             </div>
-            <?php $i=0 ?>
-            @foreach($user->academicInfo as $academy)
+            @foreach($user->academicInfo  as $index=>$academy)
             <div class="block-content">
                 <div class="row">
                     <div class="col-lg-12">
                         <!-- Billing Address -->
                         <div class="block block-rounded block-bordered">
                             <div class="block-header border-bottom">
-                                <h3 class="block-title">{{$userInstituteDegree[$i]['degree_name']}}</h3>
+                                <h3 class="block-title">{{$userInstituteDegree['degree_name'][$index]}}</h3>
                             </div>
                             <div class="block-content">
                                 <div class="font-size-h4 mb-1">{{$academy->major}}</div>
                                 <div class="font-size-sm">
                                     GPA: {{$academy->gpa}}<br>
-                                    Institute: {{$userInstituteDegree[$i]['institute_name']}}<br>
+                                    Institute: {{$userInstituteDegree['institute_name'][$index]}}<br>
                                     Passing Year: {{$academy->passing_year}}<br><br>
 
                                 </div>
@@ -313,7 +312,6 @@
                     </div>
                 </div>
             </div>
-            <?php $i=$i+1 ?>
             @endforeach
 
         </div>

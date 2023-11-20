@@ -500,18 +500,13 @@ class UserRepository
             $instituteIds = array_column($academyArray, 'institute_id');
             $degreeIds = array_column($academyArray, 'degree_id');
 
-            $institutesData = Institute::whereIn('id', $instituteIds)->pluck('name', 'id')->toArray();
-            $degreesData = Degree::whereIn('id', $degreeIds)->pluck('name', 'id')->toArray();
-
-            foreach ($academyArray as $item) {
-
-                $result[] = [
-                    'institute_id' => $item['institute_id'],
-                    'institute_name' => $institutesData[$item['institute_id']] ?? null,
-                    'degree_id' => $item['degree_id'],
-                    'degree_name' => $degreesData[$item['degree_id']] ?? null,
+            $institutesData = Institute::whereIn('id', $instituteIds)->pluck('name')->toArray();
+            $degreesData = Degree::whereIn('id', $degreeIds)->pluck('name')->toArray();
+            $result = [
+                    'institute_name' => $institutesData ?? null,
+                    'degree_name' => $degreesData ?? null,
                 ];
-            }
+
         }
         return $result;
     }
@@ -713,13 +708,11 @@ class UserRepository
     {
         try{
             DB::beginTransaction();
-
             $this->savePersonalInfo();
             $this->saveUserAdress();
             $this->saveEmergencyContact();
             $this->saveAcademicInfo();
             $this->saveBankInfo();
-
             $this->registraionComplete();
             DB::commit();
             return true;
@@ -727,7 +720,6 @@ class UserRepository
             DB::rollBack();
             return $exception->getMessage();
         }
-
     }
     public function getOfficialInfo($id)
     {

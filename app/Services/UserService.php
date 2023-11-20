@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-
 
 class UserService
 {
@@ -243,8 +241,6 @@ class UserService
     }
     public function updateProfile($data)
     {
-//        dd($data);
-
         try {
             $file_name=null;
             if (isset($data['nominee_photo'])) {
@@ -256,7 +252,6 @@ class UserService
             } else {
                 $file_path = null;
             }
-            DB::beginTransaction();
          $this->userRepository->setId($data['id'])
             ->setFatherName($data['father_name'])
             ->setMotherName($data['mother_name'])
@@ -294,17 +289,11 @@ class UserService
             ->setNomineePhoto($file_name)
             ->setNomineeRelation($data['nominee_relation'])
             ->setNomineePhoneNumber($data['nominee_phone_number']? $data['nominee_phone_number']:'')
-            ->setNomineeEmail($data['nominee_email']? $data['nominee_email']:'')
-             ->savePersonalInfo();
+            ->setNomineeEmail($data['nominee_email']? $data['nominee_email']:'');
 
-            $this->userRepository->saveUserAdress();
-              $this->userRepository->saveEmergencyContact();
-             $this->userRepository->saveAcademicInfo();
-             $this->userRepository->saveBankInfo();
-            DB::commit();
-            return true;
+            return  $this->userRepository->saveAllProfileInfo();
+
         } catch (\Exception $exception) {
-            DB::rollBack();
             return $exception->getMessage();
         }
 
@@ -325,6 +314,15 @@ class UserService
     {
         return $this->userRepository->getUserAddress($id);
     }
+    public function getOfficialInfo($id)
+    {
+        return $this->userRepository->getOfficialInfo($id);
+    }
+    public function getInstituteDegree($academy)
+    {
+        return $this->userRepository->getInstituteDegree($academy);
+    }
+
     public function updateInputs($data)
     {
         $flag = 1;

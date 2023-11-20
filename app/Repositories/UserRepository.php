@@ -491,6 +491,31 @@ class UserRepository
     {
         return UserAddress::where('user_id',$id)->get();
     }
+    public function getInstituteDegree($academy)
+    {
+        $result = [];
+        if ($academy->count() > 0) {
+            $academyArray = $academy->toArray();
+
+            $instituteIds = array_column($academyArray, 'institute_id');
+            $degreeIds = array_column($academyArray, 'degree_id');
+
+            $institutesData = Institute::whereIn('id', $instituteIds)->pluck('name', 'id')->toArray();
+            $degreesData = Degree::whereIn('id', $degreeIds)->pluck('name', 'id')->toArray();
+
+            foreach ($academyArray as $item) {
+
+                $result[] = [
+                    'institute_id' => $item['institute_id'],
+                    'institute_name' => $institutesData[$item['institute_id']] ?? null,
+                    'degree_id' => $item['degree_id'],
+                    'degree_name' => $degreesData[$item['degree_id']] ?? null,
+                ];
+            }
+        }
+        return $result;
+    }
+
     public function savePersonalInfo()
     {
         $personal_info = PersonalInfo::where('user_id',$this->id)->first();
@@ -532,7 +557,7 @@ class UserRepository
         {
             $user_address->updated_at = $this->updated_at;
         }
-        $user_address->type= "present";
+        $user_address->type= Config::get('variable_constants.address.present');
         $user_address->address= $this->present_address;
         $user_address->save();
 
@@ -548,7 +573,7 @@ class UserRepository
         {
             $user_address->updated_at = $this->updated_at;
         }
-        $user_address->type= "permanent";
+        $user_address->type= Config::get('variable_constants.address.permanent');
         $user_address->address= $this->permanent_address;
         $user_address->save();
             DB::commit();
@@ -677,5 +702,40 @@ class UserRepository
         DB::rollBack();
         return $exception->getMessage();
         }
+    }
+    public function registraionComplete()
+    {
+        $user = User::where('id',$this->id)->first();
+        $user->is_registration_complete = 1;
+        return $user->save();
+    }
+    public function saveAllProfileInfo()
+    {
+        try{
+            DB::beginTransaction();
+
+            $this->savePersonalInfo();
+            $this->saveUserAdress();
+            $this->saveEmergencyContact();
+            $this->saveAcademicInfo();
+            $this->saveBankInfo();
+
+            $this->registraionComplete();
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+
+    }
+    public function getOfficialInfo($id)
+    {
+        return DB::table('basic_info as basic')->where('user_id',$id)
+            ->join('branches as b', 'basic.branch_id','=', 'b.id')
+            ->join('designations as d', 'basic.designation_id','=', 'd.id')
+            ->join('departments as dep', 'basic.department_id','=', 'dep.id')
+            ->select('b.name as branch_name', 'd.name as designation_name', 'dep.name as department_name')
+            ->first();
     }
 }

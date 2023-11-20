@@ -51,7 +51,7 @@ class LeaveApplyController extends Controller
     public function manage()
     {
         View::share('sub_menu', 'Manage Leaves');
-        return \view('backend.pages.leaveApply.manage');
+        return view('backend.pages.leaveApply.manage');
     }
 
     public function edit($id)

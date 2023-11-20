@@ -113,6 +113,4 @@ class DepartmentService
     {
         return $this->departmentRepository->getDepartments();
     }
-
-
  }

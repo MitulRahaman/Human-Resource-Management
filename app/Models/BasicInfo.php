@@ -11,7 +11,7 @@ class BasicInfo extends Model
     use HasFactory, softDeletes;
 
     protected $table = 'basic_info';
-    protected $fillable = ['user_id', 'branch_id', 'department_id', 'designation_id', 'personal_email', 'preferred_email', 'joining_date', 'career_start_date',  'last_organization_id'];
+    protected $fillable = ['user_id', 'branch_id', 'department_id', 'designation_id', 'role_id', 'personal_email', 'preferred_email', 'joining_date', 'career_start_date',  'last_organization_id'];
 
     public function branch()
     {

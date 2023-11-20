@@ -62,6 +62,16 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="val-roleId">Role<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="roleId" name="roleId" style="width: 100%" required>
+                                        @if ($roles)
+                                            @foreach($roles as $role)
+                                                <option value="{{ $role->id }}" {{ $user->basicInfo->role_id == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="val_full_name">Full Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $user->full_name }}" required>
                                 </div>

@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileEditRequest;
 use App\Http\Controllers\Controller;
 use App\Services\DepartmentService;
 use App\Services\DesignationService;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserAddRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -14,13 +15,14 @@ use App\Services\UserService;
 
 class UserController extends Controller
 {
-    private $userService, $departmentService, $designationService;
+    private $userService, $departmentService, $designationService, $roleService;
 
-    public function __construct(UserService $userService, DepartmentService $departmentService, DesignationService $designationService)
+    public function __construct(UserService $userService, DepartmentService $departmentService, DesignationService $designationService, RoleService $roleService)
     {
         $this->userService = $userService;
         $this->departmentService = $departmentService;
         $this->designationService = $designationService;
+        $this->roleService = $roleService;
         View::share('main_menu', 'Users');
     }
 
@@ -34,13 +36,14 @@ class UserController extends Controller
         View::share('sub_menu', 'Add User');
         $branches = $this->userService->getBranches();
         $organizations = $this->userService->getOrganizations();
-        return \view('backend.pages.user.create', compact('branches', 'organizations'));
+        $roles = $this->userService->getRoles();
+        return view('backend.pages.user.create', compact('branches', 'organizations', 'roles'));
     }
 
     public function manage()
     {
         View::share('sub_menu', 'Manage Users');
-        return \view('backend.pages.user.manage');
+        return view('backend.pages.user.manage');
     }
 
     public function getDeptDesg(Request $request)
@@ -71,7 +74,8 @@ class UserController extends Controller
         $organizations = $this->userService->getOrganizations();
         $departments = $this->departmentService->getDepartments();
         $designations = $this->designationService->getDesignations();
-        return \view('backend.pages.user.edit', compact('user', 'branches', 'organizations', 'departments', 'designations'));
+        $roles = $this->roleService->getRoles();
+        return view('backend.pages.user.edit', compact('user', 'branches', 'organizations', 'departments', 'designations', 'roles'));
     }
 
     public function update(UserUpdateRequest $request, $id)

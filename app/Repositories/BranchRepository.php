@@ -23,9 +23,9 @@ class BranchRepository
     public function storeBranch($data)
     {
        return Branch::create([
-                'name' => $data->name,
-                'address' => $data->address,
-                'status' => 1,
+            'name' => $data->name,
+            'address' => $data->address,
+            'status' => 1,
        ]);
     }
 

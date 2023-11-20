@@ -21,6 +21,11 @@ class UserService
         return $this->userRepository->getBranches();
     }
 
+    public function getRoles()
+    {
+        return $this->userRepository->getRoles();
+    }
+
     public function getDeptDesg($data)
     {
         $departments = $this->userRepository->getDepartments($data);
@@ -98,9 +103,10 @@ class UserService
                 $name = $row->full_name;
                 $email = $row->email;
                 $phone_number = $row->phone_number;
-                $branch_name = $this->userRepository->getBranchNameForTable($row->branch_id);
-                $department_name = $this->userRepository->getDepartmentNameForTable($row->department_id);
-                $designation_name = $this->userRepository->getDesignationNameForTable($row->designation_id);
+                $branch_name = $this->userRepository->setBranchId($row->branch_id)->getBranchNameForTable();
+                $department_name = $this->userRepository->setDepartmentId($row->department_id)->getDepartmentNameForTable();
+                $designation_name = $this->userRepository->setDesignationId($row->designation_id)->getDesignationNameForTable();
+                $role_name = $this->userRepository->setRoleId($row->role_id)->getRoleNameForTable();
                 $joining_date = date("d-m-Y", strtotime($row->joining_date));
 
                 if($imgName) {
@@ -151,6 +157,7 @@ class UserService
                 array_push($temp, $branch_name);
                 array_push($temp, $department_name);
                 array_push($temp, $designation_name);
+                array_push($temp, $role_name);
                 array_push($temp, $joining_date);
                 array_push($temp, $status);
                 if ($row->deleted_at) {

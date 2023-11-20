@@ -22,10 +22,14 @@ use App\Models\Department;
 use App\Models\Organization;
 use function Symfony\Component\Finder\size;
 use Illuminate\Support\Facades\Storage;
+use App\Models\UserAddress;
 
 class UserRepository
 {
-    private $id;
+    private $name, $id, $father_name, $mother_name,$permanent_address, $present_address, $nid,$dob, $created_at, $updated_at, $birth_certificate,
+        $passport_no, $gender, $religion, $blood_group, $marital_status, $no_of_children,$emergency_contact,$relation, $emergency_contact_name,
+        $emergency_contact2,$relation2, $emergency_contact_name2, $institute_id ,$degree_id, $major, $gpa, $year, $bank_id, $account_name,
+        $account_number, $branch, $routing_number, $nominee_email, $nominee_phone_number, $nominee_relation, $nominee_nid, $nominee_name;
 
     public function setId($id)
     {
@@ -51,6 +55,156 @@ class UserRepository
         $this->roleId = $id;
         return $this;
     }
+    public function setFatherName($father_name){
+        $this->father_name = $father_name;
+        return $this;
+    }
+    public function setNomineeName($nominee_name){
+        $this->nominee_name = $nominee_name;
+        return $this;
+    }
+    public function setNomineeNID($nominee_nid){
+        $this->nominee_nid = $nominee_nid;
+        return $this;
+    }
+    public function setNomineePhoto($file_name){
+        $this->file_name = $file_name;
+        return $this;
+    }
+    public function setNomineeRelation($nominee_relation){
+    $this->nominee_relation = $nominee_relation;
+    return $this;
+    }
+    public function setNomineePhoneNumber($nominee_phone_number){
+        $this->nominee_phone_number = $nominee_phone_number;
+        return $this;
+    }
+    public function setNomineeEmail($nominee_email){
+        $this->nominee_email = $nominee_email;
+        return $this;
+    }
+    public function setBankId($bank_id){
+        $this->bank_id = $bank_id;
+        return $this;
+    }
+    public function setAccountName($account_name){
+        $this->account_name = $account_name;
+        return $this;
+    }
+    public function setAccountNumber($account_number){
+        $this->account_number = $account_number;
+        return $this;
+    }
+    public function setBranch($branch){
+        $this->branch = $branch;
+        return $this;
+    }
+    public function setRoutingNumber($routing_number){
+        $this->routing_number = $routing_number;
+        return $this;
+    }
+    public function setInstituteId($institute_id){
+        $this->institute_id = $institute_id;
+        return $this;
+    }
+    public function setDegreeId($degree_id){
+        $this->degree_id = $degree_id;
+        return $this;
+    }
+    public function setMajor($major){
+        $this->major = $major;
+        return $this;
+    }
+    public function setGPA($gpa){
+        $this->gpa = $gpa;
+        return $this;
+    }
+    public function setPassingYear($year){
+        $this->year = $year;
+        return $this;
+    }
+
+    public function setEmergencyContactName($emergency_contact_name){
+        $this->emergency_contact_name = $emergency_contact_name;
+        return $this;
+    }
+    public function setEmergencyContactRelation($relation){
+        $this->relation = $relation;
+        return $this;
+    }
+    public function setEmergencyContact($emergency_contact){
+        $this->emergency_contact = $emergency_contact;
+        return $this;
+    }
+    public function setEmergencyContactName2($emergency_contact_name2){
+        $this->emergency_contact_name2 = $emergency_contact_name2;
+        return $this;
+    }
+    public function setEmergencyContactRelation2($relation2){
+        $this->relation2 = $relation2;
+        return $this;
+    }
+    public function setEmergencyContact2($emergency_contact2){
+        $this->emergency_contact2 = $emergency_contact2;
+        return $this;
+    }
+    public function setPresentAddress($present_address){
+        $this->present_address = $present_address;
+        return $this;
+    }
+    public function setPermanentAddress($permanent_address){
+        $this->permanent_address = $permanent_address;
+        return $this;
+    }
+    public function setMotherName($mother_name){
+        $this->mother_name = $mother_name;
+        return $this;
+    }
+    public function setNID($nid){
+        $this->nid = $nid;
+        return $this;
+    }
+    public function setBirthCertificate($birth_certificate){
+        $this->birth_certificate = $birth_certificate;
+        return $this;
+    }
+    public function setPassportNo($passport_no){
+        $this->passport_no = $passport_no;
+        return $this;
+    }
+    public function setGender($gender){
+        $this->gender = $gender;
+        return $this;
+    }
+    public function setReligion($religion){
+        $this->religion = $religion;
+        return $this;
+    }
+    public function setBloodGroup($blood_group){
+        $this->blood_group = $blood_group;
+        return $this;
+    }
+    public function setDob($dob){
+        $this->dob = $dob;
+        return $this;
+    }
+    public function setMeritalStatus($marital_status){
+        $this->marital_status = $marital_status;
+        return $this;
+    }
+    public function setNoOfChildren($no_of_children){
+        $this->no_of_children = $no_of_children;
+        return $this;
+    }
+    public function setCreatedAt($created_at){
+        $this->created_at = $created_at;
+        return $this;
+    }
+    public function setUpdatedAt($updated_at){
+        $this->updated_at = $updated_at;
+        return $this;
+    }
+
 
     public function getBranches()
     {
@@ -368,139 +522,248 @@ class UserRepository
         $academicInfo= AcademicInfo::findOrFail($id);
         return $academicInfo->delete();
     }
-    public function updateProfile($data)
+    public function getUserAddress($id)
+    {
+        return UserAddress::where('user_id',$id)->get();
+    }
+    public function getInstituteDegree($academy)
+    {
+        $result = [];
+        if ($academy->count() > 0) {
+            $academyArray = $academy->toArray();
+
+            $instituteIds = array_column($academyArray, 'institute_id');
+            $degreeIds = array_column($academyArray, 'degree_id');
+
+            $institutesData = Institute::whereIn('id', $instituteIds)->pluck('name')->toArray();
+            $degreesData = Degree::whereIn('id', $degreeIds)->pluck('name')->toArray();
+            $result = [
+                    'institute_name' => $institutesData ?? null,
+                    'degree_name' => $degreesData ?? null,
+                ];
+
+        }
+        return $result;
+    }
+
+    public function savePersonalInfo()
+    {
+        $personal_info = PersonalInfo::where('user_id',$this->id)->first();
+        if(!$personal_info)
+        {
+            $personal_info = new PersonalInfo();
+            $personal_info->user_id = $this->id;
+            $personal_info->created_at = $this->created_at;
+        }
+        else
+        {
+            $personal_info->updated_at = $this->updated_at;
+        }
+        $personal_info->father_name = $this->father_name;
+        $personal_info->mother_name	 = $this->mother_name	;
+        $personal_info->nid = $this->nid;
+        $personal_info->birth_certificate = $this->birth_certificate;
+        $personal_info->passport_no = $this->passport_no;
+        $personal_info->gender = $this->gender;
+        $personal_info->religion = $this->religion;
+        $personal_info->blood_group = $this->blood_group;
+        $personal_info->dob = Carbon::createFromFormat('d-m-Y', $this->dob)->format('Y-m-d');
+        $personal_info->marital_status = $this->marital_status;
+        $personal_info->no_of_children = $this->no_of_children;
+        return $personal_info->save();
+    }
+    public function saveUserAdress()
     {
         $date = date('Y-m-d H:i:s');
         DB::beginTransaction();
         try {
-                $personal_info = PersonalInfo::where('user_id',$data['id'])->first();
-                if(!$personal_info)
-                {
-                    $personal_info = new PersonalInfo();
-                    $personal_info->user_id = $data['id'];
-                    $personal_info->created_at = $date;
-                }
-                else
-                {
-                    $personal_info->updated_at = $date;
-                }
-                $personal_info->father_name = $data['father_name'];
-                $personal_info->mother_name	 = $data['mother_name']	;
-                $personal_info->nid = $data['nid'];
-                $personal_info->birth_certificate = ($data['birth_certificate'])?  $data['birth_certificate']:'';
-                $personal_info->passport_no = $data['passport_no']? $data['passport_no']:'';
-                $personal_info->gender = $data['gender'];
-                $personal_info->religion = $data['religion'];
-                $personal_info->blood_group = $data['blood_group'];
-                $personal_info->dob = Carbon::createFromFormat('d-m-Y', $data['dob'])->format('Y-m-d');
-                $personal_info->marital_status = $data['marital_status'];
-                $personal_info->no_of_children = $data['no_of_children']? $data['no_of_children']:'';
-                $personal_info->save();
+        $user_address = UserAddress::where('user_id',$this->id)->first();
+        if(!$user_address)
+        {
+            $user_address = new UserAddress();
+            $user_address->user_id = $this->id;
+            $user_address->created_at = $this->created_at;
+        }
+        else
+        {
+            $user_address->updated_at = $this->updated_at;
+        }
+        $user_address->type= Config::get('variable_constants.address.present');
+        $user_address->address= $this->present_address;
+        $user_address->save();
 
-                $emergency_contact = EmergencyContact::where('user_id',$data['id'])->first();
-                if(!$emergency_contact)
-                {
-                    $emergency_contact = new EmergencyContact();
-                    $emergency_contact->user_id = $data['id'];
-                    $emergency_contact->created_at = $date;
-                }
-                else
-                {
-                    $emergency_contact->updated_at = $date;
-                }
-                $emergency_contact->name  =$data['emergency_contact_name'];
-                $emergency_contact->relation = $data['relation'];
-                $emergency_contact->phone_number = $data['emergency_contact'];
-                $emergency_contact->save();
 
-                $emergency_contact = EmergencyContact::where('user_id',$data['id'])->skip(1)->first();
-                if(!$emergency_contact)
-                {
-                    $emergency_contact = new EmergencyContact();
-                    $emergency_contact->user_id = $data['id'];
-                    $emergency_contact->created_at = $date;
-                }
-                else
-                {
-                    $emergency_contact->updated_at = $date;
-                }
-                $emergency_contact->name  =$data['emergency_contact_name2'];
-                $emergency_contact->relation = $data['relation2'];
-                $emergency_contact->phone_number = $data['emergency_contact2'];
-                $emergency_contact->save();
-
-                for($i=0; $i<sizeof($data['institute_id']); $i=$i+1)
-                {
-                    $academic_info = AcademicInfo::where('user_id',$data['id'])->where('degree_id',$data['degree_id'][$i])->first();
-                    if(!$academic_info)
-                    {
-                        $academic_info = new AcademicInfo();
-                        $academic_info->user_id = $data['id'];
-                        $academic_info->created_at = $date;
-                    }
-                    else
-                    {
-                        $academic_info->updated_at = $date;
-                    }
-                    $academic_info->institute_id = $data['institute_id'][$i];
-                    $academic_info->degree_id = $data['degree_id'][$i];
-                    $academic_info->major = $data['major'][$i];
-                    $academic_info->gpa = $data['gpa'][$i];
-                    $academic_info->passing_year = $data['year'][$i];
-                    $academic_info->save();
-                }
-
-                $bank_info = BankingInfo::where('user_id',$data['id'])->first();
-                if(!$bank_info)
-                {
-                    $bank_info = new BankingInfo();
-                    $bank_info->user_id = $data['id'];
-                    $bank_info->created_at = $date;
-                }
-                else
-                {
-                    $bank_info->updated_at = $date;
-                }
-                $bank_info->bank_id =$data['bank_id'];
-                $bank_info->account_name =$data['account_name'];
-                $bank_info->account_number =$data['account_number'];
-                $bank_info->branch =$data['branch'];
-                $bank_info->routing_no =$data['routing_number']? $data['routing_number']:'';
-                $bank_info->save();
-
-                $nominee = Nominee::where('banking_info_id',$bank_info->id)->first();
-                if(!$nominee)
-                {
-                    $nominee = new Nominee();
-                    $nominee->banking_info_id = $bank_info->id;
-                    $nominee->created_at = $date;
-                }
-                else
-                {
-                    $nominee->updated_at = $date;
-                }
-                $file_name=null;
-                if ($data['nominee_photo']) {
-
-                    $extension = $data['nominee_photo']->getClientOriginalExtension();
-                    $file_name = random_int(0001, 9999).'.'.$extension;
-                    $file_path = 'nominee/'.$file_name;
-                    Storage::disk('public')->put($file_path, file_get_contents($data['nominee_photo']));
-                } else {
-                    $file_path = null;
-                }
-                $nominee->name = $data['nominee_name'];
-                $nominee->nid = $data['nominee_nid'];
-                $nominee->photo = $file_name;
-                $nominee->relation = $data['nominee_relation'];
-                $nominee->phone_number = $data['nominee_phone_number']? $data['nominee_phone_number']:'';
-                $nominee->email = $data['nominee_email']? $data['nominee_email']:'';
-                $nominee->save();
+        $user_address = UserAddress::where('user_id',$this->id)->skip(1)->first();
+        if(!$user_address)
+        {
+            $user_address = new UserAddress();
+            $user_address->user_id = $this->id;
+            $user_address->created_at = $this->created_at;
+        }
+        else
+        {
+            $user_address->updated_at = $this->updated_at;
+        }
+        $user_address->type= Config::get('variable_constants.address.permanent');
+        $user_address->address= $this->permanent_address;
+        $user_address->save();
             DB::commit();
             return true;
         } catch (\Exception $exception) {
             DB::rollBack();
             return $exception->getMessage();
         }
+    }
+    public function saveEmergencyContact()
+    {
+        DB::beginTransaction();
+        try {
+        $emergency_contact = EmergencyContact::where('user_id',$this->id)->first();
+        if(!$emergency_contact)
+        {
+            $emergency_contact = new EmergencyContact();
+            $emergency_contact->user_id = $this->id;
+            $emergency_contact->created_at = $this->created_at;
+        }
+        else
+        {
+            $emergency_contact->updated_at = $this->updated_at;
+        }
+        $emergency_contact->name  =$this->emergency_contact_name;
+        $emergency_contact->relation = $this->relation;
+        $emergency_contact->phone_number = $this->emergency_contact;
+        $emergency_contact->save();
+
+        $emergency_contact = EmergencyContact::where('user_id',$data['id'])->skip(1)->first();
+        if(!$emergency_contact)
+        {
+            $emergency_contact = new EmergencyContact();
+            $emergency_contact->user_id = $this->id;
+            $emergency_contact->created_at = $this->created_at;
+        }
+        else
+        {
+            $emergency_contact->updated_at = $this->updated_at;
+        }
+        $emergency_contact->name  =$this->emergency_contact_name2;
+        $emergency_contact->relation = $this->relation2;
+        $emergency_contact->phone_number = $this->emergency_contact2;
+        $emergency_contact->save();
+            DB::commit();
+        return true;
+            } catch (\Exception $exception) {
+        DB::rollBack();
+        return $exception->getMessage();
+        }
+    }
+    public function saveAcademicInfo()
+    {
+        DB::beginTransaction();
+        try {
+        for($i=0; $i<sizeof($this->institute_id); $i=$i+1)
+        {
+            $academic_info = AcademicInfo::where('user_id',$this->id)->where('degree_id',$this->degree_id[$i])->first();
+            if(!$academic_info)
+            {
+                $academic_info = new AcademicInfo();
+                $academic_info->user_id = $this->id;
+                $academic_info->created_at = $this->created_at;
+            }
+            else
+            {
+                $academic_info->updated_at = $this->updated_at;
+            }
+            $academic_info->institute_id = $this->institute_id[$i];
+            $academic_info->degree_id = $this->degree_id[$i];
+            $academic_info->major = $this->major[$i];
+            $academic_info->gpa = $this->gpa[$i];
+            $academic_info->passing_year = $this->year[$i];
+            $academic_info->save();
+        }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+    public function saveBankInfo()
+    {
+        DB::beginTransaction();
+        try {
+        $bank_info = BankingInfo::where('user_id',$this->id)->first();
+        if(!$bank_info)
+        {
+            $bank_info = new BankingInfo();
+            $bank_info->user_id = $this->id;
+            $bank_info->created_at = $this->created_at;
+        }
+        else
+        {
+            $bank_info->updated_at = $this->updated_at;
+        }
+        $bank_info->bank_id =$this->bank_id;
+        $bank_info->account_name =$this->account_name;
+        $bank_info->account_number =$this->account_number;
+        $bank_info->branch =$this->branch;
+        $bank_info->routing_no =$this->routing_number;
+        $bank_info->save();
+
+        $nominee = Nominee::where('banking_info_id',$bank_info->id)->first();
+        if(!$nominee)
+        {
+            $nominee = new Nominee();
+            $nominee->banking_info_id = $bank_info->id;
+            $nominee->created_at = $this->created_at;
+        }
+        else
+        {
+            $nominee->updated_at = $this->updated_at;
+        }
+        $nominee->name = $this->nominee_name;
+        $nominee->nid = $this->nominee_nid;
+        $nominee->photo = $this->file_name? $this->file_name:($nominee->photo? $nominee->photo:'');
+        $nominee->relation = $this->nominee_relation;
+        $nominee->phone_number = $this->nominee_phone_number;
+        $nominee->email = $this->nominee_email;
+        $nominee->save();
+            DB::commit();
+        return true;
+            } catch (\Exception $exception) {
+        DB::rollBack();
+        return $exception->getMessage();
+        }
+    }
+    public function registraionComplete()
+    {
+        $user = User::where('id',$this->id)->first();
+        $user->is_registration_complete = 1;
+        return $user->save();
+    }
+    public function saveAllProfileInfo()
+    {
+        try{
+            DB::beginTransaction();
+            $this->savePersonalInfo();
+            $this->saveUserAdress();
+            $this->saveEmergencyContact();
+            $this->saveAcademicInfo();
+            $this->saveBankInfo();
+            $this->registraionComplete();
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+    public function getOfficialInfo($id)
+    {
+        return DB::table('basic_info as basic')->where('user_id',$id)
+            ->join('branches as b', 'basic.branch_id','=', 'b.id')
+            ->join('designations as d', 'basic.designation_id','=', 'd.id')
+            ->join('departments as dep', 'basic.department_id','=', 'dep.id')
+            ->select('b.name as branch_name', 'd.name as designation_name', 'dep.name as department_name')
+            ->first();
     }
 }

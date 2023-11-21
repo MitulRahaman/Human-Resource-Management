@@ -173,8 +173,8 @@ class UserController extends Controller
         $user = $this->userService->getUserInfo($id);
         if(Auth::id()!=$id)
         {
-            $user2=$this->userService->getUserInfo(Auth::id());
-            if(!$user2->is_super_user)
+            $loggedUser=$this->userService->getUserInfo(Auth::id());
+            if(!$loggedUser->is_super_user)
                 abort(403, 'You don\'t have permission!');
         }
         $const_variable =config('variable_constants');

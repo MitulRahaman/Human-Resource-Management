@@ -37,13 +37,15 @@ class LeaveApplyRepository
         ->get();
     }
 
-    public function getLeaveAppliedUser()
+    public function getLeaveAppliedEmailRecipent()
     {
         $branchIdForAppliedLeave = DB::table('basic_info')->where('user_id', '=', $this->id)->first()->branch_id; 
-        $HRId = DB::table('designations')->where('name', '=', 'HR')->first()->id;
-        $HRIdForCurrentBranch = DB::table('branch_designations')->where('branch_id', '=', $branchIdForAppliedLeave)->where('designation_id', '=', $HRId)->get()->toArray();
-
-        return DB::table('basic_info')->where('designation_id', '=', $HRIdForCurrentBranch[0]->designation_id)->first()->preferred_email;
+        $HR = DB::table('designations')->where('name', '=', 'HR')->first();
+        if($HR == null ) {
+            return false;
+        }
+        $HRIdForCurrentBranch = DB::table('branch_designations')->where('branch_id', '=', $branchIdForAppliedLeave)->where('designation_id', '=', $HR->id)->first();
+        return DB::table('basic_info')->where('designation_id', '=', $HRIdForCurrentBranch->designation_id)->first()->preferred_email;
     } 
 
     public function storeLeaves($data)

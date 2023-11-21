@@ -36,24 +36,24 @@ class UserRepository
         $this->id = $id;
         return $this;
     }
-    public function setBranchId($id)
+    public function setBranchId($branchId)
     {
-        $this->branchId = $id;
+        $this->branchId = $branchId;
         return $this;
     }
-    public function setDepartmentId($id)
+    public function setDepartmentId($departmentId)
     {
-        $this->departmentId = $id;
+        $this->departmentId = $departmentId;
         return $this;
     }
-    public function setDesignationId($id)
+    public function setDesignationId($designationId)
     {
-        $this->designationId = $id;
+        $this->designationId = $designationId;
         return $this;
     }
-    public function setRoleId($id)
+    public function setRoleId($roleId)
     {
-        $this->roleId = $id;
+        $this->roleId = $roleId;
         return $this;
     }
     public function setFatherName($father_name){
@@ -244,28 +244,28 @@ class UserRepository
         return [$deptId, $deptName, $desgId, $desgName];
     }
 
-    public function getBranchNameForTable()
+    public function getBranchName()
     {
         if($this->branchId == null)
             return null;
         return DB::table('branches')->where('id', '=', $this->branchId)->first()->name;
     }
 
-    public function getDepartmentNameForTable()
+    public function getDepartmentName()
     {
         if($this->departmentId == null)
             return null;
         return DB::table('departments')->where('id', '=', $this->departmentId)->first()->name;
     }
 
-    public function getDesignationNameForTable()
+    public function getDesignationName()
     {
         if($this->designationId == null)
             return null;
         return DB::table('designations')->where('id', '=', $this->designationId)->first()->name;
     }
 
-    public function getRoleNameForTable()
+    public function getRoleName()
     {
         if($this->roleId == null)
             return null;

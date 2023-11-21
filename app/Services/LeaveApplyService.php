@@ -37,10 +37,12 @@ class LeaveApplyService
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
 
-    public function sendMail($data)
+    public function LeaveApplicationEmail($data)
     {
-        $id = auth()->user()->id;
-        $receiver = $this->leaveApplyRepository->setId($id)->getLeaveAppliedUser();
+        $receiver = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipent();
+        if(!$receiver) {
+            return false;
+        }
         Mail::to($receiver)->send(new ContactMail($data));
     }
 

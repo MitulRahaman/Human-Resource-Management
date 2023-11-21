@@ -39,8 +39,11 @@ class LeaveApplyController extends Controller
     {
         try {
             if($this->leaveApplyService->storeLeaves($request)) {
-                $this->leaveApplyService->sendMail($request);
-                return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
+                if($this->leaveApplyService->LeaveApplicationEmail($request)) {
+                    return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
+                } else {
+                    return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
+                }
             } else {
                 return redirect('leaveApply/apply')->with('error', $response);
             }

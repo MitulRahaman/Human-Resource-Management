@@ -103,10 +103,10 @@ class UserService
                 $name = $row->full_name;
                 $email = $row->email;
                 $phone_number = $row->phone_number;
-                $branch_name = $this->userRepository->setBranchId($row->branch_id)->getBranchNameForTable();
-                $department_name = $this->userRepository->setDepartmentId($row->department_id)->getDepartmentNameForTable();
-                $designation_name = $this->userRepository->setDesignationId($row->designation_id)->getDesignationNameForTable();
-                $role_name = $this->userRepository->setRoleId($row->role_id)->getRoleNameForTable();
+                $branch_name = $this->userRepository->setBranchId($row->branch_id)->getBranchName();
+                $department_name = $this->userRepository->setDepartmentId($row->department_id)->getDepartmentName();
+                $designation_name = $this->userRepository->setDesignationId($row->designation_id)->getDesignationName();
+                $role_name = $this->userRepository->setRoleId($row->role_id)->getRoleName();
                 $joining_date = date("d-m-Y", strtotime($row->joining_date));
 
                 if($imgName) {

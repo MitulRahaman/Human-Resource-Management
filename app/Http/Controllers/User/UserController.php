@@ -169,7 +169,7 @@ class UserController extends Controller
     }
     public function editData($id)
     {
-        View::share('sub_menu', 'Profile');
+        View::share('sub_menu', 'Manage Users');
         $user = $this->userService->getUserInfo($id);
         if(Auth::id()!=$id)
         {

@@ -45,6 +45,7 @@ class LeaveApplyRepository
             return false;
         }
         $HRIdForCurrentBranch = DB::table('branch_designations')->where('branch_id', '=', $branchIdForAppliedLeave)->where('designation_id', '=', $HR->id)->first();
+//        dd(DB::table('basic_info')->where('designation_id', '=', $HRIdForCurrentBranch->designation_id)->first());
         return DB::table('basic_info')->where('designation_id', '=', $HRIdForCurrentBranch->designation_id)->first()->preferred_email;
     } 
 

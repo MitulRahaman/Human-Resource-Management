@@ -44,6 +44,7 @@ class LeaveApplyService
             return false;
         }
         Mail::to($receiver)->send(new LeaveApplicationMail($data));
+        return true;
     }
 
     public function getTableData()

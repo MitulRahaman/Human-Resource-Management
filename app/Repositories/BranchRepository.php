@@ -23,9 +23,9 @@ class BranchRepository
     public function storeBranch($data)
     {
        return Branch::create([
-                'name' => $data->name,
-                'address' => $data->address,
-                'status' => 1,
+            'name' => $data->name,
+            'address' => $data->address,
+            'status' => 1,
        ]);
     }
 
@@ -44,9 +44,9 @@ class BranchRepository
     {
         $data = Branch::find($id);
         if($data->status)
-            $data->update(array('status' => 0));
+            $data->update(array('status' => Config::get('variable_constants.activation.inactive')));    
         else
-            $data->update(array('status' => 1));
+            $data->update(array('status' => Config::get('variable_constants.activation.active')));
     }
 
     public function destroyBranch($id)

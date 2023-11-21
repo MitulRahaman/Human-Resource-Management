@@ -39,7 +39,11 @@ class LeaveApplyController extends Controller
     {
         try {
             if($this->leaveApplyService->storeLeaves($request)) {
-                return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
+                if($this->leaveApplyService->LeaveApplicationEmail($request)) {
+                    return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
+                } else {
+                    return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
+                }
             } else {
                 return redirect('leaveApply/apply')->with('error', $response);
             }
@@ -51,7 +55,7 @@ class LeaveApplyController extends Controller
     public function manage()
     {
         View::share('sub_menu', 'Manage Leaves');
-        return \view('backend.pages.leaveApply.manage');
+        return view('backend.pages.leaveApply.manage');
     }
 
     public function edit($id)

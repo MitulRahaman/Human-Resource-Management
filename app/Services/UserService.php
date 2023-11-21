@@ -94,6 +94,7 @@ class UserService
     public function getTableData()
     {
         $result = $this->userRepository->getTableData();
+
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -142,11 +143,15 @@ class UserService
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
-                $action_btn .= "$edit_btn $profile_edit_btn $toggle_btn $toggle_delete_btn";
+                $action_btn .= "$edit_btn ";
+                if($row->id==Auth::id())
+                    $action_btn .="$profile_edit_btn ";
+                elseif ($this->userRepository->isSuperUser(Auth::id()))
+                    $action_btn .="$profile_edit_btn ";
+                $action_btn .=" $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
-
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $img);

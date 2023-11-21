@@ -12,6 +12,8 @@ use App\Http\Requests\UserAddRequest;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -169,6 +171,12 @@ class UserController extends Controller
     {
         View::share('sub_menu', 'Profile');
         $user = $this->userService->getUserInfo($id);
+        if(Auth::id()!=$id)
+        {
+            $loggedUser=$this->userService->getUserInfo(Auth::id());
+            if(!$loggedUser->is_super_user)
+                abort(403, 'You don\'t have permission!');
+        }
         $const_variable =config('variable_constants');
         $user_address = $this->userService->getUserAddress($user->id);
         $institutes = $this->userService->getInstitutes();

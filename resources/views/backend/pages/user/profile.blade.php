@@ -92,14 +92,15 @@
                                     Employee ID: {{$user->employee_id}}<br>
                                     @if($user_official_info)
                                     Designation: {{$user_official_info->designation_name}}<br>
+                                    Role: {{$user_official_info->role_name}}<br>
                                     Department: {{$user_official_info->department_name}}<br>
                                     Branch:{{$user_official_info->branch_name}}<br>
                                     @endif
-                                    <br>
+                                    <br><br><br>
                                     <i class="fa fa-phone"></i> {{$user->phone_number}}<br>
                                     <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->email}}</a><br>
                                     @if($user->basicInfo)
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->basicInfo->personal_email}}</a>
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->basicInfo->personal_email}}</a><br>
                                     @endif
                                 </div>
                             </div>
@@ -186,8 +187,6 @@
                                     @endif
                                     No of Children {{$user->personalInfo->no_of_children}}<br>
                                     <br>
-                                    <i class="fa fa-phone"></i> (999) 888-55555<br>
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">company@example.com</a>
                                 </div>
 
                             </div>

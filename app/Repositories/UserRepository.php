@@ -730,4 +730,9 @@ class UserRepository
             ->select('b.name as branch_name', 'd.name as designation_name', 'dep.name as department_name')
             ->first();
     }
+    public function isSuperUser($id)
+    {
+        $user = User::where('id',$id)->select('is_super_user')->first();
+        return $user->is_super_user;
+    }
 }

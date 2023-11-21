@@ -20,58 +20,50 @@
             <div class="block-header">
                 <h3 class="block-title">Edit Profile</h3>
             </div>
-            <div class="js-wizard-simple block block">
+            <div class="js-wizard-validation block block">
                 <!-- Step Tabs -->
                 <ul class="nav nav-tabs nav-tabs-block nav-justified" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#wizard-progress-step1" data-toggle="tab">1. Personal</a>
+                        <a class="nav-link active" href="#wizard-validation-step1" data-toggle="tab">1. Personal</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#wizard-progress-step2" data-toggle="tab">2. Academic</a>
+                        <a class="nav-link" href="#wizard-validation-step2" data-toggle="tab">2. Details</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#wizard-progress-step3" data-toggle="tab">3. Banking</a>
+                        <a class="nav-link" href="#wizard-validation-step3" data-toggle="tab">3. Extra</a>
                     </li>
                 </ul>
                 <!-- END Step Tabs -->
 
                 <!-- Form -->
-                <form class="js-validation" id='form' action='{{ url('user/profile/' . $user->id . '/update')}}' method="POST" enctype="multipart/form-data">
+                <form class="js-wizard-validation-form" id='form' action='{{ url('user/profile/' . $user->id . '/update')}}' method="POST" enctype="multipart/form-data">
                     @csrf
-                    <!-- Wizard Progress Bar -->
-                    <div class="block-content block-content-sm">
-                        <div class="progress" data-wizard="progress" style="height: 8px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <!-- END Wizard Progress Bar -->
-
                     <!-- Steps Content -->
                     <div class="block-content block-content-full tab-content px-md-5" style="min-height: 300px;">
                         <!-- Step 1 -->
-                        <div class="tab-pane active" id="wizard-progress-step1" role="tabpanel">
+                        <div class="tab-pane active" id="wizard-validation-step1" role="tabpanel">
                             <div class="form-group">
-                                <label for="wizard-progress-firstname">Father Name<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="father_name" name="father_name" value="{{($user->personalInfo)? $user->personalInfo->father_name:''}}">
+                                <label for="wizard-validation-firstname">Father Name<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="father_name" name="father_name" value="{{($user->personalInfo)? $user->personalInfo->father_name:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Mother Name<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="mother_name" name="mother_name" value="{{($user->personalInfo)? $user->personalInfo->mother_name:''}}">
+                                <label for="wizard-validation-lastname">Mother Name<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="mother_name" name="mother_name" value="{{($user->personalInfo)? $user->personalInfo->mother_name:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">NID<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nid" name="nid" value="{{($user->personalInfo)? $user->personalInfo->nid:''}}">
+                                <label for="wizard-validation-lastname">NID<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="nid" name="nid" value="{{($user->personalInfo)? $user->personalInfo->nid:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Birth Certificate</label>
+                                <label for="wizard-validation-lastname">Birth Certificate</label>
                                 <input class="form-control" type="text" id="birth_certificate" name="birth_certificate" value="{{($user->personalInfo)? $user->personalInfo->birth_certificate:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Passport No</label>
+                                <label for="wizard-validation-lastname">Passport No</label>
                                 <input class="form-control" type="text" id="passport_no" name="passport_no" value="{{($user->personalInfo)? $user->personalInfo->passport_no:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Gender<span class="text-danger">*</span></label>
+                                <label for="wizard-validation-skills">Gender<span class="text-danger">*</span></label>
                                 <select class="form-control" id="gender" name="gender">
                                     @foreach ($const_variable["gender"] as $gender => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->gender==$value? 'selected':'') :''}}>{{$gender}}</option>
@@ -79,7 +71,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Religion<span class="text-danger">*</span></label>
+                                <label for="wizard-validation-skills">Religion<span class="text-danger">*</span></label>
                                 <select class="form-control" id="religion" name="religion">
                                 @foreach ($const_variable["religion"] as $religion => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->religion==$value? 'selected':'') :''}}>{{$religion}}</option>
@@ -87,19 +79,19 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Blood Group<span class="text-danger">*</span></label>
+                                <label for="wizard-validation-skills">Blood Group<span class="text-danger">*</span></label>
                                 <select class="form-control" id="blood_group" name="blood_group">
                                     @foreach ($const_variable["blood_group"] as $blood_group => $value)
-                                        <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->blood_group==$value? 'selected':'') :''}}>{{$blood_group}}</option>
+                                        <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->blood_group==$value? 'selected':'') :''}} >{{$blood_group}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group ">
                                 <label for="example-flatpickr-default">Date Of Birth<span class="text-danger">*</span></label>
-                                <input type="text" class="js-flatpickr form-control bg-white " data-date-format="d-m-Y" id="dob" name="dob" placeholder="Y-m-d" value="{{($user->personalInfo)? $user->personalInfo->dob:''}}">
+                                <input type="text" class="js-flatpickr form-control bg-white " data-date-format="d-m-Y" id="dob" name="dob" placeholder="Y-m-d" value="{{($user->personalInfo)? $user->personalInfo->dob:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Marital Status<span class="text-danger">*</span></label>
+                                <label for="wizard-validation-skills">Marital Status<span class="text-danger">*</span></label>
                                 <select class="form-control" id="marital_status" name="marital_status">
                                     @foreach ($const_variable["marital_status"] as $marital_status => $value)
                                         <option value="{{$value}}" {{$user->personalInfo? ($user->personalInfo->blood_group==$value? 'selected':'') :''}}>{{$marital_status}}</option>
@@ -107,51 +99,51 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">No of Children</label>
+                                <label for="wizard-validation-lastname">No of Children</label>
                                 <input class="form-control" type="number" id="no_of_children" name="no_of_children" value="{{($user->personalInfo)? $user->personalInfo->no_of_children:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Present Address<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="present_address" value="{{$user_address && count($user_address)>0 ? $user_address[0]->address:''}}" name="present_address" >
+                                <label for="wizard-validation-lastname">Present Address<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="present_address" value="{{$user_address && count($user_address)>0 ? $user_address[0]->address:''}}" name="present_address" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Permanent Address<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="permanent_address" value="{{$user_address && count($user_address)>1 ? $user_address[1]->address:''}}" name="permanent_address" >
+                                <label for="wizard-validation-lastname">Permanent Address<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="permanent_address" value="{{$user_address && count($user_address)>1 ? $user_address[1]->address:''}}" name="permanent_address" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Emergency Contact Person Name 1<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="emergency_contact_name" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->name : '' }}" name="emergency_contact_name" >
+                                <label for="wizard-validation-lastname">Emergency Contact Person Name 1<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="emergency_contact_name" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->name : '' }}" name="emergency_contact_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Emergency Contact Number 1<span class="text-danger">*</span></label>
-                                <input type="number" class="js-masked-phone form-control" id="emergency_contact" name="emergency_contact" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->phone_number : '' }}" placeholder="162-000-0000">
-                                <small>Format: 162-000-0000</small><br>
+                                <input type="number" class="js-masked-phone form-control" id="emergency_contact" name="emergency_contact" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->phone_number : '' }}" placeholder="Enter contact number" required>
+                                <small>Format: 1620000000</small><br>
                                 <span id="error_phone" style="font-size:13px; color:red"></span>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Relation with Emergency Contact Person 1<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="relation" name="relation" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->relation : '' }}">
+                                <label for="wizard-validation-lastname">Relation with Emergency Contact Person 1<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="relation" name="relation" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 0 ? $user->emergencyContacts[0]->relation : '' }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Emergency Contact Person Name 2<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="emergency_contact_name2" name="emergency_contact_name2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->name : '' }}">
+                                <label for="wizard-validation-lastname">Emergency Contact Person Name 2<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="emergency_contact_name2" name="emergency_contact_name2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->name : '' }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Emergency Contact Number 2<span class="text-danger">*</span></label>
-                                <input type="number" class="js-masked-phone form-control" id="emergency_contact2" name="emergency_contact2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->phone_number : '' }}" placeholder="162-000-0000">
-                                <small>Format: 162-000-0000</small><br>
+                                <input type="number" class="js-masked-phone form-control" id="emergency_contact2" name="emergency_contact2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->phone_number : '' }}" placeholder="Enter contact number" required>
+                                <small>Format: 1620000000</small><br>
                                 <span id="error_phone2" style="font-size:13px; color:red"></span>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-lastname">Relation with Emergency Contact Person 2<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="relation2" name="relation2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->relation : '' }}">
+                                <label for="wizard-validation-lastname">Relation with Emergency Contact Person 2<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="relation2" name="relation2" value="{{ isset($user->emergencyContacts) && count($user->emergencyContacts) > 1 ? $user->emergencyContacts[1]->relation : '' }}" required>
                             </div>
 
                         </div>
                         <!-- END Step 1 -->
 
                         <!-- Step 2 -->
-                        <div class="tab-pane" id="wizard-progress-step2" role="tabpanel">
+                        <div class="tab-pane" id="wizard-validation-step2" role="tabpanel">
 
                             {{--<button onclick="deleteFormBlock()">Delete</button>--}}
                             <div id="formContainer">
@@ -162,9 +154,9 @@
                         <!-- END Step 2 -->
 
                         <!-- Step 3 -->
-                        <div class="tab-pane" id="wizard-progress-step3" role="tabpanel">
+                        <div class="tab-pane" id="wizard-validation-step3" role="tabpanel">
                             <div class="form-group">
-                                <label for="wizard-progress-skills">Bank<span class="text-danger">*</span></label>
+                                <label for="wizard-validation-skills">Bank<span class="text-danger">*</span></label>
                                 <select class="form-control" id="bank_id" name="bank_id">
                                     @foreach ($bank as $b)
                                         <option value="{{$b->id}}" {{$user->bankingInfo? ($user->bankingInfo->bank_id == $b->id? 'selected':'') : ''}}>{{$b->name}}</option>
@@ -172,51 +164,51 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Account Name<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="account_name" name="account_name" value="{{$user->bankingInfo? $user->bankingInfo->account_name:''}}">
+                                <label for="wizard-validation-location">Account Name<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="account_name" name="account_name" value="{{$user->bankingInfo? $user->bankingInfo->account_name:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Account Number<span class="text-danger">*</span></label>
-                                <input class="form-control" type="number" id="account_number" name="account_number" value="{{$user->bankingInfo? $user->bankingInfo->account_number:''}}">
+                                <label for="wizard-validation-location">Account Number<span class="text-danger">*</span></label>
+                                <input class="form-control" type="number" id="account_number" name="account_number" value="{{$user->bankingInfo? $user->bankingInfo->account_number:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Branch<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="branch" name="branch" value="{{$user->bankingInfo? $user->bankingInfo->branch:''}}">
+                                <label for="wizard-validation-location">Branch<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="branch" name="branch" value="{{$user->bankingInfo? $user->bankingInfo->branch:''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Routing Number</label>
-                                <input class="form-control" type="text" id="routing_number" name="routing_number" value="{{$user->bankingInfo? $user->bankingInfo->routing_number:''}}">
+                                <label for="wizard-validation-location">Routing Number</label>
+                                <input class="form-control" type="text" id="routing_number" name="routing_number" value="{{$user->bankingInfo? $user->bankingInfo->routing_number:''}}" >
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Nominee Name<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nominee_name" name="nominee_name" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->name:''):''}}">
+                                <label for="wizard-validation-location">Nominee Name<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="nominee_name" name="nominee_name" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->name:''):''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Nominee NID<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nominee_nid" name="nominee_nid" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->nid:''):''}}">
+                                <label for="wizard-validation-location">Nominee NID<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="nominee_nid" name="nominee_nid" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->nid:''):''}}" required>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Nominee Photo</label>
+                                <label for="wizard-validation-location">Nominee Photo</label>
                                 <input class="form-control" type="file" id="nominee_photo" name="nominee_photo">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Relation with Nominee<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nominee_relation" name="nominee_relation" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->relation:''):''}}">
+                                <label for="wizard-validation-location">Relation with Nominee<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="nominee_relation" name="nominee_relation" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->relation:''):''}}" required>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Nominee Contact Number</label>
-                                <input type="text" class="js-masked-phone form-control" id="nominee_phone_number" name="nominee_phone_number" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->phone_number:''):''}}" placeholder="162-000-0000">
-                                <small>Format: 162-000-0000</small><br>
+                                <input type="text" class="js-masked-phone form-control" id="nominee_phone_number" name="nominee_phone_number" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->phone_number:''):''}}" placeholder="Enter contact number">
+                                <small>Format: 1620000000</small><br>
                                 <span id="error_nominee_phone" style="font-size:13px; color:red"></span>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-progress-location">Nominee Email</label>
+                                <label for="wizard-validation-location">Nominee Email</label>
                                 <input class="form-control" type="email" id="nominee_email" name="nominee_email" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->email:''):''}}">
                             </div>
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox custom-control-primary">
                                     <input type="checkbox" class="custom-control-input" id="wizard-progress-terms" name="wizard-progress-terms">
-                                    <label class="custom-control-label" for="wizard-progress-terms">Agree with the terms</label>
+                                    <label class="custom-control-label" for="wizard-validation-terms">Agree with the terms</label>
                                 </div>
                             </div>
                         </div>
@@ -362,11 +354,11 @@
                     '</div>' +
                     '<div class="form-group">' +
                     '<label for="wizard-progress-lastname">Major<span class="text-danger">*</span></label>' +
-                    '<input class="form-control" type="text" id="major" value="'+ academic_info[i]["major"] +'" name="major[]">' +
+                    '<input class="form-control" type="text" id="major" value="'+ academic_info[i]["major"] +'" name="major[]" required >' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label for="wizard-progress-lastname">GPA<span class="text-danger">*</span></label>' +
-                    '<input class="form-control" type="text" id="gpa" value="'+ academic_info[i]["gpa"] +'" name="gpa[]">' +
+                    '<input class="form-control" type="text" id="gpa" value="'+ academic_info[i]["gpa"] +'" name="gpa[]" required >' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label for="wizard-progress-lastname">Passing Year<span class="text-danger">*</span></label>' +
@@ -409,11 +401,11 @@
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="wizard-progress-lastname">Major<span class="text-danger">*</span></label>' +
-                '<input class="form-control" type="text" id="major" name="major[]">' +
+                '<input class="form-control" type="text" id="major" name="major[]" required >' +
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="wizard-progress-lastname">GPA<span class="text-danger">*</span></label>' +
-                '<input class="form-control" type="text" id="gpa" name="gpa[]">' +
+                '<input class="form-control" type="text" id="gpa" name="gpa[]" required >' +
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="wizard-progress-lastname">Passing Year<span class="text-danger">*</span></label>' +

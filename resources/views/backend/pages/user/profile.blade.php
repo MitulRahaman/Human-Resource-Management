@@ -96,7 +96,7 @@
                                     Department: {{$user_official_info->department_name}}<br>
                                     Branch:{{$user_official_info->branch_name}}<br>
                                     @endif
-                                    <br><br><br>
+                                    <br><br>
                                     <i class="fa fa-phone"></i> {{$user->phone_number}}<br>
                                     <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->email}}</a><br>
                                     @if($user->basicInfo)

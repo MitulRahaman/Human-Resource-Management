@@ -39,12 +39,21 @@ class LeaveApplyRepository
 
     public function getLeaveAppliedEmailRecipent()
     {
-        $branchIdForAppliedLeave = DB::table('basic_info')->where('user_id', '=', $this->id)->first()->branch_id; 
-        $HR = DB::table('designations')->where('name', '=', 'HR')->first();
+        $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first(); 
+        if($appliedUser == null ) {
+            return false;
+        }
+
+        $HR = DB::table('designations')->where('name', '=', Config::get('variable_constants.HR.HR'))->first();
         if($HR == null ) {
             return false;
         }
-        $HRIdForCurrentBranch = DB::table('branch_designations')->where('branch_id', '=', $branchIdForAppliedLeave)->where('designation_id', '=', $HR->id)->first();
+
+        $HRIdForCurrentBranch = DB::table('branch_designations')->where('branch_id', '=', $appliedUser->branch_id)->where('designation_id', '=', $HR->id)->first();
+        if($HRIdForCurrentBranch == null ) {
+            return false;
+        }
+
         return DB::table('basic_info')->where('designation_id', '=', $HRIdForCurrentBranch->designation_id)->first()->preferred_email;
     } 
 

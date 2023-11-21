@@ -46,9 +46,14 @@ return [
         'male' => 1,
         'female' => 2
     ],
+
     'leave_status' => [
         'pending' => 0,
         'approved' => 1,
         'rejected' => 2
+    ],
+
+    'HR' => [
+        'HR' => 'HR','Hr', 'hr',
     ]
 ];

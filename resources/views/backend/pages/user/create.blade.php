@@ -102,7 +102,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Joining date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" required>
+                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" data-min-date="today" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_career_start_date">Career start date</label>

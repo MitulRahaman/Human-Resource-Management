@@ -38,7 +38,8 @@ class LeaveApplyController extends Controller
     public function store(LeaveApplyAddRequest $request)
     {
         try {
-            if($this->leaveApplyService->storeLeaves($request)) {
+            $response = $this->leaveApplyService->storeLeaves($request);
+            if($response) {
                 if($this->leaveApplyService->LeaveApplicationEmail($request)) {
                     return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
                 } else {

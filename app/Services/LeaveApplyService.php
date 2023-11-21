@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Mail;
-use App\Mail\ContactMail;
+use App\Mail\LeaveApplicationMail;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -43,7 +43,7 @@ class LeaveApplyService
         if(!$receiver) {
             return false;
         }
-        Mail::to($receiver)->send(new ContactMail($data));
+        Mail::to($receiver)->send(new LeaveApplicationMail($data));
     }
 
     public function getTableData()

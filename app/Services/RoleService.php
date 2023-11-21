@@ -181,4 +181,9 @@ class RoleService
                 }';
         }
     }
+
+    public function getRoles()
+    {
+        return $this->roleRepository->getRoles();
+    }
 }

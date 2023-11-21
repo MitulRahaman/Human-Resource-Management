@@ -40,6 +40,11 @@ class UserAddRequest extends FormRequest
     {
         return [
             'employee_id' => 'required|unique:users,employee_id',
+            'branchId' => 'required',
+            'roleId' => 'required',
+            'full_name' => 'required',
+            'nick_name' => 'required',
+            'joining_date' => 'required',
             'personal_email' => 'required|email|unique:basic_info,personal_email',
             'preferred_email' => 'required|email|unique:basic_info,preferred_email',
             'phone' => 'required|unique:users,phone_number',

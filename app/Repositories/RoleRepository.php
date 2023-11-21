@@ -261,4 +261,13 @@ class RoleRepository
             return $exception->getMessage();
         }
     }
+
+    public function getRoles()
+    {
+        return DB::table('roles as r')
+            ->whereNull('r.deleted_at')
+            ->where('r.status', '=', Config::get('variable_constants.activation.active'))
+            ->select('r.id', 'r.name')
+            ->get();
+    }
 }

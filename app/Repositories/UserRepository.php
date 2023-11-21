@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\BasicInfo;
 use App\Models\Branch;
+use App\Models\Role;
 use App\Models\Department;
 use App\Models\Organization;
 use function Symfony\Component\Finder\size;
@@ -33,6 +34,26 @@ class UserRepository
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+    public function setBranchId($branchId)
+    {
+        $this->branchId = $branchId;
+        return $this;
+    }
+    public function setDepartmentId($departmentId)
+    {
+        $this->departmentId = $departmentId;
+        return $this;
+    }
+    public function setDesignationId($designationId)
+    {
+        $this->designationId = $designationId;
+        return $this;
+    }
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
         return $this;
     }
     public function setFatherName($father_name){
@@ -191,6 +212,11 @@ class UserRepository
         return Branch::where('status', Config::get('variable_constants.activation.active'))->get();
     }
 
+    public function getRoles()
+    {
+        return Role::where('status', Config::get('variable_constants.activation.active'))->get();
+    }
+
     public function getDepartments($data)
     {
         return DB::table('branch_departments')->where('branch_id', '=', $data->branchId)->get();
@@ -218,25 +244,32 @@ class UserRepository
         return [$deptId, $deptName, $desgId, $desgName];
     }
 
-    public function getBranchNameForTable($branchId)
+    public function getBranchName()
     {
-        if($branchId == null)
+        if($this->branchId == null)
             return null;
-        return DB::table('branches')->where('id', '=', $branchId)->first()->name;
+        return DB::table('branches')->where('id', '=', $this->branchId)->first()->name;
     }
 
-    public function getDepartmentNameForTable($deptId)
+    public function getDepartmentName()
     {
-        if($deptId == null)
+        if($this->departmentId == null)
             return null;
-        return DB::table('departments')->where('id', '=', $deptId)->first()->name;
+        return DB::table('departments')->where('id', '=', $this->departmentId)->first()->name;
     }
 
-    public function getDesignationNameForTable($desgId)
+    public function getDesignationName()
     {
-        if($desgId == null)
+        if($this->designationId == null)
             return null;
-        return DB::table('designations')->where('id', '=', $desgId)->first()->name;
+        return DB::table('designations')->where('id', '=', $this->designationId)->first()->name;
+    }
+
+    public function getRoleName()
+    {
+        if($this->roleId == null)
+            return null;
+        return DB::table('roles')->where('id', '=', $this->roleId)->first()->name;
     }
 
     public function getOrganizations()
@@ -252,7 +285,7 @@ class UserRepository
         })
         ->where('u.is_super_user', '0')
         ->groupBy('u.id')
-        ->select('u.id', 'u.image', 'u.employee_id', 'u.full_name', 'u.email', 'u.phone_number', 'bi.branch_id', 'bi.department_id', 'bi.designation_id', 'bi.joining_date', 'u.status', 'u.deleted_at')
+        ->select('u.id', 'u.image', 'u.employee_id', 'u.full_name', 'u.email', 'u.phone_number', 'bi.branch_id', 'bi.department_id', 'bi.role_id', 'bi.designation_id', 'bi.joining_date', 'u.status', 'u.deleted_at')
         ->get();
     }
 
@@ -297,6 +330,7 @@ class UserRepository
                 'branch_id' => $data->branchId,
                 'department_id' => $data->departmentId,
                 'designation_id' => $data->designationId,
+                'role_id' => $data->roleId,
                 'personal_email' => $data->personal_email,
                 'preferred_email' => $data->preferred_email,
                 'joining_date' => $formattedJoiningDate,
@@ -361,6 +395,7 @@ class UserRepository
                     'branch_id' => $data->branchId,
                     'department_id' => $data->departmentId,
                     'designation_id' => $data->designationId,
+                    'role_id' => $data->roleId,
                     'personal_email' => $data->personal_email,
                     'preferred_email' => $data->preferred_email,
                     'joining_date' => $data->joining_date,
@@ -374,6 +409,7 @@ class UserRepository
                     'branch_id' => $data->branchId,
                     'department_id' => $data->departmentId,
                     'designation_id' => $data->designationId,
+                    'role_id' => $data->roleId,
                     'personal_email' => $data->personal_email,
                     'preferred_email' => $data->preferred_email,
                     'joining_date' => $data->joining_date,
@@ -539,6 +575,7 @@ class UserRepository
     }
     public function saveUserAdress()
     {
+        $date = date('Y-m-d H:i:s');
         DB::beginTransaction();
         try {
         $user_address = UserAddress::where('user_id',$this->id)->first();

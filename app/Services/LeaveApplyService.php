@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Mail;
+use App\Mail\LeaveApplicationMail;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -33,6 +35,16 @@ class LeaveApplyService
     public function updateLeave($data, $id)
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
+    }
+
+    public function LeaveApplicationEmail($data)
+    {
+        $receiver = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipent();
+        if(!$receiver) {
+            return false;
+        }
+        Mail::to($receiver)->send(new LeaveApplicationMail($data));
+        return true;
     }
 
     public function getTableData()

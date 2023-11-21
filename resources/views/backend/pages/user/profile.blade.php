@@ -92,6 +92,7 @@
                                     Employee ID: {{$user->employee_id}}<br>
                                     @if($user_official_info)
                                     Designation: {{$user_official_info->designation_name}}<br>
+                                    Role: {{$user_official_info->role_name}}<br>
                                     Department: {{$user_official_info->department_name}}<br>
                                     Branch:{{$user_official_info->branch_name}}<br>
                                     @endif

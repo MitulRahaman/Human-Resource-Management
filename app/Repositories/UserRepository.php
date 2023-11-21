@@ -635,7 +635,7 @@ class UserRepository
         $emergency_contact->phone_number = $this->emergency_contact;
         $emergency_contact->save();
 
-        $emergency_contact = EmergencyContact::where('user_id',$data['id'])->skip(1)->first();
+        $emergency_contact = EmergencyContact::where('user_id',$this->id)->skip(1)->first();
         if(!$emergency_contact)
         {
             $emergency_contact = new EmergencyContact();
@@ -764,7 +764,8 @@ class UserRepository
             ->join('branches as b', 'basic.branch_id','=', 'b.id')
             ->join('designations as d', 'basic.designation_id','=', 'd.id')
             ->join('departments as dep', 'basic.department_id','=', 'dep.id')
-            ->select('b.name as branch_name', 'd.name as designation_name', 'dep.name as department_name')
+            ->join('roles as r', 'basic.role_id','=', 'r.id')
+            ->select('b.name as branch_name', 'd.name as designation_name', 'dep.name as department_name', 'r.name as role_name')
             ->first();
     }
     public function isSuperUser($id)

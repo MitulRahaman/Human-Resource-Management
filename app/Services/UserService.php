@@ -94,6 +94,7 @@ class UserService
     public function getTableData()
     {
         $result = $this->userRepository->getTableData();
+
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

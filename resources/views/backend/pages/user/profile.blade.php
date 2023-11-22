@@ -289,8 +289,10 @@
             </div>
 
             <div class="block-content">
-                @foreach($user->academicInfo  as $index=>$academy)
+                <?php $index=0 ?>
+                @foreach($user->academicInfo  as $academy)
                         <div class="row">
+                            @for($i=0; $i<2 && $index<count($user->academicInfo); $i=$i+1)
                             <div class="col-lg-6">
                                 <!-- Billing Address -->
                                 <div class="block block-rounded block-bordered">
@@ -308,6 +310,8 @@
                                 </div>
                                 <!-- END Billing Address -->
                             </div>
+                                <?php $index=$index+1 ?>
+                                @endfor
                         </div>
                 @endforeach
             </div>

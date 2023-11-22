@@ -532,17 +532,15 @@ class UserRepository
         $result = [];
         if ($academy->count() > 0) {
             $academyArray = $academy->toArray();
-
             $instituteIds = array_column($academyArray, 'institute_id');
             $degreeIds = array_column($academyArray, 'degree_id');
-
-            $institutesData = Institute::whereIn('id', $instituteIds)->pluck('name')->toArray();
-            $degreesData = Degree::whereIn('id', $degreeIds)->pluck('name')->toArray();
-            $result = [
-                    'institute_name' => $institutesData ?? null,
-                    'degree_name' => $degreesData ?? null,
+            for ($i=0; $i<count($instituteIds); $i=$i+1)
+            {
+                $result[] = [
+                    'institute_name' => Institute::where('id', $instituteIds[$i])->pluck('name')->first(),
+                    'degree_name' => Degree::where('id', $degreeIds[$i])->pluck('name')->first(),
                 ];
-
+            }
         }
         return $result;
     }

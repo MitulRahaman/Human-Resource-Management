@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Models\BasicInfo;
+use App\Models\Designation;
 use Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -9,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\LeaveType;
 use App\Models\LeaveApply;
+use App\Models\User;
+
 
 class LeaveApplyRepository
 {
@@ -23,20 +27,40 @@ class LeaveApplyRepository
     public function getLeaveTypes()
     {
         return LeaveType::where('status', Config::get('variable_constants.activation.active'))->get();
-    } 
-
-    public function getTableData()
-    {    
-        return DB::table('leaves as l')
-        ->leftJoin('leave_types as lt', function ($join) {
-            $join->on('l.leave_type_id', '=', 'lt.id');
-        })
-        ->where('l.user_id', auth()->user()->id)
-        ->groupBy('l.id')
-        ->select('l.*', 'lt.id as leave_type_id', 'lt.name')
-        ->get();
     }
-
+    public function isSuperUser($id)
+    {
+        $user = User::where('id',$id)->select('is_super_user')->first();
+        return $user->is_super_user;
+    }
+    public function isHr($id)
+    {
+        $designationId= BasicInfo::where('user_id',$id)->select('designation_id')->first();
+        if(!$designationId)
+            return false;
+        $designation= Designation::where('id',$designationId->designation_id)->select('name')->first();
+        return $designation->name=="HR";
+    }
+    public function getTableData()
+    {
+        $userId = auth()->user()->id;
+            return DB::table('leaves as l')
+                ->leftJoin('leave_types as lt', function ($join) {
+                    $join->on('l.leave_type_id', '=', 'lt.id');
+                })
+                ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
+                ->groupBy('l.id')
+                ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
+                ->when($this->isHr($userId), function($query )use ($userId){
+                    $branchID= BasicInfo::where('user_id',$userId)->select('branch_id')->first();
+                    $branchUsers = BasicInfo::where('branch_id', $branchID->branch_id)->pluck('user_id')->toArray();
+                    $query->whereIn('l.user_id', $branchUsers);
+                })
+                ->when(!$this->isSuperUser($userId) && !$this->isHr($userId), function($query)use ($userId){
+                    $query->where('l.user_id', $userId);
+                })
+                ->get();
+    }
     public function getLeaveAppliedEmailRecipent()
     {
         $branchIdForAppliedLeave = DB::table('basic_info')->where('user_id', '=', $this->id)->first()->branch_id; 
@@ -60,7 +84,7 @@ class LeaveApplyRepository
             'end_date' => $formattedEndDate,
             'total' => $data->totalLeave,
             'reason' => $data->reason,
-            'remarks' => "pending"
+            'status' => Config::get('variable_constants.leave_status.pending')
         ]);
         return $result;
     }
@@ -93,6 +117,22 @@ class LeaveApplyRepository
             ]);
         }
         return true;
+    }
+    public function approveLeave($id)
+    {
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.approved')]);
+    }
+    public function rejectLeave($id)
+    {
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.rejected')]);
+    }
+    public function cancelLeave($id)
+    {
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.canceled')]);
+    }
+    public function delete($id)
+    {
+        return DB::table('leaves')->where('id', $id)->delete();
     }
 }
     

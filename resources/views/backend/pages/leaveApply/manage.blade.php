@@ -29,12 +29,15 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Sl no.</th>
-                                <th class="text-center">Previous Leave Name</th>
+                                <th class="text-center">Employee ID</th>
+                                <th class="text-center">Employee Name</th>
+                                <th class="text-center">Employee Phone</th>
+                                <th class="text-center">Subject</th>
                                 <th class="text-center">Start Date</th>
                                 <th class="text-center">End date</th>
-                                <th class="text-center">Total Leave</th>
+                                <th class="text-center">Days</th>
                                 <th class="text-center">Reason</th>
-                                <th class="text-center">Remarks</th>
+                                <th class="text-center">Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>

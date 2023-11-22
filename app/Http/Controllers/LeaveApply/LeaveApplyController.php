@@ -34,7 +34,42 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-
+    public function approveLeave($id)
+    {
+        try {
+            $this->leaveApplyService->approveLeave($id);
+            return redirect()->back()->with('success', 'Leave approved');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function rejectLeave($id)
+    {
+        try {
+            $this->leaveApplyService->rejectLeave($id);
+            return redirect()->back()->with('success', 'Leave rejected');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function cancelLeave($id)
+    {
+        try {
+            $this->leaveApplyService->cancelLeave($id);
+            return redirect()->back()->with('success', 'Leave canceled');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function delete($id)
+    {
+        try {
+            $this->leaveApplyService->delete($id);
+            return redirect()->back()->with('success', 'Leave deleted');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
     public function store(LeaveApplyAddRequest $request)
     {
         try {

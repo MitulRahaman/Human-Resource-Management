@@ -108,12 +108,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('store', [LeaveApplyController::class, 'store']);
         Route::get('/{id}/edit', [LeaveApplyController::class, 'edit']);
         Route::patch('/update/{id}', [LeaveApplyController::class, 'update']);
-        // Route::post('/{id}/delete', [UserController::class, 'destroy']);
-        // Route::post('/{id}/restore', [UserController::class, 'restore']);
-        // Route::post('/{id}/change_status', [UserController::class, 'changeStatus']);
-        // Route::post('getDeptDesg', [UserController::class, 'getDeptDesg']);
-        // Route::post('verifyUser', [UserController::class, 'verifyUser']);
-        // Route::patch('updateUser', [UserController::class, 'updateUser']);
+        Route::get('status/{id}/approve', [LeaveApplyController::class, 'approveLeave']);
+        Route::get('status/{id}/reject', [LeaveApplyController::class, 'rejectLeave']);
+        Route::get('status/{id}/cancel', [LeaveApplyController::class, 'cancelLeave']);
+        Route::get('/{id}/delete', [LeaveApplyController::class, 'delete']);
     });
 
     Route::group(['middleware'=> 'superUser'], function() {

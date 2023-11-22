@@ -39,7 +39,8 @@ class UserController extends Controller
         $branches = $this->userService->getBranches();
         $organizations = $this->userService->getOrganizations();
         $roles = $this->userService->getRoles();
-        return view('backend.pages.user.create', compact('branches', 'organizations', 'roles'));
+        $allUsers = $this->userService->getAllUsers(null);
+        return view('backend.pages.user.create', compact('branches', 'organizations', 'roles', 'allUsers'));
     }
 
     public function manage()
@@ -77,7 +78,9 @@ class UserController extends Controller
         $departments = $this->departmentService->getDepartments();
         $designations = $this->designationService->getDesignations();
         $roles = $this->roleService->getRoles();
-        return view('backend.pages.user.edit', compact('user', 'branches', 'organizations', 'departments', 'designations', 'roles'));
+        $allUsers = $this->userService->getAllUsers($id);
+        $line_managers = $this->userService->getLineManagers($id);
+        return view('backend.pages.user.edit', compact('user', 'branches', 'organizations', 'departments', 'designations', 'roles', 'allUsers', 'line_managers'));
     }
 
     public function update(UserUpdateRequest $request, $id)

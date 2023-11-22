@@ -51,29 +51,33 @@ class UserService
 
     public function storeUser($data)
     {
+        $formattedPhone = sprintf('%011d', trim(preg_replace('/[\W]+/', '', $data->phone), '-'));
         $fileName = null;
         if($data->hasFile('photo')) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
-            return $this->userRepository->storeUser($data, $fileName);
+            return $this->userRepository->storeUser($data, $fileName, $formattedPhone);
         }
-        return $this->userRepository->storeUser($data, $fileName);
+        return $this->userRepository->storeUser($data, $fileName, $formattedPhone);
     }
 
     public function editUser($id)
     {
-        return $this->userRepository->setId($id)->getUserInfo();
+        $user = $this->userRepository->setId($id)->getUserInfo();
+        $user->phone_number = ltrim($user->phone_number, "0");
+        return $user;
     }
 
     public function updateUser($data, $id)
     {
+        $formattedPhone = sprintf('%011d', trim(preg_replace('/[\W]+/', '', $data->phone), '-'));
         $fileName = null;
         if($data->hasFile('photo')) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
             return $this->userRepository->updateUser($data, $id, $fileName);
         }
-        return $this->userRepository->updateUser($data, $id, $fileName);
+        return $this->userRepository->updateUser($data, $id, $fileName, $formattedPhone);
     }
 
     public function destroyUser($id)

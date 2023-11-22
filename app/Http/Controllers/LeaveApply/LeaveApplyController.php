@@ -8,6 +8,8 @@ use App\Http\Requests\LeaveApplyAddRequest;
 use App\Http\Requests\LeaveApplyUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\LeaveApplyService;
+use PHPMailer\PHPMailer\PHPMailer;  
+use PHPMailer\PHPMailer\Exception;
 
 class LeaveApplyController extends Controller
 {

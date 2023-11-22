@@ -289,7 +289,7 @@ class UserRepository
         ->get();
     }
 
-    public function storeUser($data, $fileName)
+    public function storeUser($data, $fileName, $formattedPhone)
     {
         DB::beginTransaction();
             $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
@@ -316,7 +316,7 @@ class UserRepository
                 'full_name' => $data->full_name,
                 'nick_name' => $data->nick_name,
                 'email' => $data->preferred_email,
-                'phone_number' => $data->phone,
+                'phone_number' => $formattedPhone,
                 'password' => Hash::make("welcome"),
                 'image' => $fileName,
                 'is_super_user' => 0,
@@ -358,8 +358,9 @@ class UserRepository
             ->get();
     }
 
-    public function updateUser($data, $id, $fileName)
+    public function updateUser($data, $id, $fileName, $formattedPhone)
     {
+
         $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
         if ($data->career_start_date == null) {
             $formattedCareerStartDate = $formattedJoiningDate;
@@ -378,7 +379,7 @@ class UserRepository
                 'full_name' => $data->full_name,
                 'nick_name' => $data->nick_name,
                 'email' => $data->preferred_email,
-                'phone_number' => $data->phone,
+                'phone_number' => $formattedPhone,
                 'password' => Hash::make("welcome"),
                 'image' => $fileName,
                 'is_super_user' => 0,

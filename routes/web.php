@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Bank\BankController;
 use App\Http\Controllers\Degree\DegreeController;
 use App\Http\Controllers\Institute\InstituteController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Branch\BranchController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\LeaveApply\LeaveApplyController;
+use App\Http\Controllers\LeaveApply\LeaveApplicationMailController;
 
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
@@ -108,6 +110,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('store', [LeaveApplyController::class, 'store']);
         Route::get('/{id}/edit', [LeaveApplyController::class, 'edit']);
         Route::patch('/update/{id}', [LeaveApplyController::class, 'update']);
+
         // Route::post('/{id}/delete', [UserController::class, 'destroy']);
         // Route::post('/{id}/restore', [UserController::class, 'restore']);
         // Route::post('/{id}/change_status', [UserController::class, 'changeStatus']);

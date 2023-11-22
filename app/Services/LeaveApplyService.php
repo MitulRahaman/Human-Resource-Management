@@ -43,7 +43,7 @@ class LeaveApplyService
         if(!$receiver) {
             return false;
         }
-        Mail::to($receiver)->send(new LeaveApplicationMail($data));
+        Mail::send((new LeaveApplicationMail($data))->to($receiver, 'AppnapHR'));
         return true;
     }
 

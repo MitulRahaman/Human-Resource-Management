@@ -49,12 +49,11 @@ class LeaveApplyRepository
             return false;
         }
 
-        $HRIdForCurrentBranch = DB::table('branch_designations')->where('branch_id', '=', $appliedUser->branch_id)->where('designation_id', '=', $HR->id)->first();
-        if($HRIdForCurrentBranch == null ) {
+        $HREmail = DB::table('basic_info')->where('branch_id', '=', $appliedUser->branch_id)->where('designation_id', '=', $HR->id)->first();
+        if($HREmail == null ) {
             return false;
         }
-
-        return DB::table('basic_info')->where('designation_id', '=', $HRIdForCurrentBranch->designation_id)->first()->preferred_email;
+        return $HREmail->preferred_email;
     } 
 
     public function storeLeaves($data)

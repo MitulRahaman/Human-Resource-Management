@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\BranchRepository;
-use Illuminate\Support\Facades\Config;
 
 class BranchService
 {

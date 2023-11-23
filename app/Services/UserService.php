@@ -58,7 +58,7 @@ class UserService
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
             return $this->userRepository->storeUser($data, $fileName, $formattedPhone);
         }
-        return $this->userRepository->storeUser($data, $fileName, $formattedPhone);
+        return $this->userRepository->setFile($fileName)->storeUser($data, $formattedPhone);
     }
 
     public function editUser($id)
@@ -77,7 +77,7 @@ class UserService
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
             return $this->userRepository->updateUser($data, $id, $fileName);
         }
-        return $this->userRepository->updateUser($data, $id, $fileName, $formattedPhone);
+        return $this->userRepository->setId($id)->setFile($fileName)->updateUser($data, $formattedPhone);
     }
 
     public function destroyUser($id)

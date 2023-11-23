@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\View;
 use App\Services\LeaveApplyService;
 use PHPMailer\PHPMailer\PHPMailer;  
 use PHPMailer\PHPMailer\Exception;
+use App\Traits\AuthorizationTrait;
 
 class LeaveApplyController extends Controller
 {
+    use AuthorizationTrait;
     private $leaveApplyService;
 
     public function __construct(LeaveApplyService $leaveApplyService)
@@ -39,6 +41,8 @@ class LeaveApplyController extends Controller
 
     public function store(LeaveApplyAddRequest $request)
     {
+        $this->checkAuthorization($request);
+        
         try {
             $response = $this->leaveApplyService->storeLeaves($request);
             if($response) {

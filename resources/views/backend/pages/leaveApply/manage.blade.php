@@ -29,11 +29,15 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Sl no.</th>
-                                <th class="text-center">Previous Leave Name</th>
+                                <th class="text-center">Employee ID</th>
+                                <th class="text-center">Employee Name</th>
+                                <th class="text-center">Employee Phone</th>
+                                <th class="text-center">Subject</th>
                                 <th class="text-center">Start Date</th>
                                 <th class="text-center">End date</th>
-                                <th class="text-center">Total Leave</th>
+                                <th class="text-center">Days</th>
                                 <th class="text-center">Reason</th>
+                                <th class="text-center">Status</th>
                                 <th class="text-center">Remarks</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -42,6 +46,60 @@
 
                         </tbody>
                     </table> 
+                </div>
+                <div class="modal" id="approve-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="approve" action="" method="post">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Approve</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm">
+                                        <p class="text-center"><span id="approve_leave"></span> Give a reason: </p>
+                                        <input type="text" name="remarks" id="remarks" required>
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal" id="reject-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="reject" action="" method="post">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Approve</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm">
+                                        <p class="text-center"><span id="reject_leave"></span> Give a reason: </p>
+                                        <input type="text" name="remarks" id="remarks" required>
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,7 +157,20 @@
             createTable(); 
         });
         //end create table
-
+        function show_approve_modal(id, type) {
+            var x = document.getElementById('approve_leave');
+            x.innerHTML = type;
+            const url = "{{ url('leaveApply/status/:id/approve') }}".replace(':id', id);
+            $('#approve').attr('action', url);
+            $('#approve-modal').modal('show');
+        }
+        function show_reject_modal(id, type) {
+            var x = document.getElementById('reject_leave');
+            x.innerHTML = type;
+            const url = "{{ url('leaveApply/status/:id/reject') }}".replace(':id', id);
+            $('#reject').attr('action', url);
+            $('#reject-modal').modal('show');
+        }
      </script>
 
     <script src="{{ asset('backend/_js/pages/be_tables_datatables.js') }}"></script>

@@ -49,6 +49,11 @@ return [
     'leave_status' => [
         'pending' => 0,
         'approved' => 1,
-        'rejected' => 2
+        'rejected' => 2,
+        'canceled' => 3
+    ],
+    'designation' =>[
+        'hr'=>"HR",
+        'super_user' => 1,
     ]
 ];

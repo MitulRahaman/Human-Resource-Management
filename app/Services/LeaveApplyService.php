@@ -101,12 +101,10 @@ class LeaveApplyService
 
                 $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\")'>Reject</a>";
-                if($userDesignation=="super_user" || $userDesignation=="HR")
+                if($userDesignation==Config::get('variable_constants.designation.super_user') || $userDesignation==Config::get('variable_constants.designation.hr'))
                 {
                     if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {
-//                        $reject_url = url('leaveApply/status/'.$id.'/reject');
-//                        $reject_btn = "<a class=\"dropdown-item\" href=\"$reject_url\">Reject</a>";
                         $action_btn .= "$approve_btn $reject_btn";
                     }
                 }

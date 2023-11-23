@@ -32,7 +32,7 @@ class LeaveApplyRepository
     {
         $user = User::where('id',$id)->select('is_super_user')->first();
         if($user->is_super_user)
-            return "super_user";
+            return $user->is_super_user;
         $designationId= BasicInfo::where('user_id',$id)->select('designation_id')->first();
         if(!$designationId)
             return false;
@@ -50,12 +50,12 @@ class LeaveApplyRepository
                 ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
                 ->groupBy('l.id')
                 ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
-                ->when($userDesignation=="HR", function($query )use ($userId){
+                ->when($userDesignation==Config::get('variable_constants.designation.hr'), function($query )use ($userId){
                     $branchID= BasicInfo::where('user_id',$userId)->select('branch_id')->first();
                     $branchUsers = BasicInfo::where('branch_id', $branchID->branch_id)->pluck('user_id')->toArray();
                     $query->whereIn('l.user_id', $branchUsers);
                 })
-                ->when($userDesignation!="super_user" && $userDesignation!="HR", function($query)use ($userId){
+                ->when($userDesignation!=Config::get('variable_constants.designation.super_user') && $userDesignation!=Config::get('variable_constants.designation.hr'), function($query)use ($userId){
                     $query->where('l.user_id', $userId);
                 })
                 ->get();

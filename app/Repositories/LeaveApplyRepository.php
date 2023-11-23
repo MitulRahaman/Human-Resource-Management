@@ -28,22 +28,21 @@ class LeaveApplyRepository
     {
         return LeaveType::where('status', Config::get('variable_constants.activation.active'))->get();
     }
-    public function isSuperUser($id)
+    public function getUserDesignation($id)
     {
         $user = User::where('id',$id)->select('is_super_user')->first();
-        return $user->is_super_user;
-    }
-    public function isHr($id)
-    {
+        if($user->is_super_user)
+            return "super_user";
         $designationId= BasicInfo::where('user_id',$id)->select('designation_id')->first();
         if(!$designationId)
             return false;
         $designation= Designation::where('id',$designationId->designation_id)->select('name')->first();
-        return $designation->name=="HR";
+        return $designation->name;
     }
     public function getTableData()
     {
         $userId = auth()->user()->id;
+        $userDesignation = $this->getUserDesignation($userId);
             return DB::table('leaves as l')
                 ->leftJoin('leave_types as lt', function ($join) {
                     $join->on('l.leave_type_id', '=', 'lt.id');
@@ -51,12 +50,12 @@ class LeaveApplyRepository
                 ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
                 ->groupBy('l.id')
                 ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
-                ->when($this->isHr($userId), function($query )use ($userId){
+                ->when($userDesignation=="HR", function($query )use ($userId){
                     $branchID= BasicInfo::where('user_id',$userId)->select('branch_id')->first();
                     $branchUsers = BasicInfo::where('branch_id', $branchID->branch_id)->pluck('user_id')->toArray();
                     $query->whereIn('l.user_id', $branchUsers);
                 })
-                ->when(!$this->isSuperUser($userId) && !$this->isHr($userId), function($query)use ($userId){
+                ->when($userDesignation!="super_user" && $userDesignation!="HR", function($query)use ($userId){
                     $query->where('l.user_id', $userId);
                 })
                 ->get();

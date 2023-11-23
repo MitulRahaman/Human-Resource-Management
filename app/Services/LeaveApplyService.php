@@ -65,6 +65,8 @@ class LeaveApplyService
     public function getTableData()
     {
         $result = $this->leaveApplyRepository->getTableData();
+        $userId= auth()->user()->id;
+        $userDesignation = $this->leaveApplyRepository->getUserDesignation($userId);
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -95,8 +97,7 @@ class LeaveApplyService
                                             Action
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
-                $userId= auth()->user()->id;
-                if($this->leaveApplyRepository->isSuperUser($userId) || $this->leaveApplyRepository->isHr($userId))
+                if($userDesignation=="super_user" || $userDesignation=="HR")
                 {
                     if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {

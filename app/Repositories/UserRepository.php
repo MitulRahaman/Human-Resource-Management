@@ -8,6 +8,7 @@ use App\Models\BankingInfo;
 use App\Models\Degree;
 use App\Models\EmergencyContact;
 use App\Models\Institute;
+use App\Models\LineManager;
 use App\Models\Nominee;
 use App\Models\PersonalInfo;
 use Carbon\Carbon;
@@ -342,6 +343,13 @@ class UserRepository
                 'career_start_date' => $formattedCareerStartDate,
                 'last_organization_id' => $organization_id
             ]);
+            foreach ($data['line_manager'] as $line_manager)
+            {
+                    LineManager::create([
+                        'user_id'=>$create_user->id,
+                        'line_manager_user_id' => $line_manager,
+                    ]);
+            }
             DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -391,6 +399,14 @@ class UserRepository
                 'is_onboarding_complete' => 0,
                 'status' => 1
             ]);
+            LineManager::where('user_id',$id)->delete();
+            foreach ($data['line_manager'] as $line_manager)
+            {
+                LineManager::create([
+                    'user_id'=>$id,
+                    'line_manager_user_id' => $line_manager,
+                ]);
+            }
             if($data->organizationName!= null && !is_numeric($data->organizationName)) {
                 $create_org = Organization::create([
                     'name' => $data->organizationName
@@ -774,5 +790,13 @@ class UserRepository
     {
         $user = User::where('id',$id)->select('is_super_user')->first();
         return $user->is_super_user;
+    }
+    public function getAllUsers($id)
+    {
+        return User::where('id','!=',$id)->get();
+    }
+    public function getLineManagers($id)
+    {
+        return LineManager::where('user_id',$id)->get();
     }
 }

@@ -53,7 +53,7 @@ class UserService
     {
         $formattedPhone = sprintf('%011d', trim(preg_replace('/[\W]+/', '', $data->phone), '-'));
         $fileName = null;
-        if($data->hasFile('photo')) {
+        if($data['photo']) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
             return $this->userRepository->storeUser($data, $fileName, $formattedPhone);
@@ -371,5 +371,13 @@ class UserService
                 'success' => true,
             ];
         }
+    }
+    public function getAllUsers($id=null)
+    {
+        return $this->userRepository->getAllUsers($id);
+    }
+    public function getLineManagers($id)
+    {
+        return $this->userRepository->getLineManagers($id);
     }
 }

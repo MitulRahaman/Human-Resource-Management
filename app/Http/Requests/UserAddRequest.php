@@ -51,7 +51,8 @@ class UserAddRequest extends FormRequest
             'photo' => 'image',
             'organizationName' => 'nullable',
             'organization_id' => 'nullable|exists:organizations,id',
-            'organization_name' => 'nullable|unique:organizations,name'
+            'organization_name' => 'nullable|unique:organizations,name',
+            'line_manager' => 'required|exists:users,id',
         ];
     }
 }

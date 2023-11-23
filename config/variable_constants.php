@@ -55,5 +55,11 @@ return [
 
     'HR' => [
         'HR' => 'HR','Hr', 'hr',
+        'rejected' => 2,
+        'canceled' => 3
+    ],
+    'designation' =>[
+        'hr'=>"HR",
+        'super_user' => 1,
     ]
 ];

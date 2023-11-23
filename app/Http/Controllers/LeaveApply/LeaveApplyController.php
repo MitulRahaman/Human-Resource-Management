@@ -11,6 +11,8 @@ use App\Services\LeaveApplyService;
 use PHPMailer\PHPMailer\PHPMailer;  
 use PHPMailer\PHPMailer\Exception;
 use App\Traits\AuthorizationTrait;
+use Illuminate\Support\Facades\Validator;
+
 
 class LeaveApplyController extends Controller
 {
@@ -38,7 +40,53 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-
+    public function approveLeave(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'remarks' => 'required',
+            ]);
+            if($validator)
+            {
+                $this->leaveApplyService->approveLeave($request->all(),$id);
+                return redirect()->back()->with('success', 'Leave approved');
+            }
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function rejectLeave(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'remarks' => 'required',
+            ]);
+            if($validator) {
+                $this->leaveApplyService->rejectLeave($request->all(),$id);
+                return redirect()->back()->with('success', 'Leave rejected');
+            }
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function cancelLeave($id)
+    {
+        try {
+            $this->leaveApplyService->cancelLeave($id);
+            return redirect()->back()->with('success', 'Leave canceled');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function delete($id)
+    {
+        try {
+            $this->leaveApplyService->delete($id);
+            return redirect()->back()->with('success', 'Leave deleted');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
     public function store(LeaveApplyAddRequest $request)
     {
         $this->checkAuthorization($request);

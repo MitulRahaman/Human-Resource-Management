@@ -19,6 +19,7 @@ use App\Http\Controllers\Designation\DesignationController;
 use App\Http\Controllers\Calender\CalenderController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -108,8 +109,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('store', [LeaveApplyController::class, 'store']);
         Route::get('/{id}/edit', [LeaveApplyController::class, 'edit']);
         Route::patch('/update/{id}', [LeaveApplyController::class, 'update']);
-        Route::get('status/{id}/approve', [LeaveApplyController::class, 'approveLeave']);
-        Route::get('status/{id}/reject', [LeaveApplyController::class, 'rejectLeave']);
+        Route::post('status/{id}/approve', [LeaveApplyController::class, 'approveLeave']);
+        Route::post('status/{id}/reject', [LeaveApplyController::class, 'rejectLeave']);
         Route::get('status/{id}/cancel', [LeaveApplyController::class, 'cancelLeave']);
         Route::get('/{id}/delete', [LeaveApplyController::class, 'delete']);
     });

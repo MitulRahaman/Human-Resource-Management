@@ -8,6 +8,8 @@ use App\Http\Requests\LeaveApplyAddRequest;
 use App\Http\Requests\LeaveApplyUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\LeaveApplyService;
+use Illuminate\Support\Facades\Validator;
+
 
 class LeaveApplyController extends Controller
 {
@@ -34,20 +36,31 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-    public function approveLeave($id)
+    public function approveLeave(Request $request, $id)
     {
         try {
-            $this->leaveApplyService->approveLeave($id);
-            return redirect()->back()->with('success', 'Leave approved');
+            $validator = Validator::make($request->all(), [
+                'remarks' => 'required',
+            ]);
+            if($validator)
+            {
+                $this->leaveApplyService->approveLeave($request->all(),$id);
+                return redirect()->back()->with('success', 'Leave approved');
+            }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-    public function rejectLeave($id)
+    public function rejectLeave(Request $request, $id)
     {
         try {
-            $this->leaveApplyService->rejectLeave($id);
-            return redirect()->back()->with('success', 'Leave rejected');
+            $validator = Validator::make($request->all(), [
+                'remarks' => 'required',
+            ]);
+            if($validator) {
+                $this->leaveApplyService->rejectLeave($request->all(),$id);
+                return redirect()->back()->with('success', 'Leave rejected');
+            }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

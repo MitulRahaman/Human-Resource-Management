@@ -46,13 +46,13 @@ class LeaveApplyService
         Mail::to($receiver)->send(new LeaveApplicationMail($data));
         return true;
     }
-    public function approveLeave($id)
+    public function approveLeave($data, $id)
     {
-        return $this->leaveApplyRepository->approveLeave($id);
+        return $this->leaveApplyRepository->approveLeave($data, $id);
     }
-    public function rejectLeave($id)
+    public function rejectLeave($data, $id)
     {
-        return $this->leaveApplyRepository->rejectLeave($id);
+        return $this->leaveApplyRepository->rejectLeave($data, $id);
     }
     public function cancelLeave($id)
     {
@@ -79,6 +79,7 @@ class LeaveApplyService
                 $total_leave = $row->total;
                 $employeePhone= $row->phone_number;
                 $reason = $row->reason;
+                $remarks = $row->remarks;
                 $status="";
                 if($row->status== Config::get('variable_constants.leave_status.pending'))
                     $status = "<span class=\"badge badge-primary\">pending</span><br>" ;
@@ -97,14 +98,15 @@ class LeaveApplyService
                                             Action
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
+
+                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\")'>Approve</a>";
+                $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\")'>Reject</a>";
                 if($userDesignation=="super_user" || $userDesignation=="HR")
                 {
                     if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {
-                        $approve_url = url('leaveApply/status/'.$id.'/approve');
-                        $approve_btn = "<a class=\"dropdown-item\" href=\"$approve_url\">Approve</a>";
-                        $reject_url = url('leaveApply/status/'.$id.'/reject');
-                        $reject_btn = "<a class=\"dropdown-item\" href=\"$reject_url\">Reject</a>";
+//                        $reject_url = url('leaveApply/status/'.$id.'/reject');
+//                        $reject_btn = "<a class=\"dropdown-item\" href=\"$reject_url\">Reject</a>";
                         $action_btn .= "$approve_btn $reject_btn";
                     }
                 }
@@ -136,6 +138,7 @@ class LeaveApplyService
                 array_push($temp, $total_leave);
                 array_push($temp, $reason);
                 array_push($temp, $status);
+                array_push($temp, $remarks);
                 array_push($temp, $action_btn);
                 array_push($data, $temp);
             }

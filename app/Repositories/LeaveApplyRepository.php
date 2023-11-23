@@ -117,13 +117,15 @@ class LeaveApplyRepository
         }
         return true;
     }
-    public function approveLeave($id)
+    public function approveLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.approved')]);
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
+            'remarks'=>$data['remarks']]);
     }
-    public function rejectLeave($id)
+    public function rejectLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.rejected')]);
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.rejected'),
+            'remarks'=>$data['remarks']]);
     }
     public function cancelLeave($id)
     {

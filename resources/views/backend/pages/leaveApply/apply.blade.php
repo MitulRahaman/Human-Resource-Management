@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Select Leave date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control bg-white" id="date-range" name="date-range" data-date-format="d-m-Y" placeholder="Select Date Range" data-mode="range" data-min-date="today" required>
+                                    <input type="text" class="js-flatpickr form-control bg-white" id="date-range" name="date-range" data-date-format="d-m-Y" placeholder="Select Date Range" data-mode="range" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>

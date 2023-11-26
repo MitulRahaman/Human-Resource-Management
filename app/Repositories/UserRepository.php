@@ -343,13 +343,15 @@ class UserRepository
                 'career_start_date' => $formattedCareerStartDate,
                 'last_organization_id' => $organization_id
             ]);
-            foreach ($data['line_manager'] as $line_manager)
-            {
+            if($data->line_manager) {
+                foreach ($data['line_manager'] as $line_manager) {
                     LineManager::create([
                         'user_id'=>$create_user->id,
                         'line_manager_user_id' => $line_manager,
                     ]);
+                }
             }
+            
             DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -399,14 +401,16 @@ class UserRepository
                 'is_onboarding_complete' => 0,
                 'status' => 1
             ]);
-            LineManager::where('user_id',$id)->delete();
-            foreach ($data['line_manager'] as $line_manager)
-            {
-                LineManager::create([
-                    'user_id'=>$id,
-                    'line_manager_user_id' => $line_manager,
-                ]);
+            if($data->line_manager) {
+                LineManager::where('user_id',$this->id)->delete();
+                foreach ($data['line_manager'] as $line_manager) {
+                    LineManager::create([
+                        'user_id'=>$this->id,
+                        'line_manager_user_id' => $line_manager,
+                    ]);
+                }
             }
+            
             if($data->organizationName!= null && !is_numeric($data->organizationName)) {
                 $create_org = Organization::create([
                     'name' => $data->organizationName

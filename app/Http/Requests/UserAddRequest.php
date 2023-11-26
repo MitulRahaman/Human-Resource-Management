@@ -52,7 +52,7 @@ class UserAddRequest extends FormRequest
             'organizationName' => 'nullable',
             'organization_id' => 'nullable|exists:organizations,id',
             'organization_name' => 'nullable|unique:organizations,name',
-            'line_manager' => 'required|exists:users,id',
+            'line_manager' => 'nullable|exists:users,id',
         ];
     }
 }

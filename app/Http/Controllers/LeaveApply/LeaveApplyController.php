@@ -89,18 +89,16 @@ class LeaveApplyController extends Controller
     }
     public function store(LeaveApplyAddRequest $request)
     {
-        $this->checkAuthorization($request);
-        
         try {
-            $response = $this->leaveApplyService->storeLeaves($request);
+            $response = $this->leaveApplyService->LeaveApplicationEmail($request);
             if($response) {
-                if($this->leaveApplyService->LeaveApplicationEmail($request)) {
+                if($this->leaveApplyService->storeLeaves($request)) {
                     return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
                 } else {
-                    return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
+                    return redirect('leaveApply/apply')->with('error', $response);
                 }
             } else {
-                return redirect('leaveApply/apply')->with('error', $response);
+                return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
             }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());

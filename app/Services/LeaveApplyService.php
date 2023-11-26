@@ -16,34 +16,30 @@ class LeaveApplyService
     {
         $this->leaveApplyRepository = $leaveApplyRepository;
     }
-
     public function getLeaveTypes()
     {
-        return $this->leaveApplyRepository->getLeaveTypes();
+        return $this->leaveApplyRepository->getLeaveTypes($id = null);
     }
-
     public function storeLeaves($data)
     {
         return $this->leaveApplyRepository->storeLeaves($data);
     }
-
     public function editLeave($id)
     {
         return $this->leaveApplyRepository->setId($id)->getLeaveInfo();
     }
-
     public function updateLeave($data, $id)
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
-
     public function LeaveApplicationEmail($data)
     {
-        $receiver = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipent();
-        if(!$receiver) {
+        $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
+        $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
+        if(!$receivers) {
             return false;
         }
-        Mail::send((new LeaveApplicationMail($data))->to($receiver, 'AppnapHR'));
+        Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
         return true;
     }
     public function approveLeave($data, $id)

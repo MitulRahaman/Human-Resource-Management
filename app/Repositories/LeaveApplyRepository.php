@@ -24,9 +24,14 @@ class LeaveApplyRepository
         return $this;
     }
 
-    public function getLeaveTypes()
+    public function getLeaveTypes($id)
     {
-        return LeaveType::where('status', Config::get('variable_constants.activation.active'))->get();
+        if($id == null) {
+            return LeaveType::where('status', Config::get('variable_constants.activation.active'))->get();
+        } else {
+            return LeaveType::where('id', '=', $id)->first()->name;
+        }
+            
     }
     public function getUserDesignation($id)
     {
@@ -60,23 +65,48 @@ class LeaveApplyRepository
                 })
                 ->get();
     }
-    public function getLeaveAppliedEmailRecipent()
+    public function getLeaveAppliedEmailRecipient()
     {
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first(); 
         if($appliedUser == null ) {
             return false;
         }
+        
+        $getLineManagers  = DB::table('users as u')
+        ->leftJoin('line_managers as lm', function ($join) {
+            $join->on('u.id', '=', 'lm.user_id')
+            ->whereNULL('lm.deleted_at');
+        })
+        ->where('lm.user_id', '=', $appliedUser->user_id)
+        ->select('lm.line_manager_user_id')
+        ->get()
+        ->toArray();
 
-        $HR = DB::table('designations')->where('name', '=', Config::get('variable_constants.HR.HR'))->first();
-        if($HR == null ) {
+        $lineManagerEmail = array();
+        foreach ($getLineManagers as $glm) {
+            array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
+        }
+
+        $hasManageLeavePermission = DB::table('permissions as p')
+            ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
+            ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
+            ->where('p.slug', '=', 'manageLeaves')
+            ->where('bi.branch_id', '=', $appliedUser->branch_id)
+            ->select('rp.role_id')
+            ->get()
+            ->toArray();
+        if($hasManageLeavePermission == null ) {
             return false;
         }
 
-        $HREmail = DB::table('basic_info')->where('branch_id', '=', $appliedUser->branch_id)->where('designation_id', '=', $HR->id)->first();
-        if($HREmail == null ) {
+        $recipientEmail = array();
+        foreach ($hasManageLeavePermission as $hmlp) {
+            array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hmlp->role_id)->first()->preferred_email);
+        }
+        if($recipientEmail == null ) {
             return false;
         }
-        return $HREmail->preferred_email;
+        return [$lineManagerEmail, $recipientEmail];
     } 
 
     public function storeLeaves($data)

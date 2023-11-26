@@ -39,10 +39,12 @@ class LeaveApplicationMail extends Mailable
      */
     public function envelope()
     {
-        if($this->user->startDate == $this->user->endDate) {
-            $leaveMessage = $this->leaveType.' Application on '.$this->user->startDate;
+        $formattedStartDate = date("d-m-Y", strtotime($this->user->startDate));
+        $formattedEndDate = date("d-m-Y", strtotime($this->user->endDate));
+        if($formattedStartDate == $formattedEndDate) {
+            $leaveMessage = $this->leaveType.' Application on '.$formattedStartDate;
         } else {
-            $leaveMessage = $this->leaveType.' Application from '.$this->user->startDate.' to '.$this->user->endDate;
+            $leaveMessage = $this->leaveType.' Application from '.$formattedStartDate.' to '.$formattedEndDate;
         }
         return new Envelope(
             from: new Address(auth()->user()->email, auth()->user()->full_name),

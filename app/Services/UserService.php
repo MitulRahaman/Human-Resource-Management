@@ -107,6 +107,7 @@ class UserService
                 $department_name = $this->userRepository->setDepartmentId($row->department_id)->getDepartmentName();
                 $designation_name = $this->userRepository->setDesignationId($row->designation_id)->getDesignationName();
                 $role_name = $this->userRepository->setRoleId($row->role_id)->getRoleName();
+                $available_leave = $this->userRepository->getAvailableLeave($id);
                 $joining_date = date("d-m-Y", strtotime($row->joining_date));
 
                 if($imgName) {
@@ -162,6 +163,7 @@ class UserService
                 array_push($temp, $department_name);
                 array_push($temp, $designation_name);
                 array_push($temp, $role_name);
+                array_push($temp, $available_leave);
                 array_push($temp, $joining_date);
                 array_push($temp, $status);
                 if ($row->deleted_at) {
@@ -375,5 +377,9 @@ class UserService
     public function getLineManagers($id)
     {
         return $this->userRepository->getLineManagers($id);
+    }
+    public function getAvailableLeave($id)
+    {
+        return $this->userRepository->getAvailableLeave($id);
     }
 }

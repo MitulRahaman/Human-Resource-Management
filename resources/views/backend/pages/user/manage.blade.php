@@ -38,6 +38,7 @@
                                 <th class="text-center">Department</th>
                                 <th class="text-center">Designation</th>
                                 <th class="text-center">Role</th>
+                                <th class="text-center">Available Leaves</th>
                                 <th class="text-center">Joining Date</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Deleted?</th>

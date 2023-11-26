@@ -795,4 +795,12 @@ class UserRepository
     {
         return LineManager::where('user_id',$id)->get();
     }
+    public function getAvailableLeave($id)
+    {
+        $currentYear = now()->year;
+        $leaves = DB::table('calender')->whereRaw('YEAR(date) = ?', [$currentYear])->pluck('date');
+        $used_leaves = DB::table('leaves')->where('user_id', $id)->where('status', Config::get('variable_constants.leave_status.approved'))->pluck('total')->toArray();
+        $total_used = array_sum($used_leaves);
+        return count($leaves)-$total_used;
+    }
 }

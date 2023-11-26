@@ -52,22 +52,22 @@
             </div>
             <div class="block-content bg-body-light text-center">
                 <div class="row items-push text-uppercase">
-                    <div class="col-6 col-md-3">
-                        <div class="font-w600 text-dark mb-1">Orders</div>
-                        <a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">5</a>
+                    <div class="col-12">
+                        <div class="font-w600 text-dark mb-1 text-center">Available Leaves</div>
+                        <a class="link-fx font-size-h3 text-primary text-center" href="{{url('leaveApply/manage')}}">{{$available_leave}}</a>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <div class="font-w600 text-dark mb-1">Orders Value</div>
-                        <a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">$3.580,00</a>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="font-w600 text-dark mb-1">Cart</div>
-                        <a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">4</a>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="font-w600 text-dark mb-1">Referred</div>
-                        <a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">3</a>
-                    </div>
+                    {{--<div class="col-6 col-md-3">--}}
+                        {{--<div class="font-w600 text-dark mb-1">Orders Value</div>--}}
+                        {{--<a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">$3.580,00</a>--}}
+                    {{--</div>--}}
+                    {{--<div class="col-6 col-md-3">--}}
+                        {{--<div class="font-w600 text-dark mb-1">Cart</div>--}}
+                        {{--<a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">4</a>--}}
+                    {{--</div>--}}
+                    {{--<div class="col-6 col-md-3">--}}
+                        {{--<div class="font-w600 text-dark mb-1">Referred</div>--}}
+                        {{--<a class="link-fx font-size-h3 text-primary" href="javascript:void(0)">3</a>--}}
+                    {{--</div>--}}
                 </div>
             </div>
         </div>

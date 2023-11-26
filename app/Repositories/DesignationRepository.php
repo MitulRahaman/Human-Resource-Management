@@ -101,7 +101,6 @@ class DesignationRepository
             $dep = array_unique(array_merge($dep, $d));
         }
         $departments = Department::whereIn('id', $dep)->get();
-//        dd($departments[1]->id);
         return $departments;
 
     }

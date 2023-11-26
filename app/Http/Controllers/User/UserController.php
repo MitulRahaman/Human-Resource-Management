@@ -167,8 +167,9 @@ class UserController extends Controller
         $user_address = $this->userService->getUserAddress($user->id);
         $userInstituteDegree = $this->userService->getInstituteDegree($user->academicInfo);
         $banking = $this->userService->getBankInfo($user->id);
+        $available_leave = $this->userService->getAvailableLeave($user->id);
         abort_if(!$user, 404);
-        return \view('backend.pages.user.profile', compact('user', 'banking', 'user_official_info','user_address', 'userInstituteDegree'));
+        return \view('backend.pages.user.profile', compact('user', 'available_leave','banking', 'user_official_info','user_address', 'userInstituteDegree'));
     }
     public function editData($id)
     {

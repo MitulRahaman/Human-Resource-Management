@@ -17,6 +17,7 @@ use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\Designation\DesignationController;
 use App\Http\Controllers\Calender\CalenderController;
+use App\Http\Controllers\Asset\AssetController;
 
 
 
@@ -243,6 +244,20 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/delete', [InstituteController::class, 'delete']);
             Route::post('/{id}/restore', [InstituteController::class, 'restore']);
             Route::post('/{id}/change_status', [InstituteController::class, 'changeStatus']);
+        });
+        Route::prefix('assetsType')->group(function() {
+            Route::get('/', [AssetController::class, 'assetTypeIndex']);
+            Route::get('/get_asset_type_data', [AssetController::class, 'fetchDataAssetType']);
+            Route::get('/add', [AssetController::class, 'createAssetType']);
+            Route::post('/validate_inputs', [AssetController::class, 'validate_inputs_asset_type']);
+            Route::post('/store', [AssetController::class, 'storeAssetType']);
+            Route::get('/{id}/edit_asset_type', [AssetController::class, 'edit_asset_type'])->name('edit_asset_type');
+            Route::post('/{id}/update_asset_type', [AssetController::class, 'update_asset_type']);
+            Route::post('/{id}/validate_name',[AssetController::class, 'validate_name_asset_type']);
+            Route::post('/{id}/delete', [AssetController::class, 'deleteAssetType']);
+            Route::post('/{id}/restore', [AssetController::class, 'restoreAssetType']);
+            Route::post('/{id}/change_status', [AssetController::class, 'changeStatusAssetType']);
+
         });
     });
 });

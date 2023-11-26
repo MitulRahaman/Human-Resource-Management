@@ -122,11 +122,15 @@
 
     <!-- year picker -->
     <script src="{{ asset('backend/js/yearpicker.js') }}"></script>
-
        
     <script> 
         //create table
         jQuery(function(){
+            window.onload = function() {
+                var currentYear = new Date().getFullYear();
+                document.getElementById("year").value = currentYear;
+                createTable();
+            };
             function createTable(){
                 var year = $('#year').val();
                 if(year >= 2000) {

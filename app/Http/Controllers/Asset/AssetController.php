@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Asset;
 
+use App\Http\Requests\AssetAddRequest;
+use App\Http\Requests\AssetEditRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\AssetService;
@@ -18,6 +20,86 @@ class AssetController extends Controller
         View::share('main_menu', 'System Settings');
         View::share('sub_menu', 'Assets Type');
     }
+//    =============================start asset======================
+    public function index()
+    {
+        return \view('backend.pages.asset.index');
+    }
+    public function fetchData()
+    {
+        return $this->assetService->fetchData();
+    }
+    public function create()
+    {
+        $asset_type = $this->assetService->getAllAssetTypeData();
+        $branches = $this->assetService->getAllBranches();
+        return \view('backend.pages.asset.create', compact('asset_type', 'branches'));
+    }
+    public function store(AssetAddRequest $request)
+    {
+        try {
+            $response = $this->assetService->createAsset($request->validated());
+            if(!$response)
+                return redirect('asset')->with('error', 'Failed to add Asset');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect('asset')->with('success', 'Asset saved successfully.');
+    }
+    public function edit($id )
+    {
+        $asset = $this->assetService->getAsset($id);
+        if($asset=="Restore first")
+            return redirect()->back()->with('error', $asset);
+        $asset_type = $this->assetService->getAllAssetTypeData();
+        $branches = $this->assetService->getAllBranches();
+        return \view('backend.pages.asset.edit',compact('asset', 'asset_type', 'branches'));
+    }
+    public function update(AssetEditRequest $request)
+    {
+        try {
+            $asset = $this->assetService->update($request->validated());
+            if(!$asset)
+                return redirect('asset')->with('error', 'Failed to update Asset');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect('/asset')->with('success', 'Asset updated successfully');
+    }
+    public function delete($id)
+    {
+        try{
+            if($this->assetService->delete($id))
+                return redirect('asset/')->with('success', "Assets  deleted successfully.");
+            return redirect('asset/')->with('error', "Assets  not deleted.");
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function restore($id)
+    {
+        try{
+            if($this->assetService->restore($id))
+                return redirect('asset/')->with('success', "Assets  restored successfully.");
+            return redirect('asset/')->with('success', "Assets  not restored.");
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function changeStatus($id)
+    {
+        try{
+            if($this->assetService->changeStatus($id))
+                return redirect('asset/')->with('success', 'Assets status changed successfully!');
+            return redirect('asset/')->with('error', 'Assets status not changed!');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
+//    =============================end asset======================
+
+//    =============================start asset type======================
     public function assetTypeIndex()
     {
         return \view('backend.pages.asset.assetTypeIndex');
@@ -98,4 +180,5 @@ class AssetController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+    //    =============================end asset type======================
 }

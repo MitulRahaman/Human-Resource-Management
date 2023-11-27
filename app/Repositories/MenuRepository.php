@@ -153,7 +153,7 @@ class MenuRepository
     {
         return Menu::where('id', $id)->pluck('title');
     }
-    public function change(int $data)
+    public function change( $data)
     {
         $menu = Menu::findOrFail($data);
         $old=$menu->status;
@@ -169,7 +169,7 @@ class MenuRepository
             return $menu->save();
         }
     }
-    public function delete(int $id)
+    public function delete( $id)
     {
         $menu= Menu::findOrFail($id);
         return $menu->delete();

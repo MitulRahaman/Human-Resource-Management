@@ -257,7 +257,17 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/delete', [AssetController::class, 'deleteAssetType']);
             Route::post('/{id}/restore', [AssetController::class, 'restoreAssetType']);
             Route::post('/{id}/change_status', [AssetController::class, 'changeStatusAssetType']);
-
+        });
+        Route::prefix('asset')->group(function() {
+            Route::get('/', [AssetController::class, 'index']);
+            Route::get('/get_asset_data', [AssetController::class, 'fetchData']);
+            Route::get('/add', [AssetController::class, 'create']);
+            Route::post('/store', [AssetController::class, 'store']);
+            Route::get('/{id}/edit', [AssetController::class, 'edit'])->name('edit_asset');
+            Route::post('/{id}/update', [AssetController::class, 'update']);
+            Route::post('/{id}/delete', [AssetController::class, 'delete']);
+            Route::post('/{id}/restore', [AssetController::class, 'restore']);
+            Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
         });
     });
 });

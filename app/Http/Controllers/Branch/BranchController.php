@@ -11,9 +11,11 @@ use App\Services\BranchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
+use App\Traits\AuthorizationTrait;
 
 class BranchController extends Controller
 {
+    use AuthorizationTrait;
     private $branchService;
 
     public function __construct(BranchService $branchService)
@@ -25,8 +27,9 @@ class BranchController extends Controller
 
     public function index()
     {
+        $branchManagePermission = $this->setId(auth()->user()->id)->branchManagePermission();
         $branches = $this->branchService->indexBranch();
-        return \view('backend.pages.branch.index', compact('branches'));
+        return \view('backend.pages.branch.index', compact('branches', 'branchManagePermission'));
     }
 
     public function create()

@@ -9,9 +9,11 @@ use App\Http\Requests\DepartmentAddRequest;
 use App\Http\Requests\DepartmentUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\DepartmentService;
+use App\Traits\AuthorizationTrait;
 
 class DepartmentController extends Controller
 {
+    use AuthorizationTrait;
     private $departmentService, $branchService;
 
     public function __construct(DepartmentService $departmentService, BranchService $branchService)
@@ -24,8 +26,9 @@ class DepartmentController extends Controller
 
     public function index()
     {
+        $departmentManagePermission = $this->setId(auth()->user()->id)->departmentManagePermission();
         $departments = $this->departmentService->indexDepartment();
-        return \view('backend.pages.department.index', compact('departments'));
+        return \view('backend.pages.department.index', compact('departments', 'departmentManagePermission'));
     }
 
     public function create()

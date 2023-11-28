@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('backend/js/yearpicker.css') }}"> 
 @endsection
 @section('page_action')
+    @if ($manageLeavePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('leave/manage') }}">
             <button type="button" class="btn btn-dark mr-3 mb-3">  
@@ -15,6 +16,7 @@
             </button>
         </a>
     </div>
+    @endif
 @endsection
 @section('content')
         <div class="content"> 
@@ -26,7 +28,7 @@
                 <div class="block-content block-content-full">
                 <label>Choose a year <span class="text-danger">*</span>(between 2000-2100)</label>
                     <div class="form-row">
-                        <div class="form-group col-xl-7">    
+                        <div class="form-group col-xl-3">    
                             <input type="number" class="yearpicker form-control bg-white" min="2000" max="2100" onKeyPress="if(this.value.length==4) return false;" id="year" value="">
                             <span id="error_year" style="font-size:13px; color:red"></span>
                         </div>
@@ -45,7 +47,9 @@
                                     <th style="width: 40%;">Name</th>
                                     <th class="text-center" style="width: 15%;">for Year</th>
                                     <th class="text-center">Total leave</th> 
+                                    @if ($manageLeavePermission)
                                     <th class="text-center">Action</th> 
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,11 +130,11 @@
     <script> 
         //create table
         jQuery(function(){
-            window.onload = function() {
+            $(document).ready(function() {
                 var currentYear = new Date().getFullYear();
                 document.getElementById("year").value = currentYear;
                 createTable();
-            };
+            });
             function createTable(){
                 var year = $('#year').val();
                 if(year >= 2000) {

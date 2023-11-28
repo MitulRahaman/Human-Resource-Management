@@ -25,7 +25,7 @@ class DesignationController extends Controller
     }
     public function create()
     {
-        $branches=$this->designationService->getBranches();
+        $branches = $this->designationService->getBranches();
         return \view('backend.pages.designation.create', compact('branches'));
     }
     public function validate_inputs(Request $request)

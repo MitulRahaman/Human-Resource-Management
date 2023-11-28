@@ -8,6 +8,7 @@
 
 @endsection
 @section('page_action')
+    @if ($branchManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('branch/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -15,6 +16,7 @@
             </button>
         </a>
     </div>
+    @endif
 @endsection
 @section('content')
         <div class="content">
@@ -33,51 +35,62 @@
                                 <th>Status</th>
                                 <th>Deleted?</th>
                                 <th class="d-none d-sm-table-cell" style="width: 50%;">Address</th>
+                                @if ($branchManagePermission)
                                 <th class="d-none d-sm-table-cell" style="width: 20%;">Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
                         <?php $x = 1 ?>
-                            @forelse ($branches as $b)
+                            @forelse ($branches as $branch)
                                 <tr>
                                     <td class="text-center font-size-sm">{{$x++}}</td>
                                     <td class="font-w600 font-size-sm">
-                                        <a href="#">{{$b->name}}</a>
+                                        <a href="#">{{$branch->name}}</a>
                                     </td>
                                     <td class="font-w600 font-size-sm">
-                                        @if ($b->status == 1 && $b->deleted_at == null)
-                                            <a href="{{ route('branch.status', $b->id) }}">
+                                        @if ($branch->status == Config::get('variable_constants.activation.active') && $branch->deleted_at == null)
+                                            @if ($branchManagePermission)
+                                            <a href="{{ route('branch.status', $branch->id) }}">
                                                 <span class="badge badge-success">Active</span>
                                             </a>
+                                            @else
+                                                <span class="badge badge-success">Active</span>
+                                            @endif
                                         @else
-                                            <a href="{{ route('branch.status', $b->id) }}">
+                                            @if ($branchManagePermission)
+                                            <a href="{{ route('branch.status', $branch->id) }}">
                                                 <span class="badge badge-warning">Inactive</span>
                                             </a>
+                                            @else
+                                                <span class="badge badge-warning">Inactive</span>
+                                            @endif
                                         @endif
                                     </td>
                                     <td class="font-w600 font-size-sm">
-                                        @if ($b->deleted_at)
+                                        @if ($branch->deleted_at)
                                         <span class="badge badge-danger">Deleted</span>
                                         @endif
                                     </td>
                                     <td class="d-none d-sm-table-cell font-size-sm">
-                                    {{$b->address}}<em class="text-muted"></em>
+                                    {{$branch->address}}<em class="text-muted"></em>
                                     </td>
+                                    @if ($branchManagePermission)
                                     <td class="d-none d-sm-table-cell">
                                         <span class="badge">
                                             <div class="row">
                                                 <div class="col">
                                                     <a  class="btn btn-sm btn-light " href="#">
-                                                        @if ($b->deleted_at)
-                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromleft_{{$b->id}}"> <i class="fas fa-trash-restore text-warning mr-1"></i> Restore</button>
+                                                        @if ($branch->deleted_at)
+                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromleft_{{$branch->id}}"> <i class="fas fa-trash-restore text-warning mr-1"></i> Restore</button>
                                                         @else
-                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromright_{{$b->id}}"> <i class="fa fa-trash text-danger mr-1"></i> Delete</button>
+                                                        <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromright_{{$branch->id}}"> <i class="fa fa-trash text-danger mr-1"></i> Delete</button>
                                                         @endif
                                                     </a>
                                                 </div>
-                                                @if (!$b->deleted_at)
+                                                @if (!$branch->deleted_at)
                                                 <div class="col">
-                                                    <a class="btn btn-sm btn-light" href="{{ route('branch.edit', $b->id) }}">
+                                                    <a class="btn btn-sm btn-light" href="{{ route('branch.edit', $branch->id) }}">
                                                         <i class="fas fa-edit text-success mr-1"></i> Edit
                                                     </a>
                                                 </div>
@@ -85,9 +98,10 @@
                                             </div>
                                         </span>
                                     </td>
+                                    @endif
                                 </tr>
                                 <!-- Delete Confirmation Modal -->
-                                <div class="modal" id="modal-block-fromright_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
+                                <div class="modal" id="modal-block-fromright_{{$branch->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromright" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromright" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -106,7 +120,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('branch.destroy', $b->id) }}" method="post">
+                                                    <form action ="{{ route('branch.destroy', $branch->id) }}" method="post">
                                                         @csrf
                                                         @method('delete')
                                                             <button type="submit" class="btn btn-primary">Ok</button>
@@ -118,7 +132,7 @@
                                 </div>
                                 <!-- END Delete Confirmation Modal -->
                                 <!-- Restore Confirmation Modal -->
-                                <div class="modal" id="modal-block-fromleft_{{$b->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
+                                <div class="modal" id="modal-block-fromleft_{{$branch->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-block-fromleft" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-fromleft" role="document">
                                         <div class="modal-content">
                                             <div class="block block-rounded block-themed block-transparent mb-0">
@@ -137,7 +151,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('branch.restore', $b->id) }}" method="post">
+                                                    <form action ="{{ route('branch.restore', $branch->id) }}" method="post">
                                                         @csrf
                                                             <button type="submit" class="btn btn-primary">Ok</button>
                                                     </form>

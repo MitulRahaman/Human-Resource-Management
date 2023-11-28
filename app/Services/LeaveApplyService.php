@@ -7,9 +7,11 @@ use App\Mail\LeaveApplicationMail;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class LeaveApplyService
 {
+    use AuthorizationTrait;
     private $leaveApplyRepository;
 
     public function __construct(LeaveApplyRepository $leaveApplyRepository)
@@ -62,7 +64,7 @@ class LeaveApplyService
     {
         $result = $this->leaveApplyRepository->getTableData();
         $userId= auth()->user()->id;
-        $userDesignation = $this->leaveApplyRepository->getUserDesignation($userId);
+        $hasManageLeavePermission = $this->setId(auth()->user()->id)->manageLeaveAuthorization();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -97,7 +99,7 @@ class LeaveApplyService
 
                 $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\")'>Reject</a>";
-                if($userDesignation==Config::get('variable_constants.designation.super_user') || $userDesignation==Config::get('variable_constants.designation.hr'))
+                if($hasManageLeavePermission)
                 {
                     if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {

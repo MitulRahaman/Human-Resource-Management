@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\LeaveType;
 use App\Models\LeaveApply;
 use App\Models\User;
+use App\Traits\AuthorizationTrait;
 
 
 class LeaveApplyRepository
 {
+    use AuthorizationTrait;
     private $id;
 
     public function setId($id)
@@ -48,6 +50,7 @@ class LeaveApplyRepository
     {
         $userId = auth()->user()->id;
         $userDesignation = $this->getUserDesignation($userId);
+        $isHrSuperUser = $this->setId($userId)->manageLeaveAuthorization();
             return DB::table('leaves as l')
                 ->leftJoin('leave_types as lt', function ($join) {
                     $join->on('l.leave_type_id', '=', 'lt.id');
@@ -55,12 +58,7 @@ class LeaveApplyRepository
                 ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
                 ->groupBy('l.id')
                 ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
-                ->when($userDesignation==Config::get('variable_constants.designation.hr'), function($query )use ($userId){
-                    $branchID= BasicInfo::where('user_id',$userId)->select('branch_id')->first();
-                    $branchUsers = BasicInfo::where('branch_id', $branchID->branch_id)->pluck('user_id')->toArray();
-                    $query->whereIn('l.user_id', $branchUsers);
-                })
-                ->when($userDesignation!=Config::get('variable_constants.designation.super_user') && $userDesignation!=Config::get('variable_constants.designation.hr'), function($query)use ($userId){
+                ->when(!$isHrSuperUser, function($query)use ($userId){
                     $query->where('l.user_id', $userId);
                 })
                 ->get();

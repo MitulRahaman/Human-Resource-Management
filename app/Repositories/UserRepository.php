@@ -436,8 +436,8 @@ class UserRepository
                     'role_id' => $data->roleId,
                     'personal_email' => $data->personal_email,
                     'preferred_email' => $data->preferred_email,
-                    'joining_date' => $data->joining_date,
-                    'career_start_date' => $data->career_start_date,
+                    'joining_date' => $formattedJoiningDate,
+                    'career_start_date' => $formattedCareerStartDate,
                     'last_organization_id' => $data->organizationName
                 ]);
                 DB::commit();

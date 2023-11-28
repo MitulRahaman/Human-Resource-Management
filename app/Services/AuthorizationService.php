@@ -13,6 +13,11 @@ class AuthorizationService
     {
         $this->authorizationRepository = $authorizationRepository;
     }
+
+    public function manageLeaveAuthorization($id)
+    {
+        //$this->authorizationRepository->setId($this->id)->manageLeaveAuthorization();
+    }
     
  }
 

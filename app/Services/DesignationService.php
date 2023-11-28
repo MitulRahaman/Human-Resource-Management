@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Repositories\DesignationRepository;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use App\Traits\AuthorizationTrait;
 
 class DesignationService
 {
+    use AuthorizationTrait;
     private $designationRepository;
     public function __construct(DesignationRepository $designationRepository)
     {
@@ -101,6 +103,7 @@ class DesignationService
     public function fetchData()
     {
         $result = $this->designationRepository->getAllDesignationData();
+        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->designationManagePermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -154,7 +157,9 @@ class DesignationService
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasDesignationManagePermission) {
+                    array_push($temp, $action_btn);
+                }
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

@@ -8,9 +8,11 @@ use App\Http\Requests\DesignationEditRequest;
 use App\Services\DesignationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use App\Traits\AuthorizationTrait;
 
 class DesignationController extends Controller
 {
+    use AuthorizationTrait;
     private $designationService;
 
     public function __construct(DesignationService $designationService)
@@ -21,7 +23,8 @@ class DesignationController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.designation.index');
+        $designationManagePermission = $this->setId(auth()->user()->id)->designationManagePermission();
+        return \view('backend.pages.designation.index', compact('designationManagePermission'));
     }
     public function create()
     {

@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\DegreeRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class DegreeService
 {
+    use AuthorizationTrait;
     private $degreeRepository;
 
     public function __construct(DegreeRepository $degreeRepository)
@@ -79,6 +81,7 @@ class DegreeService
     public function fetchData()
     {
         $result = $this->degreeRepository->getAllDegreeData();
+        $hasDegreeManagePermission = $this->setId(auth()->user()->id)->degreeManagePermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -114,9 +117,10 @@ class DegreeService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if ($hasDegreeManagePermission) {
+                    array_push($temp, $action_btn);
+                }
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

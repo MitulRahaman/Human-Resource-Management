@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\RoleRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class RoleService
 {
+    use AuthorizationTrait;
     private $roleRepository;
 
     public function __construct(RoleRepository $roleRepository)
@@ -108,6 +110,7 @@ class RoleService
     public function fetchData()
     {
         $result = $this->roleRepository->getAllRoleData();
+        $hasRoleManagePermission = $this->setId(auth()->user()->id)->roleManagePermission();
         if ($result->count() > 0) {
             $data = array();
 
@@ -167,7 +170,9 @@ class RoleService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-                array_push($temp, $created_at);
+                if($hasRoleManagePermission) {
+                    array_push($temp, $created_at);
+                }
                 array_push($temp, $action_btn);
                 array_push($data, $temp);
             }

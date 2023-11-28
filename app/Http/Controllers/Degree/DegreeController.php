@@ -8,9 +8,11 @@ use App\Http\Requests\DegreeEditRequest;
 use App\Services\DegreeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use App\Traits\AuthorizationTrait;
 
 class DegreeController extends Controller
 {
+    use AuthorizationTrait;
     private $degreeService;
     public function __construct(DegreeService $degreeService)
     {
@@ -20,7 +22,8 @@ class DegreeController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.degree.index');
+        $degreeManagePermission = $this->setId(auth()->user()->id)->degreeManagePermission();
+        return \view('backend.pages.degree.index', compact('degreeManagePermission'));
     }
     public function fetchData()
     {

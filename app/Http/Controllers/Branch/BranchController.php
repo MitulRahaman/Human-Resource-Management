@@ -10,7 +10,6 @@ use App\Http\Requests\BranchUpdateRequest;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\DB;
 use App\Traits\AuthorizationTrait;
 
 class BranchController extends Controller

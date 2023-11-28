@@ -8,9 +8,11 @@ use App\Http\Requests\BankEditRequest;
 use App\Services\BankService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use App\Traits\AuthorizationTrait;
 
 class BankController extends Controller
 {
+    use AuthorizationTrait;
     private $bankService;
     public function __construct(BankService $bankService)
     {
@@ -20,7 +22,8 @@ class BankController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.bank.index');
+        $bankManagePermission = $this->setId(auth()->user()->id)->bankManagePermission();
+        return \view('backend.pages.bank.index', compact('bankManagePermission'));
     }
     public function fetchData()
     {

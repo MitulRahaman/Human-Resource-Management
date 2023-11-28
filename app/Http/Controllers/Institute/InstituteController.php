@@ -8,9 +8,11 @@ use App\Http\Requests\InstituteEditRequest;
 use App\Services\InstituteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use App\Traits\AuthorizationTrait;
 
 class InstituteController extends Controller
 {
+    use AuthorizationTrait;
     private $instituteService;
     public function __construct(InstituteService $instituteService)
     {
@@ -20,7 +22,8 @@ class InstituteController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.institute.index');
+        $institutionManagePermission = $this->setId(auth()->user()->id)->institutionManagePermission();
+        return \view('backend.pages.institute.index', compact('institutionManagePermission'));
     }
     public function fetchData()
     {

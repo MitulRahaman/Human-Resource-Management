@@ -28,6 +28,7 @@
     </style>
 @endsection
 @section('page_action')
+    @if ($degreeManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('degree/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -35,6 +36,7 @@
             </button>
         </a>
     </div>
+    @endif
 @endsection
 @section('content')
     <div class="content">
@@ -54,7 +56,9 @@
                                 <th class="d-none d-sm-table-cell " style="width: 20%;">Description</th>
                                 <th >Deleted</th>
                                 <th >Created At</th>
+                                @if ($degreeManagePermission)
                                 <th >Action</th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>

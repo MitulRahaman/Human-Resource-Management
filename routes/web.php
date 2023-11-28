@@ -167,6 +167,31 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/{id}/delete', [RoleController::class, 'delete']);
         Route::post('/{id}/restore', [RoleController::class, 'restore']);
     });
+    Route::prefix('institute')->group(function() {
+        Route::get('/', [InstituteController::class, 'index']);
+        Route::get('/get_institute_data', [InstituteController::class, 'fetchData']);
+        Route::get('/add', [InstituteController::class, 'create']);
+        Route::post('/validate_inputs', [InstituteController::class, 'validate_inputs']);
+        Route::post('/store', [InstituteController::class, 'store']);
+        Route::get('/{institute}/edit', [InstituteController::class, 'edit'])->name('edit_institute');
+        Route::post('/{id}/update', [InstituteController::class, 'update']);
+        Route::post('/{id}/validate_name',[InstituteController::class, 'validate_name']);
+        Route::post('/{id}/delete', [InstituteController::class, 'delete']);
+        Route::post('/{id}/restore', [InstituteController::class, 'restore']);
+        Route::post('/{id}/change_status', [InstituteController::class, 'changeStatus']);
+    });
+    Route::prefix('degree')->group(function() {
+        Route::get('/', [DegreeController::class, 'index']);
+        Route::get('/get_degree_data', [DegreeController::class, 'fetchData']);
+        Route::get('/add', [DegreeController::class, 'create']);
+        Route::post('/validate_inputs', [DegreeController::class, 'validate_inputs']);
+        Route::post('/store', [DegreeController::class, 'store']);
+        Route::get('/{degree}/edit', [DegreeController::class, 'edit'])->name('edit_degree');
+        Route::post('/{id}/update', [DegreeController::class, 'update']);
+        Route::post('/{id}/validate_name',[DegreeController::class, 'validate_name']);
+        Route::post('/{id}/delete', [DegreeController::class, 'delete']);
+        Route::post('/{id}/restore', [DegreeController::class, 'restore']);
+    });
 
 
     
@@ -197,31 +222,8 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
             Route::post('/{id}/update', [MenuController::class, 'update']);
         });
-        Route::prefix('degree')->group(function() {
-            Route::get('/', [DegreeController::class, 'index']);
-            Route::get('/get_degree_data', [DegreeController::class, 'fetchData']);
-            Route::get('/add', [DegreeController::class, 'create']);
-            Route::post('/validate_inputs', [DegreeController::class, 'validate_inputs']);
-            Route::post('/store', [DegreeController::class, 'store']);
-            Route::get('/{degree}/edit', [DegreeController::class, 'edit'])->name('edit_degree');
-            Route::post('/{id}/update', [DegreeController::class, 'update']);
-            Route::post('/{id}/validate_name',[DegreeController::class, 'validate_name']);
-            Route::post('/{id}/delete', [DegreeController::class, 'delete']);
-            Route::post('/{id}/restore', [DegreeController::class, 'restore']);
-        });
-        Route::prefix('institute')->group(function() {
-            Route::get('/', [InstituteController::class, 'index']);
-            Route::get('/get_institute_data', [InstituteController::class, 'fetchData']);
-            Route::get('/add', [InstituteController::class, 'create']);
-            Route::post('/validate_inputs', [InstituteController::class, 'validate_inputs']);
-            Route::post('/store', [InstituteController::class, 'store']);
-            Route::get('/{institute}/edit', [InstituteController::class, 'edit'])->name('edit_institute');
-            Route::post('/{id}/update', [InstituteController::class, 'update']);
-            Route::post('/{id}/validate_name',[InstituteController::class, 'validate_name']);
-            Route::post('/{id}/delete', [InstituteController::class, 'delete']);
-            Route::post('/{id}/restore', [InstituteController::class, 'restore']);
-            Route::post('/{id}/change_status', [InstituteController::class, 'changeStatus']);
-        });
+        
+        
         Route::prefix('assetsType')->group(function() {
             Route::get('/', [AssetController::class, 'assetTypeIndex']);
             Route::get('/get_asset_type_data', [AssetController::class, 'fetchDataAssetType']);

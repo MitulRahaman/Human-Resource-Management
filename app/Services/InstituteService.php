@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\InstituteRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class InstituteService
 {
+    use AuthorizationTrait;
     private $instituteRepository;
 
     public function __construct(InstituteRepository $instituteRepository)
@@ -84,6 +86,7 @@ class InstituteService
     public function fetchData()
     {
         $result = $this->instituteRepository->getAllInstituteData();
+        $hasInstitutionManagePermission = $this->setId(auth()->user()->id)->institutionManagePermission();
         if ($result->count() > 0) {
             $data = array();
 
@@ -130,9 +133,10 @@ class InstituteService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasInstitutionManagePermission){
+                    array_push($temp, $action_btn);
+                }
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

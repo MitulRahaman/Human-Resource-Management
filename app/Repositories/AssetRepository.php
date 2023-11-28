@@ -99,9 +99,6 @@ class AssetRepository
     }
     public function getAsset($id)
     {
-        $asset = Asset::onlyTrashed()->find($id);
-        if($asset)
-            return "Restore first";
         $asset = DB::table('assets as a')
             ->where('a.id','=', $id)
             ->leftJoin('asset_images as ai', 'a.id', '=', 'ai.asset_id')
@@ -227,10 +224,7 @@ class AssetRepository
     }
     public function getAssetType($id)
     {
-        $asset_type = AssetType::onlyTrashed()->find($id);
-        if($asset_type)
-            return "Restore first";
-        return AssetType::findOrFail($id);
+        return DB::table('asset_types')->where('id',$id)->first();
     }
     public function isNameUnique($id)
     {

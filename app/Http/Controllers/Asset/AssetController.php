@@ -51,8 +51,8 @@ class AssetController extends Controller
     {
         View::share('sub_menu', 'Manage Assets');
         $asset = $this->assetService->getAsset($id);
-        if($asset=="Restore first")
-            return redirect()->back()->with('error', $asset);
+        if($asset && !is_null($asset->deleted_at))
+            return redirect()->back()->with('error', 'Restore first');
         $asset_type = $this->assetService->getAllAssetTypeData();
         $branches = $this->assetService->getAllBranches();
         return \view('backend.pages.asset.edit',compact('asset', 'asset_type', 'branches'));
@@ -118,7 +118,12 @@ class AssetController extends Controller
     }
     public function validate_inputs_asset_type(Request $request)
     {
-        return $this->assetService->validate_inputs_asset_type($request->all());
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+        if($validator)
+            return $this->assetService->validate_inputs_asset_type($request->all());
+        return redirect()->back()->with('error', 'Name is Required to validate');
     }
     public function storeAssetType(AssetTypeAddRequest $request)
     {
@@ -137,13 +142,18 @@ class AssetController extends Controller
     {
         View::share('sub_menu', 'Assets Type');
         $asset_type = $this->assetService->getAssetType($id);
-        if($asset_type=="Restore first")
-            return redirect()->back()->with('error', $asset_type);
+        if($asset_type && !is_null($asset_type->deleted_at))
+            return redirect()->back()->with('error', 'Restore first');
         return \view('backend.pages.asset.editAssetType',compact('asset_type'));
     }
     public function validate_name_asset_type(Request $request, $id)
     {
-        return $this->assetService->validate_name_asset_type($request->all(),$id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+        if($validator)
+            return $this->assetService->validate_name_asset_type($request->all(),$id);
+        return redirect()->back()->with('error', 'Name is Required to validate');
     }
     public function update_asset_type(AssetTypeEditRequest $request)
     {

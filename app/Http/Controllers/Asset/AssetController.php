@@ -18,11 +18,11 @@ class AssetController extends Controller
     {
         $this->assetService = $assetService;
         View::share('main_menu', 'System Settings');
-        View::share('sub_menu', 'Assets Type');
     }
 //    =============================start asset======================
     public function index()
     {
+        View::share('sub_menu', 'Manage Assets');
         return \view('backend.pages.asset.index');
     }
     public function fetchData()
@@ -31,6 +31,7 @@ class AssetController extends Controller
     }
     public function create()
     {
+        View::share('sub_menu', 'Add Asset');
         $asset_type = $this->assetService->getAllAssetTypeData();
         $branches = $this->assetService->getAllBranches();
         return \view('backend.pages.asset.create', compact('asset_type', 'branches'));
@@ -48,6 +49,7 @@ class AssetController extends Controller
     }
     public function edit($id )
     {
+        View::share('sub_menu', 'Manage Assets');
         $asset = $this->assetService->getAsset($id);
         if($asset=="Restore first")
             return redirect()->back()->with('error', $asset);
@@ -102,6 +104,7 @@ class AssetController extends Controller
 //    =============================start asset type======================
     public function assetTypeIndex()
     {
+        View::share('sub_menu', 'Assets Type');
         return \view('backend.pages.asset.assetTypeIndex');
     }
     public function fetchDataAssetType()
@@ -110,6 +113,7 @@ class AssetController extends Controller
     }
     public function createAssetType()
     {
+        View::share('sub_menu', 'Assets Type');
         return \view('backend.pages.asset.createAssetType');
     }
     public function validate_inputs_asset_type(Request $request)
@@ -131,6 +135,7 @@ class AssetController extends Controller
     }
     public function edit_asset_type($id )
     {
+        View::share('sub_menu', 'Assets Type');
         $asset_type = $this->assetService->getAssetType($id);
         if($asset_type=="Restore first")
             return redirect()->back()->with('error', $asset_type);

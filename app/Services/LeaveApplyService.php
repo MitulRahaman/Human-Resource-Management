@@ -7,43 +7,41 @@ use App\Mail\LeaveApplicationMail;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class LeaveApplyService
 {
+    use AuthorizationTrait;
     private $leaveApplyRepository;
 
     public function __construct(LeaveApplyRepository $leaveApplyRepository)
     {
         $this->leaveApplyRepository = $leaveApplyRepository;
     }
-
     public function getLeaveTypes()
     {
-        return $this->leaveApplyRepository->getLeaveTypes();
+        return $this->leaveApplyRepository->getLeaveTypes($id = null);
     }
-
     public function storeLeaves($data)
     {
         return $this->leaveApplyRepository->storeLeaves($data);
     }
-
     public function editLeave($id)
     {
         return $this->leaveApplyRepository->setId($id)->getLeaveInfo();
     }
-
     public function updateLeave($data, $id)
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
-
     public function LeaveApplicationEmail($data)
     {
-        $receiver = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipent();
-        if(!$receiver) {
+        $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
+        $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
+        if(!$receivers) {
             return false;
         }
-        Mail::to($receiver)->send(new LeaveApplicationMail($data));
+        Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
         return true;
     }
     public function approveLeave($data, $id)
@@ -66,7 +64,7 @@ class LeaveApplyService
     {
         $result = $this->leaveApplyRepository->getTableData();
         $userId= auth()->user()->id;
-        $userDesignation = $this->leaveApplyRepository->getUserDesignation($userId);
+        $hasManageLeavePermission = $this->setId($userId)->manageLeaveAuthorization();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -101,7 +99,7 @@ class LeaveApplyService
 
                 $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\")'>Reject</a>";
-                if($userDesignation==Config::get('variable_constants.designation.super_user') || $userDesignation==Config::get('variable_constants.designation.hr'))
+                if($hasManageLeavePermission)
                 {
                     if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {

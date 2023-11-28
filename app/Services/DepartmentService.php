@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\DepartmentRepository;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 
 class DepartmentService
 {

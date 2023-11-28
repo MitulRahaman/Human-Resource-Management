@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\BankRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class BankService
 {
+    use AuthorizationTrait;
     private $bankRepository;
 
     public function __construct(BankRepository $bankRepository)
@@ -79,6 +81,7 @@ class BankService
     public function fetchData()
     {
         $result = $this->bankRepository->getAllBankData();
+        $hasBankManagePermission = $this->setId(auth()->user()->id)->bankManagePermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -114,9 +117,10 @@ class BankService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasBankManagePermission) {
+                    array_push($temp, $action_btn);
+                }
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

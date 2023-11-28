@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\LeaveRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class LeaveService
 {
+    use AuthorizationTrait;
     private $leaveRepository;
 
     public function __construct(LeaveRepository $leaveRepository)
@@ -103,6 +105,7 @@ class LeaveService
     public function getTypeWiseTotalLeavesData($year)
     {
         $result = $this->leaveRepository->setYear($year)->getTypeWiseTotalLeavesData();
+        $hasManageLeavePermission = $this->setId(auth()->user()->id)->manageLeaveAuthorization();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -137,7 +140,9 @@ class LeaveService
                 array_push($temp, $name);
                 array_push($temp, $year);
                 array_push($temp, $total_leaves);
-                array_push($temp, $action_btn);
+                if($hasManageLeavePermission) {
+                    array_push($temp, $action_btn);
+                }
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

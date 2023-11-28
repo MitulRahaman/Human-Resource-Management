@@ -8,9 +8,11 @@ use App\Services\RoleService;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\RoleAddRequest;
 use App\Http\Requests\RoleEditRequest;
+use App\Traits\AuthorizationTrait;
 
 class RoleController extends Controller
 {
+    use AuthorizationTrait;
     private $roleService;
 
     public function __construct(RoleService $roleService)
@@ -21,7 +23,8 @@ class RoleController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.role.index');
+        $roleManagePermission = $this->setId(auth()->user()->id)->roleManagePermission();
+        return \view('backend.pages.role.index', compact('roleManagePermission'));
     }
     public function fetchData()
     {

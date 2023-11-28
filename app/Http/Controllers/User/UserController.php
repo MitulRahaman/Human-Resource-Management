@@ -13,10 +13,12 @@ use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\AuthorizationTrait;
 
 
 class UserController extends Controller
 {
+    use AuthorizationTrait;
     private $userService, $departmentService, $designationService, $roleService;
 
     public function __construct(UserService $userService, DepartmentService $departmentService, DesignationService $designationService, RoleService $roleService)
@@ -45,8 +47,9 @@ class UserController extends Controller
 
     public function manage()
     {
+        $userManagePermission = $this->setId(auth()->user()->id)->userManagePermission();
         View::share('sub_menu', 'Manage Users');
-        return view('backend.pages.user.manage');
+        return view('backend.pages.user.manage', compact('userManagePermission'));
     }
 
     public function getDeptDesg(Request $request)

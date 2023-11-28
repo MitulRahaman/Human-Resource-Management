@@ -12,7 +12,8 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
-        "nesbot/carbon": "^2.71"
+        "nesbot/carbon": "^2.71",
+        "phpmailer/phpmailer": "^6.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

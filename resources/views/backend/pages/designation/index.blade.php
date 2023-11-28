@@ -29,6 +29,7 @@
     </style>
 @endsection
 @section('page_action')
+    @if ($designationManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('designation/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -36,6 +37,7 @@
             </button>
         </a>
     </div>
+    @endif
 @endsection
 @section('content')
 
@@ -61,7 +63,9 @@
                             <th >Department</th>
                             <th >Deleted</th>
                             <th >Created At</th>
+                            @if ($designationManagePermission)
                             <th >Action</th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody>

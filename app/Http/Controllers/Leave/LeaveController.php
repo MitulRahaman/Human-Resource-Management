@@ -10,9 +10,11 @@ use App\Http\Requests\LeaveTypeUpdateRequest;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use App\Services\LeaveService;
+use App\Traits\AuthorizationTrait;
 
 class LeaveController extends Controller
 {
+    use AuthorizationTrait;
     private $leaveService;
 
     public function __construct(LeaveService $leaveService)
@@ -24,7 +26,8 @@ class LeaveController extends Controller
 
     public function index()
     {
-        return \view('backend.pages.leave.index');
+        $manageLeavePermission = $this->setId(auth()->user()->id)->manageLeaveAuthorization();
+        return \view('backend.pages.leave.index', compact('manageLeavePermission'));
     }
 
     public function create()

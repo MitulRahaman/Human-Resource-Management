@@ -8,11 +8,15 @@ use App\Http\Requests\LeaveApplyAddRequest;
 use App\Http\Requests\LeaveApplyUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\LeaveApplyService;
+use PHPMailer\PHPMailer\PHPMailer;  
+use PHPMailer\PHPMailer\Exception;
+use App\Traits\AuthorizationTrait;
 use Illuminate\Support\Facades\Validator;
 
 
 class LeaveApplyController extends Controller
 {
+    use AuthorizationTrait;
     private $leaveApplyService;
 
     public function __construct(LeaveApplyService $leaveApplyService)
@@ -86,15 +90,15 @@ class LeaveApplyController extends Controller
     public function store(LeaveApplyAddRequest $request)
     {
         try {
-            $response = $this->leaveApplyService->storeLeaves($request);
+            $response = $this->leaveApplyService->LeaveApplicationEmail($request);
             if($response) {
-                if($this->leaveApplyService->LeaveApplicationEmail($request)) {
+                if($this->leaveApplyService->storeLeaves($request)) {
                     return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
                 } else {
-                    return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
+                    return redirect('leaveApply/apply')->with('error', $response);
                 }
             } else {
-                return redirect('leaveApply/apply')->with('error', $response);
+                return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
             }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());

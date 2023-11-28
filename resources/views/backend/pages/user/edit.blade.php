@@ -90,18 +90,16 @@
                                     <span id="error_preferred_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-suggestions">Line manager<span class="text-danger">*</span></label>
+                                    <label for="val-suggestions">Line manager</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="line_manager" name="line_manager[]" style="width: 100%;" data-placeholder="Choose line manager for the user.." multiple required>
+                                        <select class="js-select2 form-control" id="line_manager" name="line_manager[]" style="width: 100%;" data-placeholder="Choose line manager for the user.." multiple>
                                             <option></option>
                                             @foreach ($allUsers as $users)
 
                                                 <option value='{{ $users->id }}' {{$line_managers->contains('line_manager_user_id', $users->id)? 'selected':''}}> {{ $users->full_name }} </option>
 
                                             @endforeach
-
                                         </select>
-
                                     </div>
                                 </div>
                                 <div class="form-group">

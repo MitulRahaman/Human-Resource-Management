@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Select Leave date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control bg-white" id="date-range" name="date-range" data-mode="range" data-date-format="d-m-Y" data-min-date="today" value="{{ date('d-m-Y', strtotime($leave->start_date)) }} to {{ date('d-m-Y', strtotime($leave->end_date)) }}" required>
+                                    <input type="text" class="js-flatpickr form-control bg-white" id="date-range" name="date-range" data-mode="range" data-date-format="d-m-Y" value="{{ date('d-m-Y', strtotime($leave->start_date)) }} to {{ date('d-m-Y', strtotime($leave->end_date)) }}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>

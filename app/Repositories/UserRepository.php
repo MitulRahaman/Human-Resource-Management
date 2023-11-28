@@ -57,6 +57,11 @@ class UserRepository
         $this->roleId = $roleId;
         return $this;
     }
+    public function setFile($file)
+    {
+        $this->file = $file;
+        return $this;
+    }
     public function setFatherName($father_name){
         $this->father_name = $father_name;
         return $this;
@@ -290,7 +295,7 @@ class UserRepository
         ->get();
     }
 
-    public function storeUser($data, $fileName)
+    public function storeUser($data, $formattedPhone)
     {
         DB::beginTransaction();
             $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
@@ -317,9 +322,9 @@ class UserRepository
                 'full_name' => $data->full_name,
                 'nick_name' => $data->nick_name,
                 'email' => $data->preferred_email,
-                'phone_number' => $data->phone,
+                'phone_number' => $formattedPhone,
                 'password' => Hash::make("welcome"),
-                'image' => $fileName,
+                'image' => $this->file,
                 'is_super_user' => 0,
                 'is_registration_complete' => 0,
                 'is_password_changed' => 0,
@@ -338,13 +343,15 @@ class UserRepository
                 'career_start_date' => $formattedCareerStartDate,
                 'last_organization_id' => $organization_id
             ]);
-            foreach ($data['line_manager'] as $line_manager)
-            {
+            if($data->line_manager) {
+                foreach ($data['line_manager'] as $line_manager) {
                     LineManager::create([
                         'user_id'=>$create_user->id,
                         'line_manager_user_id' => $line_manager,
                     ]);
+                }
             }
+            
             DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -366,7 +373,7 @@ class UserRepository
             ->get();
     }
 
-    public function updateUser($data, $id, $fileName)
+    public function updateUser($data, $formattedPhone)
     {
         $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
         if ($data->career_start_date == null) {
@@ -374,62 +381,63 @@ class UserRepository
         } else {
             $formattedCareerStartDate = date("Y-m-d", strtotime($data->career_start_date));
         }
-        
         try {
             DB::beginTransaction();
         
-            $user = User::find($id);
-            if($fileName == null)
-                $fileName = $user->image;
+            $user = User::find($this->id);
+            if($this->file == null)
+                $this->file = $user->image;
 
-            DB::table('users')->where('id', $id)->update([
+            DB::table('users')->where('id', $this->id)->update([
                 'full_name' => $data->full_name,
                 'nick_name' => $data->nick_name,
                 'email' => $data->preferred_email,
-                'phone_number' => $data->phone,
+                'phone_number' => $formattedPhone,
                 'password' => Hash::make("welcome"),
-                'image' => $fileName,
+                'image' => $this->file,
                 'is_super_user' => 0,
                 'is_registration_complete' => 0,
                 'is_password_changed' => 0,
                 'is_onboarding_complete' => 0,
                 'status' => 1
             ]);
-            LineManager::where('user_id',$id)->delete();
-            foreach ($data['line_manager'] as $line_manager)
-            {
-                LineManager::create([
-                    'user_id'=>$id,
-                    'line_manager_user_id' => $line_manager,
-                ]);
+            if($data->line_manager) {
+                LineManager::where('user_id',$this->id)->delete();
+                foreach ($data['line_manager'] as $line_manager) {
+                    LineManager::create([
+                        'user_id'=>$this->id,
+                        'line_manager_user_id' => $line_manager,
+                    ]);
+                }
             }
+            
             if($data->organizationName!= null && !is_numeric($data->organizationName)) {
                 $create_org = Organization::create([
                     'name' => $data->organizationName
                 ]);
-                DB::table('basic_info')->where('user_id', $id)->update([
+                DB::table('basic_info')->where('user_id', $this->id)->update([
                     'branch_id' => $data->branchId,
                     'department_id' => $data->departmentId,
                     'designation_id' => $data->designationId,
                     'role_id' => $data->roleId,
                     'personal_email' => $data->personal_email,
                     'preferred_email' => $data->preferred_email,
-                    'joining_date' => $data->joining_date,
-                    'career_start_date' => $data->career_start_date,
+                    'joining_date' => $data->formattedJoiningDate,
+                    'career_start_date' => $formattedCareerStartDate,
                     'last_organization_id' => $create_org->id
                 ]);
                 DB::commit();
                 return true;
             } else {
-                DB::table('basic_info')->where('user_id', $id)->update([
+                DB::table('basic_info')->where('user_id', $this->id)->update([
                     'branch_id' => $data->branchId,
                     'department_id' => $data->departmentId,
                     'designation_id' => $data->designationId,
                     'role_id' => $data->roleId,
                     'personal_email' => $data->personal_email,
                     'preferred_email' => $data->preferred_email,
-                    'joining_date' => $data->joining_date,
-                    'career_start_date' => $data->career_start_date,
+                    'joining_date' => $formattedJoiningDate,
+                    'career_start_date' => $formattedCareerStartDate,
                     'last_organization_id' => $data->organizationName
                 ]);
                 DB::commit();

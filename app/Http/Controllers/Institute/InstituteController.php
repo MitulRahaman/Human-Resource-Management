@@ -54,7 +54,7 @@ class InstituteController extends Controller
             return redirect()->back()->with('error', $institute_info);
         return \view('backend.pages.institute.edit',compact('institute_info'));
     }
-    public function validate_name(Request $request, int $id)
+    public function validate_name(Request $request, $id)
     {
         return $this->instituteService->validateName($request->all(),$id);
     }
@@ -65,7 +65,7 @@ class InstituteController extends Controller
                 return redirect('institute/')->with('success', "Institute updated successfully.");
             return redirect('institute/')->with('success', "Institute not updated.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Institute could not be updated.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
     }
     public function delete($id)
@@ -75,7 +75,7 @@ class InstituteController extends Controller
                 return redirect('institute/')->with('success', "Institute deleted successfully.");
             return redirect('institute/')->with('error', "Institute not deleted.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Institute could not be deleted.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
     }
     public function restore($id)
@@ -85,7 +85,7 @@ class InstituteController extends Controller
                 return redirect('institute/')->with('success', "Institute restored successfully.");
             return redirect('institute/')->with('success', "Institute not restored.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Institute could not be restored.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
     }
     public function changeStatus($id)
@@ -95,7 +95,7 @@ class InstituteController extends Controller
                 return redirect('institute/')->with('success', "Institute status changed successfully.");
             return redirect('institute/')->with('error', "Institute status not changed.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Institute status could not be changed.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
     }
 }

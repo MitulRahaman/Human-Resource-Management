@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Models\Bank;
 use App\Models\Institute;
 use Illuminate\Support\Facades\DB;
 

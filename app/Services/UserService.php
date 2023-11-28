@@ -56,9 +56,8 @@ class UserService
         if($data['photo']) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
-            return $this->userRepository->setFile($fileName)->storeUser($data, $formattedPhone);
         }
-        return $this->userRepository->storeUser($data, $formattedPhone);
+        return $this->userRepository->setFile($fileName)->storeUser($data, $formattedPhone);
     }
 
     public function editUser($id)
@@ -75,7 +74,6 @@ class UserService
         if($data->hasFile('photo')) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
-            return $this->userRepository->setId($id)->setFile($fileName)->updateUser($data, $formattedPhone);
         }
         return $this->userRepository->setId($id)->setFile($fileName)->updateUser($data, $formattedPhone);
     }

@@ -22,8 +22,8 @@ class DegreeController extends Controller
     }
     public function index()
     {
-        $degreeManagePermission = $this->setId(auth()->user()->id)->degreeManagePermission();
-        return \view('backend.pages.degree.index', compact('degreeManagePermission'));
+        $hasDegreeManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDegree')->checkAuthorization();
+        return \view('backend.pages.degree.index', compact('hasDegreeManagePermission'));
     }
     public function fetchData()
     {

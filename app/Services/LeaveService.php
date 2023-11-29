@@ -105,36 +105,36 @@ class LeaveService
     public function getTypeWiseTotalLeavesData($year)
     {
         $result = $this->leaveRepository->setYear($year)->getTypeWiseTotalLeavesData();
-        $hasManageLeavePermission = $this->setId(auth()->user()->id)->manageLeaveAuthorization();
+        $hasManageLeavePermission = $this->setId(auth()->user()->id)->setSlug('manageLeaves')->checkAuthorization();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name = $row->name;
                 $total_leaves = $row->total_leaves;
-                
-                $currentYear = date("Y"); 
-                
+
+                $currentYear = date("Y");
+
                 if($year >= $currentYear) {
                     if ($total_leaves > 0) {
-                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\"> 
+                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\">
                         <i class=\"fas fa-edit text-success mr-1\"></i>Update</td>";
-                        
+
                     } else {
-                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\"> 
+                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\">
                         <i class=\"fas fa-plus text-success mr-1\"></i>Add</td>";
                     }
                 } else {
                     if ($total_leaves > 0) {
-                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\"disabled=\"true\"> 
+                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\"disabled=\"true\">
                         <i class=\"fas fa-edit text-success mr-1\"></i>Update</td>";
-                        
+
                     } else {
-                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\"disabled=\"true\"> 
+                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\"disabled=\"true\">
                         <i class=\"fas fa-plus text-success mr-1\"></i>Add</td>";
                     }
                 }
-                
+
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $name);
@@ -159,6 +159,6 @@ class LeaveService
     public function addTotalLeave($data, $id)
     {
         $is_type_and_year_exist = $this->leaveRepository->setUpdateYear($data->updateYear)->setTotalLeave($data->totalLeave)->isTypeAndYearExist($data, $id);
-        return $this->leaveRepository->addTotalLeave($is_type_and_year_exist, $data, $id); 
+        return $this->leaveRepository->addTotalLeave($is_type_and_year_exist, $data, $id);
     }
  }

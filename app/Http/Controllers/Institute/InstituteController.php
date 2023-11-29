@@ -22,8 +22,8 @@ class InstituteController extends Controller
     }
     public function index()
     {
-        $institutionManagePermission = $this->setId(auth()->user()->id)->institutionManagePermission();
-        return \view('backend.pages.institute.index', compact('institutionManagePermission'));
+        $hasInstitutionManagePermission = $this->setId(auth()->user()->id)->setSLug('manageInstitution')->checkAuthorization();
+        return \view('backend.pages.institute.index', compact('hasInstitutionManagePermission'));
     }
     public function fetchData()
     {

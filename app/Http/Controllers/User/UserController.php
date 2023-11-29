@@ -47,9 +47,9 @@ class UserController extends Controller
 
     public function manage()
     {
-        $userManagePermission = $this->setId(auth()->user()->id)->userManagePermission();
+        $hasUserManagePermission = $this->setId(auth()->user()->id)->setSlug('manageUsers')->checkAuthorization();
         View::share('sub_menu', 'Manage Users');
-        return view('backend.pages.user.manage', compact('userManagePermission'));
+        return view('backend.pages.user.manage', compact('hasUserManagePermission'));
     }
 
     public function getDeptDesg(Request $request)
@@ -70,7 +70,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-    
+
     public function editBasicInfo($id)
     {
         View::share('sub_menu', 'Manage Users');
@@ -147,7 +147,7 @@ class UserController extends Controller
         }
     }
 
-    
+
 
     // -----basic info part-----
 

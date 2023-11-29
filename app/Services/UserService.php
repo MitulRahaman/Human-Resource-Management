@@ -152,6 +152,8 @@ class UserService
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $profile_edit_url = url('user/profile/'.$id.'/edit');
                 $profile_edit_btn= "<a class=\"dropdown-item\" href=\"$profile_edit_url\">Edit Full Profile</a>";
+                $distribute_asset_url = url('user/'.$id.'/distribute_asset');
+                $distribute_asset_url_btn= "<a class=\"dropdown-item\" href=\"$distribute_asset_url\">Distribute asset</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {
                     $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a>";
@@ -170,6 +172,8 @@ class UserService
                     $action_btn .="$profile_edit_btn ";
                 elseif ($this->userRepository->isSuperUser(Auth::id()))
                     $action_btn .="$profile_edit_btn ";
+                if(!$this->userRepository->isAssetDistributed($id) || $this->userRepository->requisitionRequest())
+                    $action_btn .="$distribute_asset_url_btn ";
                 $action_btn .=" $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</div>
                                     </div>
@@ -403,5 +407,16 @@ class UserService
     public function getAvailableLeave($id)
     {
         return $this->userRepository->getAvailableLeave($id);
+    }
+    public function getAllAssets()
+    {
+        return $this->userRepository->getAllAssets();
+    }
+    public function updateDistributeAsset($data)
+    {
+        return $this->userRepository->setId($data['user_id'])
+            ->setAssets($data['assets'])
+            ->setCreatedAt(date('Y-m-d H:i:s'))
+            ->updateDistributeAsset();
     }
 }

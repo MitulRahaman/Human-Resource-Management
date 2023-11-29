@@ -49,7 +49,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Sl_no </label>
-                                    <input type="text" class="form-control" id="sl_no" name="sl_no" @if($asset->sl_no) value="{{$asset->sl_no}}" @endif  placeholder="Enter a sl_no.." >
+                                    <input type="number" class="form-control" id="sl_no" name="sl_no" @if($asset->sl_no) value="{{$asset->sl_no}}" @endif  placeholder="Enter a sl_no.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Branch<span class="text-danger">*</span></label>

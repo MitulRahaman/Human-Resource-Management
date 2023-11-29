@@ -10,6 +10,7 @@ use App\Services\AssetService;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\AssetTypeAddRequest;
 use App\Http\Requests\AssetTypeEditRequest;
+use Illuminate\Support\Facades\Validator;
 
 class AssetController extends Controller
 {

@@ -87,8 +87,8 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="approve_requisition"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" required>
+                                        <p class="text-center"> You want to approve <span id="approve_requisition"></span>, are you sure?</p>
+                                        <input type="hidden" name="remarks" id="remarks" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -114,8 +114,8 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="reject_requisition"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" required>
+                                        <p class="text-center"> You want to reject <span id="reject_requisition"></span>, are you sure?</p>
+                                        <input type="hidden" name="remarks" id="remarks" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -166,7 +166,7 @@
                         text: 'CSV',
                         className: 'button' ,
                         exportOptions:  {
-                            columns: [0, 1,2,3,4,5,6,7,8,9]
+                            columns: [0, 1,2,3,4,5,6,7]
                         },
                         title: "Requisition Table"
 
@@ -176,7 +176,7 @@
                         text: 'Print',
                         className: 'button' ,
                         exportOptions:  {
-                            columns: [0, 1,2,3,4,5,6,7,8,9]
+                            columns: [0, 1,2,3,4,5,6,7]
                         },
                         title: "Requisition Table"
                     },

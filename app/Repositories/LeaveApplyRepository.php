@@ -33,7 +33,7 @@ class LeaveApplyRepository
         } else {
             return LeaveType::where('id', '=', $id)->first()->name;
         }
-            
+
     }
     public function getUserDesignation($id)
     {
@@ -50,7 +50,7 @@ class LeaveApplyRepository
     {
         $userId = auth()->user()->id;
         $userDesignation = $this->getUserDesignation($userId);
-        $isHrSuperUser = $this->setId($userId)->manageLeaveAuthorization();
+        $isHrSuperUser = $this->setId($userId)->setSlug('manageLeaves')->checkAuthorization();
             return DB::table('leaves as l')
                 ->leftJoin('leave_types as lt', function ($join) {
                     $join->on('l.leave_type_id', '=', 'lt.id');
@@ -65,11 +65,11 @@ class LeaveApplyRepository
     }
     public function getLeaveAppliedEmailRecipient()
     {
-        $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first(); 
+        $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
         if($appliedUser == null ) {
             return false;
         }
-        
+
         $getLineManagers  = DB::table('users as u')
         ->leftJoin('line_managers as lm', function ($join) {
             $join->on('u.id', '=', 'lm.user_id')
@@ -105,7 +105,7 @@ class LeaveApplyRepository
             return false;
         }
         return [$lineManagerEmail, $recipientEmail];
-    } 
+    }
 
     public function storeLeaves($data)
     {
@@ -172,4 +172,4 @@ class LeaveApplyRepository
         return DB::table('leaves')->where('id', $id)->delete();
     }
 }
-    
+

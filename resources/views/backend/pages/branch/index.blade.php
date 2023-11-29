@@ -8,7 +8,7 @@
 
 @endsection
 @section('page_action')
-    @if ($branchManagePermission)
+    @if ($hasBranchManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('branch/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -35,7 +35,7 @@
                                 <th>Status</th>
                                 <th>Deleted?</th>
                                 <th class="d-none d-sm-table-cell" style="width: 50%;">Address</th>
-                                @if ($branchManagePermission)
+                                @if ($hasBranchManagePermission)
                                 <th class="d-none d-sm-table-cell" style="width: 20%;">Action</th>
                                 @endif
                             </tr>
@@ -50,7 +50,7 @@
                                     </td>
                                     <td class="font-w600 font-size-sm">
                                         @if ($branch->status == Config::get('variable_constants.activation.active') && $branch->deleted_at == null)
-                                            @if ($branchManagePermission)
+                                            @if ($hasBranchManagePermission)
                                             <a href="{{ route('branch.status', $branch->id) }}">
                                                 <span class="badge badge-success">Active</span>
                                             </a>
@@ -58,7 +58,7 @@
                                                 <span class="badge badge-success">Active</span>
                                             @endif
                                         @else
-                                            @if ($branchManagePermission)
+                                            @if ($hasBranchManagePermission)
                                             <a href="{{ route('branch.status', $branch->id) }}">
                                                 <span class="badge badge-warning">Inactive</span>
                                             </a>
@@ -75,7 +75,7 @@
                                     <td class="d-none d-sm-table-cell font-size-sm">
                                     {{$branch->address}}<em class="text-muted"></em>
                                     </td>
-                                    @if ($branchManagePermission)
+                                    @if ($hasBranchManagePermission)
                                     <td class="d-none d-sm-table-cell">
                                         <span class="badge">
                                             <div class="row">

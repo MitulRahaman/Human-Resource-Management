@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis2.css') }}">
 @endsection
 @section('page_action')
-    @if ($departmentManagePermission)
+    @if ($hasDepartmentManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('department/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -18,14 +18,14 @@
     @endif
 @endsection
 @section('content')
-        <div class="content"> 
+        <div class="content">
             <div class="block block-rounded">
             @include('backend.layouts.error_msg')
                 <div class="block-header">
                     <h3 class="block-title mt-4">{{ $sub_menu }}</h3>
                 </div>
                 <div class="block-content block-content-full">
-                        <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js --> 
+                        <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons" id="dataTable">
                         <thead>
                             <tr>
@@ -35,7 +35,7 @@
                                 <th>Deleted?</th>
                                 <th style="width: 20%;">Branches</th>
                                 <th class="d-none d-sm-table-cell" style="width: 50%;">Description</th>
-                                @if ($departmentManagePermission)
+                                @if ($hasDepartmentManagePermission)
                                 <th class="d-none d-sm-table-cell" style="width: 20%;">Action</th>
                                 @endif
                             </tr>
@@ -50,7 +50,7 @@
                                     </td>
                                     <td class="font-w600 font-size-sm">
                                         @if ($department->status == Config::get('variable_constants.activation.active') && $department->deleted_at == null)
-                                            @if ($departmentManagePermission)
+                                            @if ($hasDepartmentManagePermission)
                                             <a href="{{ route('department.status', $department->id) }}">
                                                 <span class="badge badge-success">Active</span>
                                             </a>
@@ -58,7 +58,7 @@
                                                 <span class="badge badge-success">Active</span>
                                             @endif
                                         @else
-                                            @if ($departmentManagePermission)
+                                            @if ($hasDepartmentManagePermission)
                                             <a href="{{ route('department.status', $department->id) }}">
                                                 <span class="badge badge-warning">Inactive</span>
                                             </a>
@@ -78,11 +78,11 @@
                                     <td class="d-none d-sm-table-cell font-size-sm">
                                     {{$department->description}}<em class="text-muted"></em>
                                     </td>
-                                    @if ($departmentManagePermission)
+                                    @if ($hasDepartmentManagePermission)
                                     <td class="d-none d-sm-table-cell">
                                         <span class="badge">
-                                            <div class="row"> 
-                                                <div class="col"> 
+                                            <div class="row">
+                                                <div class="col">
                                                     <a  class="btn btn-sm btn-light " href="#">
                                                         @if ($department->deleted_at)
                                                         <button type="button" class="border-0" data-toggle="modal" data-target="#modal-block-fromleft_{{$department->id}}"> <i class="fas fa-trash-restore text-warning mr-1"></i> Restore</button>
@@ -92,7 +92,7 @@
                                                     </a>
                                                 </div>
                                                 @if (!$department->deleted_at)
-                                                <div class="col"> 
+                                                <div class="col">
                                                     <a class="btn btn-sm btn-light" href="{{ route('department.edit', $department->id) }}">
                                                         <i class="fas fa-edit text-success mr-1"></i> Edit
                                                     </a>
@@ -110,7 +110,7 @@
                                             <div class="block block-rounded block-themed block-transparent mb-0">
                                                 <div class="block-header bg-primary-dark">
                                                     <div>
-                                                        <h3 class="block-title text-white">Warning</h3> 
+                                                        <h3 class="block-title text-white">Warning</h3>
                                                     </div>
                                                     <div class="block-options">
                                                         <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
@@ -123,7 +123,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('department.destroy', $department->id) }}" method="post"> 
+                                                    <form action ="{{ route('department.destroy', $department->id) }}" method="post">
                                                         @csrf
                                                         @method('delete')
                                                             <button type="submit" class="btn btn-primary">Ok</button>
@@ -141,7 +141,7 @@
                                             <div class="block block-rounded block-themed block-transparent mb-0">
                                                 <div class="block-header bg-primary-dark">
                                                     <div>
-                                                        <h3 class="block-title text-white">Warning</h3> 
+                                                        <h3 class="block-title text-white">Warning</h3>
                                                     </div>
                                                     <div class="block-options">
                                                         <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
@@ -154,7 +154,7 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between p-4 border-top">
                                                     <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                                    <form action ="{{ route('department.restore', $department->id) }}" method="post"> 
+                                                    <form action ="{{ route('department.restore', $department->id) }}" method="post">
                                                         @csrf
                                                             <button type="submit" class="btn btn-primary">Ok</button>
                                                     </form>
@@ -172,7 +172,7 @@
                 </div>
             </div>
         </div>
-   
+
 @endsection
 
 @section('js_after')

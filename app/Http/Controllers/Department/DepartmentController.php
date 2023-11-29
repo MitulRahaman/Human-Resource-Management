@@ -26,9 +26,9 @@ class DepartmentController extends Controller
 
     public function index()
     {
-        $departmentManagePermission = $this->setId(auth()->user()->id)->departmentManagePermission();
+        $hasDepartmentManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDepartments')->checkAuthorization();
         $departments = $this->departmentService->indexDepartment();
-        return \view('backend.pages.department.index', compact('departments', 'departmentManagePermission'));
+        return \view('backend.pages.department.index', compact('departments', 'hasDepartmentManagePermission'));
     }
 
     public function create()

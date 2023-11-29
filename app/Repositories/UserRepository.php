@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\AcademicInfo;
+use App\Models\Asset;
 use App\Models\Bank;
 use App\Models\BankingInfo;
 use App\Models\Degree;
@@ -30,11 +31,16 @@ class UserRepository
     private $name, $id, $father_name, $mother_name,$permanent_address, $present_address, $nid,$dob, $created_at, $updated_at, $birth_certificate,
         $passport_no, $gender, $religion, $blood_group, $marital_status, $no_of_children,$emergency_contact,$relation, $emergency_contact_name,
         $emergency_contact2,$relation2, $emergency_contact_name2, $institute_id ,$degree_id, $major, $gpa, $year, $bank_id, $account_name,
-        $account_number, $branch, $routing_number, $nominee_email, $nominee_phone_number, $nominee_relation, $nominee_nid, $nominee_name;
+        $account_number, $branch, $routing_number, $nominee_email, $nominee_phone_number, $nominee_relation, $nominee_nid, $nominee_name, $assets;
 
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+    public function setAssets($assets)
+    {
+        $this->assets = $assets;
         return $this;
     }
     public function setBranchId($branchId)
@@ -810,5 +816,49 @@ class UserRepository
         $used_leaves = DB::table('leaves')->where('user_id', $id)->where('status', Config::get('variable_constants.leave_status.approved'))->pluck('total')->toArray();
         $total_used = array_sum($used_leaves);
         return count($leaves)-$total_used;
+    }
+    public function getAllAssets()
+    {
+        return Asset::get();
+    }
+    public function updateDistributeAsset()
+    {
+        DB::beginTransaction();
+        try {
+            $branch_id = DB::table('basic_info')->where('user_id', $this->id)->select('branch_id')->first();
+            foreach ($this->assets as $asset_id)
+            {
+                DB::table('user_assets')
+                    ->insertGetId([
+                        'user_id' => $this->id,
+                        'asset_id' => $asset_id,
+                        'branch_id' => $branch_id->branch_id,
+                        'status' => Config::get('variable_constants.activation.active'),
+                        'created_at' => $this->created_at
+                    ]);
+            }
+            DB::table('users')->where('id',$this->id)
+                ->update(['is_asset_distributed'=>Config::get('variable_constants.check.yes')]);
+            if($this->requisitionRequest($this->id))
+                DB::table('requisition_requests')->where('user_id', $this->id)
+                    ->update('status',Config::get('variable_constants.status.distributed'));
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+    public function isAssetDistributed($id)
+    {
+        $user = User::where('id',$id)->select('is_asset_distributed')->first();
+        return $user->is_asset_distributed;
+    }
+    public function requisitionRequest($id)
+    {
+        $status = DB::table('requisition_requests')->where('user_id', $id)
+            ->where('status',Config::get('variable_constants.status.approved'))
+            ->first();
+        return $status;
     }
 }

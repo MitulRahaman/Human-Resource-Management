@@ -20,7 +20,7 @@ use App\Http\Controllers\Menu\MenuController;
 use App\Http\Controllers\Designation\DesignationController;
 use App\Http\Controllers\Calender\CalenderController;
 use App\Http\Controllers\Asset\AssetController;
-
+use App\Http\Controllers\Requisition\RequisitionController;
 
 
 /*
@@ -103,6 +103,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
         Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
         Route::delete('profile/{id}/delete_academic_info', [UserController::class, 'deleteAcademicInfo']);
+
+        Route::get('/{id}/distribute_asset', [UserController::class, 'distributeAsset']);
+        Route::post('/{id}/update_distribute_asset', [UserController::class, 'updateDistributeAsset']);
     });
     Route::prefix('leaveApply')->group(function() {
         Route::post('get_table_data', [LeaveApplyController::class, 'getTableData']);
@@ -192,7 +195,18 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/{id}/delete', [DegreeController::class, 'delete']);
         Route::post('/{id}/restore', [DegreeController::class, 'restore']);
     });
-
+    Route::prefix('requisition')->group(function() {
+        Route::get('/', [RequisitionController::class, 'index']);
+        Route::get('/get_requisition_data', [RequisitionController::class, 'fetchData']);
+//        Route::get('/add', [RequisitionController::class, 'create']);
+//        Route::post('/validate_inputs', [RequisitionController::class, 'validate_inputs']);
+//        Route::post('/store', [RequisitionController::class, 'store']);
+//        Route::get('/{degree}/edit', [RequisitionController::class, 'edit'])->name('edit_degree');
+//        Route::post('/{id}/update', [RequisitionController::class, 'update']);
+//        Route::post('/{id}/validate_name',[RequisitionController::class, 'validate_name']);
+//        Route::post('/{id}/delete', [RequisitionController::class, 'delete']);
+//        Route::post('/{id}/restore', [RequisitionController::class, 'restore']);
+    });
 
     
     Route::group(['middleware'=> 'superUser'], function() {

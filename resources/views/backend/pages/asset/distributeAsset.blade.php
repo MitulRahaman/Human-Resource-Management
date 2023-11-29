@@ -1,0 +1,63 @@
+@extends('backend.layouts.master')
+@section('css_after')
+    <link rel="stylesheet" href="{{asset('backend/js/plugins/select2/css/select2.min.css')}}">
+@endsection
+@section('page_action')
+    <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-alt">
+            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('asset/') }}">Distribute Assets</a></li>
+            <li class="breadcrumb-item">Add</li>
+        </ol>
+    </nav>
+@endsection
+@section('content')
+    <div class="content">
+        @include('backend.layouts.error_msg')
+        <div class="block block-rounded">
+            <div class="block-header">
+                <h3 class="block-title">Distribute Assets</h3>
+            </div>
+
+            <form class="js-validation" action="{{ url('user/'.$id.'/update_distribute_asset') }}" id="form" method="POST" >
+                @csrf
+                <div class="block block-rounded">
+                    <div class="block-content block-content-full">
+                        <div class="row items-push ml-10">
+                            <div class="col-lg-6 col-xl-6">
+                                <div class="form-group">
+                                    <label for="val-suggestions">Assets</label>
+                                    <div class="form-group">
+                                        <select class="js-select2 form-control" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." multiple>
+                                            <option></option>
+                                            @foreach ($assets as $asset)
+                                                <option value='{{ $asset->id }}'> {{ $asset->name }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                            </div>
+                                <div class="col-lg-7 offset-lg-4">
+                                    <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- jQuery Validation -->
+        </div>
+        <!-- END Dynamic Table with Export Buttons -->
+    </div>
+@endsection
+
+@section('js_after')
+
+    <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('backend/js/plugins/jquery-validation/additional-methods.js') }}"></script>
+
+    <!-- Page JS Code -->
+    <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
+
+    <script src="{{asset('backend/js/plugins/select2/js/select2.full.min.js')}}"></script>
+    <script>jQuery(function(){One.helpers(['select2']);});</script>
+
+@endsection

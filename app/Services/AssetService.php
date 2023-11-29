@@ -77,9 +77,9 @@ class AssetService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name = $row->name;
-                $asset_type= $this->assetRepository->getAssetType($row->type_id)->name;
+                $asset_type= $this->assetRepository->getAssetType($row->type_id);
                 $sl_no = $row->sl_no;
-                $branch = $this->assetRepository->getBranchName($row->branch_id)->name;
+                $branch = $this->assetRepository->getBranchName($row->branch_id);
                 $specification = $row->specification;
                 $purchase_at = $row->purchase_at;
                 $purchase_by = $row->purchase_by;

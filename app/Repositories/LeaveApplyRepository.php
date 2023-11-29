@@ -119,7 +119,7 @@ class LeaveApplyRepository
             'end_date' => $formattedEndDate,
             'total' => $data->totalLeave,
             'reason' => $data->reason,
-            'status' => Config::get('variable_constants.leave_status.pending')
+            'status' => Config::get('variable_constants.status.pending')
         ]);
         return $result;
     }
@@ -155,17 +155,17 @@ class LeaveApplyRepository
     }
     public function approveLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.approved'),
             'remarks'=>$data['remarks']]);
     }
     public function rejectLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.rejected'),
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.rejected'),
             'remarks'=>$data['remarks']]);
     }
     public function cancelLeave($id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.canceled')]);
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.canceled')]);
     }
     public function delete($id)
     {

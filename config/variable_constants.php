@@ -47,11 +47,12 @@ return [
         'female' => 2
     ],
 
-    'leave_status' => [
+    'status' => [
         'pending' => 0,
         'approved' => 1,
         'rejected' => 2,
-        'canceled' => 3
+        'canceled' => 3,
+        'distributed' => 4
     ],
     
     'designation' =>[

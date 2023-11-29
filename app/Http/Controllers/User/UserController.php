@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Requests\DistributeAssetRequest;
 use App\Http\Requests\ProfileEditRequest;
 use App\Http\Controllers\Controller;
 use App\Services\DepartmentService;
@@ -203,6 +204,23 @@ class UserController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
 
+    }
+    public function distributeAsset($id)
+    {
+        View::share('sub_menu', 'Manage Users');
+        $assets = $this->userService->getAllAssets();
+        return \view('backend.pages.asset.distributeAsset', compact('id','assets'));
+    }
+    public function updateDistributeAsset(DistributeAssetRequest $request)
+    {
+        try {
+            $response = $this->userService->updateDistributeAsset($request->validated());
+            if(!$response)
+                return redirect('user/manage')->with('error', 'Failed to Distribute Asset');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        return redirect('user/manage')->with('success', 'Distributed Asset successfully.');
     }
 
 }

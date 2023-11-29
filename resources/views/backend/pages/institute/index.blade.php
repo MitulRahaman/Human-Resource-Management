@@ -28,7 +28,7 @@
     </style>
 @endsection
 @section('page_action')
-    @if ($institutionManagePermission)
+    @if ($hasInstitutionManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('institute/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -57,7 +57,7 @@
                             <th class="d-none d-sm-table-cell ">Status</th>
                             <th >Deleted</th>
                             <th >Created At</th>
-                            @if ($institutionManagePermission)
+                            @if ($hasInstitutionManagePermission)
                             <th >Action</th>
                             @endif
                         </tr>

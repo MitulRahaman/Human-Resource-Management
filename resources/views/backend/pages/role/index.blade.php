@@ -29,7 +29,7 @@
     </style>
 @endsection
 @section('page_action')
-    @if ($roleManagePermission)
+    @if ($hasRoleManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('role/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -62,7 +62,7 @@
                             <th >Branches</th>
                             <th >Deleted</th>
                             <th >Created At</th>
-                            @if ($roleManagePermission)
+                            @if ($hasRoleManagePermission)
                             <th >Action</th>
                             @endif
                         </tr>

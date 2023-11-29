@@ -26,7 +26,7 @@ class LeaveController extends Controller
 
     public function index()
     {
-        $manageLeavePermission = $this->setId(auth()->user()->id)->manageLeaveAuthorization();
+        $manageLeavePermission = $this->setId(auth()->user()->id)->setSlug('manageLeaves')->checkAuthorization();
         return \view('backend.pages.leave.index', compact('manageLeavePermission'));
     }
 

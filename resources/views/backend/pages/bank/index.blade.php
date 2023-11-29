@@ -28,7 +28,7 @@
     </style>
 @endsection
 @section('page_action')
-    @if ($bankManagePermission)
+    @if ($hasBankManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('bank/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -56,7 +56,7 @@
                                 <th class="d-none d-sm-table-cell " style="width: 20%;">Address</th>
                                 <th >Deleted</th>
                                 <th >Created At</th>
-                                @if ($bankManagePermission)
+                                @if ($hasBankManagePermission)
                                 <th >Action</th>
                                 @endif
                             </tr>

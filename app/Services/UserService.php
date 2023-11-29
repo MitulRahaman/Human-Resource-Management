@@ -57,6 +57,26 @@ class UserService
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
         }
+
+        // return $this->userRepository
+        //     ->setEmployeeId($data->employee_id)
+        //     ->setBranchId($data->branchId)
+        //     ->setDepartmentId($data->departmentId)
+        //     ->setDesignationId($data->designationId)
+        //     ->setRoleId($data->roleId)
+        //     ->setFullName($data->full_name)
+        //     ->setNickName($data->nick_name)
+        //     ->setPersonalEmail($data->personal_email)
+        //     ->setPreferredEmail($data->preferred_email)
+        //     ->setLineManagerd($data->line_manager)
+        //     ->setPhone($formattedPhone)
+        //     ->setOrganizationName($data->organizationName)
+        //     ->setJoiningdated($data->joining_date)
+        //     ->setCareerStartDate($data->career_start_date)
+        //     ->setFile($fileName)
+        //     ->storeUser();
+
+
         return $this->userRepository->setFile($fileName)->storeUser($data, $formattedPhone);
     }
 
@@ -118,7 +138,7 @@ class UserService
                 } else {
                     $img = "<td> <img src=\"https://www.pikpng.com/pngl/b/292-2924795_user-icon-png-transparent-white-user-icon-png.png\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 }
-                
+
 
 
                 if ($row->status == Config::get('variable_constants.activation.active')) {

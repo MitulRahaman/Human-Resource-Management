@@ -22,8 +22,8 @@ class BankController extends Controller
     }
     public function index()
     {
-        $bankManagePermission = $this->setId(auth()->user()->id)->bankManagePermission();
-        return \view('backend.pages.bank.index', compact('bankManagePermission'));
+        $hasBankManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBanks')->checkAuthorization();
+        return \view('backend.pages.bank.index', compact('hasBankManagePermission'));
     }
     public function fetchData()
     {

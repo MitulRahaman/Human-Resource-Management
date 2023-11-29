@@ -8,9 +8,9 @@
 
 @endsection
 @section('page_action')
-    @if ($userManagePermission)
+    @if ($hasUserManagePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href="{{ url('user/create') }}">  
+        <a href="{{ url('user/create') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
                 <i class="fa fa-fw fa-key mr-1"></i> Add User
             </button>
@@ -19,14 +19,14 @@
     @endif
 @endsection
 @section('content')
-    <div class="content"> 
+    <div class="content">
         <div class="block block-rounded">
         @include('backend.layouts.error_msg')
             <div class="block-header">
                 <h3 class="block-title mt-4">{{ $sub_menu }}</h3>
             </div>
             <div class="block-content block-content-full">
-                <div class="table-responsive"> 
+                <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter" id="dataTable">
                         <thead>
                             <tr>
@@ -50,7 +50,7 @@
                         <tbody>
 
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
                 <!-- Vertically Centered Block Modal -->
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
@@ -140,7 +140,7 @@
     </div>
 @endsection
 
-@section('js_after') 
+@section('js_after')
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -188,10 +188,10 @@
                     lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
                 });
             }
-            createTable(); 
+            createTable();
         });
         //end create table
-        
+
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";

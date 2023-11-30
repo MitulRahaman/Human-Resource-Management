@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Institute;
 
- use App\Http\Requests\InstituteAddRequest;
+use App\Http\Requests\InstituteAddRequest;
 use App\Http\Requests\InstituteEditRequest;
 use App\Services\InstituteService;
 use Illuminate\Http\Request;

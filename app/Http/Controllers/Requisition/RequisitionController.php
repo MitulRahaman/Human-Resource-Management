@@ -23,6 +23,6 @@ class RequisitionController extends Controller
     }
     public function fetchData()
     {
-        $this->requisitionService->fetchData();
+        return $this->requisitionService->fetchData();
     }
 }

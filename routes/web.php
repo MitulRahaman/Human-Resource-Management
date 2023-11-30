@@ -198,14 +198,14 @@ Route::group(['middleware'=> 'auth'], function() {
     Route::prefix('requisition')->group(function() {
         Route::get('/', [RequisitionController::class, 'index']);
         Route::get('/get_requisition_data', [RequisitionController::class, 'fetchData']);
-//        Route::get('/add', [RequisitionController::class, 'create']);
-//        Route::post('/validate_inputs', [RequisitionController::class, 'validate_inputs']);
-//        Route::post('/store', [RequisitionController::class, 'store']);
-//        Route::get('/{degree}/edit', [RequisitionController::class, 'edit'])->name('edit_degree');
-//        Route::post('/{id}/update', [RequisitionController::class, 'update']);
-//        Route::post('/{id}/validate_name',[RequisitionController::class, 'validate_name']);
-//        Route::post('/{id}/delete', [RequisitionController::class, 'delete']);
-//        Route::post('/{id}/restore', [RequisitionController::class, 'restore']);
+        Route::get('/request', [RequisitionController::class, 'create']);
+        Route::post('/store', [RequisitionController::class, 'store']);
+        Route::get('/{id}/edit', [RequisitionController::class, 'edit']);
+        Route::post('/{id}/update', [RequisitionController::class, 'update']);
+        Route::get('/{id}/delete', [RequisitionController::class, 'delete']);
+        Route::post('status/{id}/approve', [RequisitionController::class, 'approve']);
+        Route::post('status/{id}/reject', [RequisitionController::class, 'reject']);
+        Route::get('status/{id}/cancel', [RequisitionController::class, 'cancel']);
     });
 
     

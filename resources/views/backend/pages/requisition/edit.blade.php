@@ -13,7 +13,7 @@
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('role/role') }}">Roles</a></li>
+            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('requisition/') }}">Requisition</a></li>
             <li class="breadcrumb-item">Edit</li>
         </ol>
     </nav>
@@ -23,67 +23,47 @@
         @include('backend.layouts.error_msg')
         <div class="block block-rounded">
             <div class="block-header">
-                <h3 class="block-title">Edit Role</h3>
+                <h3 class="block-title">Edit Requisition</h3>
             </div>
 
-            <form class="js-validation" id='form' action='{{ url('role/' . $role_info->id . '/update')}}' method="POST" onsubmit="return validate_name(event)">
+            <form class="js-validation" action="{{ url('requisition/'.$requisition_request->id.'/update') }}" id="form" method="POST" >
                 @csrf
-
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push ml-10">
-                            <div class="col-lg-8 col-xl-5">
-                                <div class="form-group">
-                                    <label for="val-username">sl_no <span class="text-danger">*</span></label>
-                                    <input type="number" step="1" class="form-control" id="sl_no" name="sl_no" value="{{ $role_info->sl_no }}" placeholder="Enter a serial number.." required>
-                                    <span id="error_sl_no"  class="m-2" style="color:red;  font-size: 14px;"></span>
-                                </div>
+                            <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $role_info->name }}" placeholder="Enter a name.." >
-                                    <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
+                                    <input type="text"  class="form-control" id="name" name="name" value="{{$requisition_request->name}}"  placeholder="Enter a name.." required>
                                 </div>
-
                                 <div class="form-group">
-                                    <label for="val-suggestions">Permissions</label>
+                                    <label for="val-username">Specification <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="specification" name="specification" value="{{$requisition_request->specification}}"  placeholder="Enter a specification.." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="val-username">Asset Type</label>
                                     <div class="form-group">
-
-                                        <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
+                                        <select class="js-select2 form-control" id="asset_type_id" name="asset_type_id" style="width: 100%;" data-placeholder="Choose asset type..">
                                             <option></option>
-                                            @foreach ($permissions as $permission)
-                                                <option value='{{ $permission->id }}' @if($permission->selected == "yes") selected @endif> {{ $permission->name }} </option>
+                                            @foreach ($assetType as $type)
+                                                <option value='{{ $type->id }}' @if($type->id==$requisition_request->asset_type_id) selected @endif style="color:black"> {{ $type->name }} </option>
                                             @endforeach
-
                                         </select>
-
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-suggestions">Branches</label>
-                                    <div class="form-group">
-
-                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
-                                            <option></option>
-                                            @foreach ($branches as $branch)
-                                                <option value='{{ $branch->id }}' @if($branch->selected == "yes") selected @endif> {{ $branch->name }} </option>
-                                            @endforeach
-
-                                        </select>
-
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="val-suggestions">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ $role_info->description ?? "" }}</textarea>
+                                    <label for="val-username">Remarks <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="remarks" name="remarks" value="{{$requisition_request->remarks}}" placeholder="Enter a remarks.." required>
                                 </div>
                             </div>
                         </div>
+
                         <!-- END Regular -->
 
                         <!-- Submit -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary">Update</button>
+                                <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>
                             </div>
                         </div>
                         <!-- END Submit -->
@@ -96,7 +76,6 @@
     </div>
 @endsection
 
-
 @section('js_after')
 
     <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
@@ -105,38 +84,7 @@
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
 
-    <script>
-        function validate_name(e) {
-            var name = $('#name').val();
-            $.ajax({
-                type: 'POST',
-                async:false,
-                url: '{{ url('role/'. $role_info->id .'/validate_role_name') }}',
-                data: $('#form').serialize(),
-                success: function (response) {
-                    var data = $.parseJSON(response);
-                    var name_msg = data.name_msg;
-                    var success = data.success;
-                    if (!success) {
-                        if (name_msg) {
-                            document.getElementById('error_name').innerHTML = name_msg;
-                        } else {
-                            document.getElementById('error_name').innerHTML = '';
-                        }
-                        document.getElementById('error_name').innerHTML = '';
-                        e.preventDefault();
-                        return false;
-                    }
-                    return true;
-                },
-                error: function() {
-                    e.preventDefault();
-                    return false;
-                }
-            });
 
-        }
-    </script>
     <!-- Page JS Plugins -->
 
     <script src="{{asset('backend/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
@@ -148,6 +96,5 @@
     <script src="{{asset('backend/js/plugins/dropzone/dropzone.min.js')}}"></script>
     <script src="{{asset('backend/js/plugins/flatpickr/flatpickr.min.js')}}"></script>
     <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']);});</script>
-
 
 @endsection

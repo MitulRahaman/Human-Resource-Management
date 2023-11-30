@@ -20,30 +20,30 @@ trait AuthorizationTrait {
     return $this;
   }
 
-  public function checkAuthorization()
-  {
-    $hasPermission = DB::table('permissions as p')
-      ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
-      ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-      ->where('p.slug', '=', $this->slug)
-      ->where('bi.user_id', '=', $this->id)
-      ->first();
-    if($hasPermission || auth()->user()->is_super_user ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+//   public function checkAuthorization()
+//   {
+//     $hasPermission = DB::table('permissions as p')
+//       ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
+//       ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
+//       ->where('p.slug', '=', $this->slug)
+//       ->where('bi.user_id', '=', $this->id)
+//       ->first();
+//     if($hasPermission || auth()->user()->is_super_user ) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   }
 
-  public function hasPermission($permissionSlug) : bool
+  public function checkAuthorization() : bool
   {
       if (Auth::user()->is_super_user) {
           return true;
       } else {
           $hasPermission = DB::table('role_permissions as rp')
-              ->join('permissions as p', function ($join) use ($permissionSlug) {
+              ->join('permissions as p', function ($join) {
                   $join->on('p.id', '=', 'rp.permission_id');
-                  $join->where('p.slug', '=', $permissionSlug);
+                  $join->where('p.slug', '=', $this->slug);
                   $join->whereNull('p.deleted_at');
                   $join->where('p.status', '=', Config::get('variable_constants.activation.active'));
               })

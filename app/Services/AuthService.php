@@ -23,11 +23,14 @@ class AuthService
             $user->last_login = date('Y-m-d H:i:s');
             $user->save();
 
+            $basicInfo = $this->authRepository->setUserId(Auth::id())->getBasicInfo();
+
             $user_data = [
                 'employee_id' => Auth::user()->employee_id,
                 'full_name' => Auth::user()->full_name,
                 'nick_name' => Auth::user()->nick_name,
-                'is_super_user' => $user->is_super_user
+                'is_super_user' => $user->is_super_user,
+                'basic_info' => $basicInfo
             ];
 
             session(['user_data' => $user_data]);

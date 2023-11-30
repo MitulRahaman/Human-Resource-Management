@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\LeaveApply;
 
+use App\Events\LeaveApplied;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveApplyAddRequest;
 use App\Http\Requests\LeaveApplyUpdateRequest;
 use Illuminate\Support\Facades\View;
 use App\Services\LeaveApplyService;
-use PHPMailer\PHPMailer\PHPMailer;  
+use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Traits\AuthorizationTrait;
 use Illuminate\Support\Facades\Validator;
@@ -89,6 +90,7 @@ class LeaveApplyController extends Controller
     }
     public function store(LeaveApplyAddRequest $request)
     {
+        abort_if(!$this->hasPermission('applyLeave'), 403, 'You don\'t have permission!');
         try {
             $response = $this->leaveApplyService->LeaveApplicationEmail($request);
             if($response) {

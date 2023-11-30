@@ -114,15 +114,16 @@
                 url: '{{ url('role/'. $role_info->id .'/validate_role_name') }}',
                 data: $('#form').serialize(),
                 success: function (response) {
-                    var name_msg = response.name_msg;
-                    var success = response.success;
+                    var data = $.parseJSON(response);
+                    var name_msg = data.name_msg;
+                    var success = data.success;
                     if (!success) {
                         if (name_msg) {
                             document.getElementById('error_name').innerHTML = name_msg;
-                        }
-                        else {
+                        } else {
                             document.getElementById('error_name').innerHTML = '';
                         }
+                        document.getElementById('error_name').innerHTML = '';
                         e.preventDefault();
                         return false;
                     }

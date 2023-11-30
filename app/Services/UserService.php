@@ -172,7 +172,7 @@ class UserService
                     $action_btn .="$profile_edit_btn ";
                 elseif ($this->userRepository->isSuperUser(Auth::id()))
                     $action_btn .="$profile_edit_btn ";
-                if(!$this->userRepository->isAssetDistributed($id) || $this->userRepository->requisitionRequest())
+                if(!$this->userRepository->isAssetDistributed($id) || $this->userRepository->requisitionRequest($id))
                     $action_btn .="$distribute_asset_url_btn ";
                 $action_btn .=" $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</div>

@@ -14,6 +14,50 @@ class RequisitionService
     {
         $this->requisitionRepository = $requisitionRepository;
     }
+    public function getAllAssetType()
+    {
+        return $this->requisitionRepository->getAllAssetType();
+    }
+    public function create($data)
+    {
+        return $this->requisitionRepository->setName($data['name'])
+            ->setSpecification($data['specification'])
+            ->setAssetTypeId($data['asset_type_id'])
+            ->setRemarks($data['remarks'])
+            ->setStatus(Config::get('variable_constants.status.pending'))
+            ->setCreatedAt(date('Y-m-d H:i:s'))
+            ->create();
+    }
+    public function update($data)
+    {
+        return $this->requisitionRepository->setId($data['id'])
+            ->setName($data['name'])
+            ->setSpecification($data['specification'])
+            ->setAssetTypeId($data['asset_type_id'])
+            ->setRemarks($data['remarks'])
+            ->setUpdatedAt(date('Y-m-d H:i:s'))
+            ->update();
+    }
+    public function getRequisitionRequest($id)
+    {
+        return $this->requisitionRepository->getRequisitionRequest($id);
+    }
+    public function delete($id)
+    {
+        return $this->requisitionRepository->delete($id);
+    }
+    public function approve($id)
+    {
+        return $this->requisitionRepository->approve( $id);
+    }
+    public function reject($id)
+    {
+        return $this->requisitionRepository->reject( $id);
+    }
+    public function cancel($id)
+    {
+        return $this->requisitionRepository->cancel($id);
+    }
     public function fetchData()
     {
         $result = $this->requisitionRepository->getTableData();
@@ -38,6 +82,8 @@ class RequisitionService
                     $status = "<span class=\"badge badge-danger\">rejected</span><br>" ;
                 elseif ($row->status== Config::get('variable_constants.status.canceled'))
                     $status = "<span class=\"badge badge-danger\">canceled</span><br>" ;
+                elseif ($row->status== Config::get('variable_constants.status.given'))
+                    $status = "<span class=\"badge badge-success\">given</span><br>" ;
 
                 $delete_url = url('requisition/'.$id.'/delete');
                 $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"$delete_url\">Delete</a>";

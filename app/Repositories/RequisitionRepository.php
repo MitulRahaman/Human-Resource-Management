@@ -5,9 +5,11 @@ namespace App\Repositories;
 use Validator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use App\Traits\AuthorizationTrait;
 
 class RequisitionRepository
 {
+    use AuthorizationTrait;
     private $id, $name, $specification, $asset_type_id, $status, $created_at, $updated_at, $deleted_at, $remarks;
 
     public function setId($id)
@@ -64,7 +66,7 @@ class RequisitionRepository
     public function getTableData()
     {
         $userId = auth()->user()->id;
-        $isHrSuperUser = true;
+        $hasManageRequisitionPermission = $this->hasPermission("manageRequisition");
         return DB::table('requisition_requests as r')
             ->leftJoin('asset_types as at', function ($join) {
                 $join->on('r.asset_type_id', '=', 'at.id');
@@ -72,7 +74,7 @@ class RequisitionRepository
             ->leftJoin('users as u', 'r.user_id', '=', 'u.id')
             ->groupBy('r.id')
             ->select('r.*', 'at.id as asset_type_id', 'at.name as type_name', 'u.employee_id', 'u.full_name')
-            ->when(!$isHrSuperUser, function($query)use ($userId){
+            ->when(!$hasManageRequisitionPermission, function($query)use ($userId){
                 $query->where('r.user_id', $userId);
             })
             ->get();
@@ -121,6 +123,57 @@ class RequisitionRepository
     public function cancel($id)
     {
         return DB::table('requisition_requests')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.canceled')]);
+    }
+    public function getAssetTypeName($id)
+    {
+        $asset_type = '';
+        if($id)
+            $asset_type = DB::table('asset_types')->where('id',$id)
+                ->whereNull('deleted_at')
+                ->where('status',Config::get('variable_constants.activation.active'))
+                ->first();
+        return $asset_type;
+    }
+    public function getRequisitionEmailRecipient()
+    {
+        $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
+        if($appliedUser == null ) {
+            return false;
+        }
+        $getLineManagers  = DB::table('users as u')
+            ->leftJoin('line_managers as lm', function ($join) {
+                $join->on('u.id', '=', 'lm.user_id')
+                    ->whereNULL('lm.deleted_at');
+            })
+            ->where('lm.user_id', '=', $appliedUser->user_id)
+            ->select('lm.line_manager_user_id')
+            ->get()
+            ->toArray();
+
+        $lineManagerEmail = array();
+        foreach ($getLineManagers as $glm) {
+            array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
+        }
+        $hasManageRequisitionPermission = DB::table('permissions as p')
+            ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
+            ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
+            ->where('p.slug', '=', 'manageLeaves')
+            ->where('bi.branch_id', '=', $appliedUser->branch_id)
+            ->select('rp.role_id')
+            ->get()
+            ->toArray();
+
+        if(!$hasManageRequisitionPermission) {
+            return false;
+        }
+        $recipientEmail = array();
+        foreach ($hasManageRequisitionPermission as $hp) {
+            array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hp->role_id)->first()->preferred_email);
+        }
+        if($recipientEmail == null ) {
+            return false;
+        }
+        return [$lineManagerEmail, $recipientEmail];
     }
 }
     

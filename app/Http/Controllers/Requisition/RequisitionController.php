@@ -35,6 +35,7 @@ class RequisitionController extends Controller
     }
     public function store(RequisitionAddRequest $request)
     {
+        $this->requisitionService->requisitionEmai($request->validated());
         try {
             $requisition = $this->requisitionService->create($request->validated());
             if(!$requisition)
@@ -42,6 +43,7 @@ class RequisitionController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
+        $this->requisitionService->requisitionEmai($request->validated());
         return redirect('/requisition')->with('success', 'Requested successfully');
     }
     public function edit($id)

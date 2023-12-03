@@ -39,8 +39,7 @@ class RequisitionService
         if(!$receivers) {
             return false;
         }
-
-        Mail::send((new RequisitionMail($data, $assetTypeName))->to($receivers[1])->cc($receivers[0]));
+        Mail::send((new RequisitionMail($data, $assetTypeName))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
         return true;
     }
     public function update($data)
@@ -76,8 +75,11 @@ class RequisitionService
     public function fetchData()
     {
         $hasManageRequisitionPermission = $this->hasPermission("manageRequisition");
-        $result = $this->requisitionRepository->getTableData($hasManageRequisitionPermission);
         $userId= auth()->user()->id;
+        $this->requisitionRepository->setPermission($hasManageRequisitionPermission);
+        if(!$hasManageRequisitionPermission)
+            $this->requisitionRepository->setUserId($userId);
+        $result = $this->requisitionRepository->getTableData();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

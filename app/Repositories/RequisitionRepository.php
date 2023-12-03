@@ -10,11 +10,16 @@ use App\Traits\AuthorizationTrait;
 class RequisitionRepository
 {
     use AuthorizationTrait;
-    private $id, $name, $specification, $asset_type_id, $status, $created_at, $updated_at, $deleted_at, $remarks;
+    private $id, $user_id, $name, $specification,$hasPermission, $asset_type_id, $status, $created_at, $updated_at, $deleted_at, $remarks;
 
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+    public function setUserId($user_id)
+    {
+        $this->user_id= $user_id;
         return $this;
     }
     public function setName($name)
@@ -59,13 +64,17 @@ class RequisitionRepository
         $this->deleted_at = $deleted_at;
         return $this;
     }
+    public function setPermission($hasPermission)
+    {
+        $this->hasPermission = $hasPermission;
+        return $this;
+    }
     public function getAllAssetType()
     {
         return DB::table('asset_types')->get();
     }
-    public function getTableData($managePermission)
+    public function getTableData()
     {
-        $userId = auth()->user()->id;
         return DB::table('requisition_requests as r')
             ->leftJoin('asset_types as at', function ($join) {
                 $join->on('r.asset_type_id', '=', 'at.id');
@@ -73,8 +82,8 @@ class RequisitionRepository
             ->leftJoin('users as u', 'r.user_id', '=', 'u.id')
             ->groupBy('r.id')
             ->select('r.*', 'at.id as asset_type_id', 'at.name as type_name', 'u.employee_id', 'u.full_name')
-            ->when(!$managePermission, function($query)use ($userId){
-                $query->where('r.user_id', $userId);
+            ->when(!$this->hasPermission, function($query){
+                $query->where('r.user_id', $this->user_id);
             })
             ->get();
     }
@@ -144,17 +153,14 @@ class RequisitionRepository
             })
             ->leftJoin('users as line_manager_user', 'line_manager_user.id', '=', 'lm.line_manager_user_id')
             ->where('lm.user_id', '=', $appliedUser->user_id)
-            ->pluck('line_manager_user.email')
-            ->toArray();
+            ->first();
         $recipientEmail = DB::table('permissions as p')
             ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
             ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
             ->where('p.slug', '=', 'manageLeaves')
             ->where('bi.branch_id', '=', $appliedUser->branch_id)
-            ->pluck('bi.preferred_email')
-            ->toArray();
-
-        if (empty($recipientEmail) || empty($lineManagerEmail)) {
+            ->first();
+        if (!$recipientEmail || !$lineManagerEmail) {
             return false;
         }
         return [$lineManagerEmail, $recipientEmail];

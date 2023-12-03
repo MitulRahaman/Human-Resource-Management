@@ -19,11 +19,16 @@ class UserAddRequest extends FormRequest
     public function all($keys = null)
     {
         $data = parent::all($keys);
-        if ($data['organizationName']) {
-            if (is_numeric($data['organizationName'])) {
-                $data['organization_id'] = $data['organizationName'];
+
+        if (array_key_exists('organizationName',$data)) {
+            if ($data['organizationName']) {
+                if (is_numeric($data['organizationName'])) {
+                    $data['organization_id'] = $data['organizationName'];
+                } else {
+                    $data['organization_name'] = $data['organizationName'];
+                }
             } else {
-                $data['organization_name'] = $data['organizationName'];
+                $data['organization_id'] = null;
             }
         } else {
             $data['organization_id'] = null;

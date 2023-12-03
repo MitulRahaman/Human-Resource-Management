@@ -57,27 +57,24 @@ class UserService
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
         }
-
-        // return $this->userRepository
-        //     ->setEmployeeId($data->employee_id)
-        //     ->setBranchId($data->branchId)
-        //     ->setDepartmentId($data->departmentId)
-        //     ->setDesignationId($data->designationId)
-        //     ->setRoleId($data->roleId)
-        //     ->setFullName($data->full_name)
-        //     ->setNickName($data->nick_name)
-        //     ->setPersonalEmail($data->personal_email)
-        //     ->setPreferredEmail($data->preferred_email)
-        //     ->setLineManagerd($data->line_manager)
-        //     ->setPhone($formattedPhone)
-        //     ->setOrganizationName($data->organizationName)
-        //     ->setJoiningdated($data->joining_date)
-        //     ->setCareerStartDate($data->career_start_date)
-        //     ->setFile($fileName)
-        //     ->storeUser();
-
-
-        return $this->userRepository->setFile($fileName)->storeUser($data, $formattedPhone);
+        return $this->userRepository
+            ->setEmployeeId($data->employee_id)
+            ->setBranchId($data->branchId)
+            ->setDepartmentId($data->departmentId)
+            ->setDesignationId($data->designationId)
+            ->setRoleId($data->roleId)
+            ->setFullName($data->full_name)
+            ->setNickName($data->nick_name)
+            ->setPersonalEmail($data->personal_email)
+            ->setPreferredEmail($data->preferred_email)
+            ->setLineManager($data->line_manager)
+            ->setPhone($formattedPhone)
+            ->setOrganizationId($data['organization_id'])
+            ->setOrganizationName($data->organizationName)
+            ->setJoiningDate($data->joining_date)
+            ->setCareerStartDate($data->career_start_date)
+            ->setFile($fileName)
+            ->storeUser();
     }
 
     public function editUser($id)
@@ -95,7 +92,26 @@ class UserService
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
         }
-        return $this->userRepository->setId($id)->setFile($fileName)->updateUser($data, $formattedPhone);
+
+        return $this->userRepository
+            ->setId($id)
+            ->setEmployeeId($data->employee_id)
+            ->setBranchId($data->branchId)
+            ->setDepartmentId($data->departmentId)
+            ->setDesignationId($data->designationId)
+            ->setRoleId($data->roleId)
+            ->setFullName($data->full_name)
+            ->setNickName($data->nick_name)
+            ->setPersonalEmail($data->personal_email)
+            ->setPreferredEmail($data->preferred_email)
+            ->setLineManager($data->line_manager)
+            ->setPhone($formattedPhone)
+            ->setOrganizationId($data['organization_id'])
+            ->setOrganizationName($data->organizationName)
+            ->setJoiningDate($data->joining_date)
+            ->setCareerStartDate($data->career_start_date)
+            ->setFile($fileName)
+            ->updateUser();
     }
 
     public function destroyUser($id)

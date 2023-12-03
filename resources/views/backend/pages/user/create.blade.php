@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-@section('page_action')  
+@section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
@@ -18,7 +18,7 @@
             <div class="block-header">
                 <h3 class="block-title">Add User</h3>
             </div>
-            
+
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <form class="js-validation" action="{{ url('user/store') }}" method="POST" onsubmit="return verify_inputs()" id="form" enctype="multipart/form-data">
                 @csrf
@@ -28,7 +28,7 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val_employee_id">Employee ID <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required> 
+                                    <input type="number" class="form-control" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required>
                                     <span id="error_employee_id" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
@@ -45,13 +45,13 @@
                                 <div class="form-group">
                                     <label for="val-departmentId">Department</label>
                                     <select class="form-control" id="departmentId" name="departmentId" style="width: 100%;">
-                                        
+
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-designationId">Designation</label>
                                     <select class="form-control" id="designationId" name="designationId" style="width: 100%;">
-                                        
+
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -67,20 +67,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_full_name">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name.." required> 
+                                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_nick_name">Nick Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nick_name" name="nick_name" placeholder="Enter nick name.." required> 
+                                    <input type="text" class="form-control" id="nick_name" name="nick_name" placeholder="Enter nick name.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="name@gmail.com" required> 
+                                    <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="name@gmail.com" required>
                                     <span id="error_personal_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_preferred_email">Preferred Email<span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="preferred_email" name="preferred_email" placeholder="name@appnap.io" required> 
+                                    <input type="email" class="form-control" id="preferred_email" name="preferred_email" placeholder="name@appnap.io" required>
                                     <span id="error_preferred_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
@@ -158,7 +158,7 @@
     <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'masked-inputs', 'select2']);});</script>
 
 
-    <script> 
+    <script>
         $(document).ready(function() {
             $('.js-tags').select2({
                 tags: true
@@ -261,8 +261,8 @@
             });
             if(flag)
                 return true;
-            else 
+            else
                 return false;
-        } 
+        }
     </script>
 @endsection

@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Events\LeaveApplied;
+use App\Services\LeaveApplyService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -12,9 +14,11 @@ class LeaveAppliedListener
      *
      * @return void
      */
-    public function __construct()
+    private $leaveApplyService;
+
+    public function __construct(LeaveApplyService $leaveApplyService)
     {
-        //
+        $this->leaveApplyService = $leaveApplyService;
     }
 
     /**
@@ -23,8 +27,8 @@ class LeaveAppliedListener
      * @param  object  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(LeaveApplied $event)
     {
-        dd('I am in listener...');
+        return $this->leaveApplyService->LeaveApplicationEmail($event->request);
     }
 }

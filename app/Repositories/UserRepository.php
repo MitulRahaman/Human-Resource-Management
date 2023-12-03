@@ -33,14 +33,10 @@ class UserRepository
         $emergency_contact2,$relation2, $emergency_contact_name2, $institute_id ,$degree_id, $major, $gpa, $year, $bank_id, $account_name,
         $account_number, $branch, $routing_number, $nominee_email, $nominee_phone_number, $nominee_relation, $nominee_nid, $nominee_name, $assets;
 
-    public function setId($id)
+    //set basic info
+    public function setEmployeeId($employeeId)
     {
-        $this->id = $id;
-        return $this;
-    }
-    public function setAssets($assets)
-    {
-        $this->assets = $assets;
+        $this->employeeId = $employeeId;
         return $this;
     }
     public function setBranchId($branchId)
@@ -63,9 +59,71 @@ class UserRepository
         $this->roleId = $roleId;
         return $this;
     }
+    public function setFullName($fullName)
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
+    public function setNickName($nickName)
+    {
+        $this->nickName = $nickName;
+        return $this;
+    }
+    public function setPersonalEmail($personalEmail)
+    {
+        $this->personalEmail = $personalEmail;
+        return $this;
+    }
+    public function setPreferredEmail($preferredEmail)
+    {
+        $this->preferredEmail = $preferredEmail;
+        return $this;
+    }
+    public function setLineManager($lineManager)
+    {
+        $this->lineManager = $lineManager;
+        return $this;
+    }
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+    public function setOrganizationId($organizationId)
+    {
+        $this->organizationId = $organizationId;
+        return $this;
+    }
+    public function setOrganizationName($organizationName)
+    {
+        $this->organizationName = $organizationName;
+        return $this;
+    }
+    public function setJoiningDate($joiningDate)
+    {
+        $this->joiningDate = $joiningDate;
+        return $this;
+    }
+    public function setCareerStartDate($careerStartDate)
+    {
+        $this->careerStartDate = $careerStartDate;
+        return $this;
+    }
     public function setFile($file)
     {
         $this->file = $file;
+        return $this;
+    }
+    //end set basic  info
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+    public function setAssets($assets)
+    {
+        $this->assets = $assets;
         return $this;
     }
     public function setFatherName($father_name){
@@ -290,7 +348,7 @@ class UserRepository
     }
 
     public function getTableData()
-    {    
+    {
         return DB::table('users as u')
         ->leftJoin('basic_info as bi', function ($join) {
             $join->on('u.id', '=', 'bi.user_id');
@@ -301,34 +359,35 @@ class UserRepository
         ->get();
     }
 
-    public function storeUser($data, $formattedPhone)
+    public function storeUser()
     {
-        DB::beginTransaction();
-            $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
-            if ($data->career_start_date == null) {
+            $formattedJoiningDate = date("Y-m-d", strtotime($this->joiningDate));
+            if ($this->careerStartDate == null) {
                 $formattedCareerStartDate = $formattedJoiningDate;
             } else {
-                $formattedCareerStartDate = date("Y-m-d", strtotime($data->career_start_date));
+                $formattedCareerStartDate = date("Y-m-d", strtotime($this->careerStartDate));
             }
 
         try {
+            DB::beginTransaction();
+
             $organization_id = null;
-            if ($data['organization_id']) {
-                $organization_id = $data['organization_id'];
+            if ($this->organizationId) {
+                $organization_id = $this->organizationId;
             }
-            if ($data['organization_name']) {
+            else if ($this->organizationName) {
                 $organization = new Organization();
-                $organization->name = $data['organization_name'];
+                $organization->name = $this->organizationName;
                 $organization->created_at = date('Y-m-d');
                 $organization->save();
                 $organization_id = $organization->id;
             }
             $create_user = User::create([
-                'employee_id' => $data->employee_id,
-                'full_name' => $data->full_name,
-                'nick_name' => $data->nick_name,
-                'email' => $data->preferred_email,
-                'phone_number' => $formattedPhone,
+                'employee_id' => $this->employeeId,
+                'full_name' => $this->fullName,
+                'nick_name' => $this->nickName,
+                'email' => $this->preferredEmail,
+                'phone_number' => $this->phone,
                 'password' => Hash::make("welcome"),
                 'image' => $this->file,
                 'is_super_user' => 0,
@@ -339,25 +398,25 @@ class UserRepository
             ]);
             BasicInfo::create([
                 'user_id' => $create_user->id,
-                'branch_id' => $data->branchId,
-                'department_id' => $data->departmentId,
-                'designation_id' => $data->designationId,
-                'role_id' => $data->roleId,
-                'personal_email' => $data->personal_email,
-                'preferred_email' => $data->preferred_email,
+                'branch_id' => $this->branchId,
+                'department_id' => $this->departmentId,
+                'designation_id' => $this->designationId,
+                'role_id' => $this->roleId,
+                'personal_email' => $this->personalEmail,
+                'preferred_email' => $this->preferredEmail,
                 'joining_date' => $formattedJoiningDate,
                 'career_start_date' => $formattedCareerStartDate,
                 'last_organization_id' => $organization_id
             ]);
-            if($data->line_manager) {
-                foreach ($data['line_manager'] as $line_manager) {
+            if($this->lineManager) {
+                foreach ($this->lineManager as $line_manager) {
                     LineManager::create([
                         'user_id'=>$create_user->id,
                         'line_manager_user_id' => $line_manager,
                     ]);
                 }
             }
-            
+
             DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -365,40 +424,27 @@ class UserRepository
             return $exception->getMessage();
         }
     }
-              
-    public function editUser($id)
-    {
-        return DB::table('users as u')
-            ->leftJoin('basic_info as bi', function ($join) {
-                $join->on('u.id', '=', 'bi.user_id');
-            })
-            ->whereNull('u.deleted_at')
-            ->where('u.is_super_user', '=', Config::get('variable_constants.check.no'))
-            ->groupBy('u.id')
-            ->select('u.id', 'u.image', 'u.status', 'u.deleted_at', 'u.employee_id', 'u.full_name', 'u.email', 'u.phone_number', 'bi.branch_id', 'bi.department_id', 'bi.designation_id', 'bi.joining_date')
-            ->get();
-    }
 
-    public function updateUser($data, $formattedPhone)
+    public function updateUser()
     {
-        $formattedJoiningDate = date("Y-m-d", strtotime($data->joining_date)); 
-        if ($data->career_start_date == null) {
+        $formattedJoiningDate = date("Y-m-d", strtotime($this->joiningDate));
+        if ($this->careerStartDate == null) {
             $formattedCareerStartDate = $formattedJoiningDate;
         } else {
-            $formattedCareerStartDate = date("Y-m-d", strtotime($data->career_start_date));
+            $formattedCareerStartDate = date("Y-m-d", strtotime($this->careerStartDate));
         }
         try {
             DB::beginTransaction();
-        
+
             $user = User::find($this->id);
             if($this->file == null)
                 $this->file = $user->image;
 
             DB::table('users')->where('id', $this->id)->update([
-                'full_name' => $data->full_name,
-                'nick_name' => $data->nick_name,
-                'email' => $data->preferred_email,
-                'phone_number' => $formattedPhone,
+                'full_name' => $this->fullName,
+                'nick_name' => $this->nickName,
+                'email' => $this->preferredEmail,
+                'phone_number' => $this->phone,
                 'password' => Hash::make("welcome"),
                 'image' => $this->file,
                 'is_super_user' => 0,
@@ -407,28 +453,28 @@ class UserRepository
                 'is_onboarding_complete' => 0,
                 'status' => 1
             ]);
-            if($data->line_manager) {
+            if($this->lineManager) {
                 LineManager::where('user_id',$this->id)->delete();
-                foreach ($data['line_manager'] as $line_manager) {
+                foreach ($this->lineManager as $line_manager) {
                     LineManager::create([
                         'user_id'=>$this->id,
                         'line_manager_user_id' => $line_manager,
                     ]);
                 }
             }
-            
-            if($data->organizationName!= null && !is_numeric($data->organizationName)) {
+
+            if($this->organizationName!= null && !is_numeric($this->organizationName)) {
                 $create_org = Organization::create([
-                    'name' => $data->organizationName
+                    'name' => $this->organizationName
                 ]);
                 DB::table('basic_info')->where('user_id', $this->id)->update([
-                    'branch_id' => $data->branchId,
-                    'department_id' => $data->departmentId,
-                    'designation_id' => $data->designationId,
-                    'role_id' => $data->roleId,
-                    'personal_email' => $data->personal_email,
-                    'preferred_email' => $data->preferred_email,
-                    'joining_date' => $data->formattedJoiningDate,
+                    'branch_id' => $this->branchId,
+                    'department_id' => $this->departmentId,
+                    'designation_id' => $this->designationId,
+                    'role_id' => $this->roleId,
+                    'personal_email' => $this->personalEmail,
+                    'preferred_email' => $this->preferredEmail,
+                    'joining_date' => $formattedJoiningDate,
                     'career_start_date' => $formattedCareerStartDate,
                     'last_organization_id' => $create_org->id
                 ]);
@@ -436,15 +482,15 @@ class UserRepository
                 return true;
             } else {
                 DB::table('basic_info')->where('user_id', $this->id)->update([
-                    'branch_id' => $data->branchId,
-                    'department_id' => $data->departmentId,
-                    'designation_id' => $data->designationId,
-                    'role_id' => $data->roleId,
-                    'personal_email' => $data->personal_email,
-                    'preferred_email' => $data->preferred_email,
+                    'branch_id' => $this->branchId,
+                    'department_id' => $this->departmentId,
+                    'designation_id' => $this->designationId,
+                    'role_id' => $this->roleId,
+                    'personal_email' => $this->personalEmail,
+                    'preferred_email' => $this->preferredEmail,
                     'joining_date' => $formattedJoiningDate,
                     'career_start_date' => $formattedCareerStartDate,
-                    'last_organization_id' => $data->organizationName
+                    'last_organization_id' => $this->organizationName
                 ]);
                 DB::commit();
                 return true;

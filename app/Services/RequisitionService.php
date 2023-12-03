@@ -32,7 +32,7 @@ class RequisitionService
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->create();
     }
-    public function requisitionEmai($data)
+    public function requisitionEmail($data)
     {
         $assetTypeName = $this->requisitionRepository->getAssetTypeName($data['asset_type_id']);
         $receivers = $this->requisitionRepository->setId(auth()->user()->id)->getRequisitionEmailRecipient();

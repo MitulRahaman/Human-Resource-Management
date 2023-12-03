@@ -2,12 +2,16 @@
 
 namespace App\Services;
 
+use Mail;
+use App\Mail\RequisitionMail;
 use App\Repositories\RequisitionRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class RequisitionService
 {
+    use AuthorizationTrait;
     private $requisitionRepository;
 
     public function __construct(RequisitionRepository $requisitionRepository)
@@ -27,6 +31,16 @@ class RequisitionService
             ->setStatus(Config::get('variable_constants.status.pending'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->create();
+    }
+    public function requisitionEmail($data)
+    {
+        $assetTypeName = $this->requisitionRepository->getAssetTypeName($data['asset_type_id']);
+        $receivers = $this->requisitionRepository->setId(auth()->user()->id)->getRequisitionEmailRecipient();
+        if(!$receivers) {
+            return false;
+        }
+        Mail::send((new RequisitionMail($data, $assetTypeName))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
+        return true;
     }
     public function update($data)
     {
@@ -60,9 +74,12 @@ class RequisitionService
     }
     public function fetchData()
     {
-        $result = $this->requisitionRepository->getTableData();
+        $hasManageRequisitionPermission = $this->hasPermission("manageRequisition");
         $userId= auth()->user()->id;
-        $hasManageRequisitionPermission = true;
+        $this->requisitionRepository->setPermission($hasManageRequisitionPermission);
+        if(!$hasManageRequisitionPermission)
+            $this->requisitionRepository->setUserId($userId);
+        $result = $this->requisitionRepository->getTableData();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

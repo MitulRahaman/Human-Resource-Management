@@ -90,19 +90,15 @@ class LeaveApplyController extends Controller
     }
     public function store(LeaveApplyAddRequest $request)
     {
-        //abort_if(!$this->setSlug('applyLeave')->checkAuthorization(), 403, 'You don\'t have permission!');
+        abort_if(!$this->setSlug('applyLeave')->checkAuthorization(), 403, 'You don\'t have permission!');
         try {
-                if($this->leaveApplyService->storeLeaves($request)) {
-                    return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
-                } else {
-                    return redirect('leaveApply/apply')->with('error', $response);
-                }
-                if(event(new LeaveApplied($request))) {
-
-                }
-             else {
-                return redirect('leaveApply/apply')->with('error', "Currently no HR is assigned in your branch");
+            if($this->leaveApplyService->storeLeaves($request)) {
+                event(new LeaveApplied($request));
+                return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
+            } else {
+                return redirect('leaveApply/apply')->with('error', $response);
             }
+
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

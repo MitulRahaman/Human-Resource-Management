@@ -42,6 +42,7 @@ class RequisitionController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
+        $this->requisitionService->requisitionEmail($request->validated());
         return redirect('/requisition')->with('success', 'Requested successfully');
     }
     public function edit($id)

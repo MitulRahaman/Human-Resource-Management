@@ -75,9 +75,9 @@ class RequisitionService
     }
     public function fetchData()
     {
-        $result = $this->requisitionRepository->getTableData();
-        $userId= auth()->user()->id;
         $hasManageRequisitionPermission = $this->hasPermission("manageRequisition");
+        $result = $this->requisitionRepository->getTableData($hasManageRequisitionPermission);
+        $userId= auth()->user()->id;
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

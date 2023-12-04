@@ -3,14 +3,20 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AuthRepository
 {
-    private $userId;
+    private $userId, $password;
 
     public function setUserId($userId)
     {
         $this->userId = $userId;
+        return $this;
+    }
+    public function setPassword($password)
+    {
+        $this->password = $password;
         return $this;
     }
 
@@ -21,5 +27,15 @@ class AuthRepository
             ->where('bi.user_id', '=', $this->userId)
             ->select('bi.branch_id', 'bi.department_id', 'bi.designation_id', 'bi.role_id')
             ->get()
-            ->first();    }
+            ->first();
+    }
+    public function changePassword()
+    {
+        $user = DB::table('users')
+            ->update([
+                'password'=> Hash::make($this->password)
+            ]);
+        if($user>0) return true;
+        return false;
+    }
 }

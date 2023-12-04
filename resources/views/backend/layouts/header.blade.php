@@ -36,7 +36,7 @@
                     <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{url('user/profile') }}">
                         <span class="font-size-sm font-w500">My Profile</span>
                     </a>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{url('change_password')}}">
                         <span class="font-size-sm font-w500">Change Password</span>
                     </a>
                     <div role="separator" class="dropdown-divider"></div>

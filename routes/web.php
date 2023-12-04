@@ -43,7 +43,12 @@ Route::post('login', [AuthController::class, 'authenticate'])->name('login');
 
 
 Route::group(['middleware'=> 'auth'], function() {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::prefix('dashboard')->group(function() {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/get_requisition_data', [DashboardController::class, 'fetchRequisitionData']);
+        Route::get('/get_on_leave_data', [DashboardController::class, 'fetchOnLeaveData']);
+        Route::get('/get_pending_leave_data', [DashboardController::class, 'fetchPendingLeaveData']);
+    });
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('leave_types/get_data', [LeaveController::class, 'getTypeWiseTotalLeavesData']);
 

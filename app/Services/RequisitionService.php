@@ -11,7 +11,7 @@ use App\Traits\AuthorizationTrait;
 
 class RequisitionService
 {
-    use AuthorizationTrait;
+
     private $requisitionRepository;
 
     public function __construct(RequisitionRepository $requisitionRepository)

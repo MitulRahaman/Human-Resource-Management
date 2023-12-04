@@ -51,7 +51,8 @@ class AuthService
     {
         $current_password_msg = null ;
         $confirm_password_msg = null ;
-        if(!Hash::check($data['current_password'],auth()->user()->password))
+        $password = $this->authRepository->getUserPassword();
+        if(!Hash::check($data['current_password'],$password))
             $current_password_msg = 'Current password not matched';
         if($data['new_password']!=$data['confirm_password'])
             $confirm_password_msg = 'Confirm password not matched with new password';
@@ -72,10 +73,9 @@ class AuthService
     }
     public function changePassword($data)
     {
-
-        if(!Hash::check($data['current_password'],auth()->user()->password) || $data['new_password']!=$data['confirm_password'])
+        $password = $this->authRepository->getUserPassword();
+        if(!Hash::check($data['current_password'],$password) || $data['new_password']!=$data['confirm_password'])
             return false;
-
         return $this->authRepository->setPassword($data['new_password'])->changePassword();
     }
 }

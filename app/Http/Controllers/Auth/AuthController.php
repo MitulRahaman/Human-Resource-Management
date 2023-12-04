@@ -50,9 +50,9 @@ class AuthController extends Controller
     public function validatePasswords(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'change_password' => 'required',
+            'current_password' => 'required',
             'new_password' => 'required',
-            'confirm_password' => 'required'
+            'confirm_password' => 'required|same:new_password'
         ]);
         if($validator)
         {
@@ -64,9 +64,9 @@ class AuthController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'change_password' => 'required',
+                'current_password' => 'required',
                 'new_password' => 'required',
-                'confirm_password' => 'required'
+                'confirm_password' => 'required|same:new_password'
             ]);
             if($validator)
             {

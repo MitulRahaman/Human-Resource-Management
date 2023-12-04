@@ -32,10 +32,16 @@ class AuthRepository
     public function changePassword()
     {
         $user = DB::table('users')
+            ->where('id',auth()->user()->id)
             ->update([
                 'password'=> Hash::make($this->password)
             ]);
-        if($user>0) return true;
+        if($user==1) return true;
         return false;
+    }
+    public function getUserPassword()
+    {
+        $user = DB::table('users')->where('id', auth()->user()->id)->select('password')->first();
+        return $user->password;
     }
 }

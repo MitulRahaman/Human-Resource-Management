@@ -6,6 +6,7 @@ use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Traits\AuthorizationTrait;
+use Illuminate\Support\Facades\Config;
 
 class DashboardController extends Controller
 {

@@ -34,8 +34,8 @@ class DashboardRepository
             ->leftJoin('users as u', 'r.user_id', '=', 'u.id')
             ->groupBy('r.id')
             ->select('r.*', 'at.id as asset_type_id', 'at.name as type_name', 'u.employee_id', 'u.full_name')
-            ->skip($this->offset)
-            ->take($this->limit)
+            ->offset($this->offset)
+            ->limit($this->limit)
             ->get();
     }
     public function totalRequisitionRequests()
@@ -65,7 +65,7 @@ class DashboardRepository
             ->join('basic_info', 'leaves.user_id', '=', 'basic_info.user_id')
             ->join('designations', 'basic_info.designation_id', '=', 'designations.id')
             ->select('leaves.user_id', 'users.employee_id', 'users.full_name', 'designations.name as designation_name')
-            ->take($this->limit)
+            ->limit($this->limit)
             ->get();
     }
     public function getPendingLeaveTableData()
@@ -75,7 +75,7 @@ class DashboardRepository
             ->join('users', 'users.id', '=', 'leaves.user_id')
             ->join('leave_types', 'leave_types.id','=','leaves.leave_type_id')
             ->select('leave_types.name as leave_type', 'users.employee_id', 'users.full_name', 'leaves.start_date','leaves.end_date', 'leaves.created_at')
-            ->take($this->limit)
+            ->limit($this->limit)
             ->get();
     }
 

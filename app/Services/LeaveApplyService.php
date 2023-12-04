@@ -5,6 +5,7 @@ namespace App\Services;
 use Mail;
 use App\Events\LeaveApplied;
 use App\Mail\LeaveApplicationMail;
+use App\Mail\LeaveApproveMail;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -25,8 +26,12 @@ class LeaveApplyService
     }
     public function storeLeaves($data)
     {
-        event(new LeaveApplied($data));
-        return $this->leaveApplyRepository->storeLeaves($data);
+        if(is_object($this->leaveApplyRepository->storeLeaves($data))) {
+            event(new LeaveApplied($data));
+            return true;
+        } else {
+            return false;
+        }
     }
     public function editLeave($id)
     {
@@ -38,13 +43,20 @@ class LeaveApplyService
     }
     public function LeaveApplicationEmail($data)
     {
-        $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
+        $leaveTypeName = null;
         $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
         if(!$receivers) {
             return false;
         }
-        Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
-        return true;
+
+        if($data->leaveTypeId) {
+            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
+            Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
+            return true;
+        } else {
+            Mail::send((new LeaveApproveMail($data))->to($receivers[1])->cc($receivers[0]));
+            return true;
+        }
     }
     public function recommendLeave($data, $id)
     {
@@ -52,7 +64,12 @@ class LeaveApplyService
     }
     public function approveLeave($data, $id)
     {
-        return $this->leaveApplyRepository->approveLeave($data, $id);
+        if($this->leaveApplyRepository->approveLeave($data, $id)) {
+            event(new LeaveApplied($data));
+            return true;
+        } else {
+            return false;
+        }
     }
     public function rejectLeave($data, $id)
     {
@@ -104,7 +121,7 @@ class LeaveApplyService
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
                 $recommend_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_recommend_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Recommend</a>";
-                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Approve</a>";
+                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\", \"$start_date\", \"$end_date\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a>";
                 if($hasManageLeavePermission)
                 {

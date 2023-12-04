@@ -6,6 +6,7 @@ use App\Models\BasicInfo;
 use App\Models\Designation;
 use Validator;
 use Carbon\Carbon;
+use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -104,10 +105,10 @@ class LeaveApplyRepository
 
     public function storeLeaves($data)
     {
-        $data->startDate = date("Y-m-d", strtotime($data->startDate));
-        $data->endDate = date("Y-m-d", strtotime($data->endDate));
+        $data->startDate = CommonHelper::format_date($data->startDate, 'd/m/Y', 'Y-m-d');
+        $data->endDate = CommonHelper::format_date($data->endDate, 'd/m/Y', 'Y-m-d');
 
-        $result = LeaveApply::create([
+        return LeaveApply::create([
             'user_id' => auth()->user()->id,
             'leave_type_id' => $data->leaveTypeId,
             'start_date' => $data->startDate,
@@ -116,7 +117,6 @@ class LeaveApplyRepository
             'reason' => $data->reason,
             'status' => Config::get('variable_constants.status.pending')
         ]);
-        return $result;
     }
 
     public function getLeaveInfo()

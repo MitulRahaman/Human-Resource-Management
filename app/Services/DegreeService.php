@@ -81,7 +81,7 @@ class DegreeService
     public function fetchData()
     {
         $result = $this->degreeRepository->getAllDegreeData();
-        $hasDegreeManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDegree')->checkAuthorization();
+        $hasDegreeManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDegree')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

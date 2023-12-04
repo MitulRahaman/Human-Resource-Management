@@ -23,7 +23,7 @@ class RoleController extends Controller
     }
     public function index()
     {
-        $hasRoleManagePermission = $this->setId(auth()->user()->id)->setSlug('manageRoles')->checkAuthorization();
+        $hasRoleManagePermission = $this->setId(auth()->user()->id)->setSlug('manageRoles')->hasPermission();
         return \view('backend.pages.role.index', compact('hasRoleManagePermission'));
     }
     public function fetchData()

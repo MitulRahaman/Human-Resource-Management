@@ -23,7 +23,7 @@ class DesignationController extends Controller
     }
     public function index()
     {
-        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignations')->checkAuthorization();
+        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignations')->hasPermission();
         return \view('backend.pages.designation.index', compact('hasDesignationManagePermission'));
     }
     public function create()

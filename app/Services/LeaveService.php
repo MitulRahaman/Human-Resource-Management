@@ -105,7 +105,7 @@ class LeaveService
     public function getTypeWiseTotalLeavesData($year)
     {
         $result = $this->leaveRepository->setYear($year)->getTypeWiseTotalLeavesData();
-        $hasManageLeavePermission = $this->setId(auth()->user()->id)->setSlug('manageLeaves')->checkAuthorization();
+        $hasManageLeavePermission = $this->setId(auth()->user()->id)->setSlug('manageLeaves')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

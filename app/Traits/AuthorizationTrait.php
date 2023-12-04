@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 trait AuthorizationTrait {
 
+    private $id, $slug;
+
   public function setId($id)
   {
     $this->id = $id;
@@ -20,22 +22,7 @@ trait AuthorizationTrait {
     return $this;
   }
 
-//   public function checkAuthorization()
-//   {
-//     $hasPermission = DB::table('permissions as p')
-//       ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
-//       ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-//       ->where('p.slug', '=', $this->slug)
-//       ->where('bi.user_id', '=', $this->id)
-//       ->first();
-//     if($hasPermission || auth()->user()->is_super_user ) {
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-
-  public function checkAuthorization() : bool
+  public function hasPermission() : bool
   {
       if (Auth::user()->is_super_user) {
           return true;

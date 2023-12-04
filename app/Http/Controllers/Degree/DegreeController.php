@@ -22,7 +22,7 @@ class DegreeController extends Controller
     }
     public function index()
     {
-        $hasDegreeManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDegree')->checkAuthorization();
+        $hasDegreeManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDegree')->hasPermission();
         return \view('backend.pages.degree.index', compact('hasDegreeManagePermission'));
     }
     public function fetchData()

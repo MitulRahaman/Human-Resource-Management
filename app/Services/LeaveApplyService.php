@@ -70,7 +70,7 @@ class LeaveApplyService
     {
         $result = $this->leaveApplyRepository->getTableData();
         $userId= auth()->user()->id;
-        $hasManageLeavePermission = $this->setId($userId)->setSlug('manageLeaves')->checkAuthorization();
+        $hasManageLeavePermission = $this->setId($userId)->setSlug('manageLeaves')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {

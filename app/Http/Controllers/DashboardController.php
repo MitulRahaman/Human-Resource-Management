@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Config;
 class DashboardController extends Controller
 {
     use AuthorizationTrait;
+
     private  $dashboardService;
+
     public function __construct(DashboardService $dashboardService)
     {
         $this->dashboardService = $dashboardService;
@@ -20,8 +22,8 @@ class DashboardController extends Controller
     }
     public function index()
     {
-        $hasManageRequisitionPermission = $this->hasPermission(Config::get('variable_constants.permission.manageRequisition'));
-        $hasManageLeavePermission = $this->hasPermission(Config::get('variable_constants.permission.manageLeaves'));
+        $hasManageRequisitionPermission = $this->setSlug(Config::get('variable_constants.permission.manageRequisition'))->hasPermission();
+        $hasManageLeavePermission = $this->setSlug(Config::get('variable_constants.permission.manageLeaves'))->hasPermission();
         $total=[
             'requisition'=> $this->dashboardService->totalRequisitionRequests(),
             'on_leave' => $this->dashboardService->totalOnLeave(),

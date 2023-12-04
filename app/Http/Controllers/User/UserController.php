@@ -48,7 +48,7 @@ class UserController extends Controller
 
     public function manage()
     {
-        $hasUserManagePermission = $this->setId(auth()->user()->id)->setSlug('manageUsers')->checkAuthorization();
+        $hasUserManagePermission = $this->setId(auth()->user()->id)->setSlug('manageUsers')->hasPermission();
         View::share('sub_menu', 'Manage Users');
         return view('backend.pages.user.manage', compact('hasUserManagePermission'));
     }

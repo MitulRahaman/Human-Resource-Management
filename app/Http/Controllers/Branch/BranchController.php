@@ -26,7 +26,7 @@ class BranchController extends Controller
 
     public function index()
     {
-        $hasBranchManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBranch')->checkAuthorization();
+        $hasBranchManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBranch')->hasPermission();
         $branches = $this->branchService->indexBranch();
         return \view('backend.pages.branch.index', compact('branches', 'hasBranchManagePermission'));
     }

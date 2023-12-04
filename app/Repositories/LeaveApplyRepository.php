@@ -40,7 +40,7 @@ class LeaveApplyRepository
     {
         $userId = auth()->user()->id;
 
-        $isHrSuperUser = $this->setId($userId)->setSlug('manageLeaves')->checkAuthorization();
+        $isHrSuperUser = $this->setId($userId)->setSlug('manageLeaves')->hasPermission();
         $usersUnderLineManager = DB::table('line_managers')->where('line_manager_user_id', '=', $userId)->whereNull('deleted_at')->pluck('user_id')->toArray();
         array_push($usersUnderLineManager, $userId);
 

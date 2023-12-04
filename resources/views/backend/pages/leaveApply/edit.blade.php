@@ -1,8 +1,12 @@
 @extends('backend.layouts.master')
 <link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
+
+<link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
+<link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+<link rel="stylesheet" href="{{ asset('backend/js/plugins/ion-rangeslider/css/ion.rangeSlider.css') }}">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-@section('page_action')  
+@section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
@@ -18,9 +22,9 @@
             <div class="block-header">
                 <h3 class="block-title">Apply for Leave</h3>
             </div>
-            
+
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ url('leaveApply/update', $leave->id) }}" method="POST" id="form">  
+            <form class="js-validation" action="{{ url('leaveApply/update', $leave->id) }}" method="POST" id="form">
                 @csrf
                 @method('patch')
                 <div class="block block-rounded">
@@ -37,14 +41,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Select Leave date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control bg-white" id="date-range" name="date-range" data-mode="range" data-date-format="d-m-Y" value="{{ date('d-m-Y', strtotime($leave->start_date)) }} to {{ date('d-m-Y', strtotime($leave->end_date)) }}" required>
+                                    <div class="input-daterange input-group" data-date-format="dd/mm/yyyy"  data-autoclose="true" data-today-highlight="true">
+                                        <input type="text" class="form-control" id="startDate" name="startDate" value = {{ date('d/m/Y', strtotime($leave->start_date)) }}  data-autoclose="true" data-today-highlight="true" required>
+                                        <div class="input-group-prepend input-group-append">
+                                            <span class="input-group-text font-w600">
+                                                <i class="fa fa-fw fa-arrow-right"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="endDate" name="endDate" value="{{ date('d/m/Y', strtotime($leave->end_date)) }}"  data-autoclose="true" data-today-highlight="true" required>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="reason" name="reason" value="{{ $leave->reason }}" required>
                                 </div>
-                                <input type="hidden" id="startDate" name="startDate" value="">
-                                <input type="hidden" id="endDate" name="endDate" value="">
                                 <input type="hidden" id="totalLeave" name="totalLeave" value="">
                             </div>
                         </div>
@@ -76,35 +86,48 @@
     <script src="{{ asset('backend/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'masked-inputs', 'select2']);});</script>
+    <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']);});</script>
 
 
-    <script> 
+    <script>
         $(document).ready(function() {
             $('.js-tags').select2({
                 tags: true
             });
         });
 
-        $('#date-range').change(function() {
-            let date = $('#date-range').val();
-            let startDate;
-            let endDate;
-            let total = 0;
-            if(date.indexOf("t") != -1) {
-                startDate = date.substring(0, 10);
-                endDate = date.substring(14);
-                startDate = startDate.split("-").reverse().join("-");
-                endDate = endDate.split("-").reverse().join("-");
-                total = (Date.parse(endDate) - Date.parse(startDate))/86400000 + 1 ;
-            } else {
-                startDate = date.substring(0, 10);
-                endDate = startDate;
-                total = 1;
-            }
+        function daysdifference(firstDate, secondDate){
+            var startDay = new Date(firstDate);
+            var endDay = new Date(secondDate);
+            var millisBetween = startDay.getTime() - endDay.getTime();
+            var days = millisBetween / (1000 * 3600 * 24);
+            return Math.round(Math.abs(days)) + 1;
+        }
+
+        $('#startDate').change(function() {
+            let startDate = $('#startDate').val();
+            startDate = startDate.split("/");
+            newStartDate = startDate[1] + '/' + startDate[0] + '/' + startDate[2];
+
+            let endDate = $('#endDate').val();
+            endDate = endDate.split("/");
+            newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
+
+            total = daysdifference(newStartDate, newEndDate);
             $('#totalLeave').val(total);
-            $('#startDate').val(startDate);
-            $('#endDate').val(endDate);
+        });
+
+        $('#endDate').change(function() {
+            let startDate = $('#startDate').val();
+            startDate = startDate.split("/");
+            newStartDate = startDate[1] + '/' + startDate[0] + '/' + startDate[2];
+
+            let endDate = $('#endDate').val();
+            endDate = endDate.split("/");
+            newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
+
+            total = daysdifference(newStartDate, newEndDate);
+            $('#totalLeave').val(total);
         });
 
     </script>

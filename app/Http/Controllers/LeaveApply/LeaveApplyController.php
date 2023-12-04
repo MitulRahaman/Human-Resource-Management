@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\LeaveApply;
 
-use App\Events\LeaveApplied;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveApplyAddRequest;
@@ -37,6 +36,21 @@ class LeaveApplyController extends Controller
         try {
             $leaveTypes = $this->leaveApplyService->getLeaveTypes();
             return view('backend.pages.leaveApply.apply', compact('leaveTypes'));
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function recommendLeave(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'remarks' => 'required',
+            ]);
+            if($validator)
+            {
+                $this->leaveApplyService->recommendLeave($request->all(),$id);
+                return redirect()->back()->with('success', 'Recommend');
+            }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
@@ -93,7 +107,6 @@ class LeaveApplyController extends Controller
         abort_if(!$this->setSlug('applyLeave')->checkAuthorization(), 403, 'You don\'t have permission!');
         try {
             if($this->leaveApplyService->storeLeaves($request)) {
-                event(new LeaveApplied($request));
                 return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');
             } else {
                 return redirect('leaveApply/apply')->with('error', $response);

@@ -31,10 +31,11 @@ class DashboardService
     {
         return $this->dashboardRepository->totalPendingLeave();
     }
-    public function fetchRequisitionData($page, $perPage)
+    public function fetchRequisitionData($page, $limit)
     {
-        $result = $this->dashboardRepository->getRequisitionTableData($page, $perPage);
-
+        $offset = ($page-1)*$limit;
+        $this->dashboardRepository->setOffset($offset)->setLimit($limit);
+        $result = $this->dashboardRepository->getRequisitionTableData();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key => $row) {
@@ -81,8 +82,9 @@ class DashboardService
         }
     }
 
-    public function fetchOnLeaveData()
+    public function fetchOnLeaveData($limit)
     {
+        $this->dashboardRepository->setLimit($limit);
         $result = $this->dashboardRepository->getOnLeaveTableData();
         if ($result->count() > 0) {
             $data = array();
@@ -107,8 +109,9 @@ class DashboardService
             }';
         }
     }
-    public function fetchPendingLeaveData()
+    public function fetchPendingLeaveData($limit)
     {
+        $this->dashboardRepository->setLimit($limit);
         $result = $this->dashboardRepository->getPendingLeaveTableData();
         if ($result->count() > 0) {
             $data = array();

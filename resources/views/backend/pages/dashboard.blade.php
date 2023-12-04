@@ -94,7 +94,7 @@
         <!-- Recent Orders -->
             <div class="content">
                 <div class="row">
-                    @if($total_on_leave>0)
+                    @if($total['on_leave']>0)
                     <div class="col-6">
                         <div class="block block-rounded">
                             <div class="block-header block-header-default">
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     @endif
-                    @if($total_pending_leave>0)
+                    @if($total['pending_leave']>0)
                     <div class="col-6">
                         <div class="block block-rounded">
                             <div class="block-header block-header-default">
@@ -160,7 +160,7 @@
                 </div>
             <div class="row">
                 <div class="col-12">
-                @if($hasManageRequisitionPermission && $total_requisition>0)
+                @if($hasManageRequisitionPermission && $total['requisition']>0)
                     <!-- Recent Orders -->
                         <div class="block block-rounded">
                             <div class="block-header block-header-default">

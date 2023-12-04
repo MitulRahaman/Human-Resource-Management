@@ -19,31 +19,35 @@ class DashboardController extends Controller
     }
     public function index()
     {
-        $hasManageRequisitionPermission = $this->hasPermission("manageRequisition");
-        $hasManageLeavePermission = $this->hasPermission("manageLeaves");
-        $total_requisition = $this->dashboardService->totalRequisitionRequests();
-        $total_on_leave = $this->dashboardService->totalOnLeave();
-        $total_pending_leave = $this->dashboardService->totalPendingLeave();
-        return \view('backend.pages.dashboard', compact('hasManageRequisitionPermission','hasManageLeavePermission','total_pending_leave','total_on_leave','total_requisition'));
+        $hasManageRequisitionPermission = $this->hasPermission(Config::get('variable_constants.permission.manageRequisition'));
+        $hasManageLeavePermission = $this->hasPermission(Config::get('variable_constants.permission.manageLeaves'));
+        $total=[
+            'requisition'=> $this->dashboardService->totalRequisitionRequests(),
+            'on_leave' => $this->dashboardService->totalOnLeave(),
+            'pending_leave' => $this->dashboardService->totalPendingLeave(),
+        ];
+        return \view('backend.pages.dashboard', compact('hasManageRequisitionPermission','hasManageLeavePermission','total'));
     }
     public function fetchRequisitionData(Request $request)
     {
         $page = $request->input('page', 1);
-        $perPage = 10;
+        $limit = 10;
         $total_row = $this->dashboardService->totalRequisitionRequests();
         return response()->json([
-            'data' => $this->dashboardService->fetchRequisitionData($page, $perPage),
-            'total_pages' => ceil($total_row / $perPage),
+            'data' => $this->dashboardService->fetchRequisitionData($page, $limit),
+            'total_pages' => ceil($total_row / $limit),
         ]);
     }
 
     public function fetchOnLeaveData()
     {
-        return $this->dashboardService->fetchOnLeaveData();
+        $limit = 10;
+        return $this->dashboardService->fetchOnLeaveData($limit);
     }
     public function fetchPendingLeaveData()
     {
-        return $this->dashboardService->fetchPendingLeaveData();
+        $limit = 10;
+        return $this->dashboardService->fetchPendingLeaveData($limit);
     }
 
 }

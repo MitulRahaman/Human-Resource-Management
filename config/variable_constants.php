@@ -58,5 +58,9 @@ return [
     'designation' =>[
         'hr'=>"HR",
         'super_user' => 1,
+    ],
+    'permission' => [
+        'manageRequisition' => "manageRequisition",
+        'manageLeaves' => "manageLeaves",
     ]
 ];

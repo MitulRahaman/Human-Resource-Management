@@ -92,6 +92,9 @@
                                         <p class="text-center"><span id="approve_leave"></span> Give a reason: </p>
                                         <input type="text" name="approve-modal-remarks" id="approve-modal-remarks" value="" required>
                                     </div>
+                                    <input type="hidden" id="leaveType" name="leaveType" value="">
+                                    <input type="hidden" id="startDate" name="startDate" value="">
+                                    <input type="hidden" id="endDate" name="endDate" value="">
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -192,12 +195,15 @@
             document.getElementById("recommend-modal-remarks").value = remarks;
             $('#recommend-modal').modal('show');
         }
-        function show_approve_modal(id, type, remarks) {
+        function show_approve_modal(id, type, remarks, startDate, endDate) {
             var x = document.getElementById('approve_leave');
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/approve') }}".replace(':id', id);
             $('#approve').attr('action', url);
             document.getElementById("approve-modal-remarks").value = remarks;
+            document.getElementById("leaveType").value = type;
+            document.getElementById("startDate").value = startDate;
+            document.getElementById("endDate").value = endDate;
             $('#approve-modal').modal('show');
         }
         function show_reject_modal(id, type, remarks) {

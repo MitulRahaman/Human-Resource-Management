@@ -54,13 +54,18 @@ return [
         'canceled' => 3,
         'distributed' => 4
     ],
-    
+
     'designation' =>[
         'hr'=>"HR",
         'super_user' => 1,
     ],
+
     'permission' => [
         'manageRequisition' => "manageRequisition",
         'manageLeaves' => "manageLeaves",
-    ]
+    ],
+
+    'leave_status' => [
+        'pending' => 0,
+    ],
 ];

@@ -9,7 +9,7 @@
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href="{{ url('leaveApply/apply') }}">  
+        <a href="{{ url('leaveApply/apply') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
                 <i class="fa fa-fw fa-key mr-1"></i> Apply for Leave
             </button>
@@ -17,14 +17,14 @@
     </div>
 @endsection
 @section('content')
-    <div class="content"> 
+    <div class="content">
         <div class="block block-rounded">
         @include('backend.layouts.error_msg')
             <div class="block-header">
                 <h3 class="block-title mt-4">{{ $sub_menu }}</h3>
             </div>
             <div class="block-content block-content-full">
-                <div class="table-responsive"> 
+                <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter" id="dataTable">
                         <thead>
                             <tr>
@@ -45,7 +45,34 @@
                         <tbody>
 
                         </tbody>
-                    </table> 
+                    </table>
+                </div>
+                <div class="modal" id="recommend-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="recommend" action="" method="post">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Approve</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm">
+                                        <p class="text-center"><span id="recommend_leave"></span> Give a reason: </p>
+                                        <input type="text" name="remarks" id="remarks" required>
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Recommend</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal" id="approve-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -63,7 +90,7 @@
                                     </div>
                                     <div class="block-content font-size-sm">
                                         <p class="text-center"><span id="approve_leave"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" required>
+                                        <input type="text" name="remarks" id="remarks" value="" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -90,7 +117,7 @@
                                     </div>
                                     <div class="block-content font-size-sm">
                                         <p class="text-center"><span id="reject_leave"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" required>
+                                        <input type="text" name="remarks" id="remarks" value="" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -106,7 +133,7 @@
     </div>
 @endsection
 
-@section('js_after') 
+@section('js_after')
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -154,21 +181,30 @@
                     lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
                 });
             }
-            createTable(); 
+            createTable();
         });
         //end create table
-        function show_approve_modal(id, type) {
+        function show_recommend_modal(id, type) {
+            var x = document.getElementById('recommend_leave');
+            x.innerHTML = type;
+            const url = "{{ url('leaveApply/status/:id/recommend') }}".replace(':id', id);
+            $('#recommend').attr('action', url);
+            $('#recommend-modal').modal('show');
+        }
+        function show_approve_modal(id, type, remarks) {
             var x = document.getElementById('approve_leave');
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/approve') }}".replace(':id', id);
             $('#approve').attr('action', url);
+            $('#approve-modal input').val(remarks);
             $('#approve-modal').modal('show');
         }
-        function show_reject_modal(id, type) {
+        function show_reject_modal(id, type, remarks) {
             var x = document.getElementById('reject_leave');
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/reject') }}".replace(':id', id);
             $('#reject').attr('action', url);
+            $('#reject-modal input').val(remarks);
             $('#reject-modal').modal('show');
         }
      </script>

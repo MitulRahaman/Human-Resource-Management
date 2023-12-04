@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Mail;
+use App\Events\LeaveApplied;
 use App\Mail\LeaveApplicationMail;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class LeaveApplyService
     }
     public function storeLeaves($data)
     {
+        event(new LeaveApplied($data));
         return $this->leaveApplyRepository->storeLeaves($data);
     }
     public function editLeave($id)
@@ -43,6 +45,10 @@ class LeaveApplyService
         }
         Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
         return true;
+    }
+    public function recommendLeave($data, $id)
+    {
+        return $this->leaveApplyRepository->recommendLeave($data, $id);
     }
     public function approveLeave($data, $id)
     {
@@ -97,8 +103,9 @@ class LeaveApplyService
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
-                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\")'>Approve</a>";
-                $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\")'>Reject</a>";
+                $recommend_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_recommend_modal(\"$id\", \"$leave_type\")'>Recommend</a>";
+                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Approve</a>";
+                $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a>";
                 if($hasManageLeavePermission)
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
@@ -117,6 +124,12 @@ class LeaveApplyService
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
                     else $action_btn .= "$toggle_delete_btn";
+                } else
+                {
+                    if($row->status== Config::get('variable_constants.status.pending'))
+                    {
+                        $action_btn .= "$recommend_btn";
+                    }
                 }
 
                 $action_btn .= "</div>

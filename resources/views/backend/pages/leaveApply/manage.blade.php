@@ -63,7 +63,7 @@
                                     </div>
                                     <div class="block-content font-size-sm">
                                         <p class="text-center"><span id="recommend_leave"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" required>
+                                        <input type="text" name="recommend-modal-remarks" id="recommend-modal-remarks" value="" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -90,7 +90,7 @@
                                     </div>
                                     <div class="block-content font-size-sm">
                                         <p class="text-center"><span id="approve_leave"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" value="" required>
+                                        <input type="text" name="approve-modal-remarks" id="approve-modal-remarks" value="" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -117,7 +117,7 @@
                                     </div>
                                     <div class="block-content font-size-sm">
                                         <p class="text-center"><span id="reject_leave"></span> Give a reason: </p>
-                                        <input type="text" name="remarks" id="remarks" value="" required>
+                                        <input type="text" name="reject-modal-remarks" id="reject-modal-remarks" value="" required>
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -184,11 +184,12 @@
             createTable();
         });
         //end create table
-        function show_recommend_modal(id, type) {
+        function show_recommend_modal(id, type, remarks) {
             var x = document.getElementById('recommend_leave');
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/recommend') }}".replace(':id', id);
             $('#recommend').attr('action', url);
+            document.getElementById("recommend-modal-remarks").value = remarks;
             $('#recommend-modal').modal('show');
         }
         function show_approve_modal(id, type, remarks) {
@@ -196,7 +197,7 @@
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/approve') }}".replace(':id', id);
             $('#approve').attr('action', url);
-            $('#approve-modal input').val(remarks);
+            document.getElementById("approve-modal-remarks").value = remarks;
             $('#approve-modal').modal('show');
         }
         function show_reject_modal(id, type, remarks) {
@@ -204,7 +205,7 @@
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/reject') }}".replace(':id', id);
             $('#reject').attr('action', url);
-            $('#reject-modal input').val(remarks);
+            document.getElementById("reject-modal-remarks").value = remarks;
             $('#reject-modal').modal('show');
         }
      </script>

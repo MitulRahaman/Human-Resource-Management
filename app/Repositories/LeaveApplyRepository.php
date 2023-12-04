@@ -41,12 +41,8 @@ class LeaveApplyRepository
         $userId = auth()->user()->id;
 
         $isHrSuperUser = $this->setId($userId)->setSlug('manageLeaves')->checkAuthorization();
-        $usersUnderLineManager = DB::table('line_managers')->where('line_manager_user_id', '=', $userId)->whereNull('deleted_at')->get('user_id')->toArray();
-        $array = array();
-        array_push($array, $userId);
-        foreach ($usersUnderLineManager as $user) {
-            array_push($array, $user->user_id);
-        }
+        $usersUnderLineManager = DB::table('line_managers')->where('line_manager_user_id', '=', $userId)->whereNull('deleted_at')->pluck('user_id')->toArray();
+        array_push($usersUnderLineManager, $userId);
 
         return DB::table('leaves as l')
             ->leftJoin('leave_types as lt', function ($join) {
@@ -55,12 +51,13 @@ class LeaveApplyRepository
             ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
             ->groupBy('l.id')
             ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
-            ->when(!$isHrSuperUser, function($query)use ($userId, $array){
-                $query->whereIn('l.user_id', $array);
+            ->when(!$isHrSuperUser, function($query)use ($usersUnderLineManager){
+                $query->whereIn('l.user_id', $usersUnderLineManager);
             })
             ->get();
 
     }
+
     public function getLeaveAppliedEmailRecipient()
     {
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
@@ -107,14 +104,14 @@ class LeaveApplyRepository
 
     public function storeLeaves($data)
     {
-        $formattedStartDate = date("Y-m-d", strtotime($data->startDate));
-        $formattedEndDate = date("Y-m-d", strtotime($data->endDate));
+        $data->startDate = date("Y-m-d", strtotime($data->startDate));
+        $data->endDate = date("Y-m-d", strtotime($data->endDate));
 
         $result = LeaveApply::create([
             'user_id' => auth()->user()->id,
             'leave_type_id' => $data->leaveTypeId,
-            'start_date' => $formattedStartDate,
-            'end_date' => $formattedEndDate,
+            'start_date' => $data->startDate,
+            'end_date' => $data->endDate,
             'total' => $data->totalLeave,
             'reason' => $data->reason,
             'status' => Config::get('variable_constants.status.pending')
@@ -129,17 +126,15 @@ class LeaveApplyRepository
 
     public function updateLeave($data)
     {
-        $data->startDate = str_replace("/","-",$data->startDate);
-        $data->endDate = str_replace("/","-",$data->endDate);
-        $formattedStartDate = date("Y-m-d", strtotime($data->startDate));
-        $formattedEndDate = date("Y-m-d", strtotime($data->endDate));
+        $data->startDate = date("Y-m-d", strtotime(str_replace("/","-",$data->startDate)));
+        $data->endDate = date("Y-m-d", strtotime(str_replace("/","-",$data->endDate)));
         if($data->totalLeave == null) {
             DB::table('leaves')
             ->where('id', '=', $this->id)
             ->update([
                 'leave_type_id' => $data->leaveTypeId,
-                'start_date' => $formattedStartDate,
-                'end_date' => $formattedEndDate,
+                'start_date' => $$data->startDatee,
+                'end_date' => $data->endDate,
                 'reason' => $data->reason,
             ]);
         } else {
@@ -148,8 +143,8 @@ class LeaveApplyRepository
             ->where('id', '=', $this->id)
             ->update([
                 'leave_type_id' => $data->leaveTypeId,
-                'start_date' => $formattedStartDate,
-                'end_date' => $formattedEndDate,
+                'start_date' => $data->startDate,
+                'end_date' => $data->endDate,
                 'total' => $data->totalLeave,
                 'reason' => $data->reason,
             ]);
@@ -158,17 +153,17 @@ class LeaveApplyRepository
     }
     public function recommendLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['remarks'=>$data['remarks']]);
+        return DB::table('leaves')->where('id',$id)->update(['remarks'=>$data['recommend-modal-remarks']]);
     }
     public function approveLeave($data, $id)
     {
         return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.approved'),
-            'remarks'=>$data['remarks']]);
+            'remarks'=>$data['approve-modal-remarks']]);
     }
     public function rejectLeave($data, $id)
     {
         return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.rejected'),
-            'remarks'=>$data['remarks']]);
+            'remarks'=>$data['reject-modal-remarks']]);
     }
     public function cancelLeave($id)
     {

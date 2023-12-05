@@ -859,7 +859,11 @@ class UserRepository
     {
         $currentYear = now()->year;
         $leaves = DB::table('calender')->whereRaw('YEAR(date) = ?', [$currentYear])->pluck('date');
+<<<<<<< HEAD
         $used_leaves = DB::table('leaves')->where('user_id', '=',$id)->where('status', '=',Config::get('variable_constants.leave_status.approved'))->pluck('total')->toArray();
+=======
+        $used_leaves = DB::table('leaves')->where('user_id', $id)->where('status', Config::get('variable_constants.status.approved'))->pluck('total')->toArray();
+>>>>>>> 68ea93058e08fe408231b462c62313d403979da4
         $total_used = array_sum($used_leaves);
         return count($leaves)-$total_used;
     }

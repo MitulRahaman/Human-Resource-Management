@@ -63,7 +63,7 @@ class LeaveApplyController extends Controller
             ]);
             if($validator)
             {
-                $this->leaveApplyService->approveLeave($request->all(),$id);
+                $this->leaveApplyService->approveLeave($request,$id);
                 return redirect()->back()->with('success', 'Leave approved');
             }
         } catch (\Exception $exception) {

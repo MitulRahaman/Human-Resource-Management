@@ -286,7 +286,8 @@ class UserService
             $this->userRepository->setId($id);
         }
         $user = $this->userRepository->getUserInfo();
-        $user->personalInfo->dob= CommonHelper::format_date($user->personalInfo->dob, 'Y-m-d', 'd/m/Y');
+        if($user->personalInfo)
+            $user->personalInfo->dob= CommonHelper::format_date($user->personalInfo->dob, 'Y-m-d', 'd/m/Y');
         return $user;
     }
     public function getInstitutes()

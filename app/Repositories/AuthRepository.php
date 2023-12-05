@@ -32,7 +32,7 @@ class AuthRepository
     public function changePassword()
     {
         $user = DB::table('users')
-            ->where('id',auth()->user()->id)
+            ->where('id','=',auth()->user()->id)
             ->update([
                 'password'=> Hash::make($this->password)
             ]);
@@ -41,7 +41,7 @@ class AuthRepository
     }
     public function getUserPassword()
     {
-        $user = DB::table('users')->where('id', auth()->user()->id)->select('password')->first();
+        $user = DB::table('users')->where('id', '=',auth()->user()->id)->select('password')->first();
         return $user->password;
     }
 }

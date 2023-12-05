@@ -114,23 +114,23 @@ class RequisitionRepository
     }
     public function getRequisitionRequest($id)
     {
-        return DB::table('requisition_requests')->where('id',$id)->first();
+        return DB::table('requisition_requests')->where('id','=',$id)->first();
     }
     public function delete($id)
     {
-        return DB::table('requisition_requests')->where('id', $id)->delete();
+        return DB::table('requisition_requests')->where('id', '=',$id)->delete();
     }
     public function approve( $id)
     {
-        return DB::table('requisition_requests')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.approved')]);
+        return DB::table('requisition_requests')->where('id','=',$id)->update(['status'=> Config::get('variable_constants.status.approved')]);
     }
     public function reject( $id)
     {
-        return DB::table('requisition_requests')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.rejected')]);
+        return DB::table('requisition_requests')->where('id','=',$id)->update(['status'=> Config::get('variable_constants.status.rejected')]);
     }
     public function cancel($id)
     {
-        return DB::table('requisition_requests')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.canceled')]);
+        return DB::table('requisition_requests')->where('id','=',$id)->update(['status'=> Config::get('variable_constants.status.canceled')]);
     }
     public function getAssetTypeName($id)
     {
@@ -138,7 +138,7 @@ class RequisitionRepository
         if($id)
             $asset_type = DB::table('asset_types')->where('id',$id)
                 ->whereNull('deleted_at')
-                ->where('status',Config::get('variable_constants.activation.active'))
+                ->where('status','=',Config::get('variable_constants.activation.active'))
                 ->first();
         return $asset_type;
     }
@@ -147,19 +147,19 @@ class RequisitionRepository
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
         if(!$appliedUser) return false;
         $lineManagerEmail = DB::table('users as u')
-            ->leftJoin('line_managers as lm', function ($join) {
-                $join->on('u.id', '=', 'lm.user_id')
-                    ->whereNull('lm.deleted_at');
-            })
-            ->leftJoin('users as line_manager_user', 'line_manager_user.id', '=', 'lm.line_manager_user_id')
-            ->where('lm.user_id', '=', $appliedUser->user_id)
-            ->first();
+                                ->leftJoin('line_managers as lm', function ($join) {
+                                    $join->on('u.id', '=', 'lm.user_id')
+                                        ->whereNull('lm.deleted_at');
+                                })
+                                ->leftJoin('users as line_manager_user', 'line_manager_user.id', '=', 'lm.line_manager_user_id')
+                                ->where('lm.user_id', '=', $appliedUser->user_id)
+                                ->first();
         $recipientEmail = DB::table('permissions as p')
-            ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
-            ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-            ->where('p.slug', '=', 'manageLeaves')
-            ->where('bi.branch_id', '=', $appliedUser->branch_id)
-            ->first();
+                                ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
+                                ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
+                                ->where('p.slug', '=', 'manageLeaves')
+                                ->where('bi.branch_id', '=', $appliedUser->branch_id)
+                                ->first();
         if (!$recipientEmail || !$lineManagerEmail) {
             return false;
         }

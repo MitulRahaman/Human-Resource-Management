@@ -6,9 +6,11 @@ use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Helpers\CommonHelper;
+use App\Traits\AuthorizationTrait;
 
 class UserService
 {
+    use AuthorizationTrait;
     private $userRepository, $fileUploadService;
 
     public function __construct(UserRepository $userRepository, FileUploadService $fileUploadService)
@@ -133,6 +135,7 @@ class UserService
     public function getTableData()
     {
         $result = $this->userRepository->getTableData();
+        $hasManageEmployeePermsission = $this->setSlug(Config::get('variable_constants.permission.manageEmployee'))->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -185,11 +188,9 @@ class UserService
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
                 $action_btn .= "$edit_btn ";
-                if($row->id==Auth::id())
+                if($id==Auth::id() || $hasManageEmployeePermsission)
                     $action_btn .="$profile_edit_btn ";
-                elseif ($this->userRepository->isSuperUser(Auth::id()))
-                    $action_btn .="$profile_edit_btn ";
-                if(!$this->userRepository->isAssetDistributed($id) || $this->userRepository->requisitionRequest($id))
+                if($hasManageEmployeePermsission)
                     $action_btn .="$distribute_asset_url_btn ";
                 $action_btn .=" $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</div>
@@ -214,7 +215,10 @@ class UserService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
-                array_push($temp, $action_btn);
+                if($id==Auth::id() || $hasManageEmployeePermsission)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, '');
                 array_push($data, $temp);
             }
 

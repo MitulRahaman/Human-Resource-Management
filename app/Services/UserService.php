@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use App\Helpers\CommonHelper;
 
 class UserService
 {
@@ -280,7 +281,9 @@ class UserService
         } else {
             $this->userRepository->setId($id);
         }
-        return $this->userRepository->getUserInfo();
+        $user = $this->userRepository->getUserInfo();
+        $user->personalInfo->dob= CommonHelper::format_date($user->personalInfo->dob, 'Y-m-d', 'd/m/Y');
+        return $user;
     }
     public function getInstitutes()
     {

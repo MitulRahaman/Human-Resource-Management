@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Menu;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
 
@@ -132,8 +133,8 @@ class MenuRepository
     {
         $id =(int) $id;
         return DB::table('permissions')
-            ->where('permissions.status',1)
-            ->where('permissions.deleted_at',null)
+            ->where('permissions.status','=', Config::get('variable_constants.activation.active'))
+            ->whereNull('permissions.deleted_at')
             ->select('permissions.*', DB::raw('IF(menu_permissions.menu_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('menu_permissions', function ($join) use ($id) {
                 $join->on('permissions.id', '=', 'menu_permissions.permission_id')

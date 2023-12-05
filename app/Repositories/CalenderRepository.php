@@ -73,7 +73,7 @@ class CalenderRepository
                 if($date)
                 {
                     $date = DB::table('calender')
-                        ->where('id', $date->id)
+                        ->where('id', '=',$date->id)
                         ->update([
                             'title' => ($this->title[$i])?  $this->title[$i]:'',
                             'description' => ($this->description[$i])? $this->description[$i]:'',
@@ -120,7 +120,7 @@ class CalenderRepository
             if($date)
             {
                 $date = DB::table('calender')
-                    ->where('id', $date->id)
+                    ->where('id', '=',$date->id)
                     ->update([
                         'title' => ($this->title)?  $this->title:'',
                         'updated_at' => $this->updated_at,
@@ -152,7 +152,7 @@ class CalenderRepository
                 if($date)
                 {
                     $date = DB::table('calender')
-                        ->where('id', $date->id)
+                        ->where('id', '=',$date->id)
                         ->update([
                             'title' => ($l[1])?  $l[1]:'',
                             'description' => ($l[2])?  $l[2]:'',
@@ -180,7 +180,7 @@ class CalenderRepository
     public function updateTitle()
     {
         return DB::table('calender')
-            ->where('date',$this->date)
+            ->where('date', '=',$this->date)
             ->update([
                 'title' => $this->title,
                 'updated_at' => $this->updated_at,
@@ -193,7 +193,7 @@ class CalenderRepository
         if($date)
         {
             $date = DB::table('calender')
-                ->where('id', $date->id)
+                ->where('id', '=',$date->id)
                 ->update([
                     'title' => ($this->title)?  $this->title:'',
                     'description' => ($this->description)?  $this->description:'',

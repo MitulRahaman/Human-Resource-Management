@@ -63,6 +63,7 @@ return [
     'permission' => [
         'manageRequisition' => "manageRequisition",
         'manageLeaves' => "manageLeaves",
+        'manageEmployee' => "manageEmployee",
     ],
 
     'leave_status' => [

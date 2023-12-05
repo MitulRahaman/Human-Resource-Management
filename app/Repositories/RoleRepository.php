@@ -114,8 +114,8 @@ class RoleRepository
     {
         $id =(int) $id;
         return DB::table('permissions')
-            ->where('permissions.status',1)
-            ->where('permissions.deleted_at',null)
+            ->where('permissions.status','=', Config::get('variable_constants.activation.active'))
+            ->whereNull('permissions.deleted_at')
             ->select('permissions.*', DB::raw('IF(role_permissions.role_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('role_permissions', function ($join) use ($id) {
                 $join->on('permissions.id', '=', 'role_permissions.permission_id')
@@ -127,8 +127,8 @@ class RoleRepository
     {
         $id =(int) $id;
         return DB::table('branches')
-            ->where('branches.status',1)
-            ->where('branches.deleted_at',null)
+            ->where('branches.status','=', Config::get('variable_constants.activation.active'))
+            ->whereNull('branches.deleted_at')
             ->select('branches.*', DB::raw('IF(role_branches.role_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('role_branches', function ($join) use ($id) {
                 $join->on('branches.id', '=', 'role_branches.branch_id')
@@ -231,7 +231,7 @@ class RoleRepository
                 ]);
             if( $roles)
             {
-                DB::table('role_permissions')->where('role_id',$this->id)->delete();
+                DB::table('role_permissions')->where('role_id', '=', $this->id)->delete();
                 if($this->permission_ids)
                 {
                     foreach ($this->permission_ids as $p)
@@ -241,7 +241,7 @@ class RoleRepository
                             'permission_id'=>(int)$p,
                         ]);
                     }}
-                DB::table('role_branches')->where('role_id',$this->id)->delete();
+                DB::table('role_branches')->where('role_id', '=',$this->id)->delete();
                 if($this->branch_ids)
                 {
 

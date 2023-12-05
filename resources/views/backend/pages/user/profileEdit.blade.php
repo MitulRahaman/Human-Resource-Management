@@ -24,13 +24,13 @@
                 <!-- Step Tabs -->
                 <ul class="nav nav-tabs nav-tabs-block nav-justified" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#wizard-validation-step1" data-toggle="tab">1. Personal</a>
+                        <a class="nav-link active" href="#wizard-validation-step1" data-toggle="tab">1. Personal Information</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#wizard-validation-step2" data-toggle="tab">2. Details</a>
+                        <a class="nav-link" href="#wizard-validation-step2" data-toggle="tab">2. Academic Information</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#wizard-validation-step3" data-toggle="tab">3. Extra</a>
+                        <a class="nav-link" href="#wizard-validation-step3" data-toggle="tab">3. Bank Information</a>
                     </li>
                 </ul>
                 <!-- END Step Tabs -->
@@ -88,7 +88,7 @@
                             </div>
                             <div class="form-group ">
                                 <label for="example-flatpickr-default">Date Of Birth<span class="text-danger">*</span></label>
-                                <input type="text" class="js-flatpickr form-control bg-white " data-date-format="d-m-Y" id="dob" name="dob" placeholder="Y-m-d" value="{{($user->personalInfo)? $user->personalInfo->dob:''}}" required>
+                                <input type="text" class="js-flatpickr form-control bg-white " data-date-format="d-m-Y" id="dob" name="dob" placeholder="d-m-Y" value="{{($user->personalInfo)? $user->personalInfo->dob:''}}" required>
                             </div>
                             <div class="form-group">
                                 <label for="wizard-validation-skills">Marital Status<span class="text-danger">*</span></label>

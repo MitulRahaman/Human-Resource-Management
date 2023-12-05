@@ -11,7 +11,7 @@ use App\Traits\AuthorizationTrait;
 
 class RequisitionService
 {
-
+    use AuthorizationTrait;
     private $requisitionRepository;
 
     public function __construct(RequisitionRepository $requisitionRepository)
@@ -74,7 +74,7 @@ class RequisitionService
     }
     public function fetchData()
     {
-        $hasManageRequisitionPermission = $this->hasPermission("manageRequisition");
+        $hasManageRequisitionPermission = $this->setSlug(Config::get('variable_constants.permission.manageRequisition'))->hasPermission();
         $userId= auth()->user()->id;
         $this->requisitionRepository->setPermission($hasManageRequisitionPermission);
         if(!$hasManageRequisitionPermission)

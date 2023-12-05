@@ -59,7 +59,7 @@ class LeaveApplyController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'remarks' => 'required',
+                'remarks' => 'nullable',
             ]);
             if($validator)
             {
@@ -74,7 +74,7 @@ class LeaveApplyController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'remarks' => 'required',
+                'remarks' => 'nullable',
             ]);
             if($validator) {
                 $this->leaveApplyService->rejectLeave($request->all(),$id);

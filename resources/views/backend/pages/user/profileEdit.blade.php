@@ -24,13 +24,13 @@
                 <!-- Step Tabs -->
                 <ul class="nav nav-tabs nav-tabs-block nav-justified" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#wizard-validation-step1" data-toggle="tab">1. Personal</a>
+                        <a class="nav-link active" href="#wizard-validation-step1" data-toggle="tab">1. Personal Information</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#wizard-validation-step2" data-toggle="tab">2. Details</a>
+                        <a class="nav-link" href="#wizard-validation-step2" data-toggle="tab">2. Academic Information</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#wizard-validation-step3" data-toggle="tab">3. Extra</a>
+                        <a class="nav-link" href="#wizard-validation-step3" data-toggle="tab">3. Bank Information</a>
                     </li>
                 </ul>
                 <!-- END Step Tabs -->

@@ -23,7 +23,7 @@
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push">
-                            <div class="col-lg-8 col-xl-5">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ $data->name }}">
@@ -35,7 +35,7 @@
 
                         <!-- Update -->
                         <div class="row items-push">
-                            <div class="col-lg-7 offset-lg-4">
+                            <div class="col-lg-5 offset-lg-5">
                                 <button type="submit" class="btn btn-alt-primary" id="submit">Update</button>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
 
-    <script> 
+    <script>
         function verify_inputs(e){
             let name = $('#name').val();
             var current_name = " <?php echo $data->name; ?>"
@@ -98,6 +98,6 @@
                 $('#submit').attr('disabled', true);
                 return true;
             }
-        } 
+        }
     </script>
 @endsection

@@ -5,13 +5,13 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis2.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/js/yearpicker.css') }}"> 
+    <link rel="stylesheet" href="{{ asset('backend/js/yearpicker.css') }}">
 @endsection
 @section('page_action')
     @if ($manageLeavePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('leave/manage') }}">
-            <button type="button" class="btn btn-dark mr-3 mb-3">  
+            <button type="button" class="btn btn-dark mr-3 mb-3">
             <i class="fa fa-cog mr-1"></i> Manage Leave
             </button>
         </a>
@@ -19,7 +19,7 @@
     @endif
 @endsection
 @section('content')
-        <div class="content"> 
+        <div class="content">
             <div class="block block-rounded">
             @include('backend.layouts.error_msg')
                 <div class="block-header">
@@ -28,7 +28,7 @@
                 <div class="block-content block-content-full">
                 <label>Choose a year <span class="text-danger">*</span>(between 2000-2100)</label>
                     <div class="form-row">
-                        <div class="form-group col-xl-3">    
+                        <div class="form-group col-xl-3">
                             <input type="number" class="yearpicker form-control bg-white" min="2000" max="2100" onKeyPress="if(this.value.length==4) return false;" id="year" value="">
                             <span id="error_year" style="font-size:13px; color:red"></span>
                         </div>
@@ -39,16 +39,16 @@
                         </div>
                     </div>
 
-                    <div class="table-responsive"> 
+                    <div class="table-responsive">
                         <table class="table table-bordered table-striped table-vcenter" id="dataTable">
                             <thead>
                                 <tr>
                                     <th class="text-center">Sl no.</th>
                                     <th style="width: 40%;">Name</th>
                                     <th class="text-center" style="width: 15%;">for Year</th>
-                                    <th class="text-center">Total leave</th> 
+                                    <th class="text-center">Total leave</th>
                                     @if ($manageLeavePermission)
-                                    <th class="text-center">Action</th> 
+                                    <th class="text-center">Action</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -56,7 +56,7 @@
 
                             </tbody>
                         </table>
-                    </div>    
+                    </div>
                     <!-- Add total leave Modal -->
                     <div class="modal fade" id="modal-block-slideup" tabindex="-1" role="dialog" aria-labelledby="modal-block-slideup" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-slideup" role="document">
@@ -64,7 +64,7 @@
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
                                         <div>
-                                            <h3 class="block-title text-white">Confirmation</h3> 
+                                            <h3 class="block-title text-white">Confirmation</h3>
                                         </div>
                                         <div class="block-options">
                                             <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
@@ -72,20 +72,20 @@
                                             </button>
                                         </div>
                                     </div>
-                                    
+
                                     <form class="js-validation" action="" method="POST" id="modalForm">
                                         @csrf
                                         <div class="block block-rounded">
                                             <div class="block-content block-content-full">
                                                 <div class="row items-push">
-                                                    <div class="col-lg-7 col-xl-7">
+                                                    <div class="col-lg-6 col-xl-6">
                                                         <div class="form-group">
                                                             <label for="val-title">Total Leave <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" value="" placeholder="Enter total leave.."> 
+                                                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" value="" placeholder="Enter total leave..">
                                                             <span id="error_total_leave" style="font-size:13px; color:red"></span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-5 col-xl-5">
+                                                    <div class="col-lg-6 col-xl-6">
                                                         <div class="form-group">
                                                             <label for="val-title">Year</label>
                                                             <input type="number" class="form-control" id="updateYear" name="updateYear" value="" placeholder="" readonly>
@@ -93,7 +93,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row items-push">
-                                                    <div class="col-lg-7 offset-lg-4">
+                                                    <div class="col-lg-12 offset-lg-12">
                                                         <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
                                                     </div>
                                                 </div>
@@ -105,14 +105,14 @@
                         </div>
                     </div>
                     <!-- END Add total leave Modal -->
-                   
+
                 </div>
             </div>
         </div>
-   
+
 @endsection
 
-@section('js_after') 
+@section('js_after')
 
     <!-- Page JS Code -->
 
@@ -126,8 +126,8 @@
 
     <!-- year picker -->
     <script src="{{ asset('backend/js/yearpicker.js') }}"></script>
-       
-    <script> 
+
+    <script>
         //create table
         jQuery(function(){
             $(document).ready(function() {
@@ -162,17 +162,17 @@
                         ]
                     });
                 }
-                
+
             }
             createTable();
-            document.getElementById('find').addEventListener("click", function() { 
+            document.getElementById('find').addEventListener("click", function() {
                 $('#dataTable').DataTable().destroy();
                 createTable();
-            }); 
+            });
         });
         //end create table
 
-        // select year 
+        // select year
         $('.yearpicker').yearpicker({
             year: null,
             startYear: null,
@@ -197,8 +197,9 @@
         });
         // end select year
 
-        function openmodal(id){
+        function openmodal(id, totalLeave){
             var addUrl = "{{ url('leave/addTotalLeave/:id') }}".replace(':id', id);
+            $('#totalLeave').attr('value', totalLeave);
             $('#modalForm').attr('action', addUrl);
         }
 
@@ -222,7 +223,7 @@
             || event.key.length !== 1) {
                 return;
             }
-            
+
             if(!digitPeriodRegExp.test(event.key) || event.key==='.') {
                 document.getElementById('error_total_leave').innerHTML = "Please select only numbers";
                 event.preventDefault();

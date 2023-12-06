@@ -25,7 +25,7 @@
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push">
-                            <div class="col-lg-12 col-xl-12">
+                            <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val_employee_id">Employee ID <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required>
@@ -74,6 +74,14 @@
                                     <input type="text" class="form-control" id="nick_name" name="nick_name" placeholder="Enter nick name.." required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="phone">Phone Number<span class="text-danger">*</span></label>
+                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" placeholder="171-000-9999" required>
+                                    <small>Format: 171-000-9999</small><br>
+                                    <span id="error_phone" style="font-size:13px; color:red"></span>
+                                </div>
+                                </div>
+                            <div class="col-lg-6 col-xl-6">
+                                <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
                                     <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="name@gmail.com" required>
                                     <span id="error_personal_email" style="font-size:13px; color:red"></span>
@@ -97,12 +105,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="phone">Phone Number<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" placeholder="171-000-9999" required>
-                                    <small>Format: 171-000-9999</small><br>
-                                    <span id="error_phone" style="font-size:13px; color:red"></span>
-                                </div>
-                                <div class="form-group">
                                     <label for="val-organization">Previous Organizations</label>
                                     <select class="form-control js-tags" id="organizationName" name="organizationName" style="width: 100%;" data-placeholder="Select Organizations..">
                                     <option></option>
@@ -115,7 +117,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Joining date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" data-min-date="today" required>
+                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_career_start_date">Career start date</label>
@@ -127,7 +129,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Save -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">

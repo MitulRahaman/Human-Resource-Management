@@ -30,7 +30,11 @@
                 <div class="p-3 text-center bg-primary-dark rounded-top">
                     <img class="img-avatar img-avatar48 img-avatar-thumb" src="{{ asset('backend/media/avatars/avatar10.jpg') }}" alt="">
                     <p class="mt-2 mb-0 text-white font-w500">{{ \Illuminate\Support\Facades\Auth::user()->full_name }}</p>
-                    <p class="mb-0 text-white-50 font-size-sm">Super User</p>
+                    @if(\Illuminate\Support\Facades\Auth::user()->is_super_user == 1)
+                        <p class="mb-0 text-white-50 font-size-sm">Super User</p>
+                    @else
+                        <p class="mb-0 text-white-50 font-size-sm">{{ session('user_data')['basic_info']->name }}</p>
+                    @endif
                 </div>
                 <div class="p-2">
                     <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{url('user/profile') }}">

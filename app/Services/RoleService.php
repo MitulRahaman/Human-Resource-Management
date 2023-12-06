@@ -170,10 +170,10 @@ class RoleService
                 } else {
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
+                array_push($temp, $created_at);
                 if($hasRoleManagePermission) {
-                    array_push($temp, $created_at);
+                    array_push($temp, $action_btn);
                 }
-                array_push($temp, $action_btn);
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

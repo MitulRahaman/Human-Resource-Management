@@ -1,5 +1,5 @@
 @extends('backend.layouts.master')
-@section('page_action') 
+@section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
@@ -15,7 +15,7 @@
             <div class="block-header">
                 <h3 class="block-title">Add Branch</h3>
             </div>
-            
+
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
             <form class="js-validation" action="{{ url('branch/store') }}" method="POST" onsubmit="return verify_inputs()" id="form">
                 @csrf
@@ -25,7 +25,7 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name.."> 
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name..">
                                     <span id="error_name" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
@@ -37,7 +37,7 @@
 
                         <!-- Save -->
                         <div class="row items-push">
-                            <div class="col-lg-7 offset-lg-4">
+                            <div class="col-lg-5 offset-lg-5">
                                 <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
-    <script> 
+    <script>
         function verify_inputs(e){
             let _name = $('#name').val();
             let flag = 0;
@@ -86,6 +86,6 @@
                 $('#submit').attr('disabled', true);
                 return true;
             }
-        } 
+        }
     </script>
 @endsection

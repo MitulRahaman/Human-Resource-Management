@@ -26,7 +26,7 @@
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push">
-                            <div class="col-lg-12 col-xl-12">
+                            <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val_employee_id">Employee ID <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="employee_id" name="employee_id" value="{{ $user->employee_id }}" readonly >
@@ -80,6 +80,14 @@
                                     <input type="text" class="form-control" id="nick_name" name="nick_name" value="{{ $user->nick_name }}" required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="phone">Phone Number<span class="text-danger">*</span></label>
+                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" value="{{ $user->phone_number }}" required>
+                                    <small>Format: 171-000-9999</small><br>
+                                    <span id="error_phone" style="font-size:13px; color:red"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xl-6">
+                                <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
                                     <input type="email" class="form-control" id="personal_email" name="personal_email" value="{{ $user->basicInfo->personal_email }}" required>
                                     <span id="error_personal_email" style="font-size:13px; color:red"></span>
@@ -101,12 +109,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Phone Number<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" value="{{ $user->phone_number }}" required>
-                                    <small>Format: 171-000-9999</small><br>
-                                    <span id="error_phone" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-organization">Previous Organizations</label>

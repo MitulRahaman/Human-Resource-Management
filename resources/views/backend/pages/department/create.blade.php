@@ -25,7 +25,7 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name.."> 
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name..">
                                     <span id="error_name" style="font-size:13px; color:red"></span>
                                     <span id="name_null_msg" style="font-size:13px; color:red"></span>
                                 </div>
@@ -44,14 +44,14 @@
                                             @endforelse
                                         </select>
                                         <span id="branch_null_msg" style="font-size:13px; color:red"></span>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Save -->
                         <div class="row items-push">
-                            <div class="col-lg-7 offset-lg-4">
+                            <div class="col-lg-5 offset-lg-5">
                                 <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
                             </div>
                         </div>
@@ -71,11 +71,11 @@
 
     <script src="{{ asset('backend/js/plugins/select2/js/select2.full.js') }}"></script>
     <script>jQuery(function(){One.helpers('select2');});</script>
-    
+
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
-    <script> 
+    <script>
         function verify_inputs(e){
             let _name = $('#name').val();
             let _branch = $('#branchID').val();
@@ -99,14 +99,14 @@
                         } else {
                             document.getElementById('name_null_msg').innerHTML = "";
                         }
-                            
+
                         if(response.branch_null_msg) {
                             flag = 0;
                             document.getElementById('branch_null_msg').innerHTML = response.branch_null_msg;
                         } else {
                             document.getElementById('branch_null_msg').innerHTML = "";
                         }
-                            
+
                         if(response.name_msg){
                             flag = 0;
                             document.getElementById('name_null_msg').innerHTML = "";
@@ -126,6 +126,6 @@
                 $('#submit').attr('disabled', true);
                 return true;
             }
-        } 
+        }
     </script>
 @endsection

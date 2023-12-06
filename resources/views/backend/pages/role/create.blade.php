@@ -31,7 +31,7 @@
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
                         <div class="row items-push ml-10">
-                            <div class="col-lg-6 col-xl-6">
+                            <div class="col-lg-9 col-xl-9">
                                 <div class="form-group">
                                     <label for="val-username">sl_no <span class="text-danger">*</span></label>
                                     <input type="number" step="1" class="form-control" id="sl_no" name="sl_no" value="{{ old('sl_no') }}" placeholder="Enter a serial number.." required>

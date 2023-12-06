@@ -117,11 +117,11 @@ class LeaveService
 
                 if($year >= $currentYear) {
                     if ($total_leaves > 0) {
-                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\">
+                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_update\"name=\"btn_update\"data-toggle=\"modal\" data-target=\"#modal-block-slideup\" onclick=\"openmodal($id, $total_leaves)\">
                         <i class=\"fas fa-edit text-success mr-1\"></i>Update</td>";
 
                     } else {
-                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\" onclick=\"openmodal($id)\">
+                        $action_btn = "<td> <button type=\"button\"class=\"d-none d-sm-table-cell font-size-sm border-0\"id=\"btn_add\"name=\"btn_add\"data-toggle=\"modal\"data-target=\"#modal-block-slideup\" onclick=\"openmodal($id, $total_leaves)\">
                         <i class=\"fas fa-plus text-success mr-1\"></i>Add</td>";
                     }
                 } else {

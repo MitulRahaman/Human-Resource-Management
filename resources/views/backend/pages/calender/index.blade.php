@@ -7,12 +7,12 @@
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('calender/manage') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Manage Calender
+                <i class="far fa-calendar-alt mr-1"></i> Manage Calender
             </button>
         </a>
         <a href="{{ url('calender/upload') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Bulk Upload
+                <i class="far fa-calendar-plus mr-1"></i> Bulk Upload
             </button>
         </a>
     </div>

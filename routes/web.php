@@ -41,6 +41,9 @@ Route::get('/', function () {
 Route::get('login', [AuthController::class, 'index'])->name('viewLogin');
 Route::post('login', [AuthController::class, 'authenticate'])->name('login');
 
+Route::get('change_password', [AuthController::class, 'viewChangePassword']);
+Route::post('change_password', [AuthController::class, 'changePassword']);
+Route::post('change_password/validate_inputs', [AuthController::class, 'validatePasswords']);
 
 Route::group(['middleware'=> 'auth'], function() {
     Route::prefix('dashboard')->group(function() {
@@ -104,7 +107,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('verifyUser', [UserController::class, 'verifyUser']);
         Route::patch('updateUser', [UserController::class, 'updateUser']);
 
-        Route::get('profile/{id?}', [UserController::class, 'show']);
+        Route::get('profile/{id?}', [UserController::class, 'show'])->name('profile');
         Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
         Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
         Route::delete('profile/{id}/delete_academic_info', [UserController::class, 'deleteAcademicInfo']);
@@ -160,7 +163,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/save_event', [CalenderController::class, 'saveEvent']);
         Route::get('/upload', [CalenderController::class, 'upload']);
         Route::post('/save_excel', [CalenderController::class, 'saveExcel']);
-        Route::post('/update_title', [CalenderController::class, 'updateTitle']);
+        Route::post('/update_event', [CalenderController::class, 'updateEvent']);
         Route::post('/add_event', [CalenderController::class, 'addEvent']);
     });
     Route::prefix('role')->group(function() {

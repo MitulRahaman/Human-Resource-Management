@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -45,5 +46,36 @@ class AuthService
         Auth::logout();
         request()->session()->flush();
         return true;
+    }
+    public function validatePasswords($data)
+    {
+        $current_password_msg = null ;
+        $confirm_password_msg = null ;
+        $password = $this->authRepository->getUserPassword();
+        if(!Hash::check($data['current_password'],$password))
+            $current_password_msg = 'Current password not matched';
+        if($data['new_password']!=$data['confirm_password'])
+            $confirm_password_msg = 'Confirm password not matched with new password';
+        if($current_password_msg || $confirm_password_msg){
+            return [
+                'success' => false,
+                'current_password_msg' => $current_password_msg,
+                'confirm_password_msg' => $confirm_password_msg
+            ];
+        }
+       else {
+            return [
+                'success' => true,
+                'current_password_msg' => $current_password_msg,
+                'confirm_password_msg' => $confirm_password_msg
+            ];
+        }
+    }
+    public function changePassword($data)
+    {
+        $password = $this->authRepository->getUserPassword();
+        if(!Hash::check($data['current_password'],$password) || $data['new_password']!=$data['confirm_password'])
+            return false;
+        return $this->authRepository->setPassword($data['new_password'])->changePassword();
     }
 }

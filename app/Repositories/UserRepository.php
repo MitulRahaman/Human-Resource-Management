@@ -859,7 +859,7 @@ class UserRepository
     {
         $currentYear = now()->year;
         $leaves = DB::table('calender')->whereRaw('YEAR(date) = ?', [$currentYear])->pluck('date');
-        $used_leaves = DB::table('leaves')->where('user_id', $id)->where('status', Config::get('variable_constants.status.approved'))->pluck('total')->toArray();
+        $used_leaves = DB::table('leaves')->where('user_id', '=',$id)->where('status', '=',Config::get('variable_constants.leave_status.approved'))->pluck('total')->toArray();
         $total_used = array_sum($used_leaves);
         return count($leaves)-$total_used;
     }
@@ -871,7 +871,7 @@ class UserRepository
     {
         DB::beginTransaction();
         try {
-            $branch_id = DB::table('basic_info')->where('user_id', $this->id)->select('branch_id')->first();
+            $branch_id = DB::table('basic_info')->where('user_id','=', $this->id)->select('branch_id')->first();
             foreach ($this->assets as $asset_id)
             {
                 DB::table('user_assets')
@@ -883,11 +883,11 @@ class UserRepository
                         'created_at' => $this->created_at
                     ]);
             }
-            DB::table('users')->where('id',$this->id)
+            DB::table('users')->where('id','=',$this->id)
                 ->update(['is_asset_distributed'=>Config::get('variable_constants.check.yes')]);
             if($this->requisitionRequest($this->id))
                 DB::table('requisition_requests')->where('user_id', $this->id)
-                    ->update('status',Config::get('variable_constants.status.distributed'));
+                    ->update(['status',Config::get('variable_constants.status.distributed')]);
             DB::commit();
             return true;
         } catch (\Exception $exception) {
@@ -897,13 +897,13 @@ class UserRepository
     }
     public function isAssetDistributed($id)
     {
-        $user = User::where('id',$id)->select('is_asset_distributed')->first();
+        $user = User::where('id','=',$id)->select('is_asset_distributed')->first();
         return $user->is_asset_distributed;
     }
     public function requisitionRequest($id)
     {
         $status = DB::table('requisition_requests')->where('user_id', $id)
-            ->where('status',Config::get('variable_constants.status.approved'))
+            ->where('status', '=',Config::get('variable_constants.status.approved'))
             ->first();
         return $status;
     }

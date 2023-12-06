@@ -80,7 +80,7 @@ class DesignationRepository
         }
         return $designation->save();
     }
-    public function delete(int $id)
+    public function delete( $id)
     {
         $designation= Designation::findOrFail($id);
         return $designation->delete();
@@ -96,7 +96,7 @@ class DesignationRepository
 
         foreach ($branches as $b)
         {
-            $d= DB::table('branch_departments')->where('branch_id',$b)
+            $d= DB::table('branch_departments')->where('branch_id', '=',$b)
                 ->pluck('department_id')->toArray();
             $dep = array_unique(array_merge($dep, $d));
         }
@@ -156,7 +156,7 @@ class DesignationRepository
         if($designation)
             return "Restore first";
         $designations = DB::table('designations as d')
-            ->where('d.id', $id)
+            ->where('d.id', '=', $id)
             ->select('d.id', 'd.name', 'd.description', 'd.department_id', 'd.status', DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->selectRaw('GROUP_CONCAT(b.id) as branches')
             ->selectRaw('departments.name as department_name')
@@ -172,8 +172,8 @@ class DesignationRepository
     {
         $id = (int)$id;
         return DB::table('branches')
-            ->where('branches.status', 1)
-            ->where('branches.deleted_at', null)
+            ->where('branches.status', '=', Config::get('variable_constants.activation.active'))
+            ->whereNull('branches.deleted_at')
             ->select('branches.*', DB::raw('IF(branch_designations.designation_id = ' . $id . ', "yes", "no") as selected'))
             ->leftJoin('branch_designations', function ($join) use ($id) {
                 $join->on('branches.id', '=', 'branch_designations.branch_id')

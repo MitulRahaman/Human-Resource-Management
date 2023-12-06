@@ -89,8 +89,8 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="approve_leave"></span> Give a reason: </p>
-                                        <input type="text" name="approve-modal-remarks" id="approve-modal-remarks" value="" required>
+                                        <p class="text-center"><span id="approve_leave"></span> Approval Note</p>
+                                        <input type="text" name="approve-modal-remarks" id="approve-modal-remarks" style="width: 100%" value="">
                                     </div>
                                     <input type="hidden" id="leaveType" name="leaveType" value="">
                                     <input type="hidden" id="startDate" name="startDate" value="">
@@ -111,7 +111,7 @@
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
-                                        <h3 class="block-title text-center">Approve</h3>
+                                        <h3 class="block-title text-center">Reject</h3>
                                         <div class="block-options">
                                             <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                                                 <i class="fa fa-fw fa-times"></i>
@@ -119,8 +119,8 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="reject_leave"></span> Give a reason: </p>
-                                        <input type="text" name="reject-modal-remarks" id="reject-modal-remarks" value="" required>
+                                        <p class="text-center"><span id="reject_leave"></span> Rejection Note</p>
+                                        <input type="text" name="reject-modal-remarks" id="reject-modal-remarks" value="" style="width: 100%">
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>

@@ -7,12 +7,12 @@
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('calender/manage') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Manage Calender
+                <i class="far fa-calendar-alt mr-1"></i> Manage Calender
             </button>
         </a>
         <a href="{{ url('calender/upload') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Bulk Upload
+                <i class="far fa-calendar-plus mr-1"></i> Bulk Upload
             </button>
         </a>
     </div>
@@ -35,11 +35,11 @@
         <div id="eventModal" class="modal fade" style="top: 30%;">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="restore" action="{{ url('calender/update_title')}}" method="post">
+                    <form id="editEvent" action="{{ url('calender/update_event')}}" method="post">
                         @csrf
                         <div class="block block-rounded block-themed block-transparent mb-0">
                             <div class="block-header bg-primary-dark">
-                                <h3 class="block-title text-center">Change Event Title</h3>
+                                <h3 class="block-title text-center">Edit Event</h3>
                                 <div class="block-options">
                                     <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                                         <i class="fa fa-fw fa-times"></i>
@@ -47,8 +47,10 @@
                                 </div>
                             </div>
                             <div class="block-content font-size-sm">
-                                <p class="text-center">Enter New Event Title</p>
+                                <p class="m-2">Title</p>
                                 <input type="text" name="title" id="title" value="" style="width: 100%;" required>
+                                <p class="m-2 ">Description</p>
+                                <input type="text" name="description" id="description" value="" style="width: 100%;" required>
                                 <input type="hidden" name="date" id="date">
                             </div>
                             <div class="block-content block-content-full text-right border-top">
@@ -63,7 +65,7 @@
         <div id="dayModal" class="modal fade" style="top: 30%;">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="restore" action="{{ url('calender/add_event')}}" method="post">
+                    <form id="addEvent" action="{{ url('calender/add_event')}}" method="post">
                         @csrf
                         <div class="block block-rounded block-themed block-transparent mb-0">
                             <div class="block-header bg-primary-dark">
@@ -76,8 +78,8 @@
                             </div>
                             <div class="block-content font-size-sm">
                                 <p class="m-2">Enter Event Title</p>
-                                <input type="text" name="title" id="title" style="width: 100%;" required>
-                                <p class=" m-2">Enter Event Description</p>
+                                <input type="text" name="title" id="title" style="width: 100%;" required><br>
+                                <p class="m-2 ">Enter Event Description</p>
                                 <input type="text" name="description" id="description" style="width: 100%;" >
                                 <input type="hidden" name="day" id="day">
                             </div>
@@ -113,9 +115,11 @@
                 eventClick:  function(event, jsEvent, view) {
                     var date= event.event.start;
                     var title = event.event._def.title;
+                    var description = event.event.extendedProps.description;
                     date = moment(date).format('YYYY-MM-DD');
                     $('#date').val(date);
                     document.getElementById('title').setAttribute('value',title);
+                    document.getElementById('description').setAttribute('value',description);
                     $('#eventModal').modal();
                 },
                 dateClick : function(date, allDay, jsEvent, view) {

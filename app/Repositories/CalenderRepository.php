@@ -108,7 +108,7 @@ class CalenderRepository
     }
     public function getEvents()
     {
-        return DB::table('calender')->select('date as start', 'title')->get();
+        return DB::table('calender')->select('date as start', 'title', 'description')->get();
     }
     public  function saveEvent()
     {
@@ -177,12 +177,13 @@ class CalenderRepository
             return $exception->getMessage();
         }
     }
-    public function updateTitle()
+    public function updateEvent()
     {
         return DB::table('calender')
             ->where('date', '=',$this->date)
             ->update([
                 'title' => $this->title,
+                'description' => $this->description,
                 'updated_at' => $this->updated_at,
             ]);
 

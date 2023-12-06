@@ -39,6 +39,7 @@ class CalenderService
             $formattedEvents[] = [
                 'start' => $event->start,
                 'title' => ($event->title),
+                'description' => $event->description
             ];
         }
         return $formattedEvents;
@@ -58,12 +59,13 @@ class CalenderService
             ->setUpdatedAt(date('Y-m-d H:i:s'))
             ->saveExcel($data['file']);
     }
-    public function updateTitle($data)
+    public function updateEvent($data)
     {
         return $this->calenderRepository->setDate($data['date'])
             ->setTitle($data['title'])
+            ->setDescription($data['description'])
             ->setUpdatedAt(date('Y-m-d H:i:s'))
-            ->updateTitle();
+            ->updateEvent();
     }
     public function addEvent($data)
     {

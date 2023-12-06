@@ -163,7 +163,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/save_event', [CalenderController::class, 'saveEvent']);
         Route::get('/upload', [CalenderController::class, 'upload']);
         Route::post('/save_excel', [CalenderController::class, 'saveExcel']);
-        Route::post('/update_title', [CalenderController::class, 'updateTitle']);
+        Route::post('/update_event', [CalenderController::class, 'updateEvent']);
         Route::post('/add_event', [CalenderController::class, 'addEvent']);
     });
     Route::prefix('role')->group(function() {

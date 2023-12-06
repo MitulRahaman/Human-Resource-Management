@@ -81,16 +81,17 @@ class CalenderController extends Controller
             return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
         }
     }
-    public function updateTitle(Request $request)
+    public function updateEvent(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required',
+            'description' => 'nullable'
         ]);
         if($validated)
         {
 
             try{
-                $this->calenderService->updateTitle($request->all());
+                $this->calenderService->updateEvent($request->all());
                 return redirect('calender/')->with('success', "Calender Updated");
             } catch (\Exception $exception) {
                 return redirect()->back()->with('error', "OOPS! Calender could not be updated.");

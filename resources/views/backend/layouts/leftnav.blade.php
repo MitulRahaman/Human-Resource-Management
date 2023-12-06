@@ -173,7 +173,7 @@
                 </li>
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add Asset') == 0 || strcasecmp($sub_menu, 'Manage Assets') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-users"></i>
+                        <i class="nav-main-link-icon si si-grid"></i>
                         <span class="nav-main-link-name">Assets</span>
                     </a>
                     <ul class="nav-main-submenu">
@@ -191,7 +191,7 @@
                 </li>
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Request') == 0 || strcasecmp($sub_menu, 'Manage') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-users"></i>
+                        <i class="nav-main-link-icon far  fa-plus-square"></i>
                         <span class="nav-main-link-name">Requisition</span>
                     </a>
                     <ul class="nav-main-submenu">
@@ -209,7 +209,7 @@
                 </li>
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Apply Leave') == 0 || strcasecmp($sub_menu, 'Manage Leaves') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                    <i class="nav-main-link-icon si si-users"></i>
+                    <i class="nav-main-link-icon si si-note"></i>
                         <span class="nav-main-link-name">Apply for Leave</span>
                     </a>
                     <ul class="nav-main-submenu">

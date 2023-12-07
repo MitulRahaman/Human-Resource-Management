@@ -11,10 +11,13 @@ use Illuminate\Support\Facades\View;
 use App\Http\Requests\AssetTypeAddRequest;
 use App\Http\Requests\AssetTypeEditRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\AuthorizationTrait;
 
 class AssetController extends Controller
 {
+    use AuthorizationTrait;
     private $assetService;
+
     public function __construct(AssetService $assetService)
     {
         $this->assetService = $assetService;
@@ -32,6 +35,7 @@ class AssetController extends Controller
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addAsset')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Add Asset');
         $asset_type = $this->assetService->getAllAssetTypeData();
         $branches = $this->assetService->getAllBranches();
@@ -39,6 +43,7 @@ class AssetController extends Controller
     }
     public function store(AssetAddRequest $request)
     {
+        abort_if(!$this->setSlug('addAsset')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $response = $this->assetService->createAsset($request->validated());
             if(!$response)
@@ -50,6 +55,7 @@ class AssetController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editAsset')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Manage Assets');
         $asset = $this->assetService->getAsset($id);
         if($asset && !is_null($asset->deleted_at))
@@ -60,6 +66,7 @@ class AssetController extends Controller
     }
     public function update(AssetEditRequest $request)
     {
+        abort_if(!$this->setSlug('editAsset')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $asset = $this->assetService->update($request->validated());
             if(!$asset)
@@ -71,6 +78,7 @@ class AssetController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('manageAsset')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->delete($id))
                 return redirect('asset/')->with('success', "Assets  deleted successfully.");
@@ -81,6 +89,7 @@ class AssetController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('manageAsset')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->restore($id))
                 return redirect('asset/')->with('success', "Assets  restored successfully.");
@@ -91,6 +100,7 @@ class AssetController extends Controller
     }
     public function changeStatus($id)
     {
+        abort_if(!$this->setSlug('manageAsset')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->changeStatus($id))
                 return redirect('asset/')->with('success', 'Assets status changed successfully!');
@@ -114,6 +124,7 @@ class AssetController extends Controller
     }
     public function createAssetType()
     {
+        abort_if(!$this->setSlug('addAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Assets Type');
         return \view('backend.pages.asset.createAssetType');
     }
@@ -122,12 +133,13 @@ class AssetController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
-        if($validator)
+        if(!$validator->fails())
             return $this->assetService->validate_inputs_asset_type($request->all());
         return redirect()->back()->with('error', 'Name is Required to validate');
     }
     public function storeAssetType(AssetTypeAddRequest $request)
     {
+        abort_if(!$this->setSlug('addAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             $response = $this->assetService->createAssetType($request->validated());
             if (is_int($response)) {
@@ -141,6 +153,7 @@ class AssetController extends Controller
     }
     public function edit_asset_type($id )
     {
+        abort_if(!$this->setSlug('editAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Assets Type');
         $asset_type = $this->assetService->getAssetType($id);
         if($asset_type && !is_null($asset_type->deleted_at))
@@ -152,12 +165,13 @@ class AssetController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
-        if($validator)
+        if(!$validator->fails())
             return $this->assetService->validate_name_asset_type($request->all(),$id);
         return redirect()->back()->with('error', 'Name is Required to validate');
     }
     public function update_asset_type(AssetTypeEditRequest $request)
     {
+        abort_if(!$this->setSlug('editAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->edit_asset_type($request->validated()))
                 return redirect('assetsType/')->with('success', "Assets Type updated successfully.");
@@ -168,6 +182,7 @@ class AssetController extends Controller
     }
     public function deleteAssetType($id)
     {
+        abort_if(!$this->setSlug('manageAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->deleteAssetType($id))
                 return redirect('assetsType/')->with('success', "Assets Type deleted successfully.");
@@ -178,6 +193,7 @@ class AssetController extends Controller
     }
     public function restoreAssetType($id)
     {
+        abort_if(!$this->setSlug('manageAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->restoreAssetType($id))
                 return redirect('assetsType/')->with('success', "Assets Type restored successfully.");
@@ -188,6 +204,7 @@ class AssetController extends Controller
     }
     public function changeStatusAssetType($id)
     {
+        abort_if(!$this->setSlug('manageAssetType')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->assetService->changeStatusAssetType($id))
                 return redirect('assetsType/')->with('success', "Assets Type status changed successfully.");

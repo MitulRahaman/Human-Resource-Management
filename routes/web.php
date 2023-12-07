@@ -217,8 +217,6 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('status/{id}/cancel', [RequisitionController::class, 'cancel']);
     });
 
-
-    Route::group(['middleware'=> 'superUser'], function() {
         Route::prefix('permission')->group(function() {
             Route::get('/', [PermissionController::class, 'index']);
             Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
@@ -271,5 +269,4 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/restore', [AssetController::class, 'restore']);
             Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
         });
-    });
 });

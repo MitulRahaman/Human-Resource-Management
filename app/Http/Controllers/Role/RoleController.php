@@ -23,7 +23,7 @@ class RoleController extends Controller
     }
     public function index()
     {
-        $hasRoleManagePermission = $this->setId(auth()->user()->id)->setSlug('manageRoles')->hasPermission();
+        $hasRoleManagePermission = $this->setId(auth()->user()->id)->setSlug('manageRole')->hasPermission();
         return \view('backend.pages.role.index', compact('hasRoleManagePermission'));
     }
     public function fetchData()
@@ -32,12 +32,14 @@ class RoleController extends Controller
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addRole')->hasPermission(), 403, 'You don\'t have permission!');
         $permissions=$this->roleService->getPermissions();
         $branches=$this->roleService->getBranches();
         return \view('backend.pages.role.create', compact('permissions','branches'));
     }
     public function store(RoleAddRequest $request)
     {
+        abort_if(!$this->setSlug('addRole')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $role = $this->roleService->createRole($request->validated());
             if(!$role)
@@ -54,6 +56,7 @@ class RoleController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editRole')->hasPermission(), 403, 'You don\'t have permission!');
         $role_info = $this->roleService->getRole($id);
         if($role_info=="Restore first")
             return redirect()->back()->with('error', $role_info);
@@ -63,6 +66,7 @@ class RoleController extends Controller
     }
     public function update(RoleEditRequest $request)
     {
+        abort_if(!$this->setSlug('editRole')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $role = $this->roleService->update($request->validated());
             if(!$role)
@@ -74,6 +78,7 @@ class RoleController extends Controller
     }
     public function changeStatus($id)
     {
+        abort_if(!$this->setSlug('manageRole')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->roleService->changeStatus($id))
                 return redirect('role/')->with('success', "Role status changed successfully.");
@@ -84,6 +89,7 @@ class RoleController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('manageRole')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->roleService->delete($id))
                 return redirect('role/')->with('success', "Role deleted successfully.");
@@ -94,6 +100,7 @@ class RoleController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('manageRole')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->roleService->restore($id))
                 return redirect('role/')->with('success', "Role restored successfully.");

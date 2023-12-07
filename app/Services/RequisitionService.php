@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\RequisitionRequested;
+use App\Jobs\RequisitionRequestJob;
 use Mail;
 use App\Mail\RequisitionMail;
 use App\Repositories\RequisitionRepository;
@@ -34,7 +35,8 @@ class RequisitionService
             ->create();
         if(is_int($requisition))
         {
-            RequisitionRequested::dispatch($request);
+//            RequisitionRequested::dispatch($request);
+            event(new RequisitionRequested($request->all()));
             return true;
         }
         return false;
@@ -47,7 +49,15 @@ class RequisitionService
         if(!$receivers) {
             return false;
         }
-        Mail::send((new RequisitionMail($data, $assetType->name))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
+//        $data =[
+//            'data' => $data,
+//            'assetTypeName' =>  $assetType->name,
+//            'to' => $receivers[1]->preferred_email,
+//            'from'=> $receivers[0]->email
+//        ];
+//        RequisitionRequestJob::dispatch($data);
+        Mail::send((new RequisitionMail($data, $assetType->name))->to("rbtamanna@appnap.io")->cc("rbtamannarbt@gmail.com"));
+//        Mail::send((new RequisitionMail($data, $assetType->name))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
         return true;
     }
     public function update($data)
@@ -154,7 +164,10 @@ class RequisitionService
                 array_push($temp, $specification);
                 array_push($temp, $status);
                 array_push($temp, $remarks);
-                array_push($temp, $action_btn);
+                if($hasManageRequisitionPermission)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));
@@ -167,4 +180,5 @@ class RequisitionService
             }';
         }
     }
+
 }

@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
-class RequisitionRequestedListener implements ShouldQueue
+class RequisitionRequestedListener
 {
     /**
      * Create the event listener.
@@ -17,7 +17,7 @@ class RequisitionRequestedListener implements ShouldQueue
      */
     use InteractsWithQueue;
     private $requisitionService;
-    public $tries = 5;
+    public $tries = 1;
 
     public function __construct(RequisitionService $requisitionService)
     {
@@ -32,6 +32,6 @@ class RequisitionRequestedListener implements ShouldQueue
      */
     public function handle(RequisitionRequested $event)
     {
-        return $this->requisitionService->requisitionEmail($event->request);
+        $this->requisitionService->requisitionEmail($event->request);
     }
 }

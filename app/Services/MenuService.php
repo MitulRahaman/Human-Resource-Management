@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\MenuRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class MenuService
 {
+    use AuthorizationTrait;
     private $menuRepository;
     public function __construct(MenuRepository $menuRepository)
     {
@@ -74,6 +76,7 @@ class MenuService
     public function fetchData()
     {
         $result = $this->menuRepository->getAllMenuData();
+        $hasManageMenuPermission = $this->setSlug('manageMenu')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -133,7 +136,10 @@ class MenuService
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasManageMenuPermission)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\PermissionRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class PermissionService
 {
+    use AuthorizationTrait;
     private $permissionRepository;
 
     public function __construct(PermissionRepository $permissionRepository)
@@ -49,6 +51,7 @@ class PermissionService
     public function fetchData()
     {
         $result = $this->permissionRepository->getAllPermissionData();
+        $hasManagePermission = $this->setSlug('managePermission')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
 
@@ -101,7 +104,10 @@ class PermissionService
                 }
 
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasManagePermission)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

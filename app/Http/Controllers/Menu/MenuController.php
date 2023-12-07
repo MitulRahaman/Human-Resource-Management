@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\View;
 use App\Services\MenuService;
 use App\Http\Requests\MenuAddRequest;
 use App\Http\Requests\MenuEditRequest;
+use App\Traits\AuthorizationTrait;
 
 class MenuController extends Controller
 {
+    use AuthorizationTrait;
     private $menuService;
 
     public function __construct(MenuService $menuService)
@@ -28,12 +30,14 @@ class MenuController extends Controller
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addMenu')->hasPermission(), 403, 'You don\'t have permission!');
         $permissions=$this->menuService->getPermissions();
         $menus=$this->menuService->getParentMenu();
         return \view('backend.pages.menu.create', compact('permissions', 'menus'));
     }
     public function store(MenuAddRequest $request)
     {
+        abort_if(!$this->setSlug('addMenu')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $menu = $this->menuService->create($request->validated());
             if(!$menu)
@@ -45,6 +49,7 @@ class MenuController extends Controller
     }
     public function changeStatus($id)
     {
+        abort_if(!$this->setSlug('manageMenu')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->menuService->changeStatus($id))
                 return redirect('menu/')->with('success', 'Menu status changed successfully!');
@@ -55,6 +60,7 @@ class MenuController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('manageMenu')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->menuService->delete($id))
                 return redirect('menu/')->with('success', "Menu deleted successfully!");
@@ -65,6 +71,7 @@ class MenuController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('manageMenu')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->menuService->restore($id))
                 return redirect('menu/')->with('success', "Menu restored successfully!");
@@ -75,6 +82,7 @@ class MenuController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editMenu')->hasPermission(), 403, 'You don\'t have permission!');
         $menu_info = $this->menuService->getMenu($id);
         if($menu_info=="Restore first")
             return redirect()->back()->with('error', $menu_info);
@@ -85,6 +93,7 @@ class MenuController extends Controller
     }
     public function update(MenuEditRequest $request)
     {
+        abort_if(!$this->setSlug('editMenu')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $menu = $this->menuService->update($request->validated());
             if(!$menu)

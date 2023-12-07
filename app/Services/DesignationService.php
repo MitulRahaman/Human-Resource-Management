@@ -109,7 +109,7 @@ class DesignationService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name= $row->name;
-                $description = $row->description;
+                $description = $row->description? $row->description:'N/A';
                 $department = $row->department;
                 $created_at = $row->created_at;
                 $branches = '';

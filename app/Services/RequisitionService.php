@@ -104,7 +104,7 @@ class RequisitionService
                 $id = $row->id;
                 $employeeId = $row->employee_id;
                 $employeeName = $row->full_name;
-                $asset_type = $row->type_name;
+                $asset_type = $row->type_name? $row->type_name:'N/A';
                 $name= $row->name;
                 $specification= $row->specification;
                 $remarks = $row->remarks;

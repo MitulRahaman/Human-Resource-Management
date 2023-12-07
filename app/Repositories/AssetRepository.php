@@ -224,7 +224,7 @@ class AssetRepository
     }
     public function getAssetType($id)
     {
-        return DB::table('asset_types')->where('id',$id)->first();
+        return DB::table('asset_types')->where('id',$id)->select('*')->first();
     }
     public function isNameUnique($id)
     {

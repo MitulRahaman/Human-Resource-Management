@@ -87,7 +87,7 @@ class DegreeService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name = $row->name;
-                $description = $row->description;
+                $description = $row->description? $row->description:'N/A';
                 $created_at = $row->created_at;
                 $edit_url = route('edit_degree', ['degree'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";

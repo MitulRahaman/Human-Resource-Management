@@ -93,7 +93,7 @@ class InstituteService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name = $row->name;
-                $address = $row->address;
+                $address = $row->address? $row->address:'N/A';
                 $created_at = $row->created_at;
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";

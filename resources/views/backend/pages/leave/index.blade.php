@@ -81,7 +81,7 @@
                                                     <div class="col-lg-6 col-xl-6">
                                                         <div class="form-group">
                                                             <label for="val-title">Total Leave <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control" id="totalLeave" name="totalLeave" value="" placeholder="Enter total leave..">
+                                                            <input type="number" min="0" max="180" class="form-control" id="totalLeave" name="totalLeave" value="">
                                                             <span id="error_total_leave" style="font-size:13px; color:red"></span>
                                                         </div>
                                                     </div>

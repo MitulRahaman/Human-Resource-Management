@@ -92,6 +92,7 @@
                                         <p class="text-center"><span id="approve_leave"></span> Approval Note</p>
                                         <input type="text" name="approve-modal-remarks" id="approve-modal-remarks" style="width: 100%" value="">
                                     </div>
+                                    <input type="hidden" id="employeeId" name="employeeId" value="">
                                     <input type="hidden" id="leaveType" name="leaveType" value="">
                                     <input type="hidden" id="startDate" name="startDate" value="">
                                     <input type="hidden" id="endDate" name="endDate" value="">
@@ -153,6 +154,8 @@
         jQuery(function(){
             function createTable(){
                 $('#dataTable').DataTable( {
+                    "scrollY": "300px",
+                    "scrollX": true,
                     dom: 'Bfrtip',
                     ajax: {
                         type: 'POST',
@@ -195,7 +198,7 @@
             document.getElementById("recommend-modal-remarks").value = remarks;
             $('#recommend-modal').modal('show');
         }
-        function show_approve_modal(id, type, remarks, startDate, endDate) {
+        function show_approve_modal(id, type, remarks, startDate, endDate, employeeId) {
             var x = document.getElementById('approve_leave');
             x.innerHTML = type;
             const url = "{{ url('leaveApply/status/:id/approve') }}".replace(':id', id);
@@ -204,6 +207,7 @@
             document.getElementById("leaveType").value = type;
             document.getElementById("startDate").value = startDate;
             document.getElementById("endDate").value = endDate;
+            document.getElementById("employeeId").value = employeeId;
             $('#approve-modal').modal('show');
         }
         function show_reject_modal(id, type, remarks) {

@@ -164,7 +164,11 @@ class LeaveApplyService
                 array_push($temp, $total_leave);
                 array_push($temp, $reason);
                 array_push($temp, $status);
-                array_push($temp, $remarks);
+                if($remarks == null) {
+                    array_push($temp, "N/A");
+                } else {
+                    array_push($temp, $remarks);
+                }
                 array_push($temp, $action_btn);
                 array_push($data, $temp);
             }

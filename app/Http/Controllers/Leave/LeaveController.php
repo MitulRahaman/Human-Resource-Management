@@ -130,12 +130,18 @@ class LeaveController extends Controller
 
     public function addTotalLeave(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'totalLeave'=>'numeric|min:0|max:180',
+        ]);
         try {
-            if(!($this->leaveService->addTotalLeave($request, $id)))
+            if(!$validator->fails()) {
+                $this->leaveService->addTotalLeave($request, $id);
+                return redirect()->back()->with('success', 'Total leave added successfully');
+            } else {
                 return redirect()->back()->with('error', 'Failed to add total leave');
+            }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
-        return redirect()->back()->with('success', 'Total leave added successfully');
     }
 }

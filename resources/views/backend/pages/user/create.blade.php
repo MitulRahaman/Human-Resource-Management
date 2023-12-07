@@ -14,7 +14,7 @@
 @section('content')
     <div class="content">
     @include('backend.layouts.error_msg')
-        <div class="block block-rounded block-content col-sm-6">
+        <div class="block block-rounded block-content">
             <div class="block-header">
                 <h3 class="block-title">Add User</h3>
             </div>
@@ -23,9 +23,9 @@
             <form class="js-validation" action="{{ url('user/store') }}" method="POST" onsubmit="return verify_inputs()" id="form" enctype="multipart/form-data">
                 @csrf
                 <div class="block block-rounded">
-                    <div class="block-content block-content-full">
+                    <div class="block-content block-content-full pb-6">
                         <div class="row items-push">
-                            <div class="col-lg-6 col-xl-6">
+                            <div class="col-lg-6 col-xl-6 px-6">
                                 <div class="form-group">
                                     <label for="val_employee_id">Employee ID <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required>
@@ -80,7 +80,7 @@
                                     <span id="error_phone" style="font-size:13px; color:red"></span>
                                 </div>
                                 </div>
-                            <div class="col-lg-6 col-xl-6">
+                            <div class="col-lg-6 col-xl-6 px-6">
                                 <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
                                     <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="name@gmail.com" required>
@@ -130,9 +130,9 @@
                             </div>
                         </div>
                         <!-- Save -->
-                        <div class="row items-push">
-                            <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
+                        <div class="row items-push float-right">
+                            <div class="mr-6">
+                                <button type="submit" class="btn btn-alt-primary px-6" id="submit">Save</button>
                             </div>
                         </div>
                         <!-- END Save -->

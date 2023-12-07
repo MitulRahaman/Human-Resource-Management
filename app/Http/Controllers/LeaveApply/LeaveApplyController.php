@@ -46,10 +46,11 @@ class LeaveApplyController extends Controller
             $validator = Validator::make($request->all(), [
                 'remarks' => 'required',
             ]);
-            if($validator)
-            {
+            if(!$validator->fails()) {
                 $this->leaveApplyService->recommendLeave($request->all(),$id);
                 return redirect()->back()->with('success', 'Recommend');
+            } else {
+                return redirect()->back()->with('error', 'Remarks required');
             }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());

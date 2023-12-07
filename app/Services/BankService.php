@@ -87,7 +87,7 @@ class BankService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name = $row->name;
-                $address = $row->address;
+                $address = $row->address? $row->address:'N/A';
                 $created_at = $row->created_at;
                 $edit_url = route('edit_bank', ['bank'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";

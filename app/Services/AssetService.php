@@ -80,13 +80,13 @@ class AssetService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $name = $row->name;
-                $asset_type= $this->assetRepository->getAssetType($row->type_id);
-                $sl_no = $row->sl_no;
-                $branch = $this->assetRepository->getBranchName($row->branch_id);
-                $specification = $row->specification;
-                $purchase_at = $row->purchase_at;
-                $purchase_by = $row->purchase_by;
-                $purchase_price = $row->purchase_price;
+                $asset_type= $this->assetRepository->getAssetType($row->type_id)->name;
+                $sl_no = $row->sl_no? $row->sl_no:'N/A';
+                $branch = $this->assetRepository->getBranchName($row->branch_id)->name;
+                $specification = $row->specification? $row->specification:'N/A';
+                $purchase_at = $row->purchase_at? $row->purchase_at:'N/A';
+                $purchase_by = $row->purchase_by? $row->purchase_by:'N/A';
+                $purchase_price = $row->purchase_price? $row->purchase_price:'N/A';
                 $created_at = $row->created_at;
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";

@@ -60,7 +60,7 @@ class PermissionService
                 $id = $row->id;
                 $slug = $row->slug;
                 $name = $row->name;
-                $description = $row->description;
+                $description = $row->description? $row->description:'N/A';
                 $created_at = $row->created_at;
 
                 if ($row->status == Config::get('variable_constants.activation.active')) {

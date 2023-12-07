@@ -82,16 +82,17 @@ class MenuService
             foreach ($result as $key=>$row) {
                 $id = $row->id;
                 $title = $row->title;
-                $url = $row->url;
-                $icon = $row->icon;
-                $description = $row->description;
-                $menu_order = $row->menu_order;
+                $url = $row->url? $row->url:'N/A';
+                $icon = $row->icon? $row->icon:'N/A';
+                $description = $row->description? $row->description:'N/A';
+                $menu_order = $row->menu_order? $row->menu_order:'N/A';
                 $parent_menu = $this->menuRepository->getMenuTitle($row->parent_menu);
                 $created_at = $row->created_at;
                 $permissions = '';
                 foreach ($row->permissions as $p) {
                     $permissions.="<span class=\"badge badge-primary\">$p</span><br>";
                 }
+                $permissions = $permissions==''? $permissions:'N/A';
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";
                     $status_msg = "Deactivate";

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\RequisitionRequested;
+use App\Jobs\RequisitionRequestJob;
 use Mail;
 use App\Mail\RequisitionMail;
 use App\Repositories\RequisitionRepository;
@@ -34,7 +35,8 @@ class RequisitionService
             ->create();
         if(is_int($requisition))
         {
-            RequisitionRequested::dispatch($request);
+//            RequisitionRequested::dispatch($request);
+            event(new RequisitionRequested($request->all()));
             return true;
         }
         return false;
@@ -167,4 +169,5 @@ class RequisitionService
             }';
         }
     }
+
 }

@@ -173,5 +173,24 @@ class LeaveApplyRepository
     {
         return DB::table('leaves')->where('id', $id)->delete();
     }
+    public function getReciever($employeeId)
+    {
+        $appliedUser = DB::table('users')->where('employee_id',$employeeId)->first();
+        $getLineManagers  = DB::table('users as u')
+        ->leftJoin('line_managers as lm', function ($join) {
+            $join->on('u.id', '=', 'lm.user_id')
+            ->whereNULL('lm.deleted_at');
+        })
+        ->where('lm.user_id', '=', $appliedUser->id)
+        ->select('lm.line_manager_user_id')
+        ->get()
+        ->toArray();
+
+        $lineManagerEmail = array();
+        foreach ($getLineManagers as $glm) {
+            array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
+        }
+        return [$lineManagerEmail, $appliedUser->email];
+    }
 }
 

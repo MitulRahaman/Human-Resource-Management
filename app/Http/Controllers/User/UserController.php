@@ -38,12 +38,18 @@ class UserController extends Controller
 
     public function create()
     {
-        View::share('sub_menu', 'Add User');
-        $branches = $this->userService->getBranches();
-        $organizations = $this->userService->getOrganizations();
-        $roles = $this->userService->getRoles();
-        $allUsers = $this->userService->getAllUsers(null);
-        return view('backend.pages.user.create', compact('branches', 'organizations', 'roles', 'allUsers'));
+        $hasUserManagePermission = $this->setId(auth()->user()->id)->setSlug('manageUsers')->hasPermission();
+        if($hasUserManagePermission) {
+            View::share('sub_menu', 'Add User');
+            $branches = $this->userService->getBranches();
+            $organizations = $this->userService->getOrganizations();
+            $roles = $this->userService->getRoles();
+            $allUsers = $this->userService->getAllUsers(null);
+            return view('backend.pages.user.create', compact('branches', 'organizations', 'roles', 'allUsers'));
+        } else {
+            return redirect()->back()->with('error', 'You don\'t have permission');
+        }
+
     }
 
     public function manage()

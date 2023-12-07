@@ -86,7 +86,7 @@
                                     <span id="error_phone" style="font-size:13px; color:red"></span>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-xl-6">
+                            <div class="col-lg-6 col-xl-6 px-4 pr-6">
                                 <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
                                     <input type="email" class="form-control" id="personal_email" name="personal_email" value="{{ $user->basicInfo->personal_email }}" required>
@@ -132,16 +132,15 @@
                                     <label for="val_photo">Choose a photo</label><br>
                                     <input type="file" name="photo" id="photo" value="{{ $user->image }}" /><br>
                                 </div>
+                                 <!-- Save -->
+                                 <div class="items-push float-right pt-5">
+                                        <button type="submit" class="btn btn-primary px-6" id="submit">Save</button>
+                                </div>
+                                <!-- END Save -->
                             </div>
                         </div>
 
-                        <!-- Save -->
-                        <div class="row items-push float-right">
-                            <div class="mr-6">
-                                <button type="submit" class="btn btn-alt-primary px-6" id="submit">Save</button>
-                            </div>
-                        </div>
-                        <!-- END Save -->
+
                     </div>
                 </div>
             </form>

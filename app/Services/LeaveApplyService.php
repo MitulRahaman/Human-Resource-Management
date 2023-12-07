@@ -43,17 +43,16 @@ class LeaveApplyService
     }
     public function LeaveApplicationEmail($data)
     {
-        $leaveTypeName = null;
-        $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
-        if(!$receivers) {
-            return false;
-        }
-
         if($data->leaveTypeId) {
+            $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
+            if(!$receivers) {
+                return false;
+            }
             $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
             Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
             return true;
         } else {
+            $receivers = $this->leaveApplyRepository->getReciever($data->employeeId);
             Mail::send((new LeaveApproveMail($data))->to($receivers[1])->cc($receivers[0]));
             return true;
         }
@@ -121,7 +120,7 @@ class LeaveApplyService
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
                 $recommend_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_recommend_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Recommend</a>";
-                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\", \"$start_date\", \"$end_date\")'>Approve</a>";
+                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\", \"$start_date\", \"$end_date\", \"$employeeId\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a>";
                 if($hasManageLeavePermission)
                 {

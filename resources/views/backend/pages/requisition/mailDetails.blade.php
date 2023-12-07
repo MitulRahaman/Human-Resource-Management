@@ -1,12 +1,18 @@
 <php>
    
-    Please approve my Asset Requisition Request <br>
-    name: {{ $data['name'] }}  <br>
-    specification: {{ $data['specification'] }}  <br>
+    Assalamu Alaikum, <br> <br>
+    I hope this email finds you well.
+    I am writing to request the following asset for our project.
+    This requisition is essential for improving productivity and ensuring the smooth functioning of our team. <br>
+    Details of asset:<br>
+    Name: {{ $data['name'] }}  <br>
+    Specification: {{ $data['specification'] }}  <br>
     @if($assetType)
-        asset type: {{$assetType}}<br>
+        Asset type: {{$assetType}}<br>
     @endif
-    reason: {{ $data['remarks'] }}
+    Reason: {{ $data['remarks'] }}<br><br>
+    Regards,<br>
+    {{ \Illuminate\Support\Facades\Auth::user()->full_name }}
 
     
 </php>

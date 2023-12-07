@@ -5,9 +5,10 @@
 @section('content')
     <div class="content">
         <!-- Quick Actions -->
+
         <div class="row">
             <div class="col-6">
-                <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                <a class="block block-rounded block-link-shadow text-center" href="{{url('user/profile/'.$user->id.'/edit')}}">
                     <div class="block-content block-content-full">
                         <div class="font-size-h2 text-dark">
                             <i class="fa fa-pencil-alt"></i>
@@ -21,7 +22,7 @@
                 </a>
             </div>
             <div class="col-6">
-                <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                <a class="block block-rounded block-link-shadow text-center" href="{{url('change_password')}}">
                     <div class="block-content block-content-full">
                         <div class="font-size-h2 text-danger">
                             <i class="fa fa-lock-open"></i>

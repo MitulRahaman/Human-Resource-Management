@@ -8,9 +8,11 @@ use App\Services\RequisitionService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\View;
+use App\Traits\AuthorizationTrait;
 
 class RequisitionController extends Controller
 {
+    use AuthorizationTrait;
     private $requisitionService;
 
     public function __construct(RequisitionService $requisitionService)
@@ -35,8 +37,9 @@ class RequisitionController extends Controller
     }
     public function store(RequisitionAddRequest $request)
     {
+        abort_if(!$this->setSlug('requestRequisition')->hasPermission(), 403, 'You don\'t have permission!');
         try {
-            $requisition = $this->requisitionService->create($request->validated());
+            $requisition = $this->requisitionService->create($request->validated(),$request);
             if(!$requisition)
                 return redirect('requisition')->with('error', 'Failed to Request');
         } catch (\Exception $exception) {

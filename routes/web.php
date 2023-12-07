@@ -41,11 +41,11 @@ Route::get('/', function () {
 Route::get('login', [AuthController::class, 'index'])->name('viewLogin');
 Route::post('login', [AuthController::class, 'authenticate'])->name('login');
 
-Route::get('change_password', [AuthController::class, 'viewChangePassword']);
-Route::post('change_password', [AuthController::class, 'changePassword']);
-Route::post('change_password/validate_inputs', [AuthController::class, 'validatePasswords']);
-
 Route::group(['middleware'=> 'auth'], function() {
+    Route::get('change_password', [AuthController::class, 'viewChangePassword']);
+    Route::post('change_password', [AuthController::class, 'changePassword']);
+    Route::post('change_password/validate_inputs', [AuthController::class, 'validatePasswords']);
+
     Route::prefix('dashboard')->group(function() {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/get_requisition_data', [DashboardController::class, 'fetchRequisitionData']);

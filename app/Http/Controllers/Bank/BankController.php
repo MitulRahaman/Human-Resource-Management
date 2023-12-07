@@ -22,7 +22,7 @@ class BankController extends Controller
     }
     public function index()
     {
-        $hasBankManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBanks')->hasPermission();
+        $hasBankManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBank')->hasPermission();
         return \view('backend.pages.bank.index', compact('hasBankManagePermission'));
     }
     public function fetchData()
@@ -31,6 +31,7 @@ class BankController extends Controller
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addBank')->hasPermission(), 403, 'You don\'t have permission!');
         return \view('backend.pages.bank.create');
     }
     public function validate_inputs(Request $request)
@@ -39,6 +40,7 @@ class BankController extends Controller
     }
     public function store(BankAddRequest $request)
     {
+        abort_if(!$this->setSlug('addBank')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             $response = $this->bankService->createBank($request->validated());
             if (is_int($response)) {
@@ -52,6 +54,7 @@ class BankController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editBank')->hasPermission(), 403, 'You don\'t have permission!');
         $bank_info = $this->bankService->getBank($id);
         if($bank_info=="Restore first")
             return redirect()->back()->with('error', $bank_info);
@@ -63,6 +66,7 @@ class BankController extends Controller
     }
     public function update(BankEditRequest $request)
     {
+        abort_if(!$this->setSlug('editBank')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->bankService->edit($request->validated()))
                 return redirect('bank/')->with('success', "Bank updated successfully.");
@@ -73,6 +77,7 @@ class BankController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('manageBank')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->bankService->delete($id))
                 return redirect('bank/')->with('success', "Bank deleted successfully.");
@@ -83,6 +88,7 @@ class BankController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('manageBank')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->bankService->restore($id))
                 return redirect('bank/')->with('success', "Bank restored successfully.");

@@ -110,7 +110,7 @@ class RoleService
     public function fetchData()
     {
         $result = $this->roleRepository->getAllRoleData();
-        $hasRoleManagePermission = $this->setId(auth()->user()->id)->setSlug('manageRoles')->hasPermission();
+        $hasRoleManagePermission = $this->setId(auth()->user()->id)->setSlug('manageRole')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
 
@@ -174,6 +174,8 @@ class RoleService
                 if($hasRoleManagePermission) {
                     array_push($temp, $action_btn);
                 }
+                else
+                    array_push($temp,'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

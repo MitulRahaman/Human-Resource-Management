@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{asset('backend/js/plugins/fullcalendar/main.min.css')}}">
 @endsection
 @section('page_action')
+    @if($hasManageCalenderPermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('calender/manage') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
@@ -16,6 +17,7 @@
             </button>
         </a>
     </div>
+    @endif
 @endsection
 @section('content')
     <div class="content">

@@ -118,9 +118,10 @@ class DegreeService
                     array_push($temp, ' <span class="badge badge-success">No</span>');
                 }
                 array_push($temp, $created_at);
-                if ($hasDegreeManagePermission) {
+                if($hasDegreeManagePermission)
                     array_push($temp, $action_btn);
-                }
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

@@ -103,7 +103,7 @@ class DesignationService
     public function fetchData()
     {
         $result = $this->designationRepository->getAllDesignationData();
-        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignations')->hasPermission();
+        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignation')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -160,6 +160,8 @@ class DesignationService
                 if($hasDesignationManagePermission) {
                     array_push($temp, $action_btn);
                 }
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

@@ -86,7 +86,7 @@ class InstituteService
     public function fetchData()
     {
         $result = $this->instituteRepository->getAllInstituteData();
-        $hasInstitutionManagePermission = $this->setId(auth()->user()->id)->setSlug('manageInstitution')->hasPermission();
+        $hasInstitutionManagePermission = $this->setId(auth()->user()->id)->setSlug('manageInstitute')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
 
@@ -137,6 +137,8 @@ class InstituteService
                 if($hasInstitutionManagePermission){
                     array_push($temp, $action_btn);
                 }
+                else
+                    array_push($temp,'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

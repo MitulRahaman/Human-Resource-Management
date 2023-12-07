@@ -23,11 +23,12 @@ class DesignationController extends Controller
     }
     public function index()
     {
-        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignations')->hasPermission();
+        $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignation')->hasPermission();
         return \view('backend.pages.designation.index', compact('hasDesignationManagePermission'));
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         $branches = $this->designationService->getBranches();
         return \view('backend.pages.designation.create', compact('branches'));
     }
@@ -37,6 +38,7 @@ class DesignationController extends Controller
     }
     public function store(DesignationAddRequest $request)
     {
+        abort_if(!$this->setSlug('addDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $designation = $this->designationService->createDesignation($request->validated());
             if(!$designation)
@@ -48,6 +50,7 @@ class DesignationController extends Controller
     }
     public function changeStatus($id)
     {
+        abort_if(!$this->setSlug('manageDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->designationService->changeStatus($id))
                 return redirect('designation/')->with('success', 'Designation status changed successfully!');
@@ -58,6 +61,7 @@ class DesignationController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('manageDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->designationService->delete($id))
                 return redirect('designation/')->with('success', "Designation deleted successfully!");
@@ -68,6 +72,7 @@ class DesignationController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('manageDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->designationService->restore($id))
                 return redirect('designation/')->with('success', "Designation restored successfully!");
@@ -78,6 +83,7 @@ class DesignationController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         $designation_info = $this->designationService->getDesignation($id);
         if($designation_info=="Restore first")
             return redirect()->back()->with('error', $designation_info);
@@ -90,6 +96,7 @@ class DesignationController extends Controller
     }
     public function update(DesignationEditRequest $request)
     {
+        abort_if(!$this->setSlug('editDesignation')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $designation = $this->designationService->update($request->validated());
             if(!$designation)

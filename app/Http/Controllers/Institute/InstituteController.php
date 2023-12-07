@@ -22,7 +22,7 @@ class InstituteController extends Controller
     }
     public function index()
     {
-        $hasInstitutionManagePermission = $this->setId(auth()->user()->id)->setSlug('manageInstitution')->hasPermission();
+        $hasInstitutionManagePermission = $this->setId(auth()->user()->id)->setSlug('manageInstitute')->hasPermission();
         return \view('backend.pages.institute.index', compact('hasInstitutionManagePermission'));
     }
     public function fetchData()
@@ -31,6 +31,7 @@ class InstituteController extends Controller
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         return \view('backend.pages.institute.create');
     }
     public function validate_inputs(Request $request)
@@ -39,6 +40,7 @@ class InstituteController extends Controller
     }
     public function store(InstituteAddRequest $request)
     {
+        abort_if(!$this->setSlug('addInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             $response = $this->instituteService->createInstitute($request->validated());
             if (is_int($response)) {
@@ -52,6 +54,7 @@ class InstituteController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         $institute_info = $this->instituteService->getInstitute($id);
         if($institute_info=="Restore first")
             return redirect()->back()->with('error', $institute_info);
@@ -63,6 +66,7 @@ class InstituteController extends Controller
     }
     public function update(InstituteEditRequest $request)
     {
+        abort_if(!$this->setSlug('editInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->instituteService->edit($request->validated()))
                 return redirect('institute/')->with('success', "Institute updated successfully.");
@@ -73,6 +77,7 @@ class InstituteController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('manageInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->instituteService->delete($id))
                 return redirect('institute/')->with('success', "Institute deleted successfully.");
@@ -83,6 +88,7 @@ class InstituteController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('manageInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->instituteService->restore($id))
                 return redirect('institute/')->with('success', "Institute restored successfully.");
@@ -93,6 +99,7 @@ class InstituteController extends Controller
     }
     public function changeStatus($id)
     {
+        abort_if(!$this->setSlug('manageInstitute')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->instituteService->changeStatus($id))
                 return redirect('institute/')->with('success', "Institute status changed successfully.");

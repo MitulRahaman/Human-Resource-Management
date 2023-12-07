@@ -8,9 +8,11 @@ use App\Http\Requests\PermissionEditRequest;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use App\Traits\AuthorizationTrait;
 
 class PermissionController extends Controller
 {
+    use AuthorizationTrait;
     private $permissionService;
 
     public function __construct(PermissionService $permissionService)
@@ -25,6 +27,7 @@ class PermissionController extends Controller
     }
     public function create()
     {
+        abort_if(!$this->setSlug('addPermission')->hasPermission(), 403, 'You don\'t have permission!');
         return \view('backend.pages.permission.create');
     }
     public function fetchData()
@@ -33,6 +36,7 @@ class PermissionController extends Controller
     }
     public function store(PermissionAddRequest $request)
     {
+        abort_if(!$this->setSlug('addPermission')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             $response = $this->permissionService->createPermission($request->validated());
             if (is_int($response)) {
@@ -46,6 +50,7 @@ class PermissionController extends Controller
     }
     public function changeStatus($id)
     {
+        abort_if(!$this->setSlug('managePermission')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->permissionService->changeStatus($id))
                 return redirect('permission/')->with('success', "Permission status changed successfully.");
@@ -56,6 +61,7 @@ class PermissionController extends Controller
     }
     public function delete($id)
     {
+        abort_if(!$this->setSlug('managePermission')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->permissionService->delete($id))
                 return redirect('permission/')->with('success', "Permission deleted successfully.");
@@ -66,6 +72,7 @@ class PermissionController extends Controller
     }
     public function edit($id )
     {
+        abort_if(!$this->setSlug('editPermission')->hasPermission(), 403, 'You don\'t have permission!');
         $permission_info = $this->permissionService->getPermission($id);
         if($permission_info=="Restore first")
             return redirect()->back()->with('error', $permission_info);
@@ -73,6 +80,7 @@ class PermissionController extends Controller
     }
     public function update(PermissionEditRequest $request)
     {
+        abort_if(!$this->setSlug('editPermission')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->permissionService->edit($request->validated()))
                 return redirect('permission/')->with('success', "Permission updated successfully.");
@@ -83,6 +91,7 @@ class PermissionController extends Controller
     }
     public function restore($id)
     {
+        abort_if(!$this->setSlug('managePermission')->hasPermission(), 403, 'You don\'t have permission!');
         try{
             if($this->permissionService->restore($id))
                 return redirect('permission/')->with('success', "Permission restored successfully.");
@@ -96,7 +105,7 @@ class PermissionController extends Controller
     {
         return $this->permissionService->validateInputs($request->all());
     }
-    public function validate_name(Request $request, int $id)
+    public function validate_name(Request $request, $id)
     {
         return $this->permissionService->validateName($request->all(),$id);
     }

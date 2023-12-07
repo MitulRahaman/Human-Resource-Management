@@ -81,7 +81,7 @@ class BankService
     public function fetchData()
     {
         $result = $this->bankRepository->getAllBankData();
-        $hasBankManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBanks')->hasPermission();
+        $hasBankManagePermission = $this->setId(auth()->user()->id)->setSlug('manageBank')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -121,6 +121,8 @@ class BankService
                 if($hasBankManagePermission) {
                     array_push($temp, $action_btn);
                 }
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

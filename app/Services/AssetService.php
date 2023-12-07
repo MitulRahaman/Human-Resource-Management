@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Repositories\AssetRepository;
 use Illuminate\Support\Facades\Config;
+use App\Traits\AuthorizationTrait;
 
 class AssetService
 {
+    use AuthorizationTrait;
     private $assetRepository;
 
     public function __construct(AssetRepository $assetRepository)
@@ -72,6 +74,7 @@ class AssetService
     public function fetchData()
     {
         $result = $this->assetRepository->getAllAssetData();
+        $hasManageAssetPermission = $this->setSlug('manageAsset')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -131,7 +134,10 @@ class AssetService
                 }
 
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasManageAssetPermission)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));
@@ -216,6 +222,7 @@ class AssetService
     public function fetchDataAssetType()
     {
         $result = $this->assetRepository->getAllAssetTypeData();
+        $hasManageAssetTypePermission = $this->setSlug('manageAssetType')->hasPermission();
         if ($result->count() > 0) {
             $data = array();
 
@@ -262,7 +269,10 @@ class AssetService
                 }
 
                 array_push($temp, $created_at);
-                array_push($temp, $action_btn);
+                if($hasManageAssetTypePermission)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

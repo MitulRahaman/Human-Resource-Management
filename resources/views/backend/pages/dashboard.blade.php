@@ -3,98 +3,97 @@
 @section('content')
     <div class="content">
         <!-- Overview -->
-        <div class="row row-deck">
-            <div class="col-sm-6 col-xl-3">
-                <!-- Pending Orders -->
-                <div class="block block-rounded d-flex flex-column">
-                    <div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">
-                        <dl class="mb-0">
-                            <dt class="font-size-h2 font-w700">32</dt>
-                            <dd class="text-muted mb-0">Pending Orders</dd>
-                        </dl>
-                        <div class="item item-rounded bg-body">
-                            <i class="fa fa-shopping-cart font-size-h3 text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-                        <a class="font-w500 d-flex align-items-center" href="javascript:void(0)">
-                            View all orders
-                            <i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- END Pending Orders -->
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <!-- New Customers -->
-                <div class="block block-rounded d-flex flex-column">
-                    <div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">
-                        <dl class="mb-0">
-                            <dt class="font-size-h2 font-w700">124</dt>
-                            <dd class="text-muted mb-0">New Customers</dd>
-                        </dl>
-                        <div class="item item-rounded bg-body">
-                            <i class="fa fa-users font-size-h3 text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-                        <a class="font-w500 d-flex align-items-center" href="javascript:void(0)">
-                            View all customers
-                            <i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- END New Customers -->
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <!-- Messages -->
-                <div class="block block-rounded d-flex flex-column">
-                    <div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">
-                        <dl class="mb-0">
-                            <dt class="font-size-h2 font-w700">45</dt>
-                            <dd class="text-muted mb-0">Messages</dd>
-                        </dl>
-                        <div class="item item-rounded bg-body">
-                            <i class="fa fa-inbox font-size-h3 text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-                        <a class="font-w500 d-flex align-items-center" href="javascript:void(0)">
-                            View all messages
-                            <i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- END Messages -->
-            </div>
-            <div class="col-sm-6 col-xl-3">
-                <!-- Conversion Rate -->
-                <div class="block block-rounded d-flex flex-column">
-                    <div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">
-                        <dl class="mb-0">
-                            <dt class="font-size-h2 font-w700">4.5%</dt>
-                            <dd class="text-muted mb-0">Conversion Rate</dd>
-                        </dl>
-                        <div class="item item-rounded bg-body">
-                            <i class="fa fa-chart-line font-size-h3 text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-                        <a class="font-w500 d-flex align-items-center" href="javascript:void(0)">
-                            View statistics
-                            <i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- END Conversion Rate-->
-            </div>
-        </div>
+        {{--<div class="row row-deck">--}}
+            {{--<div class="col-sm-6 col-xl-3">--}}
+                {{--<!-- Pending Orders -->--}}
+                {{--<div class="block block-rounded d-flex flex-column">--}}
+                    {{--<div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">--}}
+                        {{--<dl class="mb-0">--}}
+                            {{--<dt class="font-size-h2 font-w700">32</dt>--}}
+                            {{--<dd class="text-muted mb-0">Pending Orders</dd>--}}
+                        {{--</dl>--}}
+                        {{--<div class="item item-rounded bg-body">--}}
+                            {{--<i class="fa fa-shopping-cart font-size-h3 text-primary"></i>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">--}}
+                        {{--<a class="font-w500 d-flex align-items-center" href="javascript:void(0)">--}}
+                            {{--View all orders--}}
+                            {{--<i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<!-- END Pending Orders -->--}}
+            {{--</div>--}}
+            {{--<div class="col-sm-6 col-xl-3">--}}
+                {{--<!-- New Customers -->--}}
+                {{--<div class="block block-rounded d-flex flex-column">--}}
+                    {{--<div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">--}}
+                        {{--<dl class="mb-0">--}}
+                            {{--<dt class="font-size-h2 font-w700">124</dt>--}}
+                            {{--<dd class="text-muted mb-0">New Customers</dd>--}}
+                        {{--</dl>--}}
+                        {{--<div class="item item-rounded bg-body">--}}
+                            {{--<i class="fa fa-users font-size-h3 text-primary"></i>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">--}}
+                        {{--<a class="font-w500 d-flex align-items-center" href="javascript:void(0)">--}}
+                            {{--View all customers--}}
+                            {{--<i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<!-- END New Customers -->--}}
+            {{--</div>--}}
+            {{--<div class="col-sm-6 col-xl-3">--}}
+                {{--<!-- Messages -->--}}
+                {{--<div class="block block-rounded d-flex flex-column">--}}
+                    {{--<div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">--}}
+                        {{--<dl class="mb-0">--}}
+                            {{--<dt class="font-size-h2 font-w700">45</dt>--}}
+                            {{--<dd class="text-muted mb-0">Messages</dd>--}}
+                        {{--</dl>--}}
+                        {{--<div class="item item-rounded bg-body">--}}
+                            {{--<i class="fa fa-inbox font-size-h3 text-primary"></i>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">--}}
+                        {{--<a class="font-w500 d-flex align-items-center" href="javascript:void(0)">--}}
+                            {{--View all messages--}}
+                            {{--<i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<!-- END Messages -->--}}
+            {{--</div>--}}
+            {{--<div class="col-sm-6 col-xl-3">--}}
+                {{--<!-- Conversion Rate -->--}}
+                {{--<div class="block block-rounded d-flex flex-column">--}}
+                    {{--<div class="block-content block-content-full flex-grow-1 d-flex justify-content-between align-items-center">--}}
+                        {{--<dl class="mb-0">--}}
+                            {{--<dt class="font-size-h2 font-w700">4.5%</dt>--}}
+                            {{--<dd class="text-muted mb-0">Conversion Rate</dd>--}}
+                        {{--</dl>--}}
+                        {{--<div class="item item-rounded bg-body">--}}
+                            {{--<i class="fa fa-chart-line font-size-h3 text-primary"></i>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">--}}
+                        {{--<a class="font-w500 d-flex align-items-center" href="javascript:void(0)">--}}
+                            {{--View statistics--}}
+                            {{--<i class="fa fa-arrow-alt-circle-right ml-1 opacity-25 font-size-base"></i>--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<!-- END Conversion Rate-->--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <!-- END Overview -->
     @if($hasManageLeavePermission)
         <!-- Recent Orders -->
             <div class="content">
                 <div class="row">
-                    @if($total['on_leave']>0)
                     <div class="col-6">
                         <div class="block block-rounded">
                             <div class="block-header block-header-default">
@@ -123,8 +122,6 @@
                             </div>
                         </div>
                     </div>
-                    @endif
-                    @if($total['pending_leave']>0)
                     <div class="col-6">
                         <div class="block block-rounded">
                             <div class="block-header block-header-default">
@@ -156,11 +153,10 @@
                             </div>
                         </div>
                     </div>
-                       @endif
                 </div>
             <div class="row">
                 <div class="col-12">
-                @if($hasManageRequisitionPermission && $total['requisition']>0)
+                @if($hasManageRequisitionPermission)
                     <!-- Recent Orders -->
                         <div class="block block-rounded">
                             <div class="block-header block-header-default">
@@ -249,6 +245,11 @@
                 var tableBody = $('#requisition_table_body');
                 tableBody.empty();
                 originalData = data.data;
+                if (originalData.length == 0) {
+                    var noDataRow = '<tr><td colspan=9 class="text-center">No Data Found</td></tr>';
+                    tableBody.append(noDataRow);
+                    return;
+                }
                 for (var i = 0; i < originalData.length; i++) {
                     var record = originalData[i];
                     var row = '<tr>';
@@ -288,24 +289,30 @@
             function updatePaginationLinks(totalPages, currentPage) {
                 var paginationContainer = $('#pagination');
                 paginationContainer.empty();
-                var prevButton = '<li class="page-item">';
-                prevButton += '<a class="page-link" href="javascript:void(0)" data-page="' + ((currentPage == 0) ? (currentPage - 1) : 0) + '" aria-label="Previous">';
-                prevButton += 'Prev';
-                prevButton += '</a>';
-                prevButton += '</li>';
-                paginationContainer.append(prevButton);
+                if(totalPages>1)
+                {
+                    var prevButton = '<li class="page-item">';
+                    prevButton += '<a class="page-link" href="javascript:void(0)" data-page="' + ((currentPage == 0) ? (currentPage - 1) : 0) + '" aria-label="Previous">';
+                    prevButton += 'Prev';
+                    prevButton += '</a>';
+                    prevButton += '</li>';
+                    paginationContainer.append(prevButton);
+                }
                 for (var i = 1; i <= totalPages; i++) {
                     var pageLink = '<li class="page-item ' + (i === currentPage ? 'active' : '') + '">';
                     pageLink += '<a class="page-link" href="javascript:void(0)" data-page="' + i + '">' + i + '</a>';
                     pageLink += '</li>';
                     paginationContainer.append(pageLink);
                 }
-                var nextButton = '<li class="page-item">';
-                nextButton += '<a class="page-link" href="javascript:void(0)" data-page="' +( (currentPage<=totalPages)? (currentPage + 1):totalPages)+ '" aria-label="Next">';
-                nextButton += 'Next';
-                nextButton += '</a>';
-                nextButton += '</li>';
-                paginationContainer.append(nextButton);
+                if(totalPages>1)
+                {
+                    var nextButton = '<li class="page-item">';
+                    nextButton += '<a class="page-link" href="javascript:void(0)" data-page="' +( (currentPage<=totalPages)? (currentPage + 1):totalPages)+ '" aria-label="Next">';
+                    nextButton += 'Next';
+                    nextButton += '</a>';
+                    nextButton += '</li>';
+                    paginationContainer.append(nextButton);
+                }
             }
             $('.filter-link').on('click', function () {
                 var status = $(this).data('status');
@@ -354,7 +361,11 @@
             function populateTable(data) {
                 var tableBody = $('#on_leave_table_body');
                 tableBody.empty();
-                console.log(data.data[0][1]);
+                if (data.data.length==0) {
+                    var noDataRow = '<tr><td colspan=4 class="text-center">No Data Found</td></tr>';
+                    tableBody.append(noDataRow);
+                    return;
+                }
                 for (var i = 0; i < data.data.length; i++) {
                     var record = data.data[i];
                     var row = '<tr>' ;
@@ -384,7 +395,11 @@
             function populateTable(data) {
                 var tableBody = $('#pending_table_body');
                 tableBody.empty();
-                console.log(data.data[0][1]);
+                if (data.data.length == 0) {
+                    var noDataRow = '<tr><td colspan=7 class="text-center">No Data Found</td></tr>';
+                    tableBody.append(noDataRow);
+                    return;
+                }
                 for (var i = 0; i < data.data.length; i++) {
                     var record = data.data[i];
                     var row = '<tr>' ;

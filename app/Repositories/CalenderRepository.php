@@ -144,6 +144,9 @@ class CalenderRepository
         DB::beginTransaction();
         try {
             $f= file($file);
+            $row = explode(',', $f[0]);
+            if(count($row)!=3 ||$row[0]!="date"|| $row[1]!="title" || $row[2]!="description\r\n")
+                return false;
             array_splice($f, 0, 1);
             $date="";
             foreach($f as $line) {
@@ -170,8 +173,12 @@ class CalenderRepository
                         ]);
                 }
             }
-            DB::commit();
-            return true;
+            if($date>0)
+            {
+                DB::commit();
+                return true;
+            }
+            return false;
         } catch (\Exception $exception) {
             DB::rollBack();
             return $exception->getMessage();

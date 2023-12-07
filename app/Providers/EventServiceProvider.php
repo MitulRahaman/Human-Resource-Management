@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\LeaveApplied;
+use App\Events\RequisitionRequested;
 use App\Listeners\LeaveAppliedListener;
+use App\Listeners\RequisitionRequestedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         LeaveApplied::class => [
             LeaveAppliedListener::class,
+        ],
+        RequisitionRequested::class => [
+            RequisitionRequestedListener::class,
         ]
     ];
 

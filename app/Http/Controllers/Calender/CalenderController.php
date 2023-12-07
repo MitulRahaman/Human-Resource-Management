@@ -75,10 +75,12 @@ class CalenderController extends Controller
     public function saveExcel(ExcelFileAddRequest $request)
     {
         try{
-            $this->calenderService->saveExcel($request->all());
-            return redirect('calender/')->with('success', "Calender Updated");
+            $calender = $this->calenderService->saveExcel($request->all());
+            if($calender)
+                return redirect('calender/')->with('success', "Calender Updated");
+            return redirect()->back()->with('error', "Sorry! Calender could not be updated.");
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', "OOPS! Calender could not be updated.");
+            return redirect()->back()->with('error', $exception->getMessage());
         }
     }
     public function updateEvent(Request $request)

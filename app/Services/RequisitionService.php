@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\RequisitionRequested;
 use Mail;
 use App\Mail\RequisitionMail;
 use App\Repositories\RequisitionRepository;
@@ -22,24 +23,31 @@ class RequisitionService
     {
         return $this->requisitionRepository->getAllAssetType();
     }
-    public function create($data)
+    public function create($data,$request)
     {
-        return $this->requisitionRepository->setName($data['name'])
+        $requisition = $this->requisitionRepository->setName($data['name'])
             ->setSpecification($data['specification'])
             ->setAssetTypeId($data['asset_type_id'])
             ->setRemarks($data['remarks'])
             ->setStatus(Config::get('variable_constants.status.pending'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->create();
+        if(is_int($requisition))
+        {
+            RequisitionRequested::dispatch($request);
+            return true;
+        }
+        return false;
+
     }
     public function requisitionEmail($data)
     {
-        $assetTypeName = $this->requisitionRepository->getAssetTypeName($data['asset_type_id']);
+        $assetType = $this->requisitionRepository->getAssetTypeName($data['asset_type_id']);
         $receivers = $this->requisitionRepository->setId(auth()->user()->id)->getRequisitionEmailRecipient();
         if(!$receivers) {
             return false;
         }
-        Mail::send((new RequisitionMail($data, $assetTypeName))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
+        Mail::send((new RequisitionMail($data, $assetType->name))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
         return true;
     }
     public function update($data)
@@ -159,5 +167,4 @@ class RequisitionService
             }';
         }
     }
-
 }

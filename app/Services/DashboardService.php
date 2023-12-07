@@ -73,12 +73,13 @@ class DashboardService
 
             return json_encode(['data' => $data]);
         } else {
-            return json_encode([
-                'sEcho' => 1,
-                'iTotalRecords' => 0,
-                'iTotalDisplayRecords' => 0,
-                'aaData' => [],
-            ]);
+            return '{
+                "data":[],
+                "sEcho": 1,
+                "iTotalRecords": "0",
+                "iTotalDisplayRecords": "0",
+                "aaData": []
+            }';
         }
     }
 
@@ -102,6 +103,7 @@ class DashboardService
             return json_encode(array('data'=>$data));
         } else {
             return '{
+                "data":[],
                 "sEcho": 1,
                 "iTotalRecords": "0",
                 "iTotalDisplayRecords": "0",
@@ -136,6 +138,7 @@ class DashboardService
             return json_encode(array('data'=>$data));
         } else {
             return '{
+                "data":[],
                 "sEcho": 1,
                 "iTotalRecords": "0",
                 "iTotalDisplayRecords": "0",

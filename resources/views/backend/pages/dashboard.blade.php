@@ -92,146 +92,146 @@
         <!-- END Overview -->
     @if($hasManageLeavePermission)
         <!-- Recent Orders -->
-            <div class="content">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="block block-rounded">
-                            <div class="block-header block-header-default">
-                                <h3 class="block-title">On Leave(Today)</h3>
-                            </div>
 
-                            <div class="block-content">
-                                <!-- Recent Orders Table -->
-                                <div class="table-responsive">
-                                    <table class="table table-borderless table-striped table-vcenter" id="on_leave">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Employee ID</th>
-                                            <th class="text-center">Employee Name</th>
-                                            <th class="text-center">Designation</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="on_leave_table_body">
+            <div class="block block-rounded">
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- END Recent Orders Table -->
+                <div class="block-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                                <div class="block block-rounded">
+                                    <div class="block-header block-header-default">
+                                        <h3 class="block-title">On Leave(Today)</h3>
+                                    </div>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="block block-rounded">
-                            <div class="block-header block-header-default">
-                                <h3 class="block-title">Pending Leave Application</h3>
-                            </div>
+                                    <div class="block-content">
+                                        <!-- Recent Orders Table -->
+                                        <div class="table-responsive">
+                                            <table class="table table-borderless table-striped table-vcenter" id="on_leave">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">Employee ID</th>
+                                                    <th class="text-center">Employee Name</th>
+                                                    <th class="text-center">Designation</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="on_leave_table_body">
 
-                            <div class="block-content">
-                                <!-- Recent Orders Table -->
-                                <div class="table-responsive">
-                                    <table class="table table-borderless table-striped table-vcenter" id="pending_leave">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Employee ID</th>
-                                            <th class="text-center">Employee Name</th>
-                                            <th class="text-center">Leave Type</th>
-                                            <th class="text-center">Start date</th>
-                                            <th class="text-center">End date</th>
-                                            <th class="text-center">Applied</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="pending_table_body">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- END Recent Orders Table -->
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="row">
-                <div class="col-12">
-                @if($hasManageRequisitionPermission)
-                    <!-- Recent Orders -->
-                        <div class="block block-rounded">
-                            <div class="block-header block-header-default">
-                                <h3 class="block-title">Requisition Requests</h3>
-                                <div class="block-options">
-                                    <div class="dropdown d-inline-block">
-                                        <button type="button" class="btn btn-sm btn-alt-primary" id="dropdown-recent-orders-filters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fa fa-fw fa-flask"></i>
-                                            Filters
-                                            <i class="fa fa-angle-down ml-1"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-right font-size-sm" aria-labelledby="dropdown-recent-orders-filters">
-                                            <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="pending" href="javascript:void(0)">
-                                                Pending..
-                                            </a>
-                                            <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="approved" href="javascript:void(0)">
-                                                Approved
-                                            </a>
-                                            <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="rejected" href="javascript:void(0)">
-                                                Rejected
-                                            </a>
-                                            <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="canceled" href="javascript:void(0)">
-                                                Canceled
-                                            </a>
-                                            <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="given" href="javascript:void(0)">
-                                                Given
-                                            </a>
-                                            <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="all" href="javascript:void(0)">
-                                                All
-                                            </a>
+                                                </tbody>
+                                            </table>
                                         </div>
+                                        <!-- END Recent Orders Table -->
+
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="block-content">
-                                <!-- Recent Orders Table -->
-                                <div class="table-responsive">
-                                    <table class="table table-borderless table-striped table-vcenter" id="requisition_table">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Employee ID</th>
-                                            <th class="text-center">Employee Name</th>
-                                            <th class="text-center">Asset Type</th>
-                                            <th class="text-center">Name</th>
-                                            <th class="text-center">Specification</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Remarks</th>
-                                            <th class="text-center">Requested</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="requisition_table_body">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- END Recent Orders Table -->
-                                <!-- Pagination -->
-                                <nav aria-label="Photos Search Navigation">
-                                    <ul class="pagination pagination-sm justify-content-end mt-2" id="pagination">
-
-                                    </ul>
-                                </nav>
-                                <!-- END Pagination -->
-
-                            </div>
                         </div>
-                        <!-- END Recent Orders -->
-                    @endif
+                        <div class="col-lg-6">
+                                <div class="block block-rounded">
+                                    <div class="block-header block-header-default">
+                                        <h3 class="block-title">Pending Leave Application</h3>
+                                    </div>
+
+                                    <div class="block-content">
+                                        <!-- Recent Orders Table -->
+                                        <div class="table-responsive">
+                                            <table class="table table-borderless table-striped table-vcenter" id="pending_leave">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">Employee ID</th>
+                                                    <th class="text-center">Employee Name</th>
+                                                    <th class="text-center">Leave Type</th>
+                                                    <th class="text-center">Start date</th>
+                                                    <th class="text-center">End date</th>
+                                                    <th class="text-center">Applied</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="pending_table_body">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- END Recent Orders Table -->
+
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-            <!-- END Recent Orders -->
-    @endif
+        @endif
+        @if($hasManageRequisitionPermission)
+            <!-- Recent Orders -->
+                <div class="block block-rounded">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">Requisition Requests</h3>
+                        <div class="block-options">
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="btn btn-sm btn-alt-primary" id="dropdown-recent-orders-filters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-fw fa-flask"></i>
+                                    Filters
+                                    <i class="fa fa-angle-down ml-1"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right font-size-sm" aria-labelledby="dropdown-recent-orders-filters">
+                                    <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="pending" href="javascript:void(0)">
+                                        Pending..
+                                    </a>
+                                    <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="approved" href="javascript:void(0)">
+                                        Approved
+                                    </a>
+                                    <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="rejected" href="javascript:void(0)">
+                                        Rejected
+                                    </a>
+                                    <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="canceled" href="javascript:void(0)">
+                                        Canceled
+                                    </a>
+                                    <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="given" href="javascript:void(0)">
+                                        Given
+                                    </a>
+                                    <a class="dropdown-item filter-link font-w500 d-flex align-items-center justify-content-between" data-status="all" href="javascript:void(0)">
+                                        All
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="block-content">
+                        <!-- Recent Orders Table -->
+                        <div class="table-responsive">
+                            <table class="table table-borderless table-striped table-vcenter" id="requisition_table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Employee ID</th>
+                                    <th class="text-center">Employee Name</th>
+                                    <th class="text-center">Asset Type</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Specification</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Remarks</th>
+                                    <th class="text-center">Requested</th>
+                                </tr>
+                                </thead>
+                                <tbody id="requisition_table_body">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- END Recent Orders Table -->
+                        <!-- Pagination -->
+                        <nav aria-label="Photos Search Navigation">
+                            <ul class="pagination pagination-sm justify-content-end mt-2" id="pagination">
+
+                            </ul>
+                        </nav>
+                        <!-- END Pagination -->
+
+                    </div>
+                </div>
+                <!-- END Recent Orders -->
+            @endif
+
 
 
     </div>

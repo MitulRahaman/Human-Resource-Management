@@ -135,6 +135,8 @@ class RequisitionService
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
+                    else
+                        $action_btn = "N/A";
                 }
                 elseif ($userId==$row->user_id)
                 {
@@ -146,7 +148,7 @@ class RequisitionService
                         $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
-                    else $action_btn .= "$toggle_delete_btn";
+                    else $action_btn = "N/A";
                 }
 
                 $action_btn .= "</div>
@@ -162,10 +164,7 @@ class RequisitionService
                 array_push($temp, $specification);
                 array_push($temp, $status);
                 array_push($temp, $remarks);
-                if($hasManageRequisitionPermission)
-                    array_push($temp, $action_btn);
-                else
-                    array_push($temp, 'N/A');
+                array_push($temp, $action_btn);
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

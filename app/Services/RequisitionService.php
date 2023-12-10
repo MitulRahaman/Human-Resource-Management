@@ -50,8 +50,8 @@ class RequisitionService
         $data =[
             'data' => $data,
             'assetTypeName' =>  $assetType->name,
-            'to' => $receivers[1]->preferred_email,
-            'cc'=> $receivers[0]->email,
+            'to' => $receivers[1],
+            'cc'=> $receivers[0],
             'user_email' => auth()->user()->email,
             'user_name' => auth()->user()->full_name
         ];

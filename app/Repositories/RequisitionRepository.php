@@ -146,21 +146,33 @@ class RequisitionRepository
     {
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
         if(!$appliedUser) return false;
-        $lineManagerEmail = DB::table('users as u')
-                                ->leftJoin('line_managers as lm', function ($join) {
-                                    $join->on('u.id', '=', 'lm.user_id')
-                                        ->whereNull('lm.deleted_at');
-                                })
-                                ->leftJoin('users as line_manager_user', 'line_manager_user.id', '=', 'lm.line_manager_user_id')
-                                ->where('lm.user_id', '=', $appliedUser->user_id)
-                                ->first();
-        $recipientEmail = DB::table('permissions as p')
-                                ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
-                                ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-                                ->where('p.slug', '=', 'manageRequisition')
-                                ->where('bi.branch_id', '=', $appliedUser->branch_id)
-                                ->first();
-        if (!$recipientEmail || !$lineManagerEmail) {
+        $getLineManagers  = DB::table('users as u')
+                                    ->leftJoin('line_managers as lm', function ($join) {
+                                        $join->on('u.id', '=', 'lm.user_id')
+                                            ->whereNULL('lm.deleted_at');
+                                    })
+                                    ->where('lm.user_id', '=', $appliedUser->user_id)
+                                    ->select('lm.line_manager_user_id')
+                                    ->get()
+                                    ->toArray();
+
+        $lineManagerEmail = array();
+        foreach ($getLineManagers as $glm) {
+            array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
+        }
+        $hasManageRequisitionPermission = DB::table('permissions as p')
+                                            ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
+                                            ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
+                                            ->where('p.slug', '=', 'manageRequisition')
+                                            ->where('bi.branch_id', '=', $appliedUser->branch_id)
+                                            ->select('rp.role_id')
+                                            ->get()
+                                            ->toArray();
+        $recipientEmail = array();
+        foreach ($hasManageRequisitionPermission as $hmlp) {
+            array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hmlp->role_id)->first()->preferred_email);
+        }
+        if(!$hasManageRequisitionPermission || !$recipientEmail) {
             return false;
         }
         return [$lineManagerEmail, $recipientEmail];

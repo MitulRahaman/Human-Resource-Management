@@ -32,8 +32,7 @@ class RequisitionRequestJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::send((new RequisitionMail($this->data))->to("rbtamannarbt@gmail.com")->cc("rbtamanna@appnap.io"));
-//        Mail::send((new RequisitionMail($this->data))->to($this->data['to'])->cc($this->data['cc']));
+        Mail::send((new RequisitionMail($this->data))->to($this->data['to'])->cc($this->data['cc']));
     }
 
 

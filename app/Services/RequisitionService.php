@@ -35,12 +35,10 @@ class RequisitionService
             ->create();
         if(is_int($requisition))
         {
-//            RequisitionRequested::dispatch($request);
             event(new RequisitionRequested($request->all()));
             return true;
         }
         return false;
-
     }
     public function requisitionEmail($data)
     {
@@ -49,15 +47,15 @@ class RequisitionService
         if(!$receivers) {
             return false;
         }
-//        $data =[
-//            'data' => $data,
-//            'assetTypeName' =>  $assetType->name,
-//            'to' => $receivers[1]->preferred_email,
-//            'from'=> $receivers[0]->email
-//        ];
-//        RequisitionRequestJob::dispatch($data);
-        Mail::send((new RequisitionMail($data, $assetType->name))->to("rbtamanna@appnap.io")->cc("rbtamannarbt@gmail.com"));
-//        Mail::send((new RequisitionMail($data, $assetType->name))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
+        $data =[
+            'data' => $data,
+            'assetTypeName' =>  $assetType->name,
+            'to' => $receivers[1]->preferred_email,
+            'from'=> $receivers[0]->email,
+            'user_email' => auth()->user()->email,
+            'user_name' => auth()->user()->full_name
+        ];
+        RequisitionRequestJob::dispatch($data);
         return true;
     }
     public function update($data)

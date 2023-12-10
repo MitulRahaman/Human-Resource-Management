@@ -12,7 +12,7 @@
     @endif
     Reason: {{ $data['remarks'] }}<br><br>
     Regards,<br>
-    {{ \Illuminate\Support\Facades\Auth::user()->full_name }}
+    {{ $user_name }}
 
     
 </php>

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\LeaveApplyJob;
 use Mail;
 use App\Events\LeaveApplied;
 use App\Mail\LeaveApplicationMail;
@@ -27,7 +28,7 @@ class LeaveApplyService
     public function storeLeaves($data)
     {
         if(is_object($this->leaveApplyRepository->storeLeaves($data))) {
-            event(new LeaveApplied($data));
+            event(new LeaveApplied($data->all()));
             return true;
         } else {
             return false;
@@ -43,13 +44,21 @@ class LeaveApplyService
     }
     public function LeaveApplicationEmail($data)
     {
-        if($data->leaveTypeId) {
+        if($data['leaveTypeId']) {
             $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
             if(!$receivers) {
                 return false;
             }
-            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
-            Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
+            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data['leaveTypeId']);
+            $data =[
+                'data' => $data,
+                'leaveTypeName' =>  $leaveTypeName,
+                'to' => $receivers[1],
+                'from'=> $receivers[0],
+                'user_email' => auth()->user()->email,
+                'user_name' => auth()->user()->full_name
+            ];
+            LeaveApplyJob::dispatch($data);
             return true;
         } else {
             $receivers = $this->leaveApplyRepository->getReciever($data->employeeId);

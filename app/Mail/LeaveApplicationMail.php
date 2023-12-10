@@ -14,17 +14,18 @@ class LeaveApplicationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user, $leaveType;
-
+    public $user, $leaveType, $user_email, $user_name;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $leaveType)
+    public function __construct($data)
     {
-        $this->user = $user;
-        $this->leaveType = $leaveType;
+        $this->user = $data['data'];
+        $this->leaveType = $data['leaveTypeName'];
+        $this->user_email = $data['user_email'];
+        $this->user_name = $data['user_name'];
     }
 
     public function build()
@@ -39,15 +40,15 @@ class LeaveApplicationMail extends Mailable
      */
     public function envelope()
     {
-        $formattedStartDate = date("d-m-Y", strtotime($this->user->startDate));
-        $formattedEndDate = date("d-m-Y", strtotime($this->user->endDate));
+        $formattedStartDate = date("d-m-Y", strtotime($this->user['startDate']));
+        $formattedEndDate = date("d-m-Y", strtotime($this->user['endDate']));
         if($formattedStartDate == $formattedEndDate) {
             $leaveMessage = $this->leaveType.' Application on '.$formattedStartDate;
         } else {
             $leaveMessage = $this->leaveType.' Application from '.$formattedStartDate.' to '.$formattedEndDate;
         }
         return new Envelope(
-            from: new Address(auth()->user()->email, auth()->user()->full_name),
+            from: new Address($this->user_email, $this->user_name),
             subject: $leaveMessage
         );
     }

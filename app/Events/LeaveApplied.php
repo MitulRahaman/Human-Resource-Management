@@ -14,13 +14,13 @@ use Illuminate\Http\Request;
 class LeaveApplied
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public $request;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Request $request)
+    public function __construct($request)
     {
         $this->request = $request;
     }

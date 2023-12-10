@@ -9,9 +9,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mail;
-use App\Mail\RequisitionMail;
+use App\Mail\LeaveApplicationMail;
 
-class RequisitionRequestJob implements ShouldQueue
+class LeaveApplyJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $data;
@@ -32,7 +32,7 @@ class RequisitionRequestJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::send((new RequisitionMail($this->data))->to($this->data['to'])->cc($this->data['from']));
+        Mail::send((new LeaveApplicationMail($this->data))->to($this->data['to'])->cc($this->data['from']));
     }
 
 

@@ -14,7 +14,9 @@ class LeaveAppliedListener
      *
      * @return void
      */
+    use InteractsWithQueue;
     private $leaveApplyService;
+    public $tries = 1;
 
     public function __construct(LeaveApplyService $leaveApplyService)
     {
@@ -29,6 +31,6 @@ class LeaveAppliedListener
      */
     public function handle(LeaveApplied $event)
     {
-        return $this->leaveApplyService->LeaveApplicationEmail($event->request);
+        $this->leaveApplyService->LeaveApplicationEmail($event->request);
     }
 }

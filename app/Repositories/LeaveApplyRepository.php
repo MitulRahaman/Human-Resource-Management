@@ -104,25 +104,25 @@ class LeaveApplyRepository
         return [$lineManagerEmail, $recipientEmail];
     }
 
-    public function storeLeaves($data, $fileName)
+    public function storeLeaves($data)
     {
-        $data->startDate = CommonHelper::format_date($data->startDate, 'd/m/Y', 'Y-m-d');
-        $data->endDate = CommonHelper::format_date($data->endDate, 'd/m/Y', 'Y-m-d');
+        $data['startDate'] = CommonHelper::format_date($data['startDate'], 'd/m/Y', 'Y-m-d');
+        $data['endDate'] = CommonHelper::format_date($data['endDate'], 'd/m/Y', 'Y-m-d');
 
         try {
             DB::beginTransaction();
             $leaves = LeaveApply::create([
                 'user_id' => auth()->user()->id,
-                'leave_type_id' => $data->leaveTypeId,
-                'start_date' => $data->startDate,
-                'end_date' => $data->endDate,
-                'total' => $data->totalLeave,
-                'reason' => $data->reason,
+                'leave_type_id' => $data['leaveTypeId'],
+                'start_date' => $data['startDate'],
+                'end_date' => $data['endDate'],
+                'total' => $data['totalLeave'],
+                'reason' => $data['reason'],
                 'status' => Config::get('variable_constants.status.pending')
             ]);
 
-            if($fileName != null) {
-                foreach ($fileName as $attachment) {
+            if($data['files'] != null) {
+                foreach ($data['files'] as $attachment) {
                     LeaveAttachments::create([
                         'leave_id'=>$leaves->id,
                         'attachment' => $attachment

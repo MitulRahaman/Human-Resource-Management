@@ -23,19 +23,17 @@ class LeaveApplicationMail extends Mailable
      * @return void
      */
 
-    public function __construct($data, $leaveType, $files)
+    public function __construct($data)
     {
         $this->user = $data['data'];
         $this->leaveType = $data['leaveTypeName'];
-        //$this->leaveType = $leaveType;
         $this->user_email = $data['user_email'];
-        $this->files = $files;
     }
 
     public function build()
     {
         $email = $this->markdown('backend.pages.leaveApply.mailDetails');
-        foreach($this->files as $photo) {
+        foreach($this->user['files'] as $photo) {
             $email->attach(storage_path('app/public/leaveAppliedFiles/'.$photo));
         }
         return $email;
@@ -48,13 +46,13 @@ class LeaveApplicationMail extends Mailable
      */
     public function envelope()
     {
-        if($this->user->startDate == $this->user->endDate) {
-            $leaveMessage = $this->leaveType.' Application on '.$this->user->startDate;
+        if($this->user['startDate'] == $this->user['endDate']) {
+            $leaveMessage = $this->leaveType.' Application on '.$this->user['startDate'];
         } else {
-            $leaveMessage = $this->leaveType.' Application from '.$this->user->startDate.' to '.$this->user->endDate;
+            $leaveMessage = $this->leaveType.' Application from '.$this->user['startDate'].' to '.$this->user['endDate'];
         }
         return new Envelope(
-            from: new Address($this->user_email, $this->user_name),
+            from: new Address($this->user_email),
             subject: $leaveMessage
         );
     }

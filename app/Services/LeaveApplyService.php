@@ -26,16 +26,24 @@ class LeaveApplyService
     {
         return $this->leaveApplyRepository->getLeaveTypes($id = null);
     }
-    public function storeLeaves($data)
+    public function storeLeaves($request)
     {
         $fileName = null;
-        if($data['photo']) {
-            $fileName = $this->fileUploadService->setPath($data['photo']);
-            $this->fileUploadService->uploadFile($fileName, $data['photo']);
+        if($request['photo']) {
+            $fileName = $this->fileUploadService->setPath($request['photo']);
+            $this->fileUploadService->uploadFile($fileName, $request['photo']);
         }
+        $data =[
+            'leaveTypeId' => $request['leaveTypeId'],
+            'startDate' =>  $request['startDate'],
+            'endDate' => $request['endDate'],
+            'reason'=> $request['reason'],
+            'totalLeave' => $request['totalLeave'],
+            'files' => $fileName
+        ];
 
-        if($this->leaveApplyRepository->storeLeaves($data, $fileName)) {
-            event(new LeaveApplied($data->all(), $fileName));
+        if($this->leaveApplyRepository->storeLeaves($data)) {
+            event(new LeaveApplied($data));
             return true;
         } else {
             return false;
@@ -49,23 +57,22 @@ class LeaveApplyService
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
-    public function LeaveApplicationEmail($data, $files)
+    public function LeaveApplicationEmail($value)
     {
-        if($data['leaveTypeId']) {
+        if($value['leaveTypeId']) {
             $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
             if(!$receivers) {
                 return false;
             }
-            //$leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
-            //Mail::send((new LeaveApplicationMail($data, $leaveTypeName, $files))->to($receivers[1])->cc($receivers[0]));=======
-            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data['leaveTypeId']);
+
+            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($value['leaveTypeId']);
             $data =[
-                'data' => $data,
+                'data' => $value,
                 'leaveTypeName' =>  $leaveTypeName,
                 'to' => $receivers[1],
-                'from'=> $receivers[0],
+                'cc'=> $receivers[0],
                 'user_email' => auth()->user()->email,
-                'user_name' => auth()->user()->full_name
+                'user_name' => auth()->user()->full_name,
             ];
             LeaveApplyJob::dispatch($data);
             return true;

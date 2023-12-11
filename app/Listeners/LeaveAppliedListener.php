@@ -31,10 +31,6 @@ class LeaveAppliedListener
      */
     public function handle(LeaveApplied $event)
     {
-<<<<<<< HEAD
-        return $this->leaveApplyService->LeaveApplicationEmail($event->request, $event->fileName);
-=======
-        $this->leaveApplyService->LeaveApplicationEmail($event->request);
->>>>>>> upstream/temp-development
+        return $this->leaveApplyService->LeaveApplicationEmail($event->request);
     }
 }

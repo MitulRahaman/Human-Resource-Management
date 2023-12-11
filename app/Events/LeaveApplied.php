@@ -20,10 +20,9 @@ class LeaveApplied
      *
      * @return void
      */
-    public function __construct(Request $request, $fileName)
+    public function __construct($request)
     {
         $this->request = $request;
-        $this->fileName = $fileName;
     }
 
     /**

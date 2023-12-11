@@ -106,6 +106,12 @@ class LeaveApplyController extends Controller
     public function store(LeaveApplyAddRequest $request)
     {
         abort_if(!$this->setSlug('applyLeave')->hasPermission(), 403, 'You don\'t have permission!');
+        if($request->totalLeave == null) {
+            return redirect('leaveApply/apply')->with('error', 'Select Leave date again');
+        }
+        if(!$this->leaveApplyService->validFileSize($request['photo'])) {
+            return redirect('leaveApply/apply')->with('error', 'FileSize cannot exceed 25MB!');
+        }
         try {
             if ($this->leaveApplyService->storeLeaves($request)) {
                 return redirect('leaveApply/manage')->with('success', 'Leave application submitted successfully.');

@@ -14,11 +14,12 @@ use App\Traits\AuthorizationTrait;
 class LeaveApplyService
 {
     use AuthorizationTrait;
-    private $leaveApplyRepository;
+    private $leaveApplyRepository, $fileUploadService;
 
-    public function __construct(LeaveApplyRepository $leaveApplyRepository)
+    public function __construct(LeaveApplyRepository $leaveApplyRepository, FileUploadService $fileUploadService)
     {
         $this->leaveApplyRepository = $leaveApplyRepository;
+        $this->fileUploadService = $fileUploadService;
     }
     public function getLeaveTypes()
     {
@@ -26,8 +27,14 @@ class LeaveApplyService
     }
     public function storeLeaves($data)
     {
-        if(is_object($this->leaveApplyRepository->storeLeaves($data))) {
-            event(new LeaveApplied($data));
+        $fileName = null;
+        if($data['photo']) {
+            $fileName = $this->fileUploadService->setPath($data['photo']);
+            $this->fileUploadService->uploadFile($fileName, $data['photo']);
+        }
+        event(new LeaveApplied($data, $fileName));
+        if($this->leaveApplyRepository->storeLeaves($data, $fileName)) {
+            //(new LeaveApplied($data, $fileName));
             return true;
         } else {
             return false;
@@ -41,7 +48,7 @@ class LeaveApplyService
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
-    public function LeaveApplicationEmail($data)
+    public function LeaveApplicationEmail($data, $files)
     {
         if($data->leaveTypeId) {
             $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
@@ -49,7 +56,7 @@ class LeaveApplyService
                 return false;
             }
             $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
-            Mail::send((new LeaveApplicationMail($data, $leaveTypeName))->to($receivers[1])->cc($receivers[0]));
+            Mail::send((new LeaveApplicationMail($data, $leaveTypeName, $files))->to($receivers[1])->cc($receivers[0]));
             return true;
         } else {
             $receivers = $this->leaveApplyRepository->getReciever($data->employeeId);
@@ -81,6 +88,20 @@ class LeaveApplyService
     public function delete($id)
     {
         return $this->leaveApplyRepository->delete($id);
+    }
+    public function validFileSize($data)
+    {
+        if($data == null)
+            return true;
+        $totalSize = 0;
+        foreach ($data as $d) {
+            $totalSize +=  $d->getsize();
+        }
+        if($totalSize < 26214400 ) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public function getTableData()
     {

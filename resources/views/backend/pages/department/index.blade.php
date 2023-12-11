@@ -34,7 +34,7 @@
                                 <th>Status</th>
                                 <th>Deleted?</th>
                                 <th style="width: 20%;">Branches</th>
-                                <th class="d-none d-sm-table-cell" style="width: 50%;">Description</th>
+                                <th class="d-none d-sm-table-cell" style="width: 40%;">Description</th>
                                 @if ($hasDepartmentManagePermission)
                                 <th class="d-none d-sm-table-cell" style="width: 20%;">Action</th>
                                 @endif
@@ -76,7 +76,7 @@
                                         <span>{{$department->branches}}</span>
                                     </td>
                                     <td class="d-none d-sm-table-cell font-size-sm">
-                                    {{$department->description}}<em class="text-muted"></em>
+                                    {{ $department->description ? $department->description : "N/A"}}<em class="text-muted"></em>
                                     </td>
                                     @if ($hasDepartmentManagePermission)
                                     <td class="d-none d-sm-table-cell">

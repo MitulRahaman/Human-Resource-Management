@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use Storage;
+use App\Helpers\CommonHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -21,15 +23,20 @@ class LeaveApplicationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $leaveType)
+    public function __construct($user, $leaveType, $files)
     {
         $this->user = $user;
         $this->leaveType = $leaveType;
+        $this->files = $files;
     }
 
     public function build()
     {
-        return $this->markdown('backend.pages.leaveApply.mailDetails');
+        $email = $this->markdown('backend.pages.leaveApply.mailDetails');
+        foreach($this->files as $photo) {
+            $email->attach(storage_path('app/public/leaveAppliedFiles/'.$photo));
+        }
+        return $email;
     }
 
     /**
@@ -39,12 +46,10 @@ class LeaveApplicationMail extends Mailable
      */
     public function envelope()
     {
-        $formattedStartDate = date("d-m-Y", strtotime($this->user->startDate));
-        $formattedEndDate = date("d-m-Y", strtotime($this->user->endDate));
-        if($formattedStartDate == $formattedEndDate) {
-            $leaveMessage = $this->leaveType.' Application on '.$formattedStartDate;
+        if($this->user->startDate == $this->user->endDate) {
+            $leaveMessage = $this->leaveType.' Application on '.$this->user->startDate;
         } else {
-            $leaveMessage = $this->leaveType.' Application from '.$formattedStartDate.' to '.$formattedEndDate;
+            $leaveMessage = $this->leaveType.' Application from '.$this->user->startDate.' to '.$this->user->endDate;
         }
         return new Envelope(
             from: new Address(auth()->user()->email, auth()->user()->full_name),

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\BasicInfo;
 use App\Models\Designation;
+use App\Models\LeaveAttachments;
 use Validator;
 use Carbon\Carbon;
 use App\Helpers\CommonHelper;
@@ -103,20 +104,37 @@ class LeaveApplyRepository
         return [$lineManagerEmail, $recipientEmail];
     }
 
-    public function storeLeaves($data)
+    public function storeLeaves($data, $fileName)
     {
         $data->startDate = CommonHelper::format_date($data->startDate, 'd/m/Y', 'Y-m-d');
         $data->endDate = CommonHelper::format_date($data->endDate, 'd/m/Y', 'Y-m-d');
 
-        return LeaveApply::create([
-            'user_id' => auth()->user()->id,
-            'leave_type_id' => $data->leaveTypeId,
-            'start_date' => $data->startDate,
-            'end_date' => $data->endDate,
-            'total' => $data->totalLeave,
-            'reason' => $data->reason,
-            'status' => Config::get('variable_constants.status.pending')
-        ]);
+        try {
+            DB::beginTransaction();
+            $leaves = LeaveApply::create([
+                'user_id' => auth()->user()->id,
+                'leave_type_id' => $data->leaveTypeId,
+                'start_date' => $data->startDate,
+                'end_date' => $data->endDate,
+                'total' => $data->totalLeave,
+                'reason' => $data->reason,
+                'status' => Config::get('variable_constants.status.pending')
+            ]);
+
+            if($fileName != null) {
+                foreach ($fileName as $attachment) {
+                    LeaveAttachments::create([
+                        'leave_id'=>$leaves->id,
+                        'attachment' => $attachment
+                    ]);
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
     }
 
     public function getLeaveInfo()

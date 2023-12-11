@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\LeaveApplyJob;
 use Mail;
 use App\Events\LeaveApplied;
 use App\Mail\LeaveApplicationMail;
@@ -32,9 +33,9 @@ class LeaveApplyService
             $fileName = $this->fileUploadService->setPath($data['photo']);
             $this->fileUploadService->uploadFile($fileName, $data['photo']);
         }
-        event(new LeaveApplied($data, $fileName));
+
         if($this->leaveApplyRepository->storeLeaves($data, $fileName)) {
-            //(new LeaveApplied($data, $fileName));
+            event(new LeaveApplied($data->all(), $fileName));
             return true;
         } else {
             return false;
@@ -50,13 +51,23 @@ class LeaveApplyService
     }
     public function LeaveApplicationEmail($data, $files)
     {
-        if($data->leaveTypeId) {
+        if($data['leaveTypeId']) {
             $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
             if(!$receivers) {
                 return false;
             }
-            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
-            Mail::send((new LeaveApplicationMail($data, $leaveTypeName, $files))->to($receivers[1])->cc($receivers[0]));
+            //$leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data->leaveTypeId);
+            //Mail::send((new LeaveApplicationMail($data, $leaveTypeName, $files))->to($receivers[1])->cc($receivers[0]));=======
+            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data['leaveTypeId']);
+            $data =[
+                'data' => $data,
+                'leaveTypeName' =>  $leaveTypeName,
+                'to' => $receivers[1],
+                'from'=> $receivers[0],
+                'user_email' => auth()->user()->email,
+                'user_name' => auth()->user()->full_name
+            ];
+            LeaveApplyJob::dispatch($data);
             return true;
         } else {
             $receivers = $this->leaveApplyRepository->getReciever($data->employeeId);
@@ -149,6 +160,8 @@ class LeaveApplyService
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
+                    else
+                        $action_btn = "N/A";
                 }
                 elseif ($userId==$row->user_id)
                 {
@@ -160,7 +173,7 @@ class LeaveApplyService
                         $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
-                    else $action_btn .= "$toggle_delete_btn";
+                    else $action_btn = "N/A";
                 } else
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))

@@ -14,7 +14,9 @@ class LeaveAppliedListener
      *
      * @return void
      */
+    use InteractsWithQueue;
     private $leaveApplyService;
+    public $tries = 1;
 
     public function __construct(LeaveApplyService $leaveApplyService)
     {
@@ -29,6 +31,10 @@ class LeaveAppliedListener
      */
     public function handle(LeaveApplied $event)
     {
+<<<<<<< HEAD
         return $this->leaveApplyService->LeaveApplicationEmail($event->request, $event->fileName);
+=======
+        $this->leaveApplyService->LeaveApplicationEmail($event->request);
+>>>>>>> upstream/temp-development
     }
 }

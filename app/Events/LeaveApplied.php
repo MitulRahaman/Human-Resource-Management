@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class LeaveApplied
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public $request;
     /**
      * Create a new event instance.
      *

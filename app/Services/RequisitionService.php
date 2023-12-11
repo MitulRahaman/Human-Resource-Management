@@ -35,12 +35,10 @@ class RequisitionService
             ->create();
         if(is_int($requisition))
         {
-//            RequisitionRequested::dispatch($request);
             event(new RequisitionRequested($request->all()));
             return true;
         }
         return false;
-
     }
     public function requisitionEmail($data)
     {
@@ -49,15 +47,15 @@ class RequisitionService
         if(!$receivers) {
             return false;
         }
-//        $data =[
-//            'data' => $data,
-//            'assetTypeName' =>  $assetType->name,
-//            'to' => $receivers[1]->preferred_email,
-//            'from'=> $receivers[0]->email
-//        ];
-//        RequisitionRequestJob::dispatch($data);
-        Mail::send((new RequisitionMail($data, $assetType->name))->to("rbtamanna@appnap.io")->cc("rbtamannarbt@gmail.com"));
-//        Mail::send((new RequisitionMail($data, $assetType->name))->to($receivers[1]->preferred_email)->cc($receivers[0]->email));
+        $data =[
+            'data' => $data,
+            'assetTypeName' =>  $assetType->name,
+            'to' => $receivers[1],
+            'cc'=> $receivers[0],
+            'user_email' => auth()->user()->email,
+            'user_name' => auth()->user()->full_name
+        ];
+        RequisitionRequestJob::dispatch($data);
         return true;
     }
     public function update($data)
@@ -137,6 +135,8 @@ class RequisitionService
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
+                    else
+                        $action_btn = "N/A";
                 }
                 elseif ($userId==$row->user_id)
                 {
@@ -148,7 +148,7 @@ class RequisitionService
                         $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
-                    else $action_btn .= "$toggle_delete_btn";
+                    else $action_btn = "N/A";
                 }
 
                 $action_btn .= "</div>
@@ -164,10 +164,7 @@ class RequisitionService
                 array_push($temp, $specification);
                 array_push($temp, $status);
                 array_push($temp, $remarks);
-                if($hasManageRequisitionPermission)
-                    array_push($temp, $action_btn);
-                else
-                    array_push($temp, 'N/A');
+                array_push($temp, $action_btn);
                 array_push($data, $temp);
             }
             return json_encode(array('data'=>$data));

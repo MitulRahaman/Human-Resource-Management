@@ -283,6 +283,24 @@ class PermissionSeeder extends Seeder
                 'name' => 'Edit Bank',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 42,
+                'slug' => 'manageUser',
+                'name' => 'Manage User',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 43,
+                'slug' => 'addUser',
+                'name' => 'Add User',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 44,
+                'slug' => 'editUser',
+                'name' => 'Edit User',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
 
         ];
 

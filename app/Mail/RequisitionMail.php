@@ -13,16 +13,18 @@ use Illuminate\Queue\SerializesModels;
 class RequisitionMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $data, $assetType;
+    public $data, $assetType, $user_email, $user_name;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $assetType)
+    public function __construct($data)
     {
-        $this->data = $data;
-        $this->assetType = $assetType;
+        $this->data = $data['data'];
+        $this->assetType = $data['assetTypeName'];
+        $this->user_email = $data['user_email'];
+        $this->user_name = $data['user_name'];
     }
     public function build()
     {
@@ -36,7 +38,7 @@ class RequisitionMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: new Address(auth()->user()->email, auth()->user()->full_name),
+            from: new Address($this->user_email, $this->user_name),
             subject: 'Asset Requisition Request',
         );
     }

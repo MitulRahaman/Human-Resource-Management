@@ -146,8 +146,8 @@ class RequisitionRepository
     {
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
         if(!$appliedUser) return false;
-        $getLineManagers  = DB::table('users as u')
-                                    ->leftJoin('line_managers as lm', 'u.id', '=', 'lm.user_id')
+        $getLineManagers  = DB::table('line_managers as lm')
+                                    ->leftJoin('users as u', 'u.id', '=', 'lm.user_id')
                                     ->whereNULL('lm.deleted_at')
                                     ->where('lm.user_id', '=', $appliedUser->user_id)
                                     ->select('lm.line_manager_user_id')
@@ -158,8 +158,8 @@ class RequisitionRepository
         foreach ($getLineManagers as $lineManager) {
             array_push($lineManagerEmail, DB::table('users')->where('id', '=', $lineManager->line_manager_user_id)->first()->email);
         }
-        $hasManageRequisitionPermission = DB::table('permissions as p')
-                                            ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
+        $hasManageRequisitionPermission = DB::table('role_permissions as rp')
+                                            ->leftJoin('permissions as p', 'p.id', '=', 'rp.permission_id')
                                             ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
                                             ->where('p.slug', '=', 'manageRequisition')
                                             ->where('bi.branch_id', '=', $appliedUser->branch_id)

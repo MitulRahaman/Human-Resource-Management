@@ -21,6 +21,7 @@ use App\Http\Controllers\Designation\DesignationController;
 use App\Http\Controllers\Calender\CalenderController;
 use App\Http\Controllers\Asset\AssetController;
 use App\Http\Controllers\Requisition\RequisitionController;
+use App\Http\Controllers\Log\LogController;
 
 
 /*
@@ -33,7 +34,7 @@ use App\Http\Controllers\Requisition\RequisitionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::group(['middleware'=> 'log'], function() {
 Route::get('/', function () {
     return view('welcome');
 });
@@ -258,6 +259,7 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/restore', [AssetController::class, 'restoreAssetType']);
             Route::post('/{id}/change_status', [AssetController::class, 'changeStatusAssetType']);
         });
+
         Route::prefix('asset')->group(function() {
             Route::get('/', [AssetController::class, 'index']);
             Route::get('/get_asset_data', [AssetController::class, 'fetchData']);
@@ -269,4 +271,12 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/restore', [AssetController::class, 'restore']);
             Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
         });
+        Route::prefix('log')->group(function() {
+            Route::get('/', [LogController::class, 'index']);
+            Route::get('/get_log_data', [LogController::class, 'fetchData']);
+        });
+
+    });
+
 });
+

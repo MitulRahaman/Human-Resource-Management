@@ -301,6 +301,12 @@ class PermissionSeeder extends Seeder
                 'name' => 'Edit User',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 45,
+                'slug' => 'viewLog',
+                'name' => 'View Log',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
 
         ];
 

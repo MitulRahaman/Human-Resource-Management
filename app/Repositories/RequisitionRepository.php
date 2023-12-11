@@ -147,18 +147,16 @@ class RequisitionRepository
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
         if(!$appliedUser) return false;
         $getLineManagers  = DB::table('users as u')
-                                    ->leftJoin('line_managers as lm', function ($join) {
-                                        $join->on('u.id', '=', 'lm.user_id')
-                                            ->whereNULL('lm.deleted_at');
-                                    })
+                                    ->leftJoin('line_managers as lm', 'u.id', '=', 'lm.user_id')
+                                    ->whereNULL('lm.deleted_at')
                                     ->where('lm.user_id', '=', $appliedUser->user_id)
                                     ->select('lm.line_manager_user_id')
                                     ->get()
                                     ->toArray();
 
         $lineManagerEmail = array();
-        foreach ($getLineManagers as $glm) {
-            array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
+        foreach ($getLineManagers as $lineManager) {
+            array_push($lineManagerEmail, DB::table('users')->where('id', '=', $lineManager->line_manager_user_id)->first()->email);
         }
         $hasManageRequisitionPermission = DB::table('permissions as p')
                                             ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
@@ -169,8 +167,8 @@ class RequisitionRepository
                                             ->get()
                                             ->toArray();
         $recipientEmail = array();
-        foreach ($hasManageRequisitionPermission as $hmlp) {
-            array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hmlp->role_id)->first()->preferred_email);
+        foreach ($hasManageRequisitionPermission as $hasPermission) {
+            array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hasPermission->role_id)->first()->preferred_email);
         }
         if(!$hasManageRequisitionPermission || !$recipientEmail) {
             return false;

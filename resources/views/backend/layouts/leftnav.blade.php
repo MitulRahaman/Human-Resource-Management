@@ -238,6 +238,11 @@
                         <span class="nav-main-link-name">Permissions</span>
                     </a>
                 </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Logs') == 0 ? 'active' : '' }}" href="{{ url('log') }}">
+                        <span class="nav-main-link-name">Logs</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- END Side Navigation -->

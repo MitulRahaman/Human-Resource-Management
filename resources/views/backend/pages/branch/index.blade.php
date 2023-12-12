@@ -34,7 +34,7 @@
                                 <th>Name</th>
                                 <th>Status</th>
                                 <th>Deleted?</th>
-                                <th class="d-none d-sm-table-cell" style="width: 50%;">Address</th>
+                                <th class="d-none d-sm-table-cell" style="width: 40%;">Address</th>
                                 @if ($hasBranchManagePermission)
                                 <th class="d-none d-sm-table-cell" style="width: 20%;">Action</th>
                                 @endif
@@ -73,7 +73,7 @@
                                         @endif
                                     </td>
                                     <td class="d-none d-sm-table-cell font-size-sm">
-                                    {{$branch->address}}<em class="text-muted"></em>
+                                    {{ $branch->address ? $branch->address : "N/A"}}<em class="text-muted"></em>
                                     </td>
                                     @if ($hasBranchManagePermission)
                                     <td class="d-none d-sm-table-cell">

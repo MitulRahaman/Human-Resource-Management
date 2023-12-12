@@ -22,7 +22,8 @@ class LeaveApplyJob implements ShouldQueue
      */
     public function __construct($data)
     {
-        $this->data=$data;
+        $this->data = $data;
+
     }
 
     /**
@@ -32,7 +33,7 @@ class LeaveApplyJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::send((new LeaveApplicationMail($this->data))->to($this->data['to'])->cc($this->data['from']));
+        Mail::send((new LeaveApplicationMail($this->data))->to($this->data['to'])->cc($this->data['cc']));
     }
 
 

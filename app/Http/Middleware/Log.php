@@ -24,9 +24,12 @@ class Log
         $responseJson =$response? json_encode($response):null;
         $headersJson =$request->header()? json_encode($request->header()):null;
         $paramsJson =$request->all()? json_encode($request->all()):null;
+        $uri = $request->getRequestUri();
+        if($uri=="/login")
+            $paramsJson='';
         $log = DB::table('logs')
             ->insert([
-                'uri'=>$request->getRequestUri(),
+                'uri'=>$uri,
                 'method'=>$request->getMethod(),
                 'user_id'=>auth()->user() ? auth()->user()->id : null,
                 'header' => $headersJson,

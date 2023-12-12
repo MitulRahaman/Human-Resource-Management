@@ -25,7 +25,7 @@
             </div>
 
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ url('leaveApply/store') }}" method="POST" id="form">
+            <form class="js-validation" action="{{ url('leaveApply/store') }}" method="POST" id="form" enctype="multipart/form-data">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -56,6 +56,10 @@
                                 <div class="form-group">
                                     <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="reason" name="reason" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="val_photo">Select File</label><br>
+                                    <input type="file" name="photo[]" id="photo[]" multiple /><br>
                                 </div>
                                 <input type="hidden" id="totalLeave" name="totalLeave" value="">
                             </div>

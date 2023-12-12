@@ -31,6 +31,6 @@ class LeaveAppliedListener
      */
     public function handle(LeaveApplied $event)
     {
-        $this->leaveApplyService->LeaveApplicationEmail($event->request);
+        return $this->leaveApplyService->LeaveApplicationEmail($event->request);
     }
 }

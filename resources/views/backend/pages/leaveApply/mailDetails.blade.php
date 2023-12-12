@@ -22,6 +22,4 @@
    <br>
     Regards,<br>
     {{ $user_name }}
-
-    
 </php>

@@ -15,20 +15,35 @@ use App\Traits\AuthorizationTrait;
 class LeaveApplyService
 {
     use AuthorizationTrait;
-    private $leaveApplyRepository;
+    private $leaveApplyRepository, $fileUploadService;
 
-    public function __construct(LeaveApplyRepository $leaveApplyRepository)
+    public function __construct(LeaveApplyRepository $leaveApplyRepository, FileUploadService $fileUploadService)
     {
         $this->leaveApplyRepository = $leaveApplyRepository;
+        $this->fileUploadService = $fileUploadService;
     }
     public function getLeaveTypes()
     {
         return $this->leaveApplyRepository->getLeaveTypes($id = null);
     }
-    public function storeLeaves($data)
+    public function storeLeaves($request)
     {
-        if(is_object($this->leaveApplyRepository->storeLeaves($data))) {
-            event(new LeaveApplied($data->all()));
+        $fileName = null;
+        if($request['photo']) {
+            $fileName = $this->fileUploadService->setPath($request['photo']);
+            $this->fileUploadService->uploadFile($fileName, $request['photo']);
+        }
+        $data =[
+            'leaveTypeId' => $request['leaveTypeId'],
+            'startDate' =>  $request['startDate'],
+            'endDate' => $request['endDate'],
+            'reason'=> $request['reason'],
+            'totalLeave' => $request['totalLeave'],
+            'files' => $fileName
+        ];
+
+        if($this->leaveApplyRepository->storeLeaves($data)) {
+            event(new LeaveApplied($data));
             return true;
         } else {
             return false;
@@ -42,21 +57,22 @@ class LeaveApplyService
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
-    public function LeaveApplicationEmail($data)
+    public function LeaveApplicationEmail($value)
     {
-        if($data['leaveTypeId']) {
+        if($value['leaveTypeId']) {
             $receivers = $this->leaveApplyRepository->setId(auth()->user()->id)->getLeaveAppliedEmailRecipient();
             if(!$receivers) {
                 return false;
             }
-            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($data['leaveTypeId']);
+
+            $leaveTypeName = $this->leaveApplyRepository->getLeaveTypes($value['leaveTypeId']);
             $data =[
-                'data' => $data,
+                'data' => $value,
                 'leaveTypeName' =>  $leaveTypeName,
                 'to' => $receivers[1],
-                'from'=> $receivers[0],
+                'cc'=> $receivers[0],
                 'user_email' => auth()->user()->email,
-                'user_name' => auth()->user()->full_name
+                'user_name' => auth()->user()->full_name,
             ];
             LeaveApplyJob::dispatch($data);
             return true;
@@ -90,6 +106,20 @@ class LeaveApplyService
     public function delete($id)
     {
         return $this->leaveApplyRepository->delete($id);
+    }
+    public function validFileSize($data)
+    {
+        if($data == null)
+            return true;
+        $totalSize = 0;
+        foreach ($data as $d) {
+            $totalSize +=  $d->getsize();
+        }
+        if($totalSize < 26214400 ) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public function getTableData()
     {

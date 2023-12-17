@@ -14,7 +14,7 @@ class LeaveApproveMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    public $data, $user_email;
 
     /**
      * Create a new message instance.
@@ -23,7 +23,8 @@ class LeaveApproveMail extends Mailable
      */
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->data = $data['data'];
+        $this->user_email = $data['user_email'];
     }
 
     public function build()
@@ -38,13 +39,13 @@ class LeaveApproveMail extends Mailable
      */
     public function envelope()
     {
-        if($this->data->startDate == $this->data->endDate) {
-            $leaveMessage = $this->data->leaveType.' Approval on '.$this->data->startDate;
+        if($this->data['startDate'] == $this->data['endDate']) {
+            $leaveMessage = $this->data['leaveType'].' Approval on '.$this->data['startDate'];
         } else {
-            $leaveMessage = $this->data->leaveType.' Approval from '.$this->data->startDate.' to '.$this->data->endDate;
+            $leaveMessage = $this->data['leaveType'].' Approval from '.$this->data['startDate'].' to '.$this->data['endDate'];
         }
         return new Envelope(
-            from: new Address(auth()->user()->email, auth()->user()->full_name),
+            from: new Address($this->user_email),
             subject: $leaveMessage
         );
     }

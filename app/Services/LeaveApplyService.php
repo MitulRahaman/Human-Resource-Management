@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\Jobs\LeaveApplyJob;
 use Mail;
 use App\Events\LeaveApplied;
 use App\Mail\LeaveApplicationMail;
 use App\Mail\LeaveApproveMail;
+use App\Jobs\LeaveApplyJob;
+use App\Jobs\LeaveApproveJob;
 use App\Repositories\LeaveApplyRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -77,8 +78,20 @@ class LeaveApplyService
             LeaveApplyJob::dispatch($data);
             return true;
         } else {
-            $receivers = $this->leaveApplyRepository->getReciever($data->employeeId);
-            Mail::send((new LeaveApproveMail($data))->to($receivers[1])->cc($receivers[0]));
+            $receivers = $this->leaveApplyRepository->getReciever($value->employeeId);
+            $temp =[
+                'leaveType' => $value->leaveType,
+                'startDate' => $value->startDate,
+                'endDate'=> $value->endDate,
+            ];
+            $data =[
+                'data' => $temp,
+                'to' => $receivers[1],
+                'cc'=> $receivers[0],
+                'user_email' => auth()->user()->email,
+                'user_name' => auth()->user()->full_name,
+            ];
+            LeaveApproveJob::dispatch($data);
             return true;
         }
     }

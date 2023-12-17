@@ -17,13 +17,19 @@ class Log
      */
     public function handle(Request $request, Closure $next)
     {
+        $temp = $request->all();
         $start = microtime(true);
         $response = $next($request);
         $end = microtime(true);
         $duration = ($end - $start) * 1000;
         $responseJson =$response? json_encode($response):null;
         $headersJson =$request->header()? json_encode($request->header()):null;
-        $paramsJson =$request->all()? json_encode($request->all()):null;
+        if(array_key_exists('photo', $temp)) {
+            unset($temp['photo']);
+            $paramsJson =$temp ? json_encode($temp):null;
+        } else {
+            $paramsJson =$request->all() ? json_encode($request->all()):null;
+        }
         $uri = $request->getRequestUri();
         if($uri=="/login")
             $paramsJson='';

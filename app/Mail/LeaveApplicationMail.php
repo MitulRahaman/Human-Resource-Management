@@ -16,7 +16,7 @@ class LeaveApplicationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user, $leaveType, $user_email, $user_name;
+    public $user, $leaveType, $user_email;
     /**
      * Create a new message instance.
      *

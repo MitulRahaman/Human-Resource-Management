@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use Mail;
-use App\Mail\LeaveApplicationMail;
+use App\Mail\LeaveApproveMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class LeaveApplyJob implements ShouldQueue
+class LeaveApproveJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $data;
@@ -32,8 +32,6 @@ class LeaveApplyJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::send((new LeaveApplicationMail($this->data))->to($this->data['to'])->cc($this->data['cc']));
+        Mail::send((new LeaveApproveMail($this->data))->to($this->data['to'])->cc($this->data['cc']));
     }
-
-
 }

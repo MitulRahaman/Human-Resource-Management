@@ -122,6 +122,7 @@ class MenuRepository
             ->leftJoin('menu_permissions as mp', 'm.id', '=', 'mp.menu_id')
             ->leftJoin('permissions as p', 'mp.permission_id', '=', 'p.id')
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
+            ->orderBy('m.id', 'desc')
             ->get();
         foreach ($menus as $menu) {
             $menu->permissions = explode(',', $menu->permissions);

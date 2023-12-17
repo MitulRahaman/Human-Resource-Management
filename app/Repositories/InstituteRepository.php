@@ -48,6 +48,7 @@ class InstituteRepository
     {
         return DB::table('institutes as i')
             ->select('i.id',  'i.name', 'i.address', 'i.status', DB::raw('date_format(i.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(i.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->orderBy('i.id', 'desc')
             ->get();
     }
     public function isNameExists()

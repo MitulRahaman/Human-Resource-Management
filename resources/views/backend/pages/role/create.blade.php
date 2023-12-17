@@ -46,7 +46,8 @@
                                     <label for="val-suggestions">Permissions</label>
                                     <div class="form-group">
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
-                                            <option></option>
+                                            <option value="all">Select All</option>
+                                            <option value="unSelectAll">Unselect All</option>
                                             @foreach ($permissions as $permission)
                                                 <option value='{{ $permission->id }}'> {{ $permission->name }} </option>
                                             @endforeach
@@ -100,6 +101,26 @@
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#permissions').change(function() {
+                if ($(this).val() && $(this).val().includes('all')) {
+                    $(this).find('option[value="all"]').prop('selected', false);
+                    $(this).find('option[value!="all"]').prop('selected', true);
+                    $(this).find('option[value="unSelectAll"]').prop('selected', false);
+                }else if($(this).val() && $(this).val().includes('unSelectAll')){
+                    $(this).find('option[value!=""]').prop('selected', false);
+                }
+                else {
+                    $(this).find('option[value="all"]').prop('selected', false);
+                }
+                $(this).trigger('change.select2');
+            });
+            $('.js-select2').select2({
+                placeholder: 'Choose Permissions for the Role..',
+            });
+        });
+    </script>
     <script>
         function validate_inputs(e) {
 

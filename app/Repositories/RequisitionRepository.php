@@ -85,6 +85,7 @@ class RequisitionRepository
             ->when(!$this->hasPermission, function($query){
                 $query->where('r.user_id', $this->user_id);
             })
+            ->orderBy('r.id', 'desc')
             ->get();
     }
     public function create()

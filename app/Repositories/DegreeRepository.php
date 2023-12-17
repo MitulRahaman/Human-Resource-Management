@@ -43,6 +43,7 @@ class DegreeRepository
     {
         return DB::table('degrees as d')
             ->select('d.id', 'd.name', 'd.description',  DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->orderBy('d.id', 'desc')
             ->get();
     }
     public function isNameExists()

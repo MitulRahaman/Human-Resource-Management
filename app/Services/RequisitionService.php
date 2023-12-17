@@ -129,7 +129,19 @@ class RequisitionService
 
                 $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$asset_type\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$asset_type\")'>Reject</a>";
-                if($hasManageRequisitionPermission)
+                $edit_url = url('requisition/'.$id.'/edit');
+                $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                $cancel_url = url('requisition/status/'.$id.'/cancel');
+                $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
+                if($hasManageRequisitionPermission && $userId==$row->user_id)
+                {
+                    if($row->status== Config::get('variable_constants.status.pending'))
+                    {
+                        $action_btn .= "$approve_btn $reject_btn";
+                        $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
+                    }
+                }
+                elseif($hasManageRequisitionPermission)
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
@@ -142,10 +154,6 @@ class RequisitionService
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
-                        $edit_url = url('requisition/'.$id.'/edit');
-                        $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
-                        $cancel_url = url('requisition/status/'.$id.'/cancel');
-                        $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
                     else $action_btn = "N/A";

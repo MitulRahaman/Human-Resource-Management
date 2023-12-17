@@ -43,6 +43,7 @@ class BankRepository
     {
         return DB::table('banks as b')
             ->select('b.id', 'b.name', 'b.address',  DB::raw('date_format(b.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(b.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->orderBy('b.id', 'desc')
             ->get();
     }
     public function isNameExists()

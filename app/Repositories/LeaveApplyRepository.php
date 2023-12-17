@@ -53,7 +53,7 @@ class LeaveApplyRepository
             ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
             ->groupBy('l.id')
             ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
-            ->orderBy('id', 'DESC')
+            ->orderBy('l.id', 'DESC')
             ->when(!$isHrSuperUser, function($query)use ($usersUnderLineManager){
                 $query->whereIn('l.user_id', $usersUnderLineManager);
             })

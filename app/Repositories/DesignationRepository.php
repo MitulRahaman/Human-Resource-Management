@@ -113,6 +113,7 @@ class DesignationRepository
             ->leftJoin('branches as b', 'bd.branch_id', '=', 'b.id')
             ->leftJoin('departments', 'd.department_id', '=', 'departments.id') // Join the departments table
             ->groupBy('d.id', 'd.name', 'd.description', 'd.status', 'd.department_id', 'd.created_at', 'd.deleted_at', 'departments.name')
+            ->orderBy('d.id', 'desc')
             ->get();
         foreach ($designations as $designation) {
             $designation->branches = explode(',', $designation->branches);

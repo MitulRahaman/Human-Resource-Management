@@ -87,6 +87,7 @@ class AssetRepository
     {
         return DB::table('assets as a')
             ->select('a.id',  'a.name', 'a.type_id', 'a.sl_no', 'a.branch_id','a.specification', 'a.purchase_at', 'a.purchase_by', 'a.purchase_price', 'a.status', DB::raw('date_format(a.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(a.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->orderBy('a.id', 'desc')
             ->get();
     }
     public function getBranchName($id)
@@ -207,6 +208,7 @@ class AssetRepository
     {
         return DB::table('asset_types as a')
             ->select('a.id',  'a.name', 'a.status', DB::raw('date_format(a.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(a.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->orderBy('a.id', 'desc')
             ->get();
     }
     public function isNameExists()

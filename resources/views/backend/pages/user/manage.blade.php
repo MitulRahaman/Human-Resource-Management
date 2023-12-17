@@ -5,7 +5,17 @@
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/js/plugins/datatables/buttons-bs4/buttons.colVis2.css') }}">
-
+    <style >
+        div.dataTables_wrapper div.dataTables_length
+        {
+            margin-left: 20px;
+            float: right;
+        }
+        div.dataTables_wrapper div.dataTables_length select
+        {
+            width: 50px;;
+        }
+    </style>
 @endsection
 @section('page_action')
     @if ($hasUserManagePermission)
@@ -157,9 +167,8 @@
         jQuery(function(){
             function createTable(){
                 $('#dataTable').DataTable( {
-                    "scrollY": "300px",
                     "scrollX": true,
-                    dom: 'Bfrtip',
+                    dom: 'Blfrtip',
                     ajax: {
                         type: 'POST',
                         url: '{{ url("user/get_table_data") }}',

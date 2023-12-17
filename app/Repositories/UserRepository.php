@@ -849,7 +849,11 @@ class UserRepository
     }
     public function getAllUsers($id)
     {
-        return User::where('id','!=',$id)->get();
+        if($id == null) {
+            return User::where('is_super_user', '=', Config::get('variable_constants.check.no'))->get();
+        } else {
+            return User::where('id','!=',$id)->where('is_super_user', '=', Config::get('variable_constants.check.no'))->get();
+        }
     }
     public function getLineManagers($id)
     {

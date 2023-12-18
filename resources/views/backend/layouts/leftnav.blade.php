@@ -147,6 +147,9 @@
                         <li class="nav-main-item">
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Leaves') == 0 ? 'active' : '' }}" href="{{ url('leave') }}">
                                 <span class="nav-main-link-name">Leaves</span>
+                            </a>
+                        </li>
+                        <li>
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Roles') == 0 ? 'active' : '' }}" href="{{ url('role') }}">
                                 <span class="nav-main-link-name">Roles</span>
                             </a>

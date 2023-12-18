@@ -16,7 +16,7 @@ class LeaveApplicationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user, $leaveType, $user_email;
+    public $user, $leaveType, $user_email, $user_name;
     /**
      * Create a new message instance.
      *
@@ -28,13 +28,16 @@ class LeaveApplicationMail extends Mailable
         $this->user = $data['data'];
         $this->leaveType = $data['leaveTypeName'];
         $this->user_email = $data['user_email'];
+        $this->user_name = $data['user_name'];
     }
 
     public function build()
     {
         $email = $this->markdown('backend.pages.leaveApply.mailDetails');
-        foreach($this->user['files'] as $photo) {
-            $email->attach(storage_path('app/public/leaveAppliedFiles/'.$photo));
+        if($this->user['files'] != null) {
+            foreach($this->user['files'] as $photo) {
+                $email->attach(storage_path('app/public/leaveAppliedFiles/'.$photo));
+            }
         }
         return $email;
     }

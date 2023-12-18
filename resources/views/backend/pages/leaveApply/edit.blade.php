@@ -49,6 +49,7 @@
                                             </span>
                                         </div>
                                         <input type="text" class="form-control" id="endDate" name="endDate" value="{{ date('d/m/Y', strtotime($leave->end_date)) }}"  data-autoclose="true" data-today-highlight="true" required>
+                                        <span id="error_date" style="font-size:13px; color:red"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -62,7 +63,7 @@
                         <!-- Save -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="submit">Save</button>
+                                <button type="submit" disabled="true" class="btn btn-alt-primary" id="submit">Save</button>
                             </div>
                         </div>
                         <!-- END Save -->
@@ -114,7 +115,14 @@
             newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
 
             total = daysdifference(newStartDate, newEndDate);
-            $('#totalLeave').val(total);
+            if(total < 90) {
+                $('#totalLeave').val(total);
+                document.getElementById('error_date').innerHTML = "";
+                $('#submit').attr('disabled', false);
+            } else {
+                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
+                $('#submit').attr('disabled', true);
+            }
         });
 
         $('#endDate').change(function() {
@@ -127,7 +135,14 @@
             newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
 
             total = daysdifference(newStartDate, newEndDate);
-            $('#totalLeave').val(total);
+            if(total < 90) {
+                $('#totalLeave').val(total);
+                document.getElementById('error_date').innerHTML = "";
+                $('#submit').attr('disabled', false);
+            } else {
+                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
+                $('#submit').attr('disabled', true);
+            }
         });
 
     </script>

@@ -25,8 +25,10 @@ class LeaveApplyAddRequest extends FormRequest
     {
         return [
             'leaveTypeId' => 'required',
-            'startDate' => 'required',
-            'endDate' => 'required',
+            'startDate' => 'required|date_format:d/m/Y',
+            'endDate' => 'required|date_format:d/m/Y',
+            'reason' => 'required',
+            'totalLeave' => 'max:90',
         ];
     }
 }

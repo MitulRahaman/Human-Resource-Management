@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Config;
@@ -17,8 +18,10 @@ class SuperUser extends Seeder
      */
     public function run()
     {
-        DB::table('users')
-            ->insert([
+        User::updateOrCreate([
+            'id'=> 1
+        ],
+            [
                 'employee_id' => 211202052,
                 'full_name' => 'Rakib Ibna Hamid',
                 'nick_name' => 'Rakib',

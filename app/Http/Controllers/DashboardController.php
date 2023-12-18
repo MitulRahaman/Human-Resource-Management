@@ -17,8 +17,8 @@ class DashboardController extends Controller
     public function __construct(DashboardService $dashboardService)
     {
         $this->dashboardService = $dashboardService;
-        View::share('main_menu', 'dashboard');
-        View::share('sub_menu', 'dashboard');
+        View::share('main_menu', 'Dashboard');
+        View::share('sub_menu', 'Dashboard');
     }
     public function index()
     {
@@ -28,6 +28,8 @@ class DashboardController extends Controller
             'requisition'=> $this->dashboardService->totalRequisitionRequests(),
             'on_leave' => $this->dashboardService->totalOnLeave(),
             'pending_leave' => $this->dashboardService->totalPendingLeave(),
+            'pending_requisition' => $this->dashboardService->totalPendingRequisition(),
+            'users' => $this->dashboardService->totalUser(),
         ];
         return \view('backend.pages.dashboard', compact('hasManageRequisitionPermission','hasManageLeavePermission','total'));
     }

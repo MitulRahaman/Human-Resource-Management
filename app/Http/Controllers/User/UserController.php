@@ -38,7 +38,8 @@ class UserController extends Controller
 
     public function create()
     {
-        $hasUserManagePermission = $this->setId(auth()->user()->id)->setSlug('manageUsers')->hasPermission();
+        $hasUserManagePermission = $this->setSlug('addUser')->hasPermission();
+        abort_if(!$hasUserManagePermission, 403, 'You don\'t have permission!');
         if($hasUserManagePermission) {
             View::share('sub_menu', 'Add User');
             $branches = $this->userService->getBranches();
@@ -54,7 +55,7 @@ class UserController extends Controller
 
     public function manage()
     {
-        $hasUserManagePermission = $this->setId(auth()->user()->id)->setSlug('manageUsers')->hasPermission();
+        $hasUserManagePermission = $this->setSlug('manageUser')->hasPermission();
         View::share('sub_menu', 'Manage Users');
         return view('backend.pages.user.manage', compact('hasUserManagePermission'));
     }
@@ -66,6 +67,7 @@ class UserController extends Controller
 
     public function store(UserAddRequest $request)
     {
+        abort_if(!$this->setSlug('addUser')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $response = $this->userService->storeUser($request);
             if ($response === true) {
@@ -80,6 +82,7 @@ class UserController extends Controller
 
     public function editBasicInfo($id)
     {
+        abort_if(!$this->setSlug('editUser')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Manage Users');
         $user = $this->userService->editUser($id);
         abort_if(!$user, 404);
@@ -95,6 +98,7 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, $id)
     {
+        abort_if(!$this->setSlug('editUser')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             if(!$this->userService->updateUser($request, $id))
                 return redirect('user/manage')->with('error', 'Failed to update user');
@@ -213,12 +217,14 @@ class UserController extends Controller
     }
     public function distributeAsset($id)
     {
+        abort_if(!$this->setSlug('distributeAsset')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Manage Users');
         $assets = $this->userService->getAllAssets();
         return \view('backend.pages.asset.distributeAsset', compact('id','assets'));
     }
     public function updateDistributeAsset(DistributeAssetRequest $request)
     {
+        abort_if(!$this->setSlug('distributeAsset')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $response = $this->userService->updateDistributeAsset($request->validated());
             if(!$response)

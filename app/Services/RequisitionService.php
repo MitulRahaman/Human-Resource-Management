@@ -140,6 +140,7 @@ class RequisitionService
                         $action_btn .= "$approve_btn $reject_btn";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
+                    else $action_btn = "N/A";
                 }
                 elseif($hasManageRequisitionPermission)
                 {

@@ -169,31 +169,33 @@ class UserService
                     $status_msg = "Activate";
                 }
                 $edit_url = url('user/'.$id.'/edit');
-                $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
                 $profile_edit_url = url('user/profile/'.$id.'/edit');
-                $profile_edit_btn= "<a class=\"dropdown-item\" href=\"$profile_edit_url\">Edit Full Profile</a>";
+                $profile_edit_btn= "<li><a class=\"dropdown-item\" href=\"$profile_edit_url\">Edit Full Profile</a></li>";
                 $distribute_asset_url = url('user/'.$id.'/distribute_asset');
-                $distribute_asset_url_btn= "<a class=\"dropdown-item\" href=\"$distribute_asset_url\">Distribute asset</a>";
-                $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
+                $distribute_asset_url_btn= "<li><a class=\"dropdown-item\" href=\"$distribute_asset_url\">Distribute asset</a></li>";
+                $toggle_btn = "<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a></li>";
                 if ($row->deleted_at) {
-                    $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a>";
+                    $toggle_delete_btn = "<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a></li>";
                 } else {
-                    $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_delete_modal(\"$id\", \"$name\")'>Delete</a>";
+                    $toggle_delete_btn = "<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_delete_modal(\"$id\", \"$name\")'>Delete</a></li>";
                 }
                 $action_btn = "<div class=\"col-sm-6 col-xl-4\">
                                     <div class=\"dropdown\">
                                         <button type=\"button\" class=\"btn btn-secondary dropdown-toggle\" id=\"dropdown-default-secondary\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
                                             Action
                                         </button>
-                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
+                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">
+                                        <ul style=\"max-height: 100px; overflow-x:hidden\">";
                 if($hasManageEmployeePermsission)
                     $action_btn .="$edit_btn $profile_edit_btn $distribute_asset_url_btn ";
                 elseif($id==Auth::id())
                     $action_btn .="$profile_edit_btn ";
                 $action_btn .=" $toggle_btn $toggle_delete_btn";
-                $action_btn .= "</div>
-                                    </div>
-                                </div>";
+                $action_btn .= "</ul>
+                                </div>
+                            </div>
+                        </div>";
                 $temp = array();
                 array_push($temp, $key+1);
                 array_push($temp, $img);

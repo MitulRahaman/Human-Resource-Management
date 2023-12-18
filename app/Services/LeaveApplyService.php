@@ -163,25 +163,26 @@ class LeaveApplyService
                     $status = "<span class=\"badge badge-danger\">canceled</span><br>" ;
 
                 $delete_url = url('leaveApply/'.$id.'/delete');
-                $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"$delete_url\">Delete</a>";
+                $toggle_delete_btn = "<li><a class=\"dropdown-item\" href=\"$delete_url\">Delete</a></li>";
                 $action_btn = "<div class=\"col-sm-6 col-xl-4\">
                                     <div class=\"dropdown\">
                                         <button type=\"button\" class=\"btn btn-secondary dropdown-toggle\" id=\"dropdown-default-secondary\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
                                             Action
                                         </button>
-                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
+                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">
+                                        <ul style=\"max-height: 100px; overflow-x:hidden\">";
 
-                $recommend_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_recommend_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Recommend</a>";
-                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\", \"$start_date\", \"$end_date\", \"$employeeId\")'>Approve</a>";
-                $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a>";
+                $recommend_btn="<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_recommend_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Recommend</a></li>";
+                $approve_btn="<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\", \"$start_date\", \"$end_date\", \"$employeeId\")'>Approve</a></li>";
+                $reject_btn="<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a></li>";
                 if($hasManageLeavePermission && ($userId == $row->user_id))
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
                         $edit_url = url('leaveApply/'.$id.'/edit');
-                        $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                        $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
                         $cancel_url = url('leaveApply/status/'.$id.'/cancel');
-                        $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
+                        $cancel_btn = "<li><a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a></li>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn $approve_btn $reject_btn";
                     }
                     else
@@ -200,9 +201,9 @@ class LeaveApplyService
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
                         $edit_url = url('leaveApply/'.$id.'/edit');
-                        $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                        $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
                         $cancel_url = url('leaveApply/status/'.$id.'/cancel');
-                        $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
+                        $cancel_btn = "<li><a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a></li>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
                     else $action_btn = "N/A";
@@ -215,9 +216,10 @@ class LeaveApplyService
                     }
                 }
 
-                $action_btn .= "</div>
-                                    </div>
-                                </div>";
+                $action_btn .= "</ul>
+                                </div>
+                            </div>
+                        </div>";
 
                 $temp = array();
                 array_push($temp, $key+1);

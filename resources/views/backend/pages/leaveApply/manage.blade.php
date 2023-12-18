@@ -16,7 +16,7 @@
             width: 50px;;
         }
         .dataTables_wrapper div.dataTables_scrollBody {
-            min-height: 120px;
+            min-height: 130px;
         }
     </style>
 @endsection
@@ -41,10 +41,10 @@
                     <table class="table table-bordered table-striped table-vcenter" id="dataTable">
                         <thead>
                             <tr>
-                                <th class="text-center">Sl no.</th>
+                                <th class="text-center">No.</th>
                                 <th class="text-center">Employee ID</th>
-                                <th class="text-center">Employee Name</th>
-                                <th class="text-center">Employee Phone</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Phone</th>
                                 <th class="text-center">Subject</th>
                                 <th class="text-center">Start Date</th>
                                 <th class="text-center">End date</th>
@@ -167,7 +167,6 @@
         jQuery(function(){
             function createTable(){
                 $('#dataTable').DataTable( {
-                    "scrollX": true,
                     dom: 'Blfrtip',
                     ajax: {
                         type: 'POST',

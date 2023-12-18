@@ -186,12 +186,10 @@ class UserService
                                             Action
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
-
-                $action_btn .= "$edit_btn ";
-                if($id==Auth::id() || $hasManageEmployeePermsission)
-                    $action_btn .="$profile_edit_btn ";
                 if($hasManageEmployeePermsission)
-                    $action_btn .="$distribute_asset_url_btn ";
+                    $action_btn .="$edit_btn $profile_edit_btn $distribute_asset_url_btn ";
+                elseif($id==Auth::id())
+                    $action_btn .="$profile_edit_btn ";
                 $action_btn .=" $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</div>
                                     </div>
@@ -218,7 +216,7 @@ class UserService
                 if($id==Auth::id() || $hasManageEmployeePermsission)
                     array_push($temp, $action_btn);
                 else
-                    array_push($temp, '');
+                    array_push($temp, 'N/A');
                 array_push($data, $temp);
             }
 

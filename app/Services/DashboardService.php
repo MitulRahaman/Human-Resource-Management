@@ -31,6 +31,14 @@ class DashboardService
     {
         return $this->dashboardRepository->totalPendingLeave();
     }
+    public function totalPendingRequisition()
+    {
+        return $this->dashboardRepository->totalPendingRequisition();
+    }
+    public function totalUser()
+    {
+        return $this->dashboardRepository->totalUser();
+    }
     public function fetchRequisitionData($page, $limit)
     {
         $offset = ($page-1)*$limit;

@@ -56,6 +56,19 @@ class DashboardRepository
             ->where('leaves.status','=', Config::get('variable_constants.status.pending'))
             ->count();
     }
+    public function totalPendingRequisition()
+    {
+        return DB::table('requisition_requests as r')
+            ->where('r.status','=', Config::get('variable_constants.status.pending'))
+            ->count();
+    }
+    public function totalUser()
+    {
+        return DB::table('users as u')
+            ->where('u.status','=', Config::get('variable_constants.activation.active'))
+            ->whereNull('deleted_at')
+            ->count();
+    }
     public function getOnLeaveTableData()
     {
         return DB::table('leaves')

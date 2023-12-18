@@ -307,6 +307,12 @@ class PermissionSeeder extends Seeder
                 'name' => 'View Log',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 46,
+                'slug' => 'distributeAsset',
+                'name' => 'Distribute Asset',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
 
         ];
 

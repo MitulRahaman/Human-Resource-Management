@@ -15,6 +15,9 @@
         {
             width: 50px;;
         }
+        .dataTables_wrapper div.dataTables_scrollBody {
+            min-height: 120px;
+        }
     </style>
 @endsection
 @section('page_action')

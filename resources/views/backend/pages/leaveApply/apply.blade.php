@@ -52,7 +52,9 @@
                                         </div>
                                         <input type="text" class="form-control" id="endDate" name="endDate" placeholder="To"  data-autoclose="true" data-today-highlight="true" required>
                                     </div>
+                                    <span id="error_date" style="font-size:13px; color:red"></span>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="reason" name="reason" required>
@@ -61,14 +63,14 @@
                                     <label for="val_photo">Select File</label><br>
                                     <input type="file" name="photo[]" id="photo[]" multiple /><br>
                                 </div>
-                                <input type="hidden" id="totalLeave" name="totalLeave" value="">
+                                <input type="hidden" id="totalLeave" name="totalLeave" min="1" max="90" value="">
                             </div>
                         </div>
 
                         <!-- Save -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="submit">Apply</button>
+                                <button type="submit" disabled="true" class="btn btn-alt-primary" id="submit">Apply</button>
                             </div>
                         </div>
                         <!-- END Save -->
@@ -110,7 +112,6 @@
             return Math.round(Math.abs(days)) + 1;
         }
 
-
         $('#startDate').change(function() {
             let startDate = $('#startDate').val();
             startDate = startDate.split("/");
@@ -121,7 +122,15 @@
             newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
 
             total = daysdifference(newStartDate, newEndDate);
-            $('#totalLeave').val(total);
+            if(total < 90) {
+                $('#totalLeave').val(total);
+                document.getElementById('error_date').innerHTML = "";
+                $('#submit').attr('disabled', false);
+            } else {
+                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
+                $('#submit').attr('disabled', true);
+            }
+
         });
 
         $('#endDate').change(function() {
@@ -134,8 +143,14 @@
             newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
 
             total = daysdifference(newStartDate, newEndDate);
-            $('#totalLeave').val(total);
+            if(total < 90) {
+                $('#totalLeave').val(total);
+                document.getElementById('error_date').innerHTML = "";
+                $('#submit').attr('disabled', false);
+            } else {
+                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
+                $('#submit').attr('disabled', true);
+            }
         });
-
     </script>
 @endsection

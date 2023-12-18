@@ -174,16 +174,28 @@ class LeaveApplyService
                 $recommend_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_recommend_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Recommend</a>";
                 $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$leave_type\", \"$remarks\", \"$start_date\", \"$end_date\", \"$employeeId\")'>Approve</a>";
                 $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a>";
-                if($hasManageLeavePermission)
+                if($hasManageLeavePermission && ($userId == $row->user_id))
+                {
+                    if($row->status== Config::get('variable_constants.status.pending'))
+                    {
+                        $edit_url = url('leaveApply/'.$id.'/edit');
+                        $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                        $cancel_url = url('leaveApply/status/'.$id.'/cancel');
+                        $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
+                        $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn $approve_btn $reject_btn";
+                    }
+                    else
+                        $action_btn = "N/A";
+                }
+                elseif ($hasManageLeavePermission && ($userId != $row->user_id))
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
-                    else
-                        $action_btn = "N/A";
+                    else $action_btn = "N/A";
                 }
-                elseif ($userId==$row->user_id)
+                elseif (!$hasManageLeavePermission && ($userId == $row->user_id))
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
@@ -194,7 +206,8 @@ class LeaveApplyService
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
                     else $action_btn = "N/A";
-                } else
+                }
+                else
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {

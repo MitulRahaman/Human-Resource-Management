@@ -12,7 +12,7 @@
                             <dd class="text-muted mb-0">Users</dd>
                         </dl>
                         <div class="item item-rounded bg-body">
-                            <i class="fa fa-users font-size-h3 text-primary"></i>
+                            <i class="si si-users font-size-h3 text-primary"></i>
                         </div>
                     </div>
                     <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
@@ -33,7 +33,7 @@
                             <dd class="text-muted mb-0">Pending requisition requests</dd>
                         </dl>
                         <div class="item item-rounded bg-body">
-                            <i class="fa fa-shopping-cart font-size-h3 text-primary"></i>
+                            <i class="far  fa-plus-square font-size-h3 text-primary"></i>
                         </div>
                     </div>
                     <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
@@ -54,7 +54,7 @@
                             <dd class="text-muted mb-0">Pending leave application</dd>
                         </dl>
                         <div class="item item-rounded bg-body">
-                            <i class="fa fa-inbox font-size-h3 text-primary"></i>
+                            <i class="si si-note font-size-h3 text-primary"></i>
                         </div>
                     </div>
                     <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
@@ -75,7 +75,7 @@
                             <dd class="text-muted mb-0">Absent Today</dd>
                         </dl>
                         <div class="item item-rounded bg-body">
-                            <i class="fa fa-chart-line font-size-h3 text-primary"></i>
+                            <i class="si si-users font-size-h3 text-primary"></i>
                         </div>
                     </div>
                     <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">

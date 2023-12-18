@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Degree;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,7 +20,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call([SuperUser::class, PermissionSeeder::class, AssetTypeSeeder::class, BankSeeder::class, Degree::class, InstituteSeeder::class,
+        $this->call([SuperUser::class, PermissionSeeder::class, AssetTypeSeeder::class, BankSeeder::class, DegreeSeeder::class, InstituteSeeder::class,
             LeaveTypeSeeder::class, MenuSeeder::class, OrganizationSeeder::class]);
 
     }

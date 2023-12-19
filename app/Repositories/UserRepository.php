@@ -294,7 +294,12 @@ class UserRepository
 
     public function getDesignations($data)
     {
-        return DB::table('branch_designations')->where('branch_id', '=', $data->branchId)->get();
+        if($data['branchId'] != null) {
+            $firstBranch = DB::table('branch_departments')->where('branch_id', '=', $data->branchId)->first();
+            return DB::table('designations')->where('department_id', '=', $firstBranch->department_id)->get();
+        } else {
+            return DB::table('designations')->where('department_id', '=', $data->departmentId)->get();
+        }
     }
 
     public function getDeptDesgName($deptId, $desgId)
@@ -862,10 +867,11 @@ class UserRepository
     public function getAvailableLeave($id)
     {
         $currentYear = now()->year;
-        $leaves = DB::table('calender')->whereRaw('YEAR(date) = ?', [$currentYear])->pluck('date');
-        $used_leaves = DB::table('leaves')->where('user_id', '=',$id)->where('status', '=',Config::get('variable_constants.leave_status.approved'))->pluck('total')->toArray();
+        $leaves = DB::table('total_yearly_leaves')->where('year', '=', $currentYear)->pluck('total_leaves')->toArray();
+        $total_yearly_leaves = array_sum($leaves);
+        $used_leaves = DB::table('leaves')->where('user_id', '=' ,$id)->where('status', '=',Config::get('variable_constants.leave_status.approved'))->pluck('total')->toArray();
         $total_used = array_sum($used_leaves);
-        return count($leaves)-$total_used;
+        return $total_yearly_leaves-$total_used;
     }
     public function getAllAssets()
     {

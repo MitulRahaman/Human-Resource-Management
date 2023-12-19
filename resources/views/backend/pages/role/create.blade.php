@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="{{asset('backend/js/plugins/ion-rangeslider/css/ion.rangeSlider.css')}}">
     <link rel="stylesheet" href="{{asset('backend/js/plugins/dropzone/dist/min/dropzone.min.css')}}">
     <link rel="stylesheet" href="{{asset('backend/js/plugins/flatpickr/flatpickr.min.css')}}">
+    <style >
+        .spinner {
+            display: none;
+        }
+    </style>
 
 @endsection
 @section('page_action')
@@ -26,7 +31,7 @@
                 <h3 class="block-title">Add Roles</h3>
             </div>
 
-            <form class="js-validation" action="{{ url('role/store') }}" id="form" method="POST" onsubmit="return validate_inputs(event)">
+            <form class="js-validation form-prevent-multiple-submission" action="{{ url('role/store') }}" id="form" method="POST" onsubmit="return validate_inputs(event)">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -81,7 +86,9 @@
                         <!-- Submit -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>
+                                <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
+                                    <i class="spinner fa fa-spinner fa-spin"></i>Save
+                                </button>
                             </div>
                         </div>
                         <!-- END Submit -->
@@ -158,6 +165,10 @@
                 });
             }
         }
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+            $('.spinner').show();
+        })
     </script>
 
     <!-- Page JS Plugins -->

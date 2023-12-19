@@ -55,7 +55,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-branchId">Role<span class="text-danger">*</span></label>
+                                    <label for="val-roleId">Role<span class="text-danger">*</span></label>
                                     <select class="form-control" id="roleId" name="roleId" style="width: 100%" required>
                                         <option></option>
                                         @forelse ($roles as $role)
@@ -197,6 +197,32 @@
                         deptOptions[deptOptions.length] = '<option value=""></option>'
                         selectDept.empty().append( deptOptions.join('') );
 
+                        desgOptions[desgOptions.length] = '<option value=""></option>'
+                        selectDesg.empty().append( desgOptions.join('') );
+                    }
+                },
+            });
+        });
+        $('#departmentId').change(function() {
+            let departmentId = $('#departmentId').val();
+            var selectDesg = $('#designationId');
+            $.ajax({
+                type: 'POST',
+                async:false,
+                url: '{{ url("user/getDeptDesg") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    departmentId: departmentId,
+                },
+                success: function(response) {
+                    var desgOptions = [];
+                    if(response.length){
+                        for( item in response[2] ) {
+                            html = '<option value="' + response[2][item] + '">' + response[3][item] + '</option>';
+                            desgOptions[desgOptions.length] = html;
+                        }
+                        selectDesg.empty().append( desgOptions.join('') );
+                    } else {
                         desgOptions[desgOptions.length] = '<option value=""></option>'
                         selectDesg.empty().append( desgOptions.join('') );
                     }

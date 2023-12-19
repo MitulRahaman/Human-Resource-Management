@@ -101,9 +101,9 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="approve_leave"></span> Approval Note</p>
-                                        <input type="text" name="approve-modal-remarks" id="approve-modal-remarks" style="width: 100%" value="">
+                                    <div class="form-group font-size-sm px-6">
+                                        <p class="text-center mt-2"><span id="approve_leave"></span> Approval Note</p>
+                                        <input class="form-control bg-light" type="text" name="approve-modal-remarks" id="approve-modal-remarks" style="width: 100%" value="">
                                     </div>
                                     <input type="hidden" id="employeeId" name="employeeId" value="">
                                     <input type="hidden" id="leaveType" name="leaveType" value="">
@@ -132,9 +132,9 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="reject_leave"></span> Rejection Note</p>
-                                        <input type="text" name="reject-modal-remarks" id="reject-modal-remarks" value="" style="width: 100%">
+                                    <div class="form-group font-size-sm px-6">
+                                        <p class="text-center mt-2"><span id="reject_leave"></span> Rejection Note</p>
+                                        <input class="form-control bg-light" type="text" name="reject-modal-remarks" id="reject-modal-remarks" value="" style="width: 100%">
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>

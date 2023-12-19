@@ -41,7 +41,7 @@ class UserService
 
         $desgId = array();
         foreach ($designations as $d) {
-            array_push($desgId, $d->designation_id);
+            array_push($desgId, $d->id);
         }
 
         return $this->userRepository->getDeptDesgName($deptId, $desgId);

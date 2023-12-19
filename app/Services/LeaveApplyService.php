@@ -186,7 +186,10 @@ class LeaveApplyService
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn $approve_btn $reject_btn";
                     }
                     else
+                    {
                         $action_btn = "N/A";
+                    }
+
                 }
                 elseif ($hasManageLeavePermission && ($userId != $row->user_id))
                 {
@@ -194,7 +197,10 @@ class LeaveApplyService
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
-                    else $action_btn = "N/A";
+                    else
+                    {
+                        $action_btn = "N/A";
+                    }
                 }
                 elseif (!$hasManageLeavePermission && ($userId == $row->user_id))
                 {
@@ -206,13 +212,20 @@ class LeaveApplyService
                         $cancel_btn = "<li><a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a></li>";
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
-                    else $action_btn = "N/A";
+                    else
+                    {
+                        $action_btn = "N/A";
+                    }
                 }
                 else
                 {
                     if($row->status== Config::get('variable_constants.status.pending'))
                     {
                         $action_btn .= "$recommend_btn";
+                    }
+                    else
+                    {
+                        $action_btn = "N/A";
                     }
                 }
 

@@ -24,7 +24,7 @@
                             <div class="col-lg-8 col-xl-5">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ $asset_type->name }}" placeholder="Enter a name.." >
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $asset_type->name }}" placeholder="Enter a name.." required>
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
                                 </div>
                             </div>

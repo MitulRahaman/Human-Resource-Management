@@ -432,9 +432,9 @@ class UserService
     {
         return $this->userRepository->getAvailableLeave($id);
     }
-    public function getAllAssets()
+    public function getAllAssets($id)
     {
-        return $this->userRepository->getAllAssets();
+        return $this->userRepository->setId($id)->getAllAssets();
     }
     public function updateDistributeAsset($data)
     {

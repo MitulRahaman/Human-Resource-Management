@@ -50,6 +50,7 @@
                         <thead>
                         <tr>
                             <th class="text-center ">#</th>
+                            <th >Image</th>
                             <th >Name</th>
                             <th >Asset Type</th>
                             <th >sl_no</th>

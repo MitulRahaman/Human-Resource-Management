@@ -73,17 +73,43 @@ class RequisitionRepository
     {
         return DB::table('asset_types')->get();
     }
+    public function isLineManager($id)
+    {
+        return DB::table('line_managers as l')
+            ->where('l.line_manager_user_id', '=', $id)
+            ->where('l.status', '=', Config::get('variable_constants.activation.active'))
+            ->whereNull('l.deleted_at')
+            ->exists();
+    }
+    public function getUsersUnderLineManager($id)
+    {
+        return DB::table('line_managers as l')
+                ->where('l.line_manager_user_id', $id)
+                ->where('l.status', '=', Config::get('variable_constants.activation.active'))
+                ->whereNull('l.deleted_at')
+                ->pluck('l.user_id')
+                ->toArray();
+    }
     public function getTableData()
     {
+        $is_line_manager = $this->isLineManager(auth()->user()->id);
+        $user_under_line_manager ='';
+        if($is_line_manager)
+        {
+            $user_under_line_manager = $this->getUsersUnderLineManager(auth()->user()->id);
+            array_push($user_under_line_manager, auth()->user()->id);
+        }
         return DB::table('requisition_requests as r')
             ->leftJoin('asset_types as at', function ($join) {
                 $join->on('r.asset_type_id', '=', 'at.id');
             })
             ->leftJoin('users as u', 'r.user_id', '=', 'u.id')
-            ->groupBy('r.id')
             ->select('r.*', 'at.id as asset_type_id', 'at.name as type_name', 'u.employee_id', 'u.full_name')
-            ->when(!$this->hasPermission, function($query){
+            ->when(!$this->hasPermission && !$is_line_manager, function($query){
                 $query->where('r.user_id', $this->user_id);
+            })
+            ->when(!$this->hasPermission && $is_line_manager, function($query) use ($user_under_line_manager){
+                $query->whereIn('r.user_id', $user_under_line_manager);
             })
             ->orderBy('r.id', 'desc')
             ->get();

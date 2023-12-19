@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Models\Asset;
 use App\Models\AssetType;
 use App\Models\Branch;
+use App\Models\User;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class AssetRepository
@@ -90,6 +92,15 @@ class AssetRepository
             ->orderBy('a.id', 'desc')
             ->get();
     }
+    public function getAssetImage($id)
+    {
+        $asset_image = DB::table('asset_images as a')
+            ->where('asset_id','=', $id)
+            ->whereNull('a.deleted_at')
+            ->where('status', '=', Config('variable_constants.activation.active'))
+            ->first();
+        return $asset_image->url;
+    }
     public function getBranchName($id)
     {
         return Branch::where('id',$id)->select('name')->first();
@@ -97,6 +108,12 @@ class AssetRepository
     public function getAllBranches()
     {
         return Branch::where('status', Config('variable_constants.activation.active'))->get();
+    }
+    public function getAllUsers()
+    {
+        return User::where('status', Config('variable_constants.activation.active'))
+            ->where('is_super_user', Config('variable_constants.check.no'))
+            ->get();
     }
     public function getAsset($id)
     {
@@ -207,6 +224,8 @@ class AssetRepository
     public function getAllAssetTypeData()
     {
         return DB::table('asset_types as a')
+            ->where('a.status','=', Config::get('variable_constants.activation.active'))
+            ->whereNull('a.deleted_at')
             ->select('a.id',  'a.name', 'a.status', DB::raw('date_format(a.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(a.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->orderBy('a.id', 'desc')
             ->get();

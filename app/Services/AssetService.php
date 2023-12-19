@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\AssetRepository;
 use Illuminate\Support\Facades\Config;
 use App\Traits\AuthorizationTrait;
+use Illuminate\Support\Facades\Storage;
 
 class AssetService
 {
@@ -24,13 +25,27 @@ class AssetService
     {
         return $this->assetRepository->getAllBranches();
     }
+    public function getAllUsers()
+    {
+        return $this->assetRepository->getAllUsers();
+    }
     public function createAsset($data)
     {
+        $file_name=null;
+        if (isset($data['url'])) {
+
+            $extension = $data['url']->getClientOriginalExtension();
+            $file_name = random_int(0001, 9999).'.'.$extension;
+            $file_path = 'asset/'.$file_name;
+            Storage::disk('public')->put($file_path, file_get_contents($data['url']));
+        } else {
+            $file_path = null;
+        }
         return $this->assetRepository->setName($data['name'])
             ->setTypeId($data['type_id'])
             ->setSlNo($data['sl_no'])
             ->setBranchId($data['branch_id'])
-            ->setUrl($data['url'])
+            ->setUrl($file_name)
             ->setSpecification($data['specification'])
             ->setPurchaseAt($data['purchase_at'])
             ->setPurchaseBy($data['purchase_by'])
@@ -41,12 +56,22 @@ class AssetService
     }
     public function update($data)
     {
+        $file_name=null;
+        if (isset($data['url'])) {
+
+            $extension = $data['url']->getClientOriginalExtension();
+            $file_name = random_int(0001, 9999).'.'.$extension;
+            $file_path = 'asset/'.$file_name;
+            Storage::disk('public')->put($file_path, file_get_contents($data['url']));
+        } else {
+            $file_path = null;
+        }
         return $this->assetRepository->setId($data['id'])
             ->setName($data['name'])
             ->setTypeId($data['type_id'])
             ->setSlNo($data['sl_no'])
             ->setBranchId($data['branch_id'])
-            ->setUrl($data['url'])
+            ->setUrl($file_name)
             ->setSpecification($data['specification'])
             ->setPurchaseAt($data['purchase_at'])
             ->setPurchaseBy($data['purchase_by'])
@@ -79,6 +104,13 @@ class AssetService
             $data = array();
             foreach ($result as $key=>$row) {
                 $id = $row->id;
+                $img_url = $this->assetRepository->getAssetImage($id);
+                if($img_url) {
+                    $url = asset('storage/asset/'. $img_url);
+                    $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                } else {
+                    $img = "<td> <img src=\"https://www.pikpng.com/pngl/m/58-589136_packaging-box-png-clip-art-box-transparent-png.png\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                }
                 $name = $row->name;
                 $asset_type= $this->assetRepository->getAssetType($row->type_id)->name;
                 $sl_no = $row->sl_no? $row->sl_no:'N/A';
@@ -118,6 +150,7 @@ class AssetService
                                 </div>";
                 $temp = array();
                 array_push($temp, $key+1);
+                array_push($temp, $img);
                 array_push($temp, $name);
                 array_push($temp, $asset_type);
                 array_push($temp, $sl_no);

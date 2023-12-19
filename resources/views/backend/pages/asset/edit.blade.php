@@ -63,8 +63,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Image Url </label>
-                                    <input type="text" class="form-control" id="url" name="url" @if($asset->url) value="{{$asset->url}}" @endif  placeholder="Enter a url for image.." >
+                                    <label for="val-username">Image</label><br>
+                                    <input type="file"  id="url" name="url">
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Specification </label>
@@ -75,12 +75,19 @@
                                     <input type="text" class="form-control" id="purchase_at" name="purchase_at" @if($asset->purchase_at) value="{{$asset->purchase_at}}" @endif  placeholder="Enter vendor.." >
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Purchase By </label>
-                                    <input type="text" class="form-control" id="purchase_by" name="purchase_by" @if($asset->purchase_by) value="{{$asset->purchase_by}}" @endif  placeholder="Enter who purchased.." >
+                                    <label for="val-username">Purchase By</label>
+                                    <div class="form-group">
+                                        <select class="js-select2 form-control" id="purchase_by" name="purchase_by" style="width: 100%;" data-placeholder="Enter who purchased.." >
+                                            <option></option>
+                                            @foreach ($users as $user)
+                                                <option value='{{ $user->id }}' style="color:black" @if($asset->purchase_by==$user->id) selected @endif> {{ $user->full_name }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Purchase Price </label>
-                                    <input type="text" class="form-control" id="purchase_price" name="purchase_price" @if($asset->purchase_price) value="{{$asset->purchase_price}}" @endif   placeholder="Enter purchased price.." >
+                                    <input type="number" step="0.01" min="0" class="form-control" id="purchase_price" name="purchase_price" @if($asset->purchase_price) value="{{$asset->purchase_price}}" @endif   placeholder="Enter purchased price.." >
                                 </div>
                             </div>
                         </div>

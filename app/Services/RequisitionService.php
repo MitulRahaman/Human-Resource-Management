@@ -158,6 +158,9 @@ class RequisitionService
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }
                     else $action_btn = "N/A";
+                }else
+                {
+                    $action_btn = "N/A";
                 }
 
                 $action_btn .= "</div>

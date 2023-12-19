@@ -875,7 +875,17 @@ class UserRepository
     }
     public function getAllAssets()
     {
-        return Asset::get();
+        $branch_id = DB::table('basic_info')->where('user_id','=', $this->id)->select('branch_id')->first();
+        return DB::table('assets as a')
+            ->whereNull('a.deleted_at')
+            ->where('a.status', '=',Config::get('variable_constants.activation.active'))
+            ->where('a.branch_id','=', $branch_id->branch_id)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('user_assets as ua')
+                    ->whereRaw('ua.asset_id = a.id');
+            })
+            ->get();
     }
     public function updateDistributeAsset()
     {
@@ -901,6 +911,7 @@ class UserRepository
             DB::commit();
             return true;
         } catch (\Exception $exception) {
+            dd('jhjk');
             DB::rollBack();
             return $exception->getMessage();
         }

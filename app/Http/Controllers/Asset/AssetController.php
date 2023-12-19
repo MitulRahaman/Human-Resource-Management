@@ -39,7 +39,8 @@ class AssetController extends Controller
         View::share('sub_menu', 'Add Asset');
         $asset_type = $this->assetService->getAllAssetTypeData();
         $branches = $this->assetService->getAllBranches();
-        return \view('backend.pages.asset.create', compact('asset_type', 'branches'));
+        $users = $this->assetService->getAllUsers();
+        return \view('backend.pages.asset.create', compact('asset_type', 'branches', 'users'));
     }
     public function store(AssetAddRequest $request)
     {
@@ -62,7 +63,8 @@ class AssetController extends Controller
             return redirect()->back()->with('error', 'Restore first');
         $asset_type = $this->assetService->getAllAssetTypeData();
         $branches = $this->assetService->getAllBranches();
-        return \view('backend.pages.asset.edit',compact('asset', 'asset_type', 'branches'));
+        $users = $this->assetService->getAllUsers();
+        return \view('backend.pages.asset.edit',compact('asset', 'asset_type', 'branches', 'users'));
     }
     public function update(AssetEditRequest $request)
     {

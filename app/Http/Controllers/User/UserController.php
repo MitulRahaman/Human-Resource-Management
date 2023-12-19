@@ -219,7 +219,7 @@ class UserController extends Controller
     {
         abort_if(!$this->setSlug('distributeAsset')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Manage Users');
-        $assets = $this->userService->getAllAssets();
+        $assets = $this->userService->getAllAssets($id);
         return \view('backend.pages.asset.distributeAsset', compact('id','assets'));
     }
     public function updateDistributeAsset(DistributeAssetRequest $request)

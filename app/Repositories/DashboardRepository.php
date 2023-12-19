@@ -66,6 +66,7 @@ class DashboardRepository
     {
         return DB::table('users as u')
             ->where('u.status','=', Config::get('variable_constants.activation.active'))
+            ->where('u.is_super_user','=', Config::get('variable_constants.check.no'))
             ->whereNull('deleted_at')
             ->count();
     }

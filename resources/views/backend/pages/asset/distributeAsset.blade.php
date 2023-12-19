@@ -35,6 +35,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
                             </div>
                                 <div class="col-lg-7 offset-lg-4">
                                     <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>

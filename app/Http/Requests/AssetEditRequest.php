@@ -33,9 +33,9 @@ class AssetEditRequest extends FormRequest
             'branch_id' =>'required',
             'specification' => 'nullable',
             'purchase_at' => 'nullable',
-            'purchase_by'=> 'nullable',
+            'purchase_by'=> 'nullable|exists:users,id',
             'purchase_price' => 'nullable',
-            'url' => 'nullable',
+            'url' => 'nullable|image',
         ];
     }
 }

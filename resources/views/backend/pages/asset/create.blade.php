@@ -17,7 +17,7 @@
                 <h3 class="block-title">Add Asset</h3>
             </div>
 
-            <form class="js-validation" action="{{ url('asset/store') }}" id="form" method="POST" >
+            <form class="js-validation" action="{{ url('asset/store') }}" id="form" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -54,8 +54,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Image Url </label>
-                                    <input type="text" class="form-control" id="url" name="url"   placeholder="Enter a url for image.." >
+                                    <label for="val-username">Image</label><br>
+                                    <input type="file"  id="url" name="url">
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Specification </label>
@@ -65,13 +65,21 @@
                                     <label for="val-username">Vendor </label>
                                     <input type="text" class="form-control" id="purchase_at" name="purchase_at"   placeholder="Enter vendor.." >
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="val-username">Purchase By </label>
-                                    <input type="text" class="form-control" id="purchase_by" name="purchase_by"   placeholder="Enter who purchased.." >
+                                    <label for="val-username">Purchase By</label>
+                                    <div class="form-group">
+                                        <select class="js-select2 form-control" id="purchase_by" name="purchase_by" style="width: 100%;" data-placeholder="Enter who purchased.." >
+                                            <option></option>
+                                            @foreach ($users as $user)
+                                                <option value='{{ $user->id }}' style="color:black"> {{ $user->full_name }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Purchase Price </label>
-                                    <input type="text" class="form-control" id="purchase_price" name="purchase_price"   placeholder="Enter purchased price.." >
+                                    <input type="number" step="0.01" min="0" class="form-control" id="purchase_price" name="purchase_price"   placeholder="Enter purchased price.." >
                                 </div>
                             </div>
                         </div>

@@ -248,8 +248,6 @@
 
 @section('js_after')
 
-    <script src="{{asset('backend/js/oneui.core.min.js')}}"></script>
-    <script src="{{asset('backend/js/oneui.app.min.js')}}"></script>
     <!-- Page JS Plugins -->
     <script src="{{asset('backend/js/plugins/jquery-bootstrap-wizard/bs4/jquery.bootstrap.wizard.min.js')}}"></script>
     <script src="{{asset('backend/js/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
@@ -260,7 +258,6 @@
     <!-- Page JS Code -->
     <script src="{{asset('backend/js/pages/be_forms_wizard.min.js')}}"></script>
     <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']);});</script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

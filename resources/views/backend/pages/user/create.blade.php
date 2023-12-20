@@ -1,7 +1,13 @@
 @extends('backend.layouts.master')
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+@section('css_after')
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style >
+        .spinner {
+            display: none;
+        }
+    </style>
+@endsection
 @section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
@@ -20,7 +26,7 @@
             </div>
 
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ url('user/store') }}" method="POST" onsubmit="return verify_inputs()" id="form" enctype="multipart/form-data">
+            <form class="js-validation form-prevent-multiple-submission" action="{{ url('user/store') }}" method="POST" onsubmit="return verify_inputs()" id="form" enctype="multipart/form-data">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full pb-6">
@@ -129,7 +135,9 @@
                                 </div>
                                 <!-- Save -->
                                 <div class="items-push float-right pt-5">
-                                        <button type="submit" class="btn btn-primary px-6" id="submit">Save</button>
+                                    <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
+                                        <i class="spinner fa fa-spinner fa-spin"></i>Save
+                                    </button>
                                 </div>
                                 <!-- END Save -->
                             </div>
@@ -290,5 +298,9 @@
             else
                 return false;
         }
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+            $('.spinner').show();
+        })
     </script>
 @endsection

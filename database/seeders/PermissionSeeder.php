@@ -313,7 +313,18 @@ class PermissionSeeder extends Seeder
                 'name' => 'Distribute Asset',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
-
+            [
+                'id' => 47,
+                'slug' => 'notifyLeaveApply',
+                'name' => 'Notify Leave Apply',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 48,
+                'slug' => 'notifyRequisitionRequest',
+                'name' => 'Notify Requisition Request',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($permissions as $key=>$permission)

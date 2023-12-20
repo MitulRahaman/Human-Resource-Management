@@ -99,7 +99,10 @@ class AssetRepository
             ->whereNull('a.deleted_at')
             ->where('status', '=', Config('variable_constants.activation.active'))
             ->first();
-        return $asset_image->url;
+        if($asset_image)
+            return $asset_image->url;
+        else
+            return null;
     }
     public function getBranchName($id)
     {

@@ -198,7 +198,7 @@ class RequisitionRepository
         $hasManageRequisitionPermission = DB::table('role_permissions as rp')
                                             ->leftJoin('permissions as p', 'p.id', '=', 'rp.permission_id')
                                             ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-                                            ->where('p.slug', '=', 'manageRequisition')
+                                            ->where('p.slug', '=', 'notifyRequisitionRequest')
                                             ->where('bi.branch_id', '=', $appliedUser->branch_id)
                                             ->select('rp.role_id')
                                             ->get()
@@ -230,7 +230,7 @@ class RequisitionRepository
         if(!$appliedUser) return false;
         $hasManageRequisitionPermission = DB::table('role_permissions as rp')
             ->leftJoin('permissions as p', 'p.id', '=', 'rp.permission_id')
-            ->where('p.slug', '=', 'manageRequisition')
+            ->where('p.slug', '=', 'notifyRequisitionRequest')
             ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
             ->where('bi.branch_id', '=', $appliedUser->branch_id)
             ->select('rp.role_id')

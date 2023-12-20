@@ -45,9 +45,16 @@
                                 <label for="val-departmentId">Department</label>
                                     <select class="form-control" id="departmentId" name="departmentId" style="width: 100%;">
                                         @if ($departments)
-                                            @foreach($departments as $department)
-                                                <option value="{{ $department->id }}" {{ $user->basicInfo->department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
-                                            @endforeach
+                                            @if($user->basicInfo->department_id != null)
+                                                @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}" {{ $user->basicInfo->department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option></option>
+                                                @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}" {{ $user->basicInfo->department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                                @endforeach
+                                            @endif
                                         @endif
                                     </select>
                                 </div>
@@ -55,9 +62,16 @@
                                     <label for="val-designationId">Designation</label>
                                     <select class="form-control" id="designationId" name="designationId" style="width: 100%;">
                                         @if ($designations)
-                                            @foreach($designations as $designation)
-                                                <option value="{{ $designation->id }}" {{ $user->basicInfo->designation_id == $designation->id ? 'selected' : '' }}>{{ $designation->name }}</option>
-                                            @endforeach
+                                            @if($user->basicInfo->designation_id != null)
+                                                @foreach($designations as $designation)
+                                                    <option value="{{ $designation->id }}" {{ $user->basicInfo->designation_id == $designation->id ? 'selected' : '' }}>{{ $designation->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option></option>
+                                                @foreach($designations as $designation)
+                                                    <option value="{{ $designation->id }}" {{ $user->basicInfo->designation_id == $designation->id ? 'selected' : '' }}>{{ $designation->name }}</option>
+                                                @endforeach
+                                            @endif
                                         @endif
                                     </select>
                                 </div>

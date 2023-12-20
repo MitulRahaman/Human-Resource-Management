@@ -175,7 +175,8 @@ class RequisitionRepository
         return DB::table('requisition_requests as r')
             ->where('r.id', '=', $id)
             ->leftJoin('asset_types as a', 'a.id',  '=', 'r.asset_type_id')
-            ->select('r.*','a.name as asset_type_name')
+            ->leftJoin('users as u', 'u.id', '=', 'r.user_id')
+            ->select('r.*','a.name as asset_type_name', 'u.employee_id', 'u.full_name')
             ->first();
     }
     public function getRequisitionEmailRecipient()

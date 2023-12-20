@@ -458,7 +458,7 @@ class UserRepository
                 'is_onboarding_complete' => 0,
                 'status' => 1
             ]);
-            if($this->lineManager != null) {
+            if($this->lineManager) {
                 LineManager::where('user_id',$this->id)->delete();
                 foreach ($this->lineManager as $line_manager) {
                     LineManager::create([

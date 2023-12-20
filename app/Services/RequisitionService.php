@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\RequisitionRequested;
+use App\Jobs\RequisitionRequestApproveJob;
 use App\Jobs\RequisitionRequestJob;
 use Mail;
 use App\Mail\RequisitionMail;
@@ -78,7 +79,26 @@ class RequisitionService
     }
     public function approve($id)
     {
-        return $this->requisitionRepository->approve( $id);
+        $approve = $this->requisitionRepository->approve( $id);
+        if($approve==1)
+        {
+            $requisition_info = $this->requisitionRepository->getRequisitionInfo($id);
+            $to = $this->requisitionRepository->getRequestedUserMail($id);
+            $receivers = $this->requisitionRepository->setId(auth()->user()->id)->getRequisitionApproveEmailRecipient($id);
+            if(!$receivers) {
+                return false;
+            }
+            $data =[
+                'requisition_info' =>  $requisition_info,
+                'to' => $to->preferred_email,
+                'cc'=> $receivers,
+                'user_email' => auth()->user()->email,
+                'user_name' => auth()->user()->full_name
+            ];
+            RequisitionRequestApproveJob::dispatch($data);
+            return true;
+        }
+        return false;
     }
     public function reject($id)
     {

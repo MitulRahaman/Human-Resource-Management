@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Console\DbCommand;
 use Validator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -169,6 +170,14 @@ class RequisitionRepository
                 ->first();
         return $asset_type;
     }
+    public function getRequisitionInfo($id)
+    {
+        return DB::table('requisition_requests as r')
+            ->where('r.id', '=', $id)
+            ->leftJoin('asset_types as a', 'a.id',  '=', 'r.asset_type_id')
+            ->select('r.*','a.name as asset_type_name')
+            ->first();
+    }
     public function getRequisitionEmailRecipient()
     {
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
@@ -201,6 +210,47 @@ class RequisitionRepository
             return false;
         }
         return [$lineManagerEmail, $recipientEmail];
+    }
+    public function getRequestedUserMail($id)
+    {
+        return DB::table('requisition_requests as r')
+            ->where('r.id','=', $id)
+            ->leftJoin('basic_info as b', 'b.user_id', '=', 'r.user_id')
+            ->select('b.preferred_email')
+            ->first();
+    }
+    public function getRequisitionApproveEmailRecipient($id)
+    {
+        $appliedUser = DB::table('requisition_requests as r')
+            ->where('r.id','=', $id)
+            ->leftJoin('basic_info as b', 'b.user_id', '=', 'r.user_id')
+            ->select('b.*')
+            ->first();
+        if(!$appliedUser) return false;
+        $hasManageRequisitionPermission = DB::table('role_permissions as rp')
+            ->leftJoin('permissions as p', 'p.id', '=', 'rp.permission_id')
+            ->where('p.slug', '=', 'manageRequisition')
+            ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
+            ->where('bi.branch_id', '=', $appliedUser->branch_id)
+            ->select('rp.role_id')
+            ->get()
+            ->toArray();
+        $recipientEmail = array();
+        $hasManageRequisitionPermission = collect($hasManageRequisitionPermission)->unique('role_id')->values()->all();
+        foreach ($hasManageRequisitionPermission as $hasPermission) {
+            $userBasicInfo = DB::table('basic_info')->where('role_id', '=', $hasPermission->role_id)
+                                                        ->where('user_id', '!=', $this->id)
+                                                        ->select('preferred_email')
+                                                        ->get()->toArray();
+            foreach ($userBasicInfo as $b)
+            {
+                array_push($recipientEmail,$b->preferred_email);
+            }
+        }
+        if(!$hasManageRequisitionPermission || !$recipientEmail) {
+            return false;
+        }
+        return $recipientEmail;
     }
 }
     

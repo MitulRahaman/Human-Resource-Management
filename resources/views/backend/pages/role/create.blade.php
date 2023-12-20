@@ -62,9 +62,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-suggestions">Branches</label>
+                                    <label for="val-suggestions">Branches<span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Branches for the Role.." multiple>
+                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Branches for the Role.." required multiple >
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}'> {{ $branch->name }} </option>

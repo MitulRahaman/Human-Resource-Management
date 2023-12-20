@@ -86,7 +86,7 @@ class LeaveApplyRepository
         $hasManageLeavePermission = DB::table('permissions as p')
             ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
             ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-            ->where('p.slug', '=', 'manageLeaves')
+            ->where('p.slug', '=', 'notifyLeaveApply')
             ->where('bi.branch_id', '=', $appliedUser->branch_id)
             ->select('rp.role_id')
             ->get()

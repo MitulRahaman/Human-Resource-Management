@@ -86,7 +86,7 @@ class RequisitionService
             $to = $this->requisitionRepository->getRequestedUserMail($id);
             $receivers = $this->requisitionRepository->setId(auth()->user()->id)->getRequisitionApproveEmailRecipient($id);
             if(!$receivers) {
-                return false;
+                return $receivers='';
             }
             $data =[
                 'requisition_info' =>  $requisition_info,

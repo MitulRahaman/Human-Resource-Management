@@ -1,10 +1,17 @@
 @extends('backend.layouts.master')
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
+@section('css_after')
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/ion-rangeslider/css/ion.rangeSlider.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <style >
+        .spinner {
+            display: none;
+        }
+    </style>
+@endsection
 
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/ion-rangeslider/css/ion.rangeSlider.css') }}">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
 @section('page_action')
@@ -25,7 +32,7 @@
             </div>
 
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ url('leaveApply/store') }}" method="POST" id="form" enctype="multipart/form-data">
+            <form class="js-validation form-prevent-multiple-submission" action="{{ url('leaveApply/store') }}" method="POST" id="form" enctype="multipart/form-data">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -70,7 +77,9 @@
                         <!-- Save -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" disabled="true" class="btn btn-alt-primary" id="submit">Apply</button>
+                                <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
+                                    <i class="spinner fa fa-spinner fa-spin"></i>Apply
+                                </button>
                             </div>
                         </div>
                         <!-- END Save -->
@@ -152,5 +161,9 @@
                 $('#submit').attr('disabled', true);
             }
         });
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+            $('.spinner').show();
+        })
     </script>
 @endsection

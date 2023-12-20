@@ -1,5 +1,11 @@
 @extends('backend.layouts.master')
-
+@section('css_after')
+    <style >
+        .spinner {
+            display: none;
+        }
+    </style>
+@endsection
 @section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
@@ -17,7 +23,7 @@
                 <h3 class="block-title">Add Degrees</h3>
             </div>
 
-            <form class="js-validation" action="{{ url('degree/store') }}" id="form" method="POST" onsubmit="return validate_inputs(event)">
+            <form class="js-validation form-prevent-multiple-submission" action="{{ url('degree/store') }}" id="form" method="POST" onsubmit="return validate_inputs(event)">
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -39,7 +45,9 @@
                         <!-- Submit -->
                         <div class="row items-push">
                             <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>
+                                <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
+                                    <i class="spinner fa fa-spinner fa-spin"></i>Save
+                                </button>
                             </div>
                         </div>
                         <!-- END Submit -->
@@ -91,5 +99,9 @@
                 });
             }
         }
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+            $('.spinner').show();
+        })
     </script>
 @endsection

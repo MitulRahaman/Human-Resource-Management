@@ -209,6 +209,32 @@
                 },
             });
         });
+        $('#departmentId').change(function() {
+            let departmentId = $('#departmentId').val();
+            var selectDesg = $('#designationId');
+            $.ajax({
+                type: 'POST',
+                async:false,
+                url: '{{ url("user/getDeptDesg") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    departmentId: departmentId,
+                },
+                success: function(response) {
+                    var desgOptions = [];
+                    if(response.length){
+                        for( item in response[2] ) {
+                            html = '<option value="' + response[2][item] + '">' + response[3][item] + '</option>';
+                            desgOptions[desgOptions.length] = html;
+                        }
+                        selectDesg.empty().append( desgOptions.join('') );
+                    } else {
+                        desgOptions[desgOptions.length] = '<option value=""></option>'
+                        selectDesg.empty().append( desgOptions.join('') );
+                    }
+                },
+            });
+        });
 
 
         function verify_inputs(e){

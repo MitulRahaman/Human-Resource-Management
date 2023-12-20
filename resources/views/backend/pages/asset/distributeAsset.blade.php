@@ -1,6 +1,11 @@
 @extends('backend.layouts.master')
 @section('css_after')
     <link rel="stylesheet" href="{{asset('backend/js/plugins/select2/css/select2.min.css')}}">
+    <style >
+        .spinner {
+            display: none;
+        }
+    </style>
 @endsection
 @section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
@@ -19,7 +24,7 @@
                 <h3 class="block-title">Distribute Assets</h3>
             </div>
 
-            <form class="js-validation" action="{{ url('user/'.$id.'/update_distribute_asset') }}" id="form" method="POST" >
+            <form class="js-validation form-prevent-multiple-submission" action="{{ url('user/'.$id.'/update_distribute_asset') }}" id="form" method="POST" >
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
@@ -37,9 +42,11 @@
                                     </div>
                                 </div>
                             </div>
-                                <div class="col-lg-7 offset-lg-4">
-                                    <button type="submit" class="btn btn-alt-primary" id="submit" >Submit</button>
-                                </div>
+                            <div class="col-lg-7 offset-lg-4">
+                                <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
+                                    <i class="spinner fa fa-spinner fa-spin"></i>Submit
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,5 +67,11 @@
 
     <script src="{{asset('backend/js/plugins/select2/js/select2.full.min.js')}}"></script>
     <script>jQuery(function(){One.helpers(['select2']);});</script>
+    <script>
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+            $('.spinner').show();
+        })
+    </script>
 
 @endsection

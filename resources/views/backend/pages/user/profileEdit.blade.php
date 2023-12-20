@@ -36,7 +36,7 @@
                 <!-- END Step Tabs -->
 
                 <!-- Form -->
-                <form class="js-wizard-validation-form" id='form' action='{{ url('user/profile/' . $user->id . '/update')}}' method="POST" enctype="multipart/form-data">
+                <form class="js-wizard-validation-form form-prevent-multiple-submission" id='form' action='{{ url('user/profile/' . $user->id . '/update')}}' method="POST" enctype="multipart/form-data">
                     @csrf
                     <!-- Steps Content -->
                     <div class="block-content block-content-full tab-content px-md-5" style="min-height: 300px;">
@@ -229,7 +229,7 @@
                                     Next <i class="fa fa-angle-right ml-1"></i>
                                 </button>
                                 <button type="submit" class="btn btn-primary d-none" data-wizard="finish">
-                                    <i class="fa fa-check mr-1"></i> Submit
+                                    <i class="checker fa fa-check mr-1"></i> Submit
                                 </button>
                             </div>
                         </div>
@@ -441,7 +441,9 @@
             $(button).closest('.form-block').remove();
         }
 
-
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+        })
     </script>
 
 

@@ -31,18 +31,16 @@
                         <div class="row items-push ml-10">
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
-                                    <label for="val-suggestions">Assets</label>
-                                    <div class="form-group">
-                                        <select class="js-select2 form-control" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." multiple>
+                                    <label for="val-suggestions">Assets<span class="text-danger">*</span></label>
+                                        <select class="js-select2 form-control" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." required multiple>
                                             <option></option>
                                             @foreach ($assets as $asset)
                                                 <option value='{{ $asset->id }}'> {{ $asset->name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-7 offset-lg-4">
+                            <div class="col-lg-6 col-xl-6 offset-lg-2 mt-4">
                                 <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
                                     <i class="spinner fa fa-spinner fa-spin"></i>Submit
                                 </button>

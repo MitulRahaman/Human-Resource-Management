@@ -37,16 +37,16 @@
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text"  class="form-control" id="name" name="name"  placeholder="Enter a name.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="name" name="name"  placeholder="Enter a name.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Specification <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="specification" name="specification"  placeholder="Enter a specification.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="specification" name="specification"  placeholder="Enter a specification.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Asset Type</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="asset_type_id" name="asset_type_id" style="width: 100%;" data-placeholder="Choose asset type..">
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="asset_type_id" name="asset_type_id" style="width: 100%;" data-placeholder="Choose asset type..">
                                             <option></option>
                                             @foreach ($assetType as $type)
                                                 <option value='{{ $type->id }}' style="color:black"> {{ $type->name }} </option>
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Remarks <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="remarks" name="remarks" placeholder="Enter a remarks.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="remarks" name="remarks" placeholder="Enter a remarks.." required>
                                 </div>
                             </div>
                         </div>
@@ -92,6 +92,14 @@
     $('.form-prevent-multiple-submission').on('submit',function() {
         $('.button-prevent-multiple-submission').attr('disabled', 'true');
         $('.spinner').show();
+    })
+    $('.input-prevent-multiple-submission').on('keypress',function() {
+        $('.button-prevent-multiple-submission').removeAttr('disabled');
+        $('.spinner').hide();
+    })
+    $('.input-prevent-multiple-submission').on('change' ,function() {
+        $('.button-prevent-multiple-submission').removeAttr('disabled');
+        $('.spinner').hide();
     })
     </script>
 

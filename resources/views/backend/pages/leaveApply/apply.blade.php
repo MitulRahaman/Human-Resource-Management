@@ -11,9 +11,6 @@
         }
     </style>
 @endsection
-
-
-
 @section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
@@ -40,7 +37,7 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-val_leave_type_id">Select Leave Type<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="leaveTypeId" name="leaveTypeId" style="width: 100%" required>
+                                    <select class="form-control input-prevent-multiple-submission" id="leaveTypeId" name="leaveTypeId" style="width: 100%" required>
                                         @forelse ($leaveTypes as $leaveType)
                                         <option value="{{ $leaveType->id }}">{{ $leaveType->name }}</option>
                                         @empty
@@ -49,26 +46,26 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val_joining_date">Select Leave date<span class="text-danger">*</span></label>
+                                    <label for="val_leave_date">Select Leave date<span class="text-danger">*</span></label>
                                     <div class="input-daterange input-group" data-date-format="dd/mm/yyyy"  data-autoclose="true" data-today-highlight="true">
-                                        <input type="text" class="form-control" id="startDate" name="startDate" placeholder="From"  data-autoclose="true" data-today-highlight="true" required>
+                                        <input type="text" class="form-control input-prevent-multiple-submission" id="startDate" name="startDate" placeholder="From"  data-autoclose="true" data-today-highlight="true" required>
                                         <div class="input-group-prepend input-group-append">
                                             <span class="input-group-text font-w600">
                                                 <i class="fa fa-fw fa-arrow-right"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control" id="endDate" name="endDate" placeholder="To"  data-autoclose="true" data-today-highlight="true" required>
+                                        <input type="text" class="form-control input-prevent-multiple-submission" id="endDate" name="endDate" placeholder="To"  data-autoclose="true" data-today-highlight="true" required>
                                     </div>
                                     <span id="error_date" style="font-size:13px; color:red"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="reason" name="reason" required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="reason" name="reason" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_photo">Select File</label><br>
-                                    <input type="file" name="photo[]" id="photo[]" multiple /><br>
+                                    <input type="file" class="input-prevent-multiple-submission" name="photo[]" id="photo[]" multiple /><br>
                                 </div>
                                 <input type="hidden" id="totalLeave" name="totalLeave" min="1" max="90" value="">
                             </div>
@@ -164,6 +161,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 @endsection

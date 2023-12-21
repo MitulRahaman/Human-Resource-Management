@@ -23,7 +23,6 @@
             <div class="block-header">
                 <h3 class="block-title">Distribute Assets</h3>
             </div>
-
             <form class="js-validation form-prevent-multiple-submission" action="{{ url('user/'.$id.'/update_distribute_asset') }}" id="form" method="POST" >
                 @csrf
                 <div class="block block-rounded">
@@ -32,7 +31,7 @@
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-suggestions">Assets<span class="text-danger">*</span></label>
-                                        <select class="js-select2 form-control" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." required multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." required multiple>
                                             <option></option>
                                             @foreach ($assets as $asset)
                                                 <option value='{{ $asset->id }}'> {{ $asset->name }} </option>
@@ -56,13 +55,11 @@
 @endsection
 
 @section('js_after')
-
     <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/jquery-validation/additional-methods.js') }}"></script>
 
     <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
-
     <script src="{{asset('backend/js/plugins/select2/js/select2.full.min.js')}}"></script>
     <script>jQuery(function(){One.helpers(['select2']);});</script>
     <script>
@@ -70,6 +67,13 @@
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
         })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
     </script>
-
 @endsection

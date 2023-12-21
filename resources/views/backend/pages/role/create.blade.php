@@ -49,30 +49,22 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>
-                                    <div class="form-group">
                                         <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
                                             <option value="all">Select All</option>
                                             <option value="unSelectAll">Unselect All</option>
                                             @foreach ($permissions as $permission)
                                                 <option value='{{ $permission->id }}'> {{ $permission->name }} </option>
                                             @endforeach
-
                                         </select>
-
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Branches<span class="text-danger">*</span></label>
-                                    <div class="form-group">
                                         <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Branches for the Role.." required multiple >
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}'> {{ $branch->name }} </option>
                                             @endforeach
-
                                         </select>
-
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>

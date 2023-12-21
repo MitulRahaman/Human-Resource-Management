@@ -30,12 +30,12 @@
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name"   placeholder="Enter a name.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="name" name="name"   placeholder="Enter a name.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Asset type <span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="type_id" name="type_id" style="width: 100%;" data-placeholder="Choose Asset type.." required>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="type_id" name="type_id" style="width: 100%;" data-placeholder="Choose Asset type.." required>
                                             <option></option>
                                             @foreach ($asset_type as $type)
                                                 <option value='{{ $type->id }}' style="color:black"> {{ $type->name }} </option>
@@ -45,12 +45,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Sl_no </label>
-                                    <input type="number" class="form-control" id="sl_no" name="sl_no"   placeholder="Enter a sl_no.." >
+                                    <input type="number" class="form-control input-prevent-multiple-submission" id="sl_no" name="sl_no"   placeholder="Enter a sl_no.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Branch<span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="branch_id" name="branch_id" style="width: 100%;" data-placeholder="Choose branch.." required>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="branch_id" name="branch_id" style="width: 100%;" data-placeholder="Choose branch.." required>
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}' style="color:black"> {{ $branch->name }} </option>
@@ -59,22 +59,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Image</label><br>
+                                    <label for="val-username" class="input-prevent-multiple-submission">Image</label><br>
                                     <input type="file"  id="url" name="url">
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Specification </label>
-                                    <input type="text" class="form-control" id="specification" name="specification"   placeholder="Enter specification.." >
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="specification" name="specification"   placeholder="Enter specification.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Vendor </label>
-                                    <input type="text" class="form-control" id="purchase_at" name="purchase_at"   placeholder="Enter vendor.." >
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="purchase_at" name="purchase_at"   placeholder="Enter vendor.." >
                                 </div>
 
                                 <div class="form-group">
                                     <label for="val-username">Purchase By</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="purchase_by" name="purchase_by" style="width: 100%;" data-placeholder="Enter who purchased.." >
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="purchase_by" name="purchase_by" style="width: 100%;" data-placeholder="Enter who purchased.." >
                                             <option></option>
                                             @foreach ($users as $user)
                                                 <option value='{{ $user->id }}' style="color:black"> {{ $user->full_name }} </option>
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Purchase Price </label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="purchase_price" name="purchase_price"   placeholder="Enter purchased price.." >
+                                    <input type="number" step="0.01" min="0" class="form-control input-prevent-multiple-submission" id="purchase_price" name="purchase_price"   placeholder="Enter purchased price.." >
                                 </div>
                             </div>
                         </div>
@@ -119,6 +119,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 @endsection

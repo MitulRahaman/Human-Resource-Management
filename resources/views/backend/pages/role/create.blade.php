@@ -39,18 +39,18 @@
                             <div class="col-lg-9 col-xl-9">
                                 <div class="form-group">
                                     <label for="val-username">sl_no <span class="text-danger">*</span></label>
-                                    <input type="number" step="1" class="form-control" id="sl_no" name="sl_no" value="{{ old('sl_no') }}" placeholder="Enter a serial number.." required>
+                                    <input type="number" step="1" class="form-control input-prevent-multiple-submission" id="sl_no" name="sl_no" value="{{ old('sl_no') }}" placeholder="Enter a serial number.." required>
                                     <span id="error_sl_no"  class="m-2" style="color:red;  font-size: 14px;"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"  placeholder="Enter a name.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="name" name="name" value="{{ old('name') }}"  placeholder="Enter a name.." required>
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Role.." multiple>
                                             <option value="all">Select All</option>
                                             <option value="unSelectAll">Unselect All</option>
                                             @foreach ($permissions as $permission)
@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label for="val-suggestions">Branches</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Branches for the Role.." multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose Branches for the Role.." multiple>
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}'> {{ $branch->name }} </option>
@@ -76,7 +76,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ old('description') }}</textarea>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="5" placeholder="What it is used for?">{{ old('description') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -168,6 +168,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 

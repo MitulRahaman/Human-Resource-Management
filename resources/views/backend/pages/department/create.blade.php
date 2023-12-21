@@ -32,18 +32,18 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name..">
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name..">
                                     <span id="error_name" style="font-size:13px; color:red"></span>
                                     <span id="name_null_msg" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Description?">{{ old('address') }}</textarea>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="3" placeholder="Description?">{{ old('address') }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-branch">Branch</label>
+                                    <label for="val-branch">Branch <span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="branchID" name="branchID[]" style="width: 100%;" data-placeholder="Select Branch.." multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="branchID" name="branchID[]" style="width: 100%;" data-placeholder="Select Branch.." multiple>
                                             @forelse ($branches as $branch)
                                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                             @empty
@@ -139,6 +139,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 @endsection

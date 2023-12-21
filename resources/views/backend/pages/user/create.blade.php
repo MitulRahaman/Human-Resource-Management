@@ -34,12 +34,12 @@
                             <div class="col-lg-6 col-xl-6 px-6">
                                 <div class="form-group">
                                     <label for="val_employee_id">Employee ID <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required>
+                                    <input type="number" class="form-control input-prevent-multiple-submission" id="employee_id" name="employee_id" placeholder="Enter Employee id.." required>
                                     <span id="error_employee_id" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-branchId">Branch<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="branchId" name="branchId" style="width: 100%" required>
+                                    <select class="form-control input-prevent-multiple-submission" id="branchId" name="branchId" style="width: 100%" required>
                                         <option></option>
                                         @forelse ($branches as $branch)
                                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -50,19 +50,19 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-departmentId">Department</label>
-                                    <select class="form-control" id="departmentId" name="departmentId" style="width: 100%;">
+                                    <select class="form-control input-prevent-multiple-submission" id="departmentId" name="departmentId" style="width: 100%;">
 
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-designationId">Designation</label>
-                                    <select class="form-control" id="designationId" name="designationId" style="width: 100%;">
+                                    <select class="form-control input-prevent-multiple-submission" id="designationId" name="designationId" style="width: 100%;">
 
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-roleId">Role<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="roleId" name="roleId" style="width: 100%" required>
+                                    <select class="form-control input-prevent-multiple-submission" id="roleId" name="roleId" style="width: 100%" required>
                                         <option></option>
                                         @forelse ($roles as $role)
                                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -73,15 +73,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_full_name">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="full_name" name="full_name" placeholder="Enter full name.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_nick_name">Nick Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nick_name" name="nick_name" placeholder="Enter nick name.." required>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="nick_name" name="nick_name" placeholder="Enter nick name.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Phone Number<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-masked-phone form-control" id="phone" name="phone" placeholder="171-000-9999" required>
+                                    <input type="text" class="js-masked-phone form-control input-prevent-multiple-submission" id="phone" name="phone" placeholder="171-000-9999" required>
                                     <small>Format: 171-000-9999</small><br>
                                     <span id="error_phone" style="font-size:13px; color:red"></span>
                                 </div>
@@ -89,18 +89,18 @@
                             <div class="col-lg-6 col-xl-6 px-4 pr-6">
                                 <div class="form-group">
                                     <label for="val_personal_email">Personal Email<span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="name@gmail.com" required>
+                                    <input type="email" class="form-control input-prevent-multiple-submission" id="personal_email" name="personal_email" placeholder="name@gmail.com" required>
                                     <span id="error_personal_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_preferred_email">Preferred Email<span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="preferred_email" name="preferred_email" placeholder="name@appnap.io" required>
+                                    <input type="email" class="form-control input-prevent-multiple-submission" id="preferred_email" name="preferred_email" placeholder="name@appnap.io" required>
                                     <span id="error_preferred_email" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Line manager</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="line_manager" name="line_manager[]" style="width: 100%;" data-placeholder="Choose line manager for the user.." multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="line_manager" name="line_manager[]" style="width: 100%;" data-placeholder="Choose line manager for the user.." multiple>
                                             <option></option>
                                             @foreach ($allUsers as $users)
 
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-organization">Previous Organizations</label>
-                                    <select class="form-control js-tags" id="organizationName" name="organizationName" style="width: 100%;" data-placeholder="Select Organizations..">
+                                    <select class="form-control js-tags input-prevent-multiple-submission" id="organizationName" name="organizationName" style="width: 100%;" data-placeholder="Select Organizations..">
                                     <option></option>
                                         @forelse ($organizations as $organization)
                                         <option value="{{ $organization->id }}">{{ $organization->name }}</option>
@@ -123,15 +123,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val_joining_date">Joining date<span class="text-danger">*</span></label>
-                                    <input type="text" class="js-flatpickr form-control" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" required>
+                                    <input type="text" class="js-flatpickr form-control input-prevent-multiple-submission" id="joining_date" name="joining_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_career_start_date">Career start date</label>
-                                    <input type="text" class="js-flatpickr form-control" id="career_start_date" name="career_start_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y">
+                                    <input type="text" class="js-flatpickr form-control input-prevent-multiple-submission" id="career_start_date" name="career_start_date" placeholder="dd-mm-YYYY" data-date-format="d-m-Y">
                                 </div>
                                 <div class="form-group">
                                     <label for="val_photo">Choose a photo</label><br>
-                                    <input type="file" name="photo" id="photo" /><br>
+                                    <input type="file" class="input-prevent-multiple-submission"  name="photo" id="photo" /><br>
                                 </div>
                                 <!-- Save -->
                                 <div class="items-push float-right pt-5">
@@ -301,6 +301,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 @endsection

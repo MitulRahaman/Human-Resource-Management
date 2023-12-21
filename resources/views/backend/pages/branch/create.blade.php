@@ -32,12 +32,12 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name..">
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a name..">
                                     <span id="error_name" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-description">Address</label>
-                                    <textarea class="form-control" id="address" name="address" rows="3" placeholder="Address?">{{ old('address') }}</textarea>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="address" name="address" rows="3" placeholder="Address?">{{ old('address') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -99,6 +99,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 @endsection

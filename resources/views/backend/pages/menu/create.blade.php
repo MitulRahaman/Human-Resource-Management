@@ -37,24 +37,24 @@
                             <div class="col-lg-6 col-xl-6">
                                 <div class="form-group">
                                     <label for="val-username">Title <span class="text-danger">*</span></label>
-                                    <input type="text"  class="form-control" id="title" name="title" value="{{ old('title') }}" placeholder="Enter a title.." required>
+                                    <input type="text"  class="form-control input-prevent-multiple-submission" id="title" name="title" value="{{ old('title') }}" placeholder="Enter a title.." required>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">URL </label>
-                                    <input type="text" class="form-control" id="url" name="url" value="{{ old('url') }}"  placeholder="Enter a url.." >
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="url" name="url" value="{{ old('url') }}"  placeholder="Enter a url.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Icon </label>
-                                    <input type="text" class="form-control" id="icon" name="icon" value="{{ old('icon') }}"  placeholder="Enter a icon.." >
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="icon" name="icon" value="{{ old('icon') }}"  placeholder="Enter a icon.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Menu order </label>
-                                    <input type="number" step="1" class="form-control" id="menu_order" name="menu_order" value="{{ old('menu_order') }}"  placeholder="Enter a menu_order.." >
+                                    <input type="number" step="1" class="form-control input-prevent-multiple-submission" id="menu_order" name="menu_order" value="{{ old('menu_order') }}"  placeholder="Enter a menu_order.." >
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Parent menu </label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="parent_menu" name="parent_menu" style="width: 100%;" data-placeholder="Choose parent menu..">
                                             <option></option>
                                             @foreach ($menus as $menu)
                                                     <option value='{{ $menu->id }}' style="color:black"> {{ $menu->title }} </option>
@@ -65,7 +65,7 @@
                                 <div class="form-group">
                                     <label for="val-suggestions">Permissions</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Menu.." multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="permissions" name="permissions[]" style="width: 100%;" data-placeholder="Choose Permissions for the Menu.." multiple>
                                             <option></option>
                                             @foreach ($permissions as $permission)
 
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="What it is used for?">{{ old('description') }}</textarea>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="5" placeholder="What it is used for?">{{ old('description') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -115,6 +115,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 

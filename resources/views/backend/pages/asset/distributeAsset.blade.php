@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label for="val-suggestions">Assets</label>
                                     <div class="form-group">
-                                        <select class="js-select2 form-control" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." multiple>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." multiple>
                                             <option></option>
                                             @foreach ($assets as $asset)
                                                 <option value='{{ $asset->id }}'> {{ $asset->name }} </option>
@@ -71,6 +71,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 

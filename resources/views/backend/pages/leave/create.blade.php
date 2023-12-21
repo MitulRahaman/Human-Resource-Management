@@ -32,7 +32,7 @@
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-title">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a Leave Type..">
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="name" name="name" value="{{ old('name') }}" placeholder="Enter a Leave Type..">
                                     <span id="error_name" style="font-size:13px; color:red"></span>
                                     <span id="name_null_msg" style="font-size:13px; color:red"></span>
                                 </div>
@@ -108,6 +108,14 @@
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
             $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
         })
     </script>
 @endsection

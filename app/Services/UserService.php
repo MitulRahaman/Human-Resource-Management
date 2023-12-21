@@ -136,6 +136,7 @@ class UserService
     {
         $result = $this->userRepository->getTableData();
         $hasManageEmployeePermsission = $this->setSlug(Config::get('variable_constants.permission.manageEmployee'))->hasPermission();
+        $hasDistributeAssetPermsission = $this->setSlug("distributeAsset")->hasPermission();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -188,9 +189,11 @@ class UserService
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">
                                         <ul style=\"max-height: 100px; overflow-x:hidden\">";
                 if($hasManageEmployeePermsission)
-                    $action_btn .="$edit_btn $profile_edit_btn $distribute_asset_url_btn ";
+                    $action_btn .="$edit_btn $profile_edit_btn ";
                 elseif($id==Auth::id())
                     $action_btn .="$profile_edit_btn ";
+                if($hasDistributeAssetPermsission)
+                    $action_btn .=" $distribute_asset_url_btn ";
                 $action_btn .=" $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</ul>
                                 </div>

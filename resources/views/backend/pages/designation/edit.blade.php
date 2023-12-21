@@ -41,26 +41,19 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="val-suggestions">Branches</label>
-                                    <div class="form-group">
-
-                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose branches for the designation.." multiple>
+                                    <label for="val-suggestions">Branches<span class="text-danger">*</span></label>
+                                        <select class="js-select2 form-control" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose branches for the designation.." required multiple>
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}' @if($branch->selected == "yes") selected @endif> {{ $branch->name }} </option>
                                             @endforeach
-
                                         </select>
-
-                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Department </label>
-                                    <div class="form-group">
-                                        <select class="js-select2 form-control" id="department" name="department" style="width: 100%;" data-placeholder="Choose parent menu..">
+                                    <label for="val-username">Department <span class="text-danger">*</span></label>
+                                        <select class="js-select2 form-control" id="department" name="department" style="width: 100%;" data-placeholder="Choose parent menu.." required>
                                             <option value="{{$designation_info->department_id}}" selected>{{$designation_info->department_name}}</option>
                                         </select>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>

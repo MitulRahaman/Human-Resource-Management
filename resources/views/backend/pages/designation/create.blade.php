@@ -42,25 +42,19 @@
                                     <span id="error_name" class="m-2" style="color:red;  font-size: 14px;"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-suggestions">Branches</label>
-                                    <div class="form-group">
-                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose branches for the designation.." multiple>
+                                    <label for="val-suggestions">Branches<span class="text-danger">*</span></label>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="branches" name="branches[]" style="width: 100%;" data-placeholder="Choose branches for the designation.." required multiple>
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}'> {{ $branch->name }} </option>
                                             @endforeach
-
                                         </select>
-
-                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-username">Department </label>
-                                    <div class="form-group">
-                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="department" name="department" style="width: 100%;" data-placeholder="Choose parent menu..">
+                                    <label for="val-username">Department <span class="text-danger">*</span></label>
+                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="department" name="department" style="width: 100%;" data-placeholder="Choose parent menu.." required>
                                             <option></option>
                                         </select>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-suggestions">Description</label>

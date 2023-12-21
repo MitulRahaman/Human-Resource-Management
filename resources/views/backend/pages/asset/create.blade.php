@@ -34,14 +34,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Asset type <span class="text-danger">*</span></label>
-                                    <div class="form-group">
                                         <select class="js-select2 form-control input-prevent-multiple-submission" id="type_id" name="type_id" style="width: 100%;" data-placeholder="Choose Asset type.." required>
                                             <option></option>
                                             @foreach ($asset_type as $type)
                                                 <option value='{{ $type->id }}' style="color:black"> {{ $type->name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Sl_no </label>
@@ -49,14 +47,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Branch<span class="text-danger">*</span></label>
-                                    <div class="form-group">
                                         <select class="js-select2 form-control input-prevent-multiple-submission" id="branch_id" name="branch_id" style="width: 100%;" data-placeholder="Choose branch.." required>
                                             <option></option>
                                             @foreach ($branches as $branch)
                                                 <option value='{{ $branch->id }}' style="color:black"> {{ $branch->name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username" class="input-prevent-multiple-submission">Image</label><br>
@@ -73,14 +69,12 @@
 
                                 <div class="form-group">
                                     <label for="val-username">Purchase By</label>
-                                    <div class="form-group">
                                         <select class="js-select2 form-control input-prevent-multiple-submission" id="purchase_by" name="purchase_by" style="width: 100%;" data-placeholder="Enter who purchased.." >
                                             <option></option>
                                             @foreach ($users as $user)
                                                 <option value='{{ $user->id }}' style="color:black"> {{ $user->full_name }} </option>
                                             @endforeach
                                         </select>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="val-username">Purchase Price </label>

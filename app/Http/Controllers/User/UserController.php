@@ -185,6 +185,16 @@ class UserController extends Controller
         abort_if(!$user, 404);
         return \view('backend.pages.user.profile', compact('user', 'available_leave','banking', 'user_official_info','user_address', 'userInstituteDegree'));
     }
+    public function getUserAssetData(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $limit = 10;
+        $total_row = $this->userService->totalUserAssets();
+        return response()->json([
+            'data' => $this->userService->getAssetsTaken(Auth::id(), $page, $limit),
+            'total_pages' => ceil($total_row / $limit),
+        ]);
+    }
     public function editData($id)
     {
         View::share('sub_menu', 'Manage Users');

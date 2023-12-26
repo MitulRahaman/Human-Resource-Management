@@ -13,6 +13,7 @@ use App\Models\LineManager;
 use App\Models\Nominee;
 use App\Models\PersonalInfo;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -600,6 +601,30 @@ class UserRepository
             ->join('banks', 'banks.id', '=', 'b.bank_id')
             ->select('b.*', 'n.*', 'banks.name as bank_name', 'banks.address as bank_address')
             ->first();
+    }
+    public function totalUserAssets()
+    {
+        return DB::table('user_assets as ua')
+            ->whereNull('ua.deleted_at')
+            ->where('ua.status', '=', Config::get('variable_constants.activation.active'))
+            ->where('ua.user_id', '=', Auth::id())
+            ->count();
+    }
+    public function getAssetsTaken($id, $page, $limit)
+    {
+        $offset = ($page-1)*$limit;
+        return DB::table('user_assets as ua')
+            ->whereNull('ua.deleted_at')
+            ->where('ua.status', '=', Config::get('variable_constants.activation.active'))
+            ->where('ua.user_id', '=', $id)
+            ->leftJoin('assets as a', 'a.id', '=', 'ua.asset_id')
+            ->leftJoin('asset_images as ai', 'ai.asset_id', '=', 'ua.asset_id')
+            ->leftJoin('asset_types as at', 'at.id', '=', 'a.type_id')
+            ->select('a.name', 'a.specification', 'ai.url as image', 'at.name as type', 'ua.status', 'ua.id', 'ua.created_at', DB::raw('(CASE WHEN ua.requisition_request_id IS NULL THEN "no" ELSE "yes" END) as by_requisition'))
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy('ua.id','desc')
+            ->get();
     }
     public function deleteAcademicInfo($id)
     {

@@ -362,11 +362,129 @@
         </div>
         @endif
         <!-- END Banking -->
+        @if($user->is_asset_distributed)
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Assets Taken</h3>
+                </div>
 
+                <div class="block-content">
+                    <!-- Recent Orders Table -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-vcenter" id="asset_table">
+                            <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Image</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Asset Type</th>
+                                <th class="text-center">Specification</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">By Requisition</th>
+                                <th class="text-center">Taken</th>
+                            </tr>
+                            </thead>
+                            <tbody id="asset_table_body">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END Recent Orders Table -->
+                    <!-- Pagination -->
+                    <nav aria-label="Photos Search Navigation">
+                        <ul class="pagination pagination-sm justify-content-end mt-2" id="pagination">
+
+                        </ul>
+                    </nav>
+                    <!-- END Pagination -->
+
+                </div>
+            </div>
+        @endif
     </div>
 
 @endsection
 
 @section('js_after')
 
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            var originalData = [];
+            var currentPage = 1;
+            function populateTable(data) {
+                var tableBody = $('#asset_table_body');
+                tableBody.empty();
+                originalData = data.data;
+                if (originalData.length == 0) {
+                    var noDataRow = '<tr><td colspan=9 class="text-center">No Data Found</td></tr>';
+                    tableBody.append(noDataRow);
+                    return;
+                }
+                for (var i = 0; i < originalData.length; i++) {
+                    var record = originalData[i];
+                    var row = '<tr>';
+                    console.log(originalData[i]);
+                    for (var j = 0; j < record.length; j++) {
+                        row += '<td>' + record[j] + '</td>';
+                    }
+                    row += '</tr>';
+                    tableBody.append(row);
+                }
+            }
+            function fetchData(page) {
+                $.ajax({
+                    url: '{{ url('/user/get_user_assets_data') }}',
+                    method: 'GET',
+                    dataType: 'json',
+                    data: {
+                        page: page
+                    },
+                    success: function (data) {
+                        populateTable(JSON.parse(data.data));
+                        updatePaginationLinks(data.total_pages, currentPage);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+            }
+            fetchData(currentPage);
+            $('.pagination').on('click', '.page-link', function (e) {
+                e.preventDefault();
+                var clickedPage = $(this).data('page');
+                if (clickedPage !== currentPage) {
+                    currentPage = clickedPage;
+                    fetchData(currentPage);
+                }
+            });
+            function updatePaginationLinks(totalPages, currentPage) {
+                var paginationContainer = $('#pagination');
+                paginationContainer.empty();
+                if(totalPages>1)
+                {
+                    var prevButton = '<li class="page-item">';
+                    prevButton += '<a class="page-link" href="javascript:void(0)" data-page="' + ((currentPage == 0) ? (currentPage - 1) : 0) + '" aria-label="Previous">';
+                    prevButton += 'Prev';
+                    prevButton += '</a>';
+                    prevButton += '</li>';
+                    paginationContainer.append(prevButton);
+                }
+                for (var i = 1; i <= totalPages; i++) {
+                    var pageLink = '<li class="page-item ' + (i === currentPage ? 'active' : '') + '">';
+                    pageLink += '<a class="page-link" href="javascript:void(0)" data-page="' + i + '">' + i + '</a>';
+                    pageLink += '</li>';
+                    paginationContainer.append(pageLink);
+                }
+                if(totalPages>1)
+                {
+                    var nextButton = '<li class="page-item">';
+                    nextButton += '<a class="page-link" href="javascript:void(0)" data-page="' +( (currentPage<=totalPages)? (currentPage + 1):totalPages)+ '" aria-label="Next">';
+                    nextButton += 'Next';
+                    nextButton += '</a>';
+                    nextButton += '</li>';
+                    paginationContainer.append(nextButton);
+                }
+            }
+        });
+    </script>
 @endsection

@@ -379,7 +379,11 @@ class UserService
     }
     public function getAssetsTaken($id, $page, $limit)
     {
-        $result = $this->userRepository->getAssetsTaken($id, $page, $limit);
+        $offset = ($page-1)*$limit;
+        $result = $this->userRepository->setId($id)
+            ->setOffset($offset)
+            ->setLimit($limit)
+            ->getAssetsTaken();
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key => $row) {
@@ -387,7 +391,7 @@ class UserService
                     $url = asset('storage/asset/'. $row->image);
                     $img = "<img src=\"$url\" class=\"rounded\" width='50px' alt=\"user_img\">";
                 } else {
-                    $img = "<img src=\"https://www.pikpng.com/pngl/m/58-589136_packaging-box-png-clip-art-box-transparent-png.png\" width='50px' class=\"rounded\" alt=\"user_img\">";
+                    $img = "<img src=\"https://periodtracker102.blob.core.windows.net/development/assets/avatar.jpg\" width='50px' class=\"rounded\" alt=\"user_img\">";
                 }
                 $name = $row->name;
                 $type = $row->type;

@@ -109,7 +109,8 @@ class AssetService
                     $url = asset('storage/asset/'. $img_url);
                     $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 } else {
-                    $img = "<td> <img src=\"https://periodtracker102.blob.core.windows.net/development/assets/avatar.jpg\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                    $url = asset('images/asset.jpeg');
+                    $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 }
                 $name = $row->name;
                 $asset_type= $this->assetRepository->getAssetType($row->type_id)->name;

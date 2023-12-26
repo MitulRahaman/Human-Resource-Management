@@ -158,7 +158,8 @@ class UserService
                     $url = asset('storage/userImg/'. $imgName);
                     $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 } else {
-                    $img = "<td> <img src=\"https://www.pikpng.com/pngl/b/292-2924795_user-icon-png-transparent-white-user-icon-png.png\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                    $url = asset('images/user.png');
+                    $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 }
 
 
@@ -391,7 +392,8 @@ class UserService
                     $url = asset('storage/asset/'. $row->image);
                     $img = "<img src=\"$url\" class=\"rounded\" width='50px' alt=\"user_img\">";
                 } else {
-                    $img = "<img src=\"https://periodtracker102.blob.core.windows.net/development/assets/avatar.jpg\" width='50px' class=\"rounded\" alt=\"user_img\">";
+                    $url = asset('images/asset.jpeg');
+                    $img = "<img src=\"$url\" width='50px' class=\"rounded\" alt=\"user_img\">";
                 }
                 $name = $row->name;
                 $type = $row->type;

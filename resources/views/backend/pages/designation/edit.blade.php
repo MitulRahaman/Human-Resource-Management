@@ -79,16 +79,42 @@
     </div>
 @endsection
 
-
 @section('js_after')
 
     <script src="{{ asset('backend/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/jquery-validation/additional-methods.js') }}"></script>
-
-    <!-- Page JS Code -->
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
-
-    <script>
+    <!-- Page JS Plugins -->
+    <script src="{{asset('backend/js/plugins/select2/js/select2.full.min.js')}}"></script>
+    <!-- Page JS Code -->
+    <script>jQuery(function(){One.helpers(['select2']);});</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            fetch_departments();
+        });
+        $('#branches').on('change', function() {
+            fetch_departments();
+        });
+        function fetch_departments() {
+            var selectedBranches = $('#branches').val();
+            $.ajax({
+                url: '{{ url('designation/fetch_departments') }}',
+                type: 'POST',
+                data: {
+                    branches: selectedBranches,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('#department').empty();
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        $('#department').append(
+                            '<option value="' + data[i]['id'] + '" style="color:black">' + data[i]['name'] + '</option>'
+                        );
+                    }
+                }
+            });
+        }
         function validate_name(e) {
             var name = $('#name').val();
             $.ajax({
@@ -119,41 +145,5 @@
 
         }
     </script>
-    <script>
-        $(document).ready(function() {
-            $('#branches').on('change', function() {
-                var selectedBranches = $(this).val();
-                $.ajax({
-                    url: '{{ url('designation/fetch_departments') }}',
-                    type: 'POST',
-                    data: {
-                        branches: selectedBranches,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(data) {
-                        $('#department').empty();
-                        for (var i = 0; i < data.length; i++)
-                        {
-                            $('#department').append(
-                                '<option value="' + data[i]['id'] + '" style="color:black">' + data[i]['name'] + '</option>'
-                            );
-                        }
-                    }
-                });
-            });
-        });
-    </script>
-    <!-- Page JS Plugins -->
-
-    <script src="{{asset('backend/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/select2/js/select2.full.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/dropzone/dropzone.min.js')}}"></script>
-    <script src="{{asset('backend/js/plugins/flatpickr/flatpickr.min.js')}}"></script>
-    <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']);});</script>
-
 
 @endsection

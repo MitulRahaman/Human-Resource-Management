@@ -91,17 +91,19 @@ class DesignationRepository
     }
     public function fetchDepartments($data)
     {
-        $branches = $data['branches'];
-        $dep = [];
+        if (array_key_exists('branches', $data)) {
+            $branches = $data['branches'];
+            $dep = [];
 
-        foreach ($branches as $b)
-        {
-            $d= DB::table('branch_departments')->where('branch_id', '=',$b)
-                ->pluck('department_id')->toArray();
-            $dep = array_unique(array_merge($dep, $d));
+            foreach ($branches as $b)
+            {
+                $d= DB::table('branch_departments')->where('branch_id', '=',$b)
+                    ->pluck('department_id')->toArray();
+                $dep = array_unique(array_merge($dep, $d));
+            }
+            $departments = Department::whereIn('id', $dep)->get();
+            return $departments;
         }
-        $departments = Department::whereIn('id', $dep)->get();
-        return $departments;
 
     }
     public function getAllDesignationData()
@@ -154,9 +156,9 @@ class DesignationRepository
     public function getDesignation($id)
     {
         $designation = Designation::onlyTrashed()->find($id);
-        if($designation)
+        if ($designation)
             return "Restore first";
-        $designations = DB::table('designations as d')
+        return DB::table('designations as d')
             ->where('d.id', '=', $id)
             ->select('d.id', 'd.name', 'd.description', 'd.department_id', 'd.status', DB::raw('date_format(d.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(d.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->selectRaw('GROUP_CONCAT(b.id) as branches')
@@ -166,8 +168,6 @@ class DesignationRepository
             ->leftJoin('departments', 'd.department_id', '=', 'departments.id') // Join the departments table
             ->groupBy('d.id', 'd.name', 'd.description', 'd.department_id', 'd.status', 'd.created_at', 'd.deleted_at', 'department_name')
             ->first();
-        $designations->branches =($designations->branches)? explode(',', $designations->branches):[];
-        return $designations;
     }
     public function getAllBranches($id)
     {

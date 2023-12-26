@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Helpers\CommonHelper;
@@ -371,6 +372,62 @@ class UserService
     public function getBankInfo($id)
     {
         return $this->userRepository->getBankInfo($id);
+    }
+    public function totalUserAssets()
+    {
+        return $this->userRepository->totalUserAssets();
+    }
+    public function getAssetsTaken($id, $page, $limit)
+    {
+        $offset = ($page-1)*$limit;
+        $result = $this->userRepository->setId($id)
+            ->setOffset($offset)
+            ->setLimit($limit)
+            ->getAssetsTaken();
+        if ($result->count() > 0) {
+            $data = array();
+            foreach ($result as $key => $row) {
+                if($row->image) {
+                    $url = asset('storage/asset/'. $row->image);
+                    $img = "<img src=\"$url\" class=\"rounded\" width='50px' alt=\"user_img\">";
+                } else {
+                    $img = "<img src=\"https://periodtracker102.blob.core.windows.net/development/assets/avatar.jpg\" width='50px' class=\"rounded\" alt=\"user_img\">";
+                }
+                $name = $row->name;
+                $type = $row->type;
+                $specification= $row->specification? $row->specification:'               ';
+                if($row->status== Config::get('variable_constants.activation.active'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">active</span>" ;
+                else
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\">inactive</span>" ;
+                if($row->by_requisition=="yes")
+                    $by_requisition = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\">Yes</span>" ;
+                else
+                    $by_requisition = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">No</span>" ;
+                $created_at = Carbon::parse($row->created_at)->diffForHumans();
+                $created_at = "<span class =\"d-none d-sm-table-cell font-size-sm font-w600 text-muted \">".$created_at."</span>";
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $img);
+                array_push($temp, $name);
+                array_push($temp, $type);
+                array_push($temp, $specification);
+                array_push($temp, $status);
+                array_push($temp, $by_requisition);
+                array_push($temp, $created_at);
+                array_push($data, $temp);
+            }
+
+            return json_encode(['data' => $data]);
+        } else {
+            return '{
+                "data":[],
+                "sEcho": 1,
+                "iTotalRecords": "0",
+                "iTotalDisplayRecords": "0",
+                "aaData": []
+            }';
+        }
     }
     public function deleteAcademicInfo($id)
     {

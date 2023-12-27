@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\LeaveApply;
 
+
+use Illuminate\Support\Facades\DB;
+use Excel;
 use Illuminate\Http\Request;
+use App\Exports\ExportLeaves;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveApplyAddRequest;
 use App\Http\Requests\LeaveApplyUpdateRequest;
@@ -40,6 +44,7 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
     public function recommendLeave(Request $request, $id)
     {
         try {
@@ -56,6 +61,7 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
     public function approveLeave(Request $request, $id)
     {
         try {
@@ -71,6 +77,7 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
     public function rejectLeave(Request $request, $id)
     {
         try {
@@ -85,6 +92,7 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
     public function cancelLeave($id)
     {
         try {
@@ -94,6 +102,7 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
     public function delete($id)
     {
         try {
@@ -103,6 +112,7 @@ class LeaveApplyController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
     public function store(LeaveApplyAddRequest $request)
     {
         abort_if(!$this->setSlug('applyLeave')->hasPermission(), 403, 'You don\'t have permission!');
@@ -150,6 +160,20 @@ class LeaveApplyController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function leaveReports()
+    {
+        abort_if(!$this->setSlug('manageLeaves')->hasPermission(), 403, 'You don\'t have permission!');
+        View::share('sub_menu', 'Yearly Leaves Data');
+        $leaveTypes = $this->leaveApplyService->getLeaveTypes();
+        return view('backend.pages.leaveApply.leaveReports', compact('leaveTypes'));
+        // return Excel::download(new ExportLeaves, 'users.xlsx');
+    }
+
+    public function getReportData()
+    {
+        return $this->leaveApplyService->getReportData();
     }
 
 }

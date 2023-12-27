@@ -33,20 +33,20 @@ class Log
         $uri = $request->getRequestUri();
         if($uri=="/login")
             $paramsJson='';
-        $log = DB::table('logs')
-            ->insert([
-                'uri'=>$uri,
-                'method'=>$request->getMethod(),
-                'user_id'=>auth()->user() ? auth()->user()->id : null,
-                'header' => $headersJson,
-                'params'=>$paramsJson,
-                'duration' => $duration,
-                'ip_address'=>$request->ip(),
-                'user_agent'=>$request->header('user-agent'),
-                'response_code'=> $response ? $response->getStatusCode() : null,
-                'response'=> $responseJson,
-                'created_at'=>date('Y-m-d H:i:s'),
-            ]);
+        // $log = DB::table('logs')
+        //     ->insert([
+        //         'uri'=>$uri,
+        //         'method'=>$request->getMethod(),
+        //         'user_id'=>auth()->user() ? auth()->user()->id : null,
+        //         'header' => $headersJson,
+        //         'params'=>$paramsJson,
+        //         'duration' => $duration,
+        //         'ip_address'=>$request->ip(),
+        //         'user_agent'=>$request->header('user-agent'),
+        //         'response_code'=> $response ? $response->getStatusCode() : null,
+        //         'response'=> $responseJson,
+        //         'created_at'=>date('Y-m-d H:i:s'),
+        //     ]);
         return $response;
     }
 }

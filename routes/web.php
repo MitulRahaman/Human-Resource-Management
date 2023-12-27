@@ -128,6 +128,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('status/{id}/recommend', [LeaveApplyController::class, 'recommendLeave']);
         Route::get('status/{id}/cancel', [LeaveApplyController::class, 'cancelLeave']);
         Route::get('/{id}/delete', [LeaveApplyController::class, 'delete']);
+        Route::get('leaveReports', [LeaveApplyController::class, 'leaveReports']);
+        Route::post('get_report_data', [LeaveApplyController::class, 'getReportData']);
     });
     Route::prefix('bank')->group(function() {
         Route::get('/', [BankController::class, 'index']);

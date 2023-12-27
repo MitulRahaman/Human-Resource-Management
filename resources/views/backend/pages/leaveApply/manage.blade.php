@@ -27,6 +27,11 @@
                 <i class="fa fa-fw fa-key mr-1"></i> Apply for Leave
             </button>
         </a>
+        <a href="{{ url('leaveApply/leaveReports') }}">
+            <button type="button" class="btn btn-dark mr-1 mb-3">
+                <i class="si si-settings"></i> Generate Report
+            </button>
+        </a>
     </div>
 @endsection
 @section('content')

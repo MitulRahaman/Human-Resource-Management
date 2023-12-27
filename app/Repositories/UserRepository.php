@@ -13,6 +13,7 @@ use App\Models\LineManager;
 use App\Models\Nominee;
 use App\Models\PersonalInfo;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -31,9 +32,18 @@ class UserRepository
     private $name, $id, $father_name, $mother_name,$permanent_address, $present_address, $nid,$dob, $created_at, $updated_at, $birth_certificate,
         $passport_no, $gender, $religion, $blood_group, $marital_status, $no_of_children,$emergency_contact,$relation, $emergency_contact_name,
         $emergency_contact2,$relation2, $emergency_contact_name2, $institute_id ,$degree_id, $major, $gpa, $year, $bank_id, $account_name,
-        $account_number, $branch, $routing_number, $nominee_email, $nominee_phone_number, $nominee_relation, $nominee_nid, $nominee_name, $assets;
+        $account_number, $branch, $routing_number, $nominee_email, $nominee_phone_number, $nominee_relation, $nominee_nid, $nominee_name, $assets, $offset, $limit;
 
-    //set basic info
+    public function setOffset($offset)
+    {
+        $this->offset= $offset;
+        return $this;
+    }
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
     public function setEmployeeId($employeeId)
     {
         $this->employeeId = $employeeId;
@@ -601,6 +611,29 @@ class UserRepository
             ->select('b.*', 'n.*', 'banks.name as bank_name', 'banks.address as bank_address')
             ->first();
     }
+    public function totalUserAssets()
+    {
+        return DB::table('user_assets')
+            ->whereNull('deleted_at')
+            ->where('status', '=', Config::get('variable_constants.activation.active'))
+            ->where('user_id', '=', Auth::id())
+            ->count();
+    }
+    public function getAssetsTaken()
+    {
+        return DB::table('user_assets as ua')
+            ->whereNull('ua.deleted_at')
+            ->where('ua.status', '=', Config::get('variable_constants.activation.active'))
+            ->where('ua.user_id', '=', $this->id)
+            ->leftJoin('assets as a', 'a.id', '=', 'ua.asset_id')
+            ->leftJoin('asset_images as ai', 'ai.asset_id', '=', 'ua.asset_id')
+            ->leftJoin('asset_types as at', 'at.id', '=', 'a.type_id')
+            ->select('a.name', 'a.specification', 'ai.url as image', 'at.name as type', 'ua.status', 'ua.id', 'ua.created_at', DB::raw('(CASE WHEN ua.requisition_request_id IS NULL THEN "no" ELSE "yes" END) as by_requisition'))
+            ->offset($this->offset)
+            ->limit($this->limit)
+            ->orderBy('ua.id','desc')
+            ->get();
+    }
     public function deleteAcademicInfo($id)
     {
         $academicInfo= AcademicInfo::findOrFail($id);
@@ -894,26 +927,30 @@ class UserRepository
         DB::beginTransaction();
         try {
             $branch_id = DB::table('basic_info')->where('user_id','=', $this->id)->select('branch_id')->first();
+            $asset =[];
             foreach ($this->assets as $asset_id)
             {
-                DB::table('user_assets')
-                    ->insertGetId([
-                        'user_id' => $this->id,
-                        'asset_id' => $asset_id,
-                        'branch_id' => $branch_id->branch_id,
-                        'status' => Config::get('variable_constants.activation.active'),
-                        'created_at' => $this->created_at
-                    ]);
+                $asset[]=DB::table('user_assets')
+                            ->insertGetId([
+                                'user_id' => $this->id,
+                                'asset_id' => $asset_id,
+                                'branch_id' => $branch_id->branch_id,
+                                'status' => Config::get('variable_constants.activation.active'),
+                                'created_at' => $this->created_at
+                            ]);
             }
-            DB::table('users')->where('id','=',$this->id)
-                ->update(['is_asset_distributed'=>Config::get('variable_constants.check.yes')]);
-            if($this->requisitionRequest($this->id))
-                DB::table('requisition_requests')->where('user_id', $this->id)
-                    ->update(['status',Config::get('variable_constants.status.distributed')]);
+            if($asset)
+            {
+                $user= DB::table('users')->where('id','=',$this->id)->first();
+                if($user->is_asset_distributed==Config::get('variable_constants.check.no'))
+                {
+                     DB::table('users')->where('id','=',$this->id)
+                                ->update(['is_asset_distributed'=>Config::get('variable_constants.check.yes')]);
+                }
+            }
             DB::commit();
             return true;
         } catch (\Exception $exception) {
-            dd('jhjk');
             DB::rollBack();
             return $exception->getMessage();
         }

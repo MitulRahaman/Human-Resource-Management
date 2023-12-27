@@ -113,6 +113,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
         Route::delete('profile/{id}/delete_academic_info', [UserController::class, 'deleteAcademicInfo']);
 
+        Route::get('get_user_assets_data', [UserController::class, 'getUserAssetData']);
+
         Route::get('/{id}/distribute_asset', [UserController::class, 'distributeAsset']);
         Route::post('/{id}/update_distribute_asset', [UserController::class, 'updateDistributeAsset']);
     });

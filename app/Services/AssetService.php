@@ -109,7 +109,8 @@ class AssetService
                     $url = asset('storage/asset/'. $img_url);
                     $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 } else {
-                    $img = "<td> <img src=\"https://www.pikpng.com/pngl/m/58-589136_packaging-box-png-clip-art-box-transparent-png.png\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
+                    $url = asset('images/asset.jpeg');
+                    $img = "<td> <img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\"></td>";
                 }
                 $name = $row->name;
                 $asset_type= $this->assetRepository->getAssetType($row->type_id)->name;

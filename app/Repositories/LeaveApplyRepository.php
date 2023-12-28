@@ -61,6 +61,67 @@ class LeaveApplyRepository
 
     }
 
+    public function getReportData()
+    {
+        return DB::table('users as u')
+            ->leftJoin('basic_info as bi', function ($join) {
+                $join->on('bi.user_id', '=', 'u.id');
+            })
+            ->leftJoin('designations as d', function ($join) {
+                $join->on('d.id', '=', 'bi.designation_id');
+            })
+            ->whereNULL('u.deleted_at')
+            ->whereNULL('d.deleted_at')
+            ->whereNULL('bi.deleted_at')
+            ->select('u.id', 'u.employee_id', 'u.full_name as user_name', 'd.name as designation', 'bi.joining_date')
+            ->orderBy('u.id')
+            ->get();
+    }
+
+    public function getTotalLeaves()
+    {
+        return DB::table('leave_types as lt')
+            ->leftJoin('total_yearly_leaves as tyl', function ($join) {
+                $join->on('lt.id', '=', 'tyl.leave_type_id')
+                ->whereNULL('tyl.deleted_at')
+                ->where('tyl.year', '=', date("Y"));
+            })
+            ->whereNULL('lt.deleted_at')
+            ->select('lt.id', 'tyl.total_leaves')
+            ->orderBy('lt.id')
+            ->get();
+    }
+
+    public function getTakenLeaves()
+    {
+        return DB::table('users as u')
+            ->join('leaves as l', function ($join) {
+                $join->on('u.id', '=', 'l.user_id')
+                ->whereNULL('l.deleted_at');
+            })
+            ->whereNULL('u.deleted_at')
+            ->select('u.id as user_id', 'l.leave_type_id', DB::raw('SUM(total) AS total'))
+            ->groupBy('l.user_id', 'l.leave_type_id')
+            ->orderBy('u.id')
+            ->get()
+            ->toArray();
+    }
+
+    public function getTotalTakenLeavesPerUser()
+    {
+        return DB::table('users as u')
+            ->join('leaves as l', function ($join) {
+                $join->on('u.id', '=', 'l.user_id')
+                ->whereNULL('l.deleted_at');
+            })
+            ->whereNULL('u.deleted_at')
+            ->select('u.id as user_id', DB::raw('SUM(total) AS total'))
+            ->groupBy('l.user_id')
+            ->orderBy('u.id')
+            ->get()
+            ->toArray();
+    }
+
     public function getLeaveAppliedEmailRecipient()
     {
         $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();

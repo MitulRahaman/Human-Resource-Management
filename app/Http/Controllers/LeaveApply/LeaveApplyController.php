@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\LeaveApply;
 
 
-use Illuminate\Support\Facades\DB;
+
 use Excel;
 use Illuminate\Http\Request;
 use App\Exports\ExportLeaves;

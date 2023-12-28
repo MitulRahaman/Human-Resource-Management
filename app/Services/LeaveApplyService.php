@@ -264,4 +264,75 @@ class LeaveApplyService
             }';
         }
     }
+
+    public function getReportData()
+    {
+        $userInfo = $this->leaveApplyRepository->getReportData();
+        $totaLeaves = $this->leaveApplyRepository->getTotalLeaves();
+        $takenLeaves = $this->leaveApplyRepository->getTakenLeaves();
+        $totalTakenLeavesPerUser = $this->leaveApplyRepository->getTotalTakenLeavesPerUser();
+        $sum = 0;
+        foreach($totaLeaves as $totaLeave) {
+            $sum += $totaLeave->total_leaves;
+        }
+
+        if ($userInfo->count() > 0) {
+            $data = array();
+            foreach ($userInfo as $key=>$row) {
+                $userId = $row->id;
+                $employeeId = $row->employee_id;
+                $employeeName = $row->user_name;
+                $designation = $row->designation;
+                if($row->joining_date) {
+                    $joining_date = date("d-m-Y", strtotime($row->joining_date));
+                } else {
+                    $joining_date = "N/A";
+                }
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $employeeId);
+                array_push($temp, $employeeName);
+                if($designation) {
+                    array_push($temp, $designation);
+                } else {
+                    array_push($temp, "N/A");
+                }
+                array_push($temp, $joining_date);
+                for($i = 0; $i < count($totaLeaves); $i++) {
+                    array_push($temp, $totaLeaves[$i]->total_leaves);
+                    $flag = 1;
+                    for($j = 0; $j < count($takenLeaves); $j++) {
+                        if($takenLeaves[$j]->user_id == $userId && $totaLeaves[$i]->id == $takenLeaves[$j]->leave_type_id) {
+                            array_push($temp, $takenLeaves[$j]->total);
+                            $flag = 0;
+                        }
+                    }
+                    if($flag) {
+                        array_push($temp, 0);
+                    }
+                }
+                array_push($temp, $sum);
+                $flag = 1;
+                for($i = 0; $i < count($totalTakenLeavesPerUser); $i++) {
+                    if($userId == $totalTakenLeavesPerUser[$i]->user_id) {
+                        array_push($temp, $totalTakenLeavesPerUser[$i]->total);
+                        $flag = 0;
+                    }
+                }
+                if($flag) {
+                    array_push($temp, 0);
+                }
+                array_push($data, $temp);
+            }
+
+            return json_encode(array('data'=>$data));
+        } else {
+            return '{
+                "sEcho": 1,
+                "iTotalRecords": "0",
+                "iTotalDisplayRecords": "0",
+                "aaData": []
+            }';
+        }
+    }
 }

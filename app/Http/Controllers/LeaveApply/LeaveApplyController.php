@@ -70,8 +70,11 @@ class LeaveApplyController extends Controller
             ]);
             if($validator)
             {
-                $this->leaveApplyService->approveLeave($request,$id);
-                return redirect()->back()->with('success', 'Leave approved');
+                if($this->leaveApplyService->approveLeave($request,$id)) {
+                    return redirect()->back()->with('success', 'Leave approved');
+                } else {
+                    return redirect()->back()->with('error', 'Line Manager is not reommended');
+                }
             }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());

@@ -23,10 +23,12 @@ class LeaveApplyService
         $this->leaveApplyRepository = $leaveApplyRepository;
         $this->fileUploadService = $fileUploadService;
     }
+
     public function getLeaveTypes()
     {
         return $this->leaveApplyRepository->getLeaveTypes($id = null);
     }
+
     public function storeLeaves($request)
     {
         $fileName = null;
@@ -50,14 +52,17 @@ class LeaveApplyService
             return false;
         }
     }
+
     public function editLeave($id)
     {
         return $this->leaveApplyRepository->setId($id)->getLeaveInfo();
     }
+
     public function updateLeave($data, $id)
     {
         return $this->leaveApplyRepository->setId($id)->updateLeave($data);
     }
+
     public function LeaveApplicationEmail($value)
     {
         if($value['leaveTypeId']) {
@@ -95,31 +100,60 @@ class LeaveApplyService
             return true;
         }
     }
+
     public function recommendLeave($data, $id)
     {
         return $this->leaveApplyRepository->recommendLeave($data, $id);
     }
+
     public function approveLeave($data, $id)
     {
-        if($this->leaveApplyRepository->approveLeave($data, $id)) {
-            event(new LeaveApplied($data));
-            return true;
+        $lineManagers = $this->leaveApplyRepository->setId($data->employeeId)->getlineManagers();
+        if($lineManagers) {
+            $flag = 1;
+            foreach($lineManagers as $lm) {
+                if($lm->line_manager_user_id == auth()->user()->id) {
+                    $flag = 0;
+                    break;
+                }
+            }
+            if($flag) {
+                $isRecommended = $this->leaveApplyRepository->setId($id)->isRecommended();
+                if(!$isRecommended) {
+                    return false;
+                }
+            }
+            if($this->leaveApplyRepository->approveLeave($data, $id)) {
+                event(new LeaveApplied($data));
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            if($this->leaveApplyRepository->approveLeave($data, $id)) {
+                event(new LeaveApplied($data));
+                return true;
+            } else {
+                return false;
+            }
         }
     }
+
     public function rejectLeave($data, $id)
     {
         return $this->leaveApplyRepository->rejectLeave($data, $id);
     }
+
     public function cancelLeave($id)
     {
         return $this->leaveApplyRepository->cancelLeave($id);
     }
+
     public function delete($id)
     {
         return $this->leaveApplyRepository->delete($id);
     }
+
     public function validFileSize($data)
     {
         if($data == null)
@@ -134,6 +168,7 @@ class LeaveApplyService
             return false;
         }
     }
+
     public function getTableData()
     {
         $result = $this->leaveApplyRepository->getTableData();
@@ -153,13 +188,13 @@ class LeaveApplyService
                 $reason = $row->reason;
                 $remarks = $row->remarks;
                 $status="";
-                if($row->status== Config::get('variable_constants.status.pending'))
+                if($row->status== Config::get('variable_constants.leave_status.pending'))
                     $status = "<span class=\"badge badge-primary\">pending</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.approved'))
+                elseif ($row->status== Config::get('variable_constants.leave_status.approved'))
                     $status = "<span class=\"badge badge-success\">approved</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.rejected'))
+                elseif ($row->status== Config::get('variable_constants.leave_status.rejected'))
                     $status = "<span class=\"badge badge-danger\">rejected</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.canceled'))
+                elseif ($row->status== Config::get('variable_constants.leave_status.canceled'))
                     $status = "<span class=\"badge badge-danger\">canceled</span><br>" ;
 
                 $delete_url = url('leaveApply/'.$id.'/delete');
@@ -177,7 +212,7 @@ class LeaveApplyService
                 $reject_btn="<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$leave_type\", \"$remarks\")'>Reject</a></li>";
                 if($hasManageLeavePermission && ($userId == $row->user_id))
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
+                    if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {
                         $edit_url = url('leaveApply/'.$id.'/edit');
                         $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
@@ -193,7 +228,7 @@ class LeaveApplyService
                 }
                 elseif ($hasManageLeavePermission && ($userId != $row->user_id))
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
+                    if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
@@ -204,7 +239,7 @@ class LeaveApplyService
                 }
                 elseif (!$hasManageLeavePermission && ($userId == $row->user_id))
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
+                    if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {
                         $edit_url = url('leaveApply/'.$id.'/edit');
                         $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
@@ -219,9 +254,9 @@ class LeaveApplyService
                 }
                 else
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
+                    if($row->status== Config::get('variable_constants.leave_status.pending'))
                     {
-                        $action_btn .= "$recommend_btn";
+                        $action_btn .= "$recommend_btn $reject_btn";
                     }
                     else
                     {

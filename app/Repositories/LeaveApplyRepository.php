@@ -61,6 +61,30 @@ class LeaveApplyRepository
 
     }
 
+    public function getlineManagers()
+    {
+        return DB::table('line_managers as lm')
+            ->leftJoin('users as u', function ($join) {
+                $join->on('lm.user_id', '=', 'u.id')
+                ->whereNULL('u.deleted_at');
+            })
+            ->where('u.employee_id', '=', $this->id)
+            ->whereNULL('lm.deleted_at')
+            ->select('u.id as user_id', 'lm.line_manager_user_id')
+            ->get()
+            ->toArray();
+    }
+
+    public function isRecommended()
+    {
+        return DB::table('leaves')
+            ->where('id', '=', $this->id)
+            ->where('status', Config::get('variable_constants.activation.line_manager_approval'))
+            ->whereNULL('deleted_at')
+            ->get()
+            ->toArray();
+    }
+
     public function getReportData()
     {
         return DB::table('users as u')
@@ -180,7 +204,7 @@ class LeaveApplyRepository
                 'end_date' => $data['endDate'],
                 'total' => $data['totalLeave'],
                 'reason' => $data['reason'],
-                'status' => Config::get('variable_constants.status.pending')
+                'status' => Config::get('variable_constants.leave_status.pending')
             ]);
 
             if($data['files'] != null) {
@@ -233,21 +257,22 @@ class LeaveApplyRepository
     }
     public function recommendLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['remarks'=>$data['recommend-modal-remarks']]);
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.line_manager_approval'),
+            'remarks'=>$data['recommend-modal-remarks']]);
     }
     public function approveLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.approved'),
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
             'remarks'=>$data['approve-modal-remarks']]);
     }
     public function rejectLeave($data, $id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.rejected'),
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.rejected'),
             'remarks'=>$data['reject-modal-remarks']]);
     }
     public function cancelLeave($id)
     {
-        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.status.canceled')]);
+        return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.canceled')]);
     }
     public function delete($id)
     {

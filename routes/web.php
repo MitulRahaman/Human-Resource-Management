@@ -34,7 +34,7 @@ use App\Http\Controllers\Log\LogController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware'=> 'log'], function() {
+//Route::group(['middleware'=> 'log'], function() {
 Route::get('/', function () {
     return view('welcome');
 });
@@ -218,6 +218,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('status/{id}/approve', [RequisitionController::class, 'approve']);
         Route::post('status/{id}/reject', [RequisitionController::class, 'reject']);
         Route::get('status/{id}/cancel', [RequisitionController::class, 'cancel']);
+        Route::get('status/{id}/receive', [RequisitionController::class, 'receive']);
+        Route::get('status/{id}/processing', [RequisitionController::class, 'processing']);
+        Route::post('status/{id}/deliver', [RequisitionController::class, 'deliver']);
+        Route::post('/fetch_assets_to_deliver',[RequisitionController::class, 'fetchAssetsToDeliver']);
     });
 
         Route::prefix('permission')->group(function() {
@@ -272,6 +276,10 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::post('/{id}/delete', [AssetController::class, 'delete']);
             Route::post('/{id}/restore', [AssetController::class, 'restore']);
             Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
+            Route::post('/{id}/change_condition', [AssetController::class, 'changeCondition']);
+            Route::get('/user_assets', [AssetController::class, 'userAssets']);
+            Route::get('/get_user_asset_data', [AssetController::class, 'fetchUserAssetData']);
+            Route::post('/{id}/change_user_asset_status', [AssetController::class, 'changeUserAssetStatus']);
         });
         Route::prefix('log')->group(function() {
             Route::get('/', [LogController::class, 'index']);
@@ -280,5 +288,5 @@ Route::group(['middleware'=> 'auth'], function() {
 
     });
 
-});
+//});
 

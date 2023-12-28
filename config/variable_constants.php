@@ -46,13 +46,20 @@ return [
         'male' => 1,
         'female' => 2
     ],
-
+    'requisition_status' => [
+        'pending' => 0,
+        'received' => 1,
+        'approved' => 2,
+        'canceled' => 3,
+        'rejected' => 4,
+        'processing' => 5,
+        'delivered' => 6
+    ],
     'status' => [
         'pending' => 0,
         'approved' => 1,
         'rejected' => 2,
         'canceled' => 3,
-        'distributed' => 4
     ],
 
     'designation' =>[
@@ -71,5 +78,12 @@ return [
         'approved' => 1,
         'rejected' => 2,
         'canceled' => 3,
+    ],
+    'asset_condition' =>
+    [
+      'good' => 1,
+      'need_repair' => 2,
+      'damaged' =>3,
+      'destroyed' =>4,
     ],
 ];

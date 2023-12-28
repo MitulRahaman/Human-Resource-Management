@@ -28,41 +28,40 @@
     </style>
 @endsection
 @section('page_action')
-    <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href="{{ url('permission/add') }}">
-            <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Add Permission
-            </button>
-        </a>
-    </div>
+
 @endsection
 @section('content')
     <div class="content">
         @include('backend.layouts.error_msg')
         <div class="block block-rounded">
             <div class="block-header">
-                <h3 class="block-title">Manage Permissions</h3>
+                <h3 class="block-title">User Assets</h3>
             </div>
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                 <div class="table-responsive">
-                <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="permission_table">
-                            <thead>
-                            <tr>
-                                <th class="text-center ">#</th>
-                                <th >Name</th>
-                                <th >Slug</th>
-                                <th class="d-none d-sm-table-cell " style="width: 20%;">Description</th>
-                                <th class="d-none d-sm-table-cell ">Status</th>
-                                <th >Deleted</th>
-                                <th >Created At</th>
-                                <th >Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                    <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="user_asset_table">
+                        <thead>
+                        <tr>
+                            <th class="text-center ">#</th>
+                            <th >Image</th>
+                            <th>Employee ID</th>
+                            <th>User Name</th>
+                            <th >Asset Name</th>
+                            <th >Asset Type</th>
+                            <th >sl_no</th>
+                            <th >Branch</th>
+                            <th class="d-none d-sm-table-cell ">Status</th>
+                            <th class="d-none d-sm-table-cell ">Condition</th>
+                            <th>By Requisition</th>
+                            <th >Created At</th>
+                            <th >Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                            </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </div>
                 <!-- Vertically Centered Block Modal -->
                 <div class="modal" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
@@ -72,7 +71,7 @@
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
-                                        <h3 class="block-title text-center">Change Permission Status</h3>
+                                        <h3 class="block-title text-center">Change Status</h3>
                                         <div class="block-options">
                                             <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                                                 <i class="fa fa-fw fa-times"></i>
@@ -81,7 +80,7 @@
                                     </div>
                                     <div class="block-content font-size-sm">
                                         <p id="warning_message" class="text-center"></p>
-                                        <input type="hidden" name="permission_id" id="permission_id">
+                                        <input type="hidden" name="user_asset_id" id="user_asset_id">
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
@@ -92,14 +91,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                <div class="modal" id="asset-condition-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <form id="delete" action="" method="post">
+                            <form id="asset_condition" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
-                                        <h3 class="block-title text-center">Delete Permission</h3>
+                                        <h3 class="block-title text-center">Change Asset Condition</h3>
                                         <div class="block-options">
                                             <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                                                 <i class="fa fa-fw fa-times"></i>
@@ -107,39 +106,14 @@
                                         </div>
                                     </div>
                                     <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="permission_name"></span> Permission will be deleted. Are you sure?</p>
-                                        <input type="hidden" name="delete_permission_id" id="delete_permission_id">
-                                    </div>
-                                    <div class="block-content block-content-full text-right border-top">
-                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <form id="restore" action="" method="post">
-                                @csrf
-                                <div class="block block-rounded block-themed block-transparent mb-0">
-                                    <div class="block-header bg-primary-dark">
-                                        <h3 class="block-title text-center">Restore Permission</h3>
-                                        <div class="block-options">
-                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
-                                                <i class="fa fa-fw fa-times"></i>
-                                            </button>
+                                        <p class="text-center"><span id="change_condition"></span></p>
+                                        <input type="hidden" name="remarks" id="remarks" required>
+                                        <div class="form-group" id="condition_select">
+
                                         </div>
                                     </div>
-                                    <div class="block-content font-size-sm">
-                                        <p class="text-center"><span id="restore_permission_name"></span> Permission will be restored. Are you sure?</p>
-                                        <input type="hidden" name="restore_permission_id" id="restore_permission_id">
-                                    </div>
-                                    <div class="block-content block-content-full text-right border-top">
-                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    <div class="block-content block-content-full text-right border-top" id="buttons">
+
                                     </div>
                                 </div>
                             </form>
@@ -166,11 +140,11 @@
     <script src="{{ asset('backend/js/pages/be_tables_datatables.min.js') }}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
-            $('#permission_table').DataTable().destroy();
+            $('#user_asset_table').DataTable().destroy();
 
-            var dtable = $('#permission_table').DataTable({
+            var dtable = $('#user_asset_table').DataTable({
                 responsive: true,
-                ajax: '{{ url('permission/get_permission_data') }}',
+                ajax: '{{ url('asset/get_user_asset_data') }}',
                 paging: true,
                 dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
                 retrieve: true,
@@ -179,51 +153,77 @@
                     extend: 'copy',
                     text: 'Copy',
                     className: 'button',
-                    title: "Permission Table"
+                    title: "User Assets Table"
                 },
-                {
-                    extend: 'csv',
-                    text: 'CSV',
-                    className: 'button' ,
-                    exportOptions:  {
-                                        columns: [0, 1,2,3,4,5]
-                                    },
-                    title: "Permission Table"
-                },
-                {
-                    extend: 'print',
-                    text: 'Print',
-                    className: 'button' ,
-                    exportOptions:  {
-                                        columns: [0, 1,2,3,4,5]
-                                    },
-                    title: "Permission Table"
-                },
-            ],
-            lengthMenu: [[ 10, 25, 50, -1], [ 10, 25, 50, 'All']],
+                    {
+                        extend: 'csv',
+                        text: 'CSV',
+                        className: 'button' ,
+                        exportOptions:  {
+                            columns: [0, 1,2,3,4,5,6,7,8,9,10]
+                        },
+                        title: "User Assets Table"
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'button' ,
+                        exportOptions:  {
+                            columns: [0, 1,2,3,4,5,6,7,8,9,10]
+                        },
+                        title: "User Assets Table"
+                    },
+                ],
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],
             });
             dtable.buttons().container().addClass('center-align-buttons');
         });
         function show_status_modal(id, msg) {
             var x = document.getElementById('warning_message');
             x.innerHTML = "Are you sure, you want to change status?";
-            const url = "{{ url('permission/:id/change_status') }}".replace(':id', id);
+            const url = "{{ url('asset/:id/change_user_asset_status') }}".replace(':id', id);
             $('#change_status').attr('action', url);
             $('#status-modal').modal('show');
         }
-        function show_delete_modal(id, name) {
-            var x = document.getElementById('permission_name');
-            x.innerHTML = name;
-            const url = "{{ url('permission/:id/delete') }}".replace(':id', id);
-            $('#delete').attr('action', url);
-            $('#delete-modal').modal('show');
-        }
-        function show_restore_modal(id, name) {
-            var x = document.getElementById('restore_permission_name');
-            x.innerHTML = name;
-            const url = "{{ url('permission/:id/restore') }}".replace(':id', id);
-            $('#restore').attr('action', url);
-            $('#restore-modal').modal('show');
+        function show_condition_modal(id, condition) {
+            var x = document.getElementById('change_condition');
+            var asset_condition={
+                good: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.good')) !!},
+                need_repair: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.need_repair')) !!},
+                damaged: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.damaged')) !!},
+                destroyed: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.destroyed')) !!}
+            };
+            if(condition==asset_condition.damaged ||condition==asset_condition.destroyed)
+            {
+                x.innerHTML = "Can't change asset's condition.";
+                $('#condition_select').empty();
+                $('#buttons').empty();
+            }
+            else
+            {
+                x.innerHTML = "Select changeable condition";
+                $('#condition_select').empty();
+                $('#buttons').empty();
+                $('#condition_select').append('<label for="val-suggestions">Select Condition<span class="text-danger">*</span></label>\n' +
+                    '                                            <select class="js-select2 form-control input-prevent-multiple-submission" id="condition" name="condition" style="width: 100%;" data-placeholder="Choose Asset condition.." required>\n' +
+                    '                                                <option></option>\n' +
+                    '                                            </select>');
+                if(condition==asset_condition.good)
+                {
+                    $('#condition').append('<option value="' + asset_condition.need_repair + '" style="color:black">Need to Repair</option>');
+                }
+                else
+                {
+                    $('#condition').append('<option value="' + asset_condition.good + '" style="color:black">Good</option>');
+                }
+                $('#condition').append('<option value="' + asset_condition.damaged + '" style="color:black">Damaged</option>');
+                $('#condition').append('<option value="' + asset_condition.destroyed + '" style="color:black">Destroyed</option>');
+                $('#buttons').append('<button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>\n' +
+                    '                                        <button type="submit" class="btn btn-primary">Submit</button>');
+            }
+            const url = "{{ url('asset/:id/change_condition') }}".replace(':id', id);
+            $('#asset_condition').attr('action', url);
+            $('#asset-condition-modal').modal('show');
         }
     </script>
 @endsection

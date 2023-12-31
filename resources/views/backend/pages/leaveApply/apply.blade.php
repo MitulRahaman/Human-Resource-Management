@@ -128,12 +128,12 @@
             newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
 
             total = daysdifference(newStartDate, newEndDate);
-            if(total < 90) {
+            if(total < 181) {
                 $('#totalLeave').val(total);
                 document.getElementById('error_date').innerHTML = "";
                 $('#submit').attr('disabled', false);
             } else {
-                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
+                document.getElementById('error_date').innerHTML = "total leave must be less than or equal 180 days";
                 $('#submit').attr('disabled', true);
             }
 

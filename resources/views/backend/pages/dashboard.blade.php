@@ -252,7 +252,7 @@
                     var record = originalData[i];
                     var row = '<tr>';
                     for (var j = 0; j < record.length; j++) {
-                        row += '<td>' + record[j] + '</td>';
+                        row += '<td class="text-center">' + record[j] + '</td>';
                     }
                     row += '</tr>';
                     tableBody.append(row);
@@ -368,7 +368,7 @@
                     var record = data.data[i];
                     var row = '<tr>' ;
                     for (var j = 0; j < record.length; j++) {
-                        row = row + '<td>' + record[j] + '</td>';
+                        row = row + '<td class="text-center">' + record[j] + '</td>';
                     }
                     row+= '</tr>';
                     tableBody.append(row);
@@ -402,7 +402,7 @@
                     var record = data.data[i];
                     var row = '<tr>' ;
                     for (var j = 0; j < record.length; j++) {
-                        row = row + '<td>' + record[j] + '</td>';
+                        row = row + '<td class="text-center">' + record[j] + '</td>';
                     }
                        row+= '</tr>';
                     tableBody.append(row);

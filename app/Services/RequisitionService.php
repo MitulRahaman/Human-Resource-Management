@@ -31,7 +31,7 @@ class RequisitionService
             ->setSpecification($data['specification'])
             ->setAssetTypeId($data['asset_type_id'])
             ->setRemarks($data['remarks'])
-            ->setStatus(Config::get('variable_constants.status.pending'))
+            ->setStatus(Config::get('variable_constants.requisition_status.pending'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->create();
         if(is_int($requisition))
@@ -71,15 +71,15 @@ class RequisitionService
     }
     public function getRequisitionRequest($id)
     {
-        return $this->requisitionRepository->getRequisitionRequest($id);
+        return $this->requisitionRepository->setId($id)->getRequisitionRequest();
     }
     public function delete($id)
     {
-        return $this->requisitionRepository->delete($id);
+        return $this->requisitionRepository->setId($id)->delete();
     }
     public function approve($id)
     {
-        $approve = $this->requisitionRepository->approve( $id);
+        $approve = $this->requisitionRepository->setId($id)->approve();
         if($approve==1)
         {
             $requisition_info = $this->requisitionRepository->getRequisitionInfo($id);
@@ -102,11 +102,27 @@ class RequisitionService
     }
     public function reject($id)
     {
-        return $this->requisitionRepository->reject( $id);
+        return $this->requisitionRepository->setId($id)->reject();
     }
     public function cancel($id)
     {
-        return $this->requisitionRepository->cancel($id);
+        return $this->requisitionRepository->setId($id)->cancel();
+    }
+    public function receive($id)
+    {
+        return $this->requisitionRepository->setId($id)->receive();
+    }
+    public function processing($id)
+    {
+        return $this->requisitionRepository->setId($id)->processing();
+    }
+    public function deliver($id, $data)
+    {
+        return $this->requisitionRepository->setId($id)->setAssetId($data['asset_id'])->deliver();
+    }
+    public function getAllAssets($data)
+    {
+        return $this->requisitionRepository->setId($data['id'])->getAllAssets();
     }
     public function fetchData()
     {
@@ -116,6 +132,7 @@ class RequisitionService
         if(!$hasManageRequisitionPermission)
             $this->requisitionRepository->setUserId($userId);
         $result = $this->requisitionRepository->getTableData();
+        $super_user = auth()->user()->is_super_user;
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -127,16 +144,20 @@ class RequisitionService
                 $specification= $row->specification;
                 $remarks = $row->remarks;
                 $status="";
-                if($row->status== Config::get('variable_constants.status.pending'))
+                if($row->status== Config::get('variable_constants.requisition_status.pending'))
                     $status = "<span class=\"badge badge-primary\">pending</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.approved'))
+                elseif($row->status== Config::get('variable_constants.requisition_status.received'))
+                    $status = "<span class=\"badge badge-primary\">received</span><br>" ;
+                elseif ($row->status== Config::get('variable_constants.requisition_status.approved'))
                     $status = "<span class=\"badge badge-success\">approved</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.rejected'))
+                elseif ($row->status== Config::get('variable_constants.requisition_status.rejected'))
                     $status = "<span class=\"badge badge-danger\">rejected</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.canceled'))
+                elseif ($row->status== Config::get('variable_constants.requisition_status.canceled'))
                     $status = "<span class=\"badge badge-danger\">canceled</span><br>" ;
-                elseif ($row->status== Config::get('variable_constants.status.given'))
-                    $status = "<span class=\"badge badge-success\">given</span><br>" ;
+                elseif($row->status== Config::get('variable_constants.requisition_status.processing'))
+                    $status = "<span class=\"badge badge-primary\">processing</span><br>" ;
+                elseif($row->status== Config::get('variable_constants.requisition_status.delivered'))
+                    $status = "<span class=\"badge badge-success\">delivered</span><br>" ;
 
                 $delete_url = url('requisition/'.$id.'/delete');
                 $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"$delete_url\">Delete</a>";
@@ -147,33 +168,48 @@ class RequisitionService
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">";
 
-                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$asset_type\")'>Approve</a>";
-                $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$asset_type\")'>Reject</a>";
+                $approve_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_approve_modal(\"$id\", \"$name\")'>Approve</a>";
+                $reject_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reject_modal(\"$id\", \"$name\")'>Reject</a>";
                 $edit_url = url('requisition/'.$id.'/edit');
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $cancel_url = url('requisition/status/'.$id.'/cancel');
                 $cancel_btn = "<a class=\"dropdown-item\" href=\"$cancel_url\">Cancel</a>";
-                if($hasManageRequisitionPermission && $userId==$row->user_id)
+                $receive_url = url('requisition/status/'.$id.'/receive');
+                $receive_btn = "<a class=\"dropdown-item\" href=\"$receive_url\">Receive</a>";
+                $processing_url = url('requisition/status/'.$id.'/processing');
+                $processing_btn = "<a class=\"dropdown-item\" href=\"$processing_url\">Process</a>";
+                $deliver_btn="<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_deliver_modal(\"$id\", \"$name\")'>Deliver</a>";
+                if($super_user)
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
-                    {
-                        $action_btn .= "$approve_btn $reject_btn";
-                        $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
-                    }
-                    else $action_btn = "N/A";
+                    $action_btn .= "$receive_btn $approve_btn $reject_btn $processing_btn $deliver_btn";
                 }
                 elseif($hasManageRequisitionPermission)
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
+                    if($row->status== Config::get('variable_constants.requisition_status.pending'))
+                    {
+                        $action_btn .= "$receive_btn ";
+                        if($userId==$row->user_id)
+                        {
+                            $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
+                        }
+                    }
+                    elseif ($row->status== Config::get('variable_constants.requisition_status.received'))
                     {
                         $action_btn .= "$approve_btn $reject_btn";
                     }
-                    else
-                        $action_btn = "N/A";
+                    elseif ($row->status== Config::get('variable_constants.requisition_status.approved'))
+                    {
+                        $action_btn .= "$processing_btn ";
+                    }
+                    elseif ($row->status== Config::get('variable_constants.requisition_status.processing'))
+                    {
+                        $action_btn .= "$deliver_btn ";
+                    }
+                    else $action_btn = "N/A";
                 }
                 elseif ($userId==$row->user_id)
                 {
-                    if($row->status== Config::get('variable_constants.status.pending'))
+                    if($row->status== Config::get('variable_constants.requisition_status.pending'))
                     {
                         $action_btn .= "$edit_btn $cancel_btn $toggle_delete_btn";
                     }

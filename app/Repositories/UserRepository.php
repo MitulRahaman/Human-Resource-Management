@@ -615,7 +615,6 @@ class UserRepository
     {
         return DB::table('user_assets')
             ->whereNull('deleted_at')
-            ->where('status', '=', Config::get('variable_constants.activation.active'))
             ->where('user_id', '=', Auth::id())
             ->count();
     }
@@ -623,12 +622,11 @@ class UserRepository
     {
         return DB::table('user_assets as ua')
             ->whereNull('ua.deleted_at')
-            ->where('ua.status', '=', Config::get('variable_constants.activation.active'))
             ->where('ua.user_id', '=', $this->id)
             ->leftJoin('assets as a', 'a.id', '=', 'ua.asset_id')
             ->leftJoin('asset_images as ai', 'ai.asset_id', '=', 'ua.asset_id')
             ->leftJoin('asset_types as at', 'at.id', '=', 'a.type_id')
-            ->select('a.name', 'a.specification', 'ai.url as image', 'at.name as type', 'ua.status', 'ua.id', 'ua.created_at', DB::raw('(CASE WHEN ua.requisition_request_id IS NULL THEN "no" ELSE "yes" END) as by_requisition'))
+            ->select('a.name', 'a.specification', 'a.condition', 'ai.url as image', 'at.name as type', 'ua.status', 'ua.id', 'ua.created_at', DB::raw('(CASE WHEN ua.requisition_request_id IS NULL THEN "no" ELSE "yes" END) as by_requisition'))
             ->offset($this->offset)
             ->limit($this->limit)
             ->orderBy('ua.id','desc')
@@ -914,10 +912,12 @@ class UserRepository
         return DB::table('assets as a')
             ->whereNull('a.deleted_at')
             ->where('a.status', '=',Config::get('variable_constants.activation.active'))
+            ->where('a.condition', '=',Config::get('variable_constants.asset_condition.good'))
             ->where('a.branch_id','=', $branch_id->branch_id)
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('user_assets as ua')
+                    ->where('ua.status', '=', Config::get('variable_constants.activation.active'))
                     ->whereRaw('ua.asset_id = a.id');
             })
             ->get();

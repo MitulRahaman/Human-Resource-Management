@@ -126,6 +126,39 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal" id="deliver-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="deliver" action="" method="post">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Delivered</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm">
+                                        <p class="text-center"> You want to deliver <span id="deliver_requisition"></span>, select it first.</p>
+                                        <input type="hidden" name="remarks" id="remarks" required>
+                                        <div class="form-group">
+                                            <label for="val-suggestions">Select Asset<span class="text-danger">*</span></label>
+                                            <select class="js-select2 form-control input-prevent-multiple-submission" id="asset_id" name="asset_id" style="width: 100%;" data-placeholder="Choose asset to deliver.." required>
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <!-- END Vertically Centered Block Modal -->
             </div>
         </div>
@@ -181,24 +214,50 @@
                         title: "Requisition Table"
                     },
                 ],
-                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
+                lengthMenu: [[ 10, 25, 50, -1], [ 10, 25, 50, 'All']],
             });
             dtable.buttons().container().addClass('center-align-buttons');
         });
 
-        function show_approve_modal(id, type) {
+        function show_approve_modal(id, name) {
             var x = document.getElementById('approve_requisition');
-            x.innerHTML = type;
+            x.innerHTML = name;
             const url = "{{ url('requisition/status/:id/approve') }}".replace(':id', id);
             $('#approve').attr('action', url);
             $('#approve-modal').modal('show');
         }
-        function show_reject_modal(id, type) {
+        function show_reject_modal(id, name) {
             var x = document.getElementById('reject_requisition');
-            x.innerHTML = type;
+            x.innerHTML = name;
             const url = "{{ url('requisition/status/:id/reject') }}".replace(':id', id);
             $('#reject').attr('action', url);
             $('#reject-modal').modal('show');
+        }
+        function show_deliver_modal(id, name) {
+            var x = document.getElementById('deliver_requisition');
+            x.innerHTML = name;
+            $.ajax({
+                url: '{{ url('requisition/fetch_assets_to_deliver') }}',
+                type: 'POST',
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    $('#asset_id').empty();
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        var asset =  '<option value="' + data[i]['id'] + '" style="color:black">Asset: ' + data[i]['name'] ;
+                        if(data[i]['user_name']) asset+= ', User: '+ data[i]['user_name'];
+                        asset+='</option>';
+                        $('#asset_id').append(asset);
+                    }
+                }
+            });
+            const url = "{{ url('requisition/status/:id/deliver') }}".replace(':id', id);
+            $('#deliver').attr('action', url);
+            $('#deliver-modal').modal('show');
         }
     </script>
 @endsection

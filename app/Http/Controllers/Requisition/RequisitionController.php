@@ -7,6 +7,7 @@ use App\Http\Requests\RequisitionAddRequest;
 use App\Services\RequisitionService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use App\Traits\AuthorizationTrait;
 
@@ -23,6 +24,7 @@ class RequisitionController extends Controller
     public function index()
     {
         View::share('sub_menu', 'Manage');
+//        $assets = $this->requisitionService->getAllAssets();
         return view('backend.pages.requisition.index');
     }
     public function fetchData()
@@ -106,6 +108,47 @@ class RequisitionController extends Controller
         try {
             $this->requisitionService->cancel($id);
             return redirect()->back()->with('success', 'Request canceled');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function receive($id)
+    {
+        abort_if(!$this->setSlug('manageRequisition')->hasPermission(), 403, 'You don\'t have permission!');
+        try {
+            $this->requisitionService->receive($id);
+            return redirect()->back()->with('success', 'Request received');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function processing($id)
+    {
+        abort_if(!$this->setSlug('manageRequisition')->hasPermission(), 403, 'You don\'t have permission!');
+        try {
+            $this->requisitionService->processing($id);
+            return redirect()->back()->with('success', 'Request processing');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function fetchAssetsToDeliver(Request $request)
+    {
+        return $this->requisitionService->getAllAssets($request->all());
+    }
+    public function deliver( $id, Request $request)
+    {
+        abort_if(!$this->setSlug('manageRequisition')->hasPermission(), 403, 'You don\'t have permission!');
+        try {
+            $validator = Validator::make($request->all(), [
+                'asset_id' => 'required|exists:assets,id',
+            ]);
+            if(!$validator->fails())
+            {
+                $this->requisitionService->deliver($id, $request->all());
+                return redirect()->back()->with('success', 'Request delivered');
+            }
+            return redirect()->back()->with('error', 'Request not delivered');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

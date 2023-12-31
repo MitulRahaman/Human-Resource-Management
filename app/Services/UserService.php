@@ -397,7 +397,19 @@ class UserService
                 }
                 $name = $row->name;
                 $type = $row->type;
-                $specification= $row->specification? $row->specification:'               ';
+                $specification= $row->specification? $row->specification:'  ';
+                $condition = $row->condition;
+                if ($condition == Config::get('variable_constants.asset_condition.good')) {
+                    $condition = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">Good</span>";
+                }elseif ($condition == Config::get('variable_constants.asset_condition.need_repair')){
+                    $condition = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-warning-light text-warning\">Need to Repair</span>";
+                }elseif ($condition == Config::get('variable_constants.asset_condition.damaged')){
+                    $condition = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\" >Damaged</span>";
+                    $action = false;
+                }elseif ($condition == Config::get('variable_constants.asset_condition.destroyed')){
+                    $condition = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\" >Destroyed</span>";
+                    $action = false;
+                }
                 if($row->status== Config::get('variable_constants.activation.active'))
                     $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">active</span>" ;
                 else
@@ -415,6 +427,7 @@ class UserService
                 array_push($temp, $type);
                 array_push($temp, $specification);
                 array_push($temp, $status);
+                array_push($temp, $condition);
                 array_push($temp, $by_requisition);
                 array_push($temp, $created_at);
                 array_push($data, $temp);

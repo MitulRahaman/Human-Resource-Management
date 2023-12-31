@@ -22,6 +22,7 @@ use App\Http\Controllers\Calender\CalenderController;
 use App\Http\Controllers\Asset\AssetController;
 use App\Http\Controllers\Requisition\RequisitionController;
 use App\Http\Controllers\Log\LogController;
+use App\Http\Controllers\Ticket\TicketController;
 
 
 /*
@@ -286,6 +287,16 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::prefix('log')->group(function() {
             Route::get('/', [LogController::class, 'index']);
             Route::get('/get_log_data', [LogController::class, 'fetchData']);
+        });
+        Route::prefix('ticket')->group(function() {
+            Route::get('/', [TicketController::class, 'index']);
+            Route::get('/get_ticket_data', [TicketController::class, 'fetchData']);
+            Route::get('/add', [TicketController::class, 'create']);
+            Route::post('/store', [TicketController::class, 'store']);
+            Route::get('status/{id}/close', [TicketController::class, 'close']);
+            Route::get('/{id}/edit', [TicketController::class, 'edit']);
+            Route::post('/{id}/update', [TicketController::class, 'update']);
+            Route::get('status/{id}/hold', [TicketController::class, 'hold']);
         });
 
     });

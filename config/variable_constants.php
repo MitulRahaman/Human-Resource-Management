@@ -87,4 +87,18 @@ return [
       'damaged' =>3,
       'destroyed' =>4,
     ],
+    'ticket_status' =>
+    [
+      'open' => 0,
+      'hold' => 1,
+      'completed' => 2,
+      'closed' => 3,
+    ],
+    'ticket_priority' =>
+    [
+      'low' => 0,
+      'medium' => 1,
+      'high' => 2,
+      'critical' => 3,
+    ],
 ];

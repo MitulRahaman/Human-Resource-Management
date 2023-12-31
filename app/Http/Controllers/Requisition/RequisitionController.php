@@ -24,7 +24,6 @@ class RequisitionController extends Controller
     public function index()
     {
         View::share('sub_menu', 'Manage');
-//        $assets = $this->requisitionService->getAllAssets();
         return view('backend.pages.requisition.index');
     }
     public function fetchData()

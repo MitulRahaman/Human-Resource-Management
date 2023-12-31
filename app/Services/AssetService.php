@@ -51,6 +51,7 @@ class AssetService
             ->setPurchaseBy($data['purchase_by'])
             ->setPurchasePrice($data['purchase_price'])
             ->setStatus(Config::get('variable_constants.activation.active'))
+            ->setCondition(Config::get('variable_constants.asset_condition.good'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
             ->save();
     }
@@ -88,9 +89,17 @@ class AssetService
     {
         return $this->assetRepository->restore($id);
     }
-    public function changeStatus($data)
+    public function changeStatus($id)
     {
-        return $this->assetRepository->change($data);
+        return $this->assetRepository->change($id);
+    }
+    public function changeUserAssetStatus($id)
+    {
+        return $this->assetRepository->changeUserAssetStatus($id);
+    }
+    public function changeCondition($id, $data)
+    {
+        return $this->assetRepository->setId($id)->setCondition($data['condition'])->changeCondition();
     }
     public function getAsset($id)
     {
@@ -120,17 +129,31 @@ class AssetService
                 $purchase_at = $row->purchase_at? $row->purchase_at:'N/A';
                 $purchase_by = $row->purchase_by? $row->purchase_by:'N/A';
                 $purchase_price = $row->purchase_price? $row->purchase_price:'N/A';
+                $condition = $row->condition;
                 $created_at = $row->created_at;
+                $action = true;
+                if ($condition == Config::get('variable_constants.asset_condition.good')) {
+                    $condition = "<span class=\"badge badge-success text-center\">Good</span>";
+                }elseif ($condition == Config::get('variable_constants.asset_condition.need_repair')){
+                    $condition = "<span class=\"badge badge-warning text-center\" >Need to Repair</span>";
+                }elseif ($condition == Config::get('variable_constants.asset_condition.damaged')){
+                    $condition = "<span class=\"badge badge-danger text-center\" >Damaged</span>";
+                    $action = false;
+                }elseif ($condition == Config::get('variable_constants.asset_condition.destroyed')){
+                    $condition = "<span class=\"badge badge-danger text-center\" >Destroyed</span>";
+                    $action = false;
+                }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
-                    $status = "<span class=\"badge badge-success\">Active</span>";
+                    $status = "<span class=\"badge badge-success text-center\">Active</span>";
                     $status_msg = "Deactivate";
                 }else{
-                    $status = "<span class=\"badge badge-danger\" >Inactive</span>";
+                    $status = "<span class=\"badge badge-danger text-center\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
                 $edit_url = route('edit_asset', ['id'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
+                $condition_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_condition_modal(\"$id\", \"$row->condition\")'> Change Condition</a>";
                 if ($row->deleted_at) {
                     $toggle_delete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_restore_modal(\"$id\", \"$name\")'>Restore</a>";
                 } else {
@@ -144,6 +167,7 @@ class AssetService
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-success\">";
                 $action_btn .= "$edit_btn
                 $toggle_btn
+                $condition_btn
                 $toggle_delete_btn
                 ";
                 $action_btn .= "</div>
@@ -161,6 +185,7 @@ class AssetService
                 array_push($temp, $purchase_by);
                 array_push($temp, $purchase_price);
                 array_push($temp, $status);
+                array_push($temp, $condition);
                 if ($row->deleted_at) {
                     array_push($temp, ' <span class="badge badge-danger" >Yes</span>');
                 } else {
@@ -168,7 +193,96 @@ class AssetService
                 }
 
                 array_push($temp, $created_at);
-                if($hasManageAssetPermission)
+                if($hasManageAssetPermission && $action)
+                    array_push($temp, $action_btn);
+                else
+                    array_push($temp, 'N/A');
+                array_push($data, $temp);
+            }
+            return json_encode(array('data'=>$data));
+        } else {
+            return '{
+                    "sEcho": 1,
+                    "iTotalRecords": "0",
+                    "iTotalDisplayRecords": "0",
+                    "aaData": []
+                }';
+        }
+    }
+    public function fetchUserAssetData()
+    {
+        $result = $this->assetRepository->getAllUserAssetData();
+        $hasDistributeAssetPermission = $this->setSlug('distributeAsset')->hasPermission();
+        if ($result->count() > 0) {
+            $data = array();
+            foreach ($result as $key=>$row) {
+                $imgage = $row->image;
+                if($imgage) {
+                    $url = asset('storage/asset/'. $imgage);
+                    $img = "<img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\">";
+                } else {
+                    $url = asset('images/asset.jpeg');
+                    $img = "<img src=\"$url\" class=\"w-100 rounded\" alt=\"user_img\">";
+                }
+                $employee_id = $row->employee_id;
+                $user_name = $row->user_name;
+                $name = $row->name;
+                $asset_type= $row->asset_type;
+                $sl_no = $row->sl_no? $row->sl_no:'N/A';
+                $branch = $row->branch;
+                $condition = $row->condition;
+                $created_at = $row->created_at;
+                $by_requisition = $row->by_requisition;
+                $action = true;
+                if($by_requisition)
+                    $by_requisition= "<span class=\"badge badge-success text-center\">Yes</span>";
+                else
+                    $by_requisition= "<span class=\"badge badge-danger text-center\">No</span>";
+                if ($condition == Config::get('variable_constants.asset_condition.good')) {
+                    $condition = "<span class=\"badge badge-success text-center\">Good</span>";
+                }elseif ($condition == Config::get('variable_constants.asset_condition.need_repair')){
+                    $condition = "<span class=\"badge badge-warning text-center\" >Need to Repair</span>";
+                }elseif ($condition == Config::get('variable_constants.asset_condition.damaged')){
+                    $condition = "<span class=\"badge badge-danger text-center\" >Damaged</span>";
+                    $action = false;
+                }elseif ($condition == Config::get('variable_constants.asset_condition.destroyed')){
+                    $condition = "<span class=\"badge badge-danger text-center\" >Destroyed</span>";
+                    $action = false;
+                }
+                if ($row->status == Config::get('variable_constants.activation.active')) {
+                    $status = "<span class=\"badge badge-success text-center\">Active</span>";
+                    $status_msg = "Deactivate";
+                }else{
+                    $status = "<span class=\"badge badge-danger text-center\" >Inactive</span>";
+                    $status_msg = "Activate";
+                }
+
+                $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$row->user_asset_id\", \"$status_msg\")'> $status_msg </a>";
+                $condition_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_condition_modal(\"$row->asset_id\", \"$row->condition\")'> Change Condition</a>";
+                $action_btn = "<div class=\"col-sm-6 col-xl-4\">
+                                    <div class=\"dropdown\">
+                                        <button type=\"button\" class=\"btn btn-success dropdown-toggle\" id=\"dropdown-default-success\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+                                            Action
+                                        </button>
+                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-success\">";
+                $action_btn .= "$toggle_btn $condition_btn";
+                $action_btn .= "</div>
+                                    </div>
+                                </div>";
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $img);
+                array_push($temp, $employee_id);
+                array_push($temp, $user_name);
+                array_push($temp, $name);
+                array_push($temp, $asset_type);
+                array_push($temp, $sl_no);
+                array_push($temp, $branch);
+                array_push($temp, $status);
+                array_push($temp, $condition);
+                array_push($temp, $by_requisition);
+                array_push($temp, $created_at);
+                if($hasDistributeAssetPermission && $action)
                     array_push($temp, $action_btn);
                 else
                     array_push($temp, 'N/A');

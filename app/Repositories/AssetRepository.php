@@ -6,12 +6,13 @@ use App\Models\Asset;
 use App\Models\AssetType;
 use App\Models\Branch;
 use App\Models\User;
+use App\Models\UserAsset;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class AssetRepository
 {
-    private  $name, $id, $url, $type_id, $sl_no, $branch_id, $specification, $purchase_at, $purchase_by, $purchase_price, $status, $created_at, $updated_at, $deleted_at;
+    private  $name, $condition, $id, $url, $type_id, $sl_no, $branch_id, $specification, $purchase_at, $purchase_by, $purchase_price, $status, $created_at, $updated_at, $deleted_at;
 
     public function setName($name)
     {
@@ -83,13 +84,30 @@ class AssetRepository
         $this->deleted_at = $deleted_at;
         return $this;
     }
+    public function setCondition($condition)
+    {
+        $this->condition = $condition;
+        return $this;
+    }
     //    =============================start asset======================
 
     public function getAllAssetData()
     {
         return DB::table('assets as a')
-            ->select('a.id',  'a.name', 'a.type_id', 'a.sl_no', 'a.branch_id','a.specification', 'a.purchase_at', 'a.purchase_by', 'a.purchase_price', 'a.status', DB::raw('date_format(a.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(a.deleted_at, "%d/%m/%Y") as deleted_at'))
+            ->select('a.id',  'a.name', 'a.type_id', 'a.sl_no', 'a.branch_id','a.specification', 'a.purchase_at', 'a.purchase_by', 'a.purchase_price', 'a.status','a.condition', DB::raw('date_format(a.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(a.deleted_at, "%d/%m/%Y") as deleted_at'))
             ->orderBy('a.id', 'desc')
+            ->get();
+    }
+    public function getAllUserAssetData()
+    {
+        return DB::table('user_assets as ua')
+            ->whereNull('ua.deleted_at')
+            ->leftJoin('users as u', 'u.id', '=', 'ua.user_id')
+            ->leftJoin('assets as a', 'a.id','=','ua.asset_id')
+            ->leftJoin('asset_types as at', 'at.id', '=', 'a.type_id')
+            ->leftJoin('branches as b', 'b.id','=','ua.branch_id')
+            ->leftJoin('asset_images as ai', 'ai.asset_id','=', 'a.id')
+            ->select('ai.url as image','ua.id as user_asset_id','a.id as asset_id','u.employee_id', 'u.full_name as user_name', 'a.name', 'a.sl_no','a.condition', 'at.name as asset_type', 'b.name as branch', 'ua.status', DB::raw('date_format(ua.created_at, "%d/%m/%Y") as created_at'), DB::raw('(CASE WHEN ua.requisition_request_id IS NOT NULL THEN 1 ELSE 0 END) as by_requisition'))
             ->get();
     }
     public function getAssetImage($id)
@@ -142,6 +160,7 @@ class AssetRepository
                         'purchase_by' => $this->purchase_by? $this->purchase_by:'',
                         'purchase_price' => $this->purchase_price? $this->purchase_price:'',
                         'status' => $this->status,
+                        'condition' => $this->condition,
                         'created_at' => $this->created_at
                     ]);
                 if($this->url)
@@ -205,9 +224,9 @@ class AssetRepository
     {
         return Asset::withTrashed()->where('id', $id)->restore();
     }
-    public function change( $data)
+    public function change( $id)
     {
-        $asset = Asset::findOrFail($data);
+        $asset = Asset::findOrFail($id);
         $old=$asset->status;
         $status= config('variable_constants.activation');
         if($old==$status['active'])
@@ -220,6 +239,52 @@ class AssetRepository
             $asset->status=$status['active'];
             return $asset->save();
         }
+    }
+    public function changeUserAssetStatus( $id)
+    {
+        $user_asset = DB::table('user_assets')->where('id','=',$id)->select('status','asset_id')->first();
+        if(!$user_asset) return false;
+        $old=$user_asset->status;
+        $status= config('variable_constants.activation');
+        if($old==$status['active'])
+        {
+            $user_asset = DB::table('user_assets')->where('id','=',$id)
+                ->update([
+                    'status'=>$status['inactive'],
+                    'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+        else
+        {
+            $asset_id = $user_asset->asset_id;
+            $otherUser = DB::table('user_assets')->where('asset_id','=',$asset_id)->where('id', '!=',$id)->first();
+            if(!$otherUser)
+            {
+                $user_asset = DB::table('user_assets')->where('id','=',$id)
+                    ->update([
+                        'status'=>$status['active'],
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            else
+                return false;
+        }
+        return $user_asset;
+    }
+    public function changeCondition()
+    {
+        $asset = DB::table('assets')->where('id','=',$this->id);
+        abort_if(!$asset, 404);
+        $asset = DB::table('assets')->where('id','=',$this->id)->update(['condition'=>$this->condition]);
+        if($this->condition==Config::get('variable_constants.asset_condition.damaged') || $this->condition==Config::get('variable_constants.asset_condition.destroyed'))
+        {
+            DB::table('user_assets')->where('asset_id', '=', $this->id)
+                ->where('status','=', Config::get('variable_constants.activation.active'))
+                ->update([
+                    'status'=> Config::get('variable_constants.activation.inactive')
+                ]);
+        }
+        return $asset;
     }
     //    =============================end asset======================
 

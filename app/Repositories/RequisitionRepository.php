@@ -11,11 +11,16 @@ use App\Traits\AuthorizationTrait;
 class RequisitionRepository
 {
     use AuthorizationTrait;
-    private $id, $user_id, $name, $specification,$hasPermission, $asset_type_id, $status, $created_at, $updated_at, $deleted_at, $remarks;
+    private $id, $user_id, $name, $specification,$hasPermission, $asset_type_id, $status, $created_at, $updated_at, $deleted_at, $remarks, $asset_id;
 
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+    public function setAssetId($asset_id)
+    {
+        $this->asset_id = $asset_id;
         return $this;
     }
     public function setUserId($user_id)
@@ -140,25 +145,111 @@ class RequisitionRepository
                 'updated_at' => $this->updated_at
             ]);
     }
-    public function getRequisitionRequest($id)
+    public function getRequisitionRequest()
     {
-        return DB::table('requisition_requests')->where('id','=',$id)->first();
+        return DB::table('requisition_requests')->where('id','=',$this->id)->first();
     }
-    public function delete($id)
+    public function delete()
     {
-        return DB::table('requisition_requests')->where('id', '=',$id)->delete();
+        return DB::table('requisition_requests')->where('id', '=',$this->id)->delete();
     }
-    public function approve( $id)
+    public function approve()
     {
-        return DB::table('requisition_requests')->where('id','=',$id)->update(['status'=> Config::get('variable_constants.status.approved')]);
+        return DB::table('requisition_requests')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.requisition_status.approved')]);
     }
-    public function reject( $id)
+    public function reject()
     {
-        return DB::table('requisition_requests')->where('id','=',$id)->update(['status'=> Config::get('variable_constants.status.rejected')]);
+        return DB::table('requisition_requests')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.requisition_status.rejected')]);
     }
-    public function cancel($id)
+    public function cancel()
     {
-        return DB::table('requisition_requests')->where('id','=',$id)->update(['status'=> Config::get('variable_constants.status.canceled')]);
+        return DB::table('requisition_requests')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.requisition_status.canceled')]);
+    }
+    public function receive()
+    {
+        return DB::table('requisition_requests')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.requisition_status.received')]);
+    }
+    public function processing()
+    {
+        return DB::table('requisition_requests')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.requisition_status.processing')]);
+    }
+    public function deliver()
+    {
+        DB::beginTransaction();
+        try {
+             DB::table('requisition_requests')->where('id','=',$this->id)
+                ->update(['status'=> Config::get('variable_constants.requisition_status.delivered'),
+                    'asset_id'=>$this->asset_id]);
+
+            $requested_user_id = (DB::table('requisition_requests')->where('id','=',$this->id)->select('user_id')->first())->user_id;
+            $user_asset = DB::table('user_assets')->where('asset_id','=',$this->asset_id)->first();
+            $branch_id = (DB::table('assets')->where('id','=',$this->asset_id)->select('branch_id')->first())->branch_id;
+            if($user_asset)
+            {
+                DB::table('user_assets')->where('asset_id','=',$this->asset_id)->update([
+                                    'status'=> Config::get('variable_constants.activation.inactive'),
+                                    'updated_at'=>date('Y-m-d H:i:s')
+                                ]);
+                $asset = DB::table('user_assets')
+                    ->insertGetId([
+                        'user_id' => $requested_user_id,
+                        'asset_id' => $this->asset_id,
+                        'branch_id' => $branch_id,
+                        'requisition_request_id' => $this->id,
+                        'status' => Config::get('variable_constants.activation.active'),
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+            }
+            else{
+                $asset = DB::table('user_assets')
+                            ->insertGetId([
+                                'user_id' => $requested_user_id,
+                                'asset_id' => $this->asset_id,
+                                'branch_id' => $branch_id,
+                                'requisition_request_id' => $this->id,
+                                'status' => Config::get('variable_constants.activation.active'),
+                                'created_at' => date('Y-m-d H:i:s')
+                            ]);
+            }
+
+            if($asset)
+            {
+                $user= DB::table('users')->where('id','=',$requested_user_id)->first();
+                if($user->is_asset_distributed==Config::get('variable_constants.check.no'))
+                {
+                    DB::table('users')->where('id','=',$requested_user_id)
+                        ->update(['is_asset_distributed'=>Config::get('variable_constants.check.yes')]);
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+    public function getAllAssets()
+    {
+        $branch_id = DB::table('requisition_requests as rr')
+            ->where('rr.id','=',$this->id)
+            ->leftJoin('basic_info as bi', 'rr.user_id', '=', 'bi.user_id')
+            ->select('bi.branch_id')
+            ->first();
+        $super_user = auth()->user()->is_super_user;
+        return DB::table('assets as a')
+            ->whereNull('a.deleted_at')
+            ->where('a.status', '=', Config::get('variable_constants.activation.active'))
+            ->where('a.condition', '=', Config::get('variable_constants.asset_condition.good'))
+            ->leftJoin('user_assets as ua', function($join) {
+                $join->on('ua.asset_id', '=', 'a.id')
+                    ->where('ua.status', '=', Config::get('variable_constants.activation.active'));
+            })
+            ->leftJoin('users as u', 'u.id', '=', 'ua.user_id')
+            ->when(!$super_user, function($query) use($branch_id){
+                $query->where('a.branch_id', '=', $branch_id->branch_id);
+            })
+            ->select('a.*', 'u.full_name as user_name')
+            ->get();
     }
     public function getAssetTypeName($id)
     {

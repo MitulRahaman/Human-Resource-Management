@@ -60,6 +60,7 @@
                             <th >Purchased_by</th>
                             <th >Purchased_price</th>
                             <th class="d-none d-sm-table-cell ">Status</th>
+                            <th class="d-none d-sm-table-cell ">Condition</th>
                             <th >Deleted</th>
                             <th >Created At</th>
                             <th >Action</th>
@@ -152,6 +153,35 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal" id="asset-condition-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="asset_condition" action="" method="post">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Change Asset Condition</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm">
+                                        <p class="text-center"><span id="change_condition"></span></p>
+                                        <input type="hidden" name="remarks" id="remarks" required>
+                                        <div class="form-group" id="condition_select">
+
+                                        </div>
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top" id="buttons">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <!-- END Vertically Centered Block Modal -->
             </div>
         </div>
@@ -206,7 +236,7 @@
                         title: "Asset Table"
                     },
                 ],
-                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, 'All']],
+                lengthMenu: [[ 10, 25, 50, -1], [ 10, 25, 50, 'All']],
             });
             dtable.buttons().container().addClass('center-align-buttons');
         });
@@ -230,6 +260,46 @@
             const url = "{{ url('asset/:id/restore') }}".replace(':id', id);
             $('#restore').attr('action', url);
             $('#restore-modal').modal('show');
+        }
+        function show_condition_modal(id, condition) {
+            var x = document.getElementById('change_condition');
+            var asset_condition={
+                good: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.good')) !!},
+                need_repair: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.need_repair')) !!},
+                damaged: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.damaged')) !!},
+                destroyed: {!! json_encode(\Illuminate\Support\Facades\Config::get('variable_constants.asset_condition.destroyed')) !!}
+            };
+            if(condition==asset_condition.damaged ||condition==asset_condition.destroyed)
+            {
+                x.innerHTML = "Can't change asset's condition.";
+                $('#condition_select').empty();
+                $('#buttons').empty();
+            }
+            else
+            {
+                x.innerHTML = "Select changeable condition";
+                $('#condition_select').empty();
+                $('#buttons').empty();
+                $('#condition_select').append('<label for="val-suggestions">Select Condition<span class="text-danger">*</span></label>\n' +
+                    '                                            <select class="js-select2 form-control input-prevent-multiple-submission" id="condition" name="condition" style="width: 100%;" data-placeholder="Choose Asset condition.." required>\n' +
+                    '                                                <option></option>\n' +
+                    '                                            </select>');
+                if(condition==asset_condition.good)
+                {
+                    $('#condition').append('<option value="' + asset_condition.need_repair + '" style="color:black">Need to Repair</option>');
+                }
+                else
+                {
+                    $('#condition').append('<option value="' + asset_condition.good + '" style="color:black">Good</option>');
+                }
+                $('#condition').append('<option value="' + asset_condition.damaged + '" style="color:black">Damaged</option>');
+                $('#condition').append('<option value="' + asset_condition.destroyed + '" style="color:black">Destroyed</option>');
+                $('#buttons').append('<button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>\n' +
+                    '                                        <button type="submit" class="btn btn-primary">Submit</button>');
+            }
+            const url = "{{ url('asset/:id/change_condition') }}".replace(':id', id);
+            $('#asset_condition').attr('action', url);
+            $('#asset-condition-modal').modal('show');
         }
     </script>
 @endsection

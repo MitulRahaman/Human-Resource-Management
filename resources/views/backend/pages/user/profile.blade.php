@@ -380,6 +380,7 @@
                                 <th class="text-center">Asset Type</th>
                                 <th class="text-center">Specification</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Condition</th>
                                 <th class="text-center">By Requisition</th>
                                 <th class="text-center">Taken</th>
                             </tr>
@@ -425,7 +426,7 @@
                     var row = '<tr>';
                     console.log(originalData[i]);
                     for (var j = 0; j < record.length; j++) {
-                        row += '<td>' + record[j] + '</td>';
+                        row += '<td class="text-center">' + record[j] + '</td>';
                     }
                     row += '</tr>';
                     tableBody.append(row);

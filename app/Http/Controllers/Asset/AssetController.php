@@ -33,6 +33,10 @@ class AssetController extends Controller
     {
         return $this->assetService->fetchData();
     }
+    public function fetchUserAssetData()
+    {
+        return $this->assetService->fetchUserAssetData();
+    }
     public function create()
     {
         abort_if(!$this->setSlug('addAsset')->hasPermission(), 403, 'You don\'t have permission!');
@@ -110,6 +114,33 @@ class AssetController extends Controller
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+    public function changeUserAssetStatus($id)
+    {
+        abort_if(!$this->setSlug('distributeAsset')->hasPermission(), 403, 'You don\'t have permission!');
+        try{
+            if($this->assetService->changeUserAssetStatus($id))
+                return redirect('asset/user_assets')->with('success', 'User Assets status changed successfully!');
+            return redirect('asset/user_assets')->with('error', 'User Assets status not changed!');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function changeCondition($id, Request $request)
+    {
+        abort_if(!$this->setSlug('manageAsset')->hasPermission(), 403, 'You don\'t have permission!');
+        try{
+            if($this->assetService->changeCondition($id, $request->all()))
+                return redirect()->back()->with('success', 'Assets condition changed successfully!');
+            return redirect()->back()->with('error', 'Assets condition not changed!');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+    public function userAssets()
+    {
+        View::share('sub_menu', 'User Assets');
+        return \view('backend.pages.asset.userAssets');
     }
 
 //    =============================end asset======================

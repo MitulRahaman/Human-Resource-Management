@@ -53,13 +53,13 @@ class DashboardRepository
     public function totalPendingLeave()
     {
         return DB::table('leaves')
-            ->where('leaves.status','=', Config::get('variable_constants.status.pending'))
+            ->where('leaves.status','=', Config::get('variable_constants.leave_status.pending'))
             ->count();
     }
     public function totalPendingRequisition()
     {
         return DB::table('requisition_requests as r')
-            ->where('r.status','=', Config::get('variable_constants.status.pending'))
+            ->where('r.status','=', Config::get('variable_constants.requisition_status.pending'))
             ->count();
     }
     public function totalUser()
@@ -75,7 +75,7 @@ class DashboardRepository
         return DB::table('leaves')
             ->whereDate('leaves.start_date', '<=', now())
             ->whereDate('leaves.end_date', '>=', now())
-            ->where('leaves.status','=', Config::get('variable_constants.status.approved'))
+            ->where('leaves.status','=', Config::get('variable_constants.leave_status.approved'))
             ->join('users', 'users.id', '=', 'leaves.user_id')
             ->join('basic_info', 'leaves.user_id', '=', 'basic_info.user_id')
             ->join('designations', 'basic_info.designation_id', '=', 'designations.id')
@@ -87,7 +87,7 @@ class DashboardRepository
     public function getPendingLeaveTableData()
     {
         return DB::table('leaves')
-            ->where('leaves.status','=', Config::get('variable_constants.status.pending'))
+            ->where('leaves.status','=', Config::get('variable_constants.leave_status.pending'))
             ->join('users', 'users.id', '=', 'leaves.user_id')
             ->join('leave_types', 'leave_types.id','=','leaves.leave_type_id')
             ->select('leave_types.name as leave_type', 'users.employee_id', 'users.full_name', 'leaves.start_date','leaves.end_date', 'leaves.created_at')

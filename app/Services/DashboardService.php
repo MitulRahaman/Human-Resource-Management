@@ -54,16 +54,20 @@ class DashboardService
                 $specification= $row->specification;
                 $remarks = $row->remarks;
                 $status="";
-                if($row->status== Config::get('variable_constants.status.pending'))
-                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-primary-light text-primary\">pending</span>" ;
-                elseif ($row->status== Config::get('variable_constants.status.approved'))
-                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">approved</span>" ;
-                elseif ($row->status== Config::get('variable_constants.status.rejected'))
-                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\">rejected</span>" ;
-                elseif ($row->status== Config::get('variable_constants.status.canceled'))
-                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\">canceled</span>" ;
-                elseif ($row->status== Config::get('variable_constants.status.given'))
-                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">given</span>" ;
+                if($row->status== Config::get('variable_constants.requisition_status.pending'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-primary-light text-primary\">pending</span><br>" ;
+                elseif($row->status== Config::get('variable_constants.requisition_status.received'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-primary-light text-primary\">received</span><br>" ;
+                elseif ($row->status== Config::get('variable_constants.requisition_status.approved'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">approved</span><br>" ;
+                elseif ($row->status== Config::get('variable_constants.requisition_status.rejected'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\">rejected</span><br>" ;
+                elseif ($row->status== Config::get('variable_constants.requisition_status.canceled'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-danger-light text-danger\">canceled</span><br>" ;
+                elseif($row->status== Config::get('variable_constants.requisition_status.processing'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-primary-light text-primary\">processing</span><br>" ;
+                elseif($row->status== Config::get('variable_constants.requisition_status.delivered'))
+                    $status = "<span class=\"font-size-sm font-w600 px-2 py-1 rounded  bg-success-light text-success\">delivered</span><br>" ;
                 $created_at = Carbon::parse($row->created_at)->diffForHumans();
                 $created_at = "<span class =\"d-none d-sm-table-cell font-size-sm font-w600 text-muted \">".$created_at."</span>";
                 $temp = array();

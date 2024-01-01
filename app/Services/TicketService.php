@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Jobs\TicketAssignJob;
+use App\Jobs\TicketCompleteJob;
 use App\Repositories\TicketRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 
 class TicketService
@@ -26,7 +28,7 @@ class TicketService
             ->setCreatedBy(auth()->user()->id)
             ->setAssignedTo($data['assigned_to'])
             ->setPriority($data['priority'])
-            ->setDeadline($data['deadline'])
+            ->setDeadline(Carbon::createFromFormat('d-m-Y', $data['deadline'])->format('Y-m-d'))
             ->setDescription($data['description'])
             ->setStatus(Config::get('variable_constants.ticket_status.open'))
             ->setCreatedAt(date('Y-m-d H:i:s'))
@@ -38,7 +40,8 @@ class TicketService
                 'ticket_info' =>  $data,
                 'to' => $to,
                 'user_email' => auth()->user()->email,
-                'user_name' => auth()->user()->full_name
+                'user_name' => auth()->user()->full_name,
+                'subject' => "Ticket Assigned",
             ];
             TicketAssignJob::dispatch($data);
             return true;
@@ -48,14 +51,28 @@ class TicketService
 
     public function update($data)
     {
-        return $this->ticketRepository->setId($data['id'])
+        $ticket = $this->ticketRepository->setId($data['id'])
             ->setSubject($data['subject'])
             ->setAssignedTo($data['assigned_to'])
             ->setPriority($data['priority'])
-            ->setDeadline($data['deadline'])
+            ->setDeadline(Carbon::createFromFormat('d-m-Y', $data['deadline'])->format('Y-m-d'))
             ->setDescription($data['description'])
             ->setUpdatedAt(date('Y-m-d H:i:s'))
             ->update();
+        if($ticket)
+        {
+            $to = $this->ticketRepository->getUserEmail($data['assigned_to']);
+            $data =[
+                'ticket_info' =>  $data,
+                'to' => $to,
+                'user_email' => auth()->user()->email,
+                'user_name' => auth()->user()->full_name,
+                'subject' => "Ticket Updated",
+            ];
+            TicketAssignJob::dispatch($data);
+            return true;
+        }
+        return false;
     }
 
     public function getTicket($id)
@@ -73,6 +90,25 @@ class TicketService
         return $this->ticketRepository->setId($id)->hold();
     }
 
+    public function complete($id, $data)
+    {
+        $ticket_com = $this->ticketRepository->setId($id)->setRemarks($data['remarks']? $data['remarks']:'')->complete();
+        if($ticket_com)
+        {
+            $ticket = $this->ticketRepository->setId($id)->getTicket();
+            $to = $this->ticketRepository->getUserEmail($ticket->created_by);
+            $data =[
+                'ticket_info' =>  $ticket,
+                'to' => $to,
+                'user_email' => auth()->user()->email,
+                'user_name' => auth()->user()->full_name
+            ];
+            TicketCompleteJob::dispatch($data);
+            return true;
+        }
+        return false;
+    }
+
     public function fetchData()
     {
         $userId= auth()->user()->id;
@@ -84,7 +120,7 @@ class TicketService
                 $subject = $row->subject;
                 $created_by_name = $row->created_by_name;
                 $assigned_to_name = $row->assigned_to_name;
-                $deadline = $row->deadline;
+                $deadline = Carbon::createFromFormat('Y-m-d', $row->deadline)->format('d-m-Y') ;
                 $description = $row->description;
 
                 $remarks = $row->remarks;
@@ -125,8 +161,10 @@ class TicketService
 
                 if($userId==$row->created_by)
                 {
+                    if($row->status!= Config::get('variable_constants.ticket_status.closed') && $row->status!= Config::get('variable_constants.ticket_status.completed'))
+                        $action_btn.=" $edit_btn ";
                     if($row->status!= Config::get('variable_constants.ticket_status.closed'))
-                        $action_btn.="$edit_btn $close_btn ";
+                        $action_btn.=" $close_btn ";
                     else
                         $action_btn = "N/A";
                 }

@@ -136,7 +136,7 @@ class TicketRepository
 
     public function getTicket()
     {
-        return DB::table('tickets')->where('id','=',$this->id)->first();
+        return DB::table('tickets')->where('id','=',$this->id)->select('tickets.*',DB::raw('date_format(tickets.deadline, "%d-%m-%Y") as deadline'))->first();
     }
 
     public function close()
@@ -148,5 +148,11 @@ class TicketRepository
     {
         return DB::table('tickets')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.ticket_status.hold')]);
     }
+
+    public function complete()
+    {
+        return DB::table('tickets')->where('id','=',$this->id)->update(['status'=> Config::get('variable_constants.ticket_status.completed'), 'remarks'=>$this->remarks]);
+    }
+
 
 }

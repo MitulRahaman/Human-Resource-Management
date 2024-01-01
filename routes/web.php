@@ -297,6 +297,7 @@ Route::group(['middleware'=> 'auth'], function() {
             Route::get('/{id}/edit', [TicketController::class, 'edit']);
             Route::post('/{id}/update', [TicketController::class, 'update']);
             Route::get('status/{id}/hold', [TicketController::class, 'hold']);
+            Route::post('status/{id}/complete', [TicketController::class, 'complete']);
         });
 
     });

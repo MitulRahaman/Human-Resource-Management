@@ -10,10 +10,10 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
 
-class TicketAssignMail extends Mailable
+class TicketCompleteMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $ticket_info, $user_email, $user_name, $subject;
+    public $ticket_info, $user_email, $user_name;
     /**
      * Create a new message instance.
      *
@@ -24,11 +24,10 @@ class TicketAssignMail extends Mailable
         $this->ticket_info = $data['ticket_info'];
         $this->user_email = $data['user_email'];
         $this->user_name = $data['user_name'];
-        $this->subject = $data['subject'];
     }
     public function build()
     {
-        return $this->markdown('backend.pages.ticket.assignMailDetails');
+        return $this->markdown('backend.pages.ticket.completeMailDetails');
     }
     /**
      * Get the message envelope.
@@ -39,7 +38,7 @@ class TicketAssignMail extends Mailable
     {
         return new Envelope(
             from: new Address($this->user_email, $this->user_name),
-            subject: $this->subject,
+            subject: 'Ticket Completed',
         );
     }
 

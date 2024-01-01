@@ -94,4 +94,13 @@ class TicketController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+    public function complete($id, Request $request)
+    {
+        try {
+            $this->ticketService->complete($id, $request->all());
+            return redirect()->back()->with('success', 'Ticket completed');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 }

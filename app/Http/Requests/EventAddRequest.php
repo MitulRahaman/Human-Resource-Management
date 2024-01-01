@@ -29,7 +29,8 @@ class EventAddRequest extends FormRequest
             'departmentId' => 'required',
             'participantId' => 'required',
             'startDate' => 'required|date_format:d/m/Y',
-            'endDate' => 'nullable|date_format:d/m/Y'
+            'endDate' => 'nullable|date_format:d/m/Y',
+            'photo' => 'nullable|max:10240',
         ];
     }
 }

@@ -4,18 +4,23 @@ namespace App\Repositories;
 
 use Validator;
 use Carbon\Carbon;
+use App\Models\Event;
 use App\Helpers\CommonHelper;
+use App\Traits\AuthorizationTrait;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\AuthorizationTrait;
-
 
 class EventRepository
 {
     use AuthorizationTrait;
-    private $branchId, $participantId, $departmentId;
+    private $title, $branchId, $departmentId, $participantId, $startDate, $endDate, $description, $file ;
 
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
     public function setBranchId($branchId)
     {
         $this->branchId = $branchId;
@@ -31,6 +36,26 @@ class EventRepository
         $this->participantId = $participantId;
         return $this;
     }
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+        return $this;
+    }
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+        return $this;
+    }
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+    public function setFile($file)
+    {
+        $this->file = $file;
+        return $this;
+    }
 
     public function getDepartments()
     {
@@ -42,165 +67,71 @@ class EventRepository
         return DB::table('basic_info')->where('department_id', '=', $this->departmentId)->get();
     }
 
-    public function getDeptPartName()
+    public function getDepartmentName()
     {
         $departmentName = array();
         foreach ($this->departmentId as $d) {
             $array = DB::table('departments')->select('name')->where('id', '=', $d)->first();
             array_push($departmentName, $array->name);
         }
+        return [$this->departmentId, $departmentName, null, null];
+    }
+
+    public function getParticipantName()
+    {
         $participantName = array();
         foreach ($this->participantId as $p) {
             $array = DB::table('users')->select('full_name')->where('id', '=', $p)->first();
             array_push($participantName, $array->full_name);
         }
-        return [$this->departmentId, $departmentName, $this->participantId, $participantName];
+        return [null, null, $this->participantId, $participantName];
     }
 
-    // public function getLeaveTypes($id)
-    // {
-    //     if($id == null) {
-    //         return LeaveType::where('status', Config::get('variable_constants.activation.active'))->get();
-    //     } else {
-    //         return LeaveType::where('id', '=', $id)->first()->name;
-    //     }
+    public function storeEvents()
+    {
+        $this->startDate = CommonHelper::format_date($this->startDate, 'd/m/Y', 'Y-m-d');
+        $this->endDate = CommonHelper::format_date($this->endDate, 'd/m/Y', 'Y-m-d');
 
-    // }
+        try {
+            DB::beginTransaction();
+            $event = Event::create([
+                'title' => $this->title,
+                'branch_id' => $this->branchId,
+                'start_date' => $this->startDate,
+                'end_date' => $this->endDate,
+                'description' => $this->description,
+                'itinerary' => $this->file,
+            ]);
 
-    // public function getTableData()
-    // {
-    //     $userId = auth()->user()->id;
+            foreach ($this->departmentId as $departmentId) {
+                DB::table('event_departments')
+                    ->insert([
+                        'department_id' => $departmentId,
+                        'event_id' => $event->id,
+                        'status' => Config::get('variable_constants.activation.active'),
+                    ]);
+            }
 
-    //     $isHrSuperUser = $this->setId($userId)->setSlug('manageLeaves')->hasPermission();
-    //     $usersUnderLineManager = DB::table('line_managers')->where('line_manager_user_id', '=', $userId)->whereNull('deleted_at')->pluck('user_id')->toArray();
-    //     array_push($usersUnderLineManager, $userId);
+            foreach ($this->participantId as $participantId) {
+                DB::table('event_participants')
+                    ->insert([
+                        'participant_id' => $participantId,
+                        'event_id' => $event->id,
+                        'status' => Config::get('variable_constants.activation.active'),
+                    ]);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
 
-    //     return DB::table('leaves as l')
-    //         ->leftJoin('leave_types as lt', function ($join) {
-    //             $join->on('l.leave_type_id', '=', 'lt.id');
-    //         })
-    //         ->leftJoin('users as u', 'l.user_id', '=', 'u.id')
-    //         ->groupBy('l.id')
-    //         ->select('l.*', 'lt.id as leave_type_id', 'lt.name', 'u.employee_id', 'u.full_name', 'u.phone_number')
-    //         ->orderBy('l.id', 'DESC')
-    //         ->when(!$isHrSuperUser, function($query)use ($usersUnderLineManager){
-    //             $query->whereIn('l.user_id', $usersUnderLineManager);
-    //         })
-    //         ->get();
-
-    // }
-
-    // public function getlineManagers()
-    // {
-    //     return DB::table('line_managers as lm')
-    //         ->leftJoin('users as u', function ($join) {
-    //             $join->on('lm.user_id', '=', 'u.id')
-    //             ->whereNULL('u.deleted_at');
-    //         })
-    //         ->where('u.employee_id', '=', $this->id)
-    //         ->whereNULL('lm.deleted_at')
-    //         ->select('u.id as user_id', 'lm.line_manager_user_id')
-    //         ->get()
-    //         ->toArray();
-    // }
-
-
-    // public function getTotalTakenLeavesPerUser()
-    // {
-    //     return DB::table('users as u')
-    //         ->join('leaves as l', function ($join) {
-    //             $join->on('u.id', '=', 'l.user_id')
-    //             ->whereNULL('l.deleted_at');
-    //         })
-    //         ->whereNULL('u.deleted_at')
-    //         ->select('u.id as user_id', DB::raw('SUM(total) AS total'))
-    //         ->groupBy('l.user_id')
-    //         ->orderBy('u.id')
-    //         ->get()
-    //         ->toArray();
-    // }
-
-    // public function getLeaveAppliedEmailRecipient()
-    // {
-    //     $appliedUser = DB::table('basic_info')->where('user_id', '=', $this->id)->first();
-    //     if($appliedUser == null ) {
-    //         return false;
-    //     }
-
-    //     $getLineManagers  = DB::table('users as u')
-    //     ->leftJoin('line_managers as lm', function ($join) {
-    //         $join->on('u.id', '=', 'lm.user_id')
-    //         ->whereNULL('lm.deleted_at');
-    //     })
-    //     ->where('lm.user_id', '=', $appliedUser->user_id)
-    //     ->select('lm.line_manager_user_id')
-    //     ->get()
-    //     ->toArray();
-
-    //     $lineManagerEmail = array();
-    //     foreach ($getLineManagers as $glm) {
-    //         array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
-    //     }
-
-    //     $hasManageLeavePermission = DB::table('permissions as p')
-    //         ->leftJoin('role_permissions as rp', 'p.id', '=', 'rp.permission_id')
-    //         ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
-    //         ->where('p.slug', '=', 'notifyLeaveApply')
-    //         ->where('bi.branch_id', '=', $appliedUser->branch_id)
-    //         ->select('rp.role_id')
-    //         ->get()
-    //         ->toArray();
-    //     if($hasManageLeavePermission == null ) {
-    //         return false;
-    //     }
-
-    //     $recipientEmail = array();
-    //     foreach ($hasManageLeavePermission as $hmlp) {
-    //         array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hmlp->role_id)->first()->preferred_email);
-    //     }
-    //     if($recipientEmail == null ) {
-    //         return false;
-    //     }
-    //     return [$lineManagerEmail, $recipientEmail];
-    // }
-
-    // public function storeLeaves($data)
-    // {
-    //     $data['startDate'] = CommonHelper::format_date($data['startDate'], 'd/m/Y', 'Y-m-d');
-    //     $data['endDate'] = CommonHelper::format_date($data['endDate'], 'd/m/Y', 'Y-m-d');
-
-    //     try {
-    //         DB::beginTransaction();
-    //         $leaves = LeaveApply::create([
-    //             'user_id' => auth()->user()->id,
-    //             'leave_type_id' => $data['leaveTypeId'],
-    //             'start_date' => $data['startDate'],
-    //             'end_date' => $data['endDate'],
-    //             'total' => $data['totalLeave'],
-    //             'reason' => $data['reason'],
-    //             'status' => Config::get('variable_constants.leave_status.pending')
-    //         ]);
-
-    //         if($data['files'] != null) {
-    //             foreach ($data['files'] as $attachment) {
-    //                 LeaveAttachments::create([
-    //                     'leave_id'=>$leaves->id,
-    //                     'attachment' => $attachment
-    //                 ]);
-    //             }
-    //         }
-    //         DB::commit();
-    //         return true;
-    //     } catch (\Exception $exception) {
-    //         DB::rollBack();
-    //         return $exception->getMessage();
-    //     }
-    // }
-
-    // public function getLeaveInfo()
-    // {
-    //     return LeaveApply::find($this->id);
-    // }
+    public function getAllEvents()
+    {
+        return DB::table('events')->where('deleted_at', '=', null)->get();
+    }
 
     // public function updateLeave($data)
     // {

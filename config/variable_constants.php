@@ -46,6 +46,7 @@ return [
         'male' => 1,
         'female' => 2
     ],
+
     'requisition_status' => [
         'pending' => 0,
         'received' => 1,
@@ -55,6 +56,7 @@ return [
         'processing' => 5,
         'delivered' => 6
     ],
+
     'status' => [
         'pending' => 0,
         'approved' => 1,
@@ -80,11 +82,19 @@ return [
         'rejected' => 3,
         'canceled' => 4,
     ],
+
     'asset_condition' =>
     [
       'good' => 1,
       'need_repair' => 2,
       'damaged' =>3,
       'destroyed' =>4,
+    ],
+
+    'file_path' =>
+    [
+      'user' => 0,
+      'leave' => 1,
+      'event' => 2,
     ],
 ];

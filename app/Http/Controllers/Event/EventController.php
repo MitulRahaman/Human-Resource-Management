@@ -32,7 +32,9 @@ class EventController extends Controller
     public function manage()
     {
         View::share('sub_menu', 'Manage Events');
-        return view('backend.pages.event.manage');
+        $events = $this->eventService->getAllEvents();
+        dd($events);
+        return view('backend.pages.event.manage', compact('events'));
     }
 
     public function create()
@@ -55,16 +57,12 @@ class EventController extends Controller
 
     public function store(EventAddRequest $request)
     {
-        if(!$this->leaveApplyService->validFileSize($request['photo'])) {
-            return redirect('event/manage')->with('error', 'FileSize cannot exceed 25MB!');
-        }
         try {
             if ($this->eventService->storeEvents($request)) {
                 return redirect('event/manage')->with('success', 'Event Created successfully!');
             } else {
                 return redirect('event/create')->with('error', 'An error occurred!');
             }
-
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

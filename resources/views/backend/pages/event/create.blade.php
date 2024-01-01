@@ -61,13 +61,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-participant">Participant<span class="text-danger">*</span></label>
-                                        <select class="js-select2 form-control input-prevent-multiple-submission" id="participantId" name="participantId[]" style="width: 100%;" data-placeholder="Choose Participant for the Event.." multiple required>
-                                            <option value="all">Select All</option>
-                                            <option value="unSelectAll">Unselect All</option>
-                                            @foreach ($allUsers as $user)
-                                                <option value='{{ $user->id }}'> {{ $user->full_name }} </option>
-                                            @endforeach
-                                        </select>
+                                    <select class="js-select2 form-control input-prevent-multiple-submission" id="participantId" name="participantId[]" style="width: 100%;" data-placeholder="Choose Participant for the Event.." multiple required>
+
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_leave_date">Date<span class="text-danger">*</span></label>
@@ -84,11 +80,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="val-description">Description</label>
-                                    <textarea class="form-control input-prevent-multiple-submission" id="descriptionId" name="descriptionId" rows="3"></textarea>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="3"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="val_photo">Itinerary</label><br>
-                                    <input type="file" class="input-prevent-multiple-submission" name="photo[]" id="photo[]" multiple /><br>
+                                    <input type="file" class="input-prevent-multiple-submission" name="photo" id="photo" /><br>
                                 </div>
                             </div>
                         </div>
@@ -125,22 +121,6 @@
     <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'select2', 'rangeslider']);});</script>
 
     <script>
-        $(document).ready(function() {
-            $('#participantId').change(function() {
-                if ($(this).val() && $(this).val().includes('all')) {
-                    $(this).find('option[value="all"]').prop('selected', false);
-                    $(this).find('option[value!="all"]').prop('selected', true);
-                    $(this).find('option[value="unSelectAll"]').prop('selected', false);
-                }else if($(this).val() && $(this).val().includes('unSelectAll')){
-                    $(this).find('option[value!=""]').prop('selected', false);
-                }
-                else {
-                    $(this).find('option[value="all"]').prop('selected', false);
-                }
-                $(this).trigger('change.select2');
-            });
-        });
-
         $('#branchId').change(function() {
             let branchId = $('#branchId').val();
             var selectDept = $('#departmentId');
@@ -197,10 +177,10 @@
                             html = '<option value="' + response[2][item] + '">' + response[3][item] + '</option>';
                             partOptions[partOptions.length] = html;
                         }
-                        partOptions.empty().append( partOptions.join('') );
+                        selectPart.empty().append( partOptions.join('') );
                     } else {
                         partOptions[partOptions.length] = '<option value=""></option>'
-                        partOptions.empty().append( partOptions.join('') );
+                        selectPart.empty().append( partOptions.join('') );
                     }
                 },
             });

@@ -233,7 +233,6 @@
                         </li>
                     </ul>
                 </li>
-<<<<<<< HEAD
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Create Event') == 0 || strcasecmp($sub_menu, 'Manage Events') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                     <i class="nav-main-link-icon fa fa-calendar-alt"></i>
@@ -248,7 +247,10 @@
                         <li class="nav-main-item">
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Events') == 0 ? 'active' : '' }}" href="{{ url('event/manage' )}}">
                                 <span class="nav-main-link-name">Manage Events</span>
-=======
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add Tickets') == 0 || strcasecmp($sub_menu, 'Manage Tickets') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon fa fa-tasks"></i>
@@ -263,15 +265,11 @@
                         <li class="nav-main-item">
                             <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Tickets') == 0 ? 'active' : '' }}" href="{{ url('ticket/' )}}">
                                 <span class="nav-main-link-name">Manage Tickets</span>
->>>>>>> upstream/temp-development
                             </a>
                         </li>
                     </ul>
                 </li>
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/temp-development
 
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">

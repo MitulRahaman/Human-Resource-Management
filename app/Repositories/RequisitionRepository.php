@@ -235,7 +235,12 @@ class RequisitionRepository
             ->leftJoin('basic_info as bi', 'rr.user_id', '=', 'bi.user_id')
             ->select('bi.branch_id')
             ->first();
-        $super_user = auth()->user()->is_super_user;
+//        $super_user = auth()->user()->is_super_user;
+        $super_user = (DB::table('requisition_requests as rr')
+            ->where('rr.id','=',$this->id)
+            ->leftJoin('users as u', 'u.id','=', 'rr.user_id')
+            ->select('u.is_super_user')
+            ->first())->is_super_user;
         return DB::table('assets as a')
             ->whereNull('a.deleted_at')
             ->where('a.status', '=', Config::get('variable_constants.activation.active'))
@@ -345,4 +350,4 @@ class RequisitionRepository
         return $recipientEmail;
     }
 }
-    
+

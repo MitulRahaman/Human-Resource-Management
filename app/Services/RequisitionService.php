@@ -80,7 +80,7 @@ class RequisitionService
     public function approve($id)
     {
         $approve = $this->requisitionRepository->setId($id)->approve();
-        if($approve==1)
+        if($approve)
         {
             $requisition_info = $this->requisitionRepository->getRequisitionInfo($id);
             $to = $this->requisitionRepository->getRequestedUserMail($id);

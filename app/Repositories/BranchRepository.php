@@ -44,7 +44,7 @@ class BranchRepository
     {
         $data = Branch::find($id);
         if($data->status)
-            $data->update(array('status' => Config::get('variable_constants.activation.inactive')));    
+            $data->update(array('status' => Config::get('variable_constants.activation.inactive')));
         else
             $data->update(array('status' => Config::get('variable_constants.activation.active')));
     }

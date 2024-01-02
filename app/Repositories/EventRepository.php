@@ -14,11 +14,16 @@ use Illuminate\Support\Facades\Hash;
 class EventRepository
 {
     use AuthorizationTrait;
-    private $title, $branchId, $departmentId, $participantId, $startDate, $endDate, $description, $file ;
+    private $title, $eventId, $branchId, $departmentId, $participantId, $startDate, $endDate, $description, $file ;
 
     public function setTitle($title)
     {
         $this->title = $title;
+        return $this;
+    }
+    public function setEventId($eventId)
+    {
+        $this->eventId = $eventId;
         return $this;
     }
     public function setBranchId($branchId)
@@ -130,7 +135,50 @@ class EventRepository
 
     public function getAllEvents()
     {
-        return DB::table('events')->where('deleted_at', '=', null)->get();
+        if($this->eventId) {
+            return DB::table('events')->where('id', '=', $this->eventId)->get();
+        } else{
+            return DB::table('events')->where('deleted_at', '=', null)->get();
+        }
+
+    }
+
+    public function getCurrentBranch()
+    {
+        return DB::table('events as e')
+            ->leftJoin('branches as b', function ($join) {
+                $join->on('e.branch_id', '=', 'b.id');
+            })
+            ->where('e.id', '=', $this->eventId)
+            ->first();
+    }
+
+    public function getCurrentDepartments()
+    {
+        return DB::table('events as e')
+            ->leftJoin('event_departments as ed', function ($join) {
+                $join->on('e.id', '=', 'ed.event_id');
+            })
+            ->leftJoin('departments as d', function ($join) {
+                $join->on('d.id', '=', 'ed.department_id');
+            })
+            ->where('e.id', '=', $this->eventId)
+            ->select('ed.department_id', 'd.name')
+            ->get();
+    }
+
+    public function getCurrentUsers()
+    {
+        return DB::table('events as e')
+            ->leftJoin('event_participants as ep', function ($join) {
+                $join->on('e.id', '=', 'ep.event_id');
+            })
+            ->leftJoin('users as u', function ($join) {
+                $join->on('u.id', '=', 'ep.participant_id');
+            })
+            ->where('e.id', '=', $this->eventId)
+            ->select('ep.participant_id', 'u.full_name')
+            ->get();
     }
 
     // public function updateLeave($data)

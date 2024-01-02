@@ -60,9 +60,34 @@ class EventService
             ->storeEvents();
     }
 
-    public function getAllEvents()
+    public function getAllEvents($id = null)
     {
-        return $this->eventRepository->getAllEvents();
+        $data = $this->eventRepository->setEventId($id)->getAllEvents();
+        foreach($data as $d) {
+            $events[] = [
+                'id' => $d->id,
+                'title' => $d->title,
+                'start' => $d->start_date,
+                'end' => $d->end_date,
+                'description' => $d->description,
+            ];
+        }
+        return $events;
+    }
+
+    public function getCurrentBranch($id)
+    {
+        return $this->eventRepository->setEventId($id)->getCurrentBranch();
+    }
+
+    public function getCurrentDepartments($id)
+    {
+        return $this->eventRepository->setEventId($id)->getCurrentDepartments();
+    }
+
+    public function getCurrentUsers($id)
+    {
+        return $this->eventRepository->setEventId($id)->getCurrentUsers();
     }
 
     // public function editLeave($id)

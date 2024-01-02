@@ -1,17 +1,25 @@
 @extends('backend.layouts.master')
+@section('css_after')
 <link rel="stylesheet" href="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.css') }}">
-
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('backend/js/plugins/ion-rangeslider/css/ion.rangeSlider.css') }}">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/ion-rangeslider/css/ion.rangeSlider.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/js/plugins/select2/css/select2.min.css') }}">
+        <style >
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #1E8FE6;
+            color: #0A1C2A;
+        }
+        .spinner {
+            display: none;
+        }
+    </style>
+@endsection
 @section('page_action')
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('leaveApply') }}">Leave Apply</a></li>
-            <li class="breadcrumb-item">Add</li>
+            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('event/manage') }}">Events</a></li>
+            <li class="breadcrumb-item">Create</li>
         </ol>
     </nav>
 @endsection
@@ -20,11 +28,11 @@
     @include('backend.layouts.error_msg')
         <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
-                <h3 class="block-title">Apply for Leave</h3>
+                <h3 class="block-title">Create Event</h3>
             </div>
 
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
-            <form class="js-validation" action="{{ url('leaveApply/update', $leave->id) }}" method="POST" id="form">
+            <form class="js-validation form-prevent-multiple-submission" action="{{ url('event/update', $events[0]['id']) }}" method="POST" id="form" enctype="multipart/form-data">
                 @csrf
                 @method('patch')
                 <div class="block block-rounded">
@@ -32,38 +40,69 @@
                         <div class="row items-push">
                             <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
-                                    <label for="val-val_leave_type_id">Select Leave Type<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="leaveTypeId" name="leaveTypeId" style="width: 100%" required>
-                                        @foreach ($leaveTypes as $leaveType)
-                                        <option value="{{ $leaveType->id }}" {{ $leave->leave_type_id == $leaveType->id ? 'selected' : '' }}>{{ $leaveType->name }}</option>
-                                        @endforeach
+                                    <label for="val-title">Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control input-prevent-multiple-submission" id="title" name="title" value="{{ $events[0]['title'] }}"  placeholder="Give a title.." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="val-branch">Branch<span class="text-danger">*</span></label>
+                                    <select class="form-control input-prevent-multiple-submission" id="branchId" name="branchId" style="width: 100%" required>
+                                        @if ($branches)
+                                            @foreach($branches as $branch)
+                                                <option value="{{ $branch->id }}" {{ $currentBranch->id == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val_joining_date">Select Leave date<span class="text-danger">*</span></label>
+                                    <label for="val-department">Department<span class="text-danger">*</span></label>
+                                    <select class="js-select2 form-control input-prevent-multiple-submission" id="departmentId" name="departmentId[]" style="width: 100%;" multiple required>
+                                        @if ($currentDepartments)
+                                            @foreach($currentDepartments as $departments)
+                                                <option value="{{ $departments->department_id }}" selected >{{ $departments->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="val-participant">Participant<span class="text-danger">*</span></label>
+                                    <select class="js-select2 form-control input-prevent-multiple-submission" id="participantId" name="participantId[]" style="width: 100%;" data-placeholder="Choose Participant for the Event.." multiple required>
+                                        @if ($currentParticipants)
+                                            @foreach($currentParticipants as $participants)
+                                                <option value="{{ $participants->participant_id }}" selected >{{ $participants->full_name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="val_leave_date">Date<span class="text-danger">*</span></label>
                                     <div class="input-daterange input-group" data-date-format="dd/mm/yyyy"  data-autoclose="true" data-today-highlight="true">
-                                        <input type="text" class="form-control" id="startDate" name="startDate" value = {{ date('d/m/Y', strtotime($leave->start_date)) }}  data-autoclose="true" data-today-highlight="true" required>
+                                        <input type="text" class="form-control input-prevent-multiple-submission" id="startDate" name="startDate" value="{{ date('d/m/Y', strtotime($events[0]["start"])) }}"  data-autoclose="true" data-today-highlight="true" required>
                                         <div class="input-group-prepend input-group-append">
                                             <span class="input-group-text font-w600">
                                                 <i class="fa fa-fw fa-arrow-right"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control" id="endDate" name="endDate" value="{{ date('d/m/Y', strtotime($leave->end_date)) }}"  data-autoclose="true" data-today-highlight="true" required>
-                                        <span id="error_date" style="font-size:13px; color:red"></span>
+                                        <input type="text" class="form-control input-prevent-multiple-submission" id="endDate" name="endDate" value="{{ date('d/m/Y', strtotime($events[0]["end"])) }}"  data-autoclose="true" data-today-highlight="true">
                                     </div>
+                                    <span id="error_date" style="font-size:13px; color:red"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val_reason">Please tell your reason<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="reason" name="reason" value="{{ $leave->reason }}" required>
+                                    <label for="val-description">Description</label>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="3">{{ $events[0]['description'] }}</textarea>
                                 </div>
-                                <input type="hidden" id="totalLeave" name="totalLeave" value="">
+                                <div class="form-group">
+                                    <label for="val_photo">Itinerary</label><br>
+                                    <input type="file" class="input-prevent-multiple-submission" name="photo" id="photo" /><br>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Save -->
                         <div class="row items-push">
-                            <div class="col-lg-7 offset-lg-4">
-                                <button type="submit" disabled="true" class="btn btn-alt-primary" id="submit">Save</button>
+                            <div class="col-lg-6 offset-lg-5">
+                                <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
+                                    <i class="spinner fa fa-spinner fa-spin"></i>Update
+                                </button>
                             </div>
                         </div>
                         <!-- END Save -->
@@ -84,66 +123,88 @@
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
-    <script src="{{ asset('backend/js/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('backend/js/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']);});</script>
-
+    <script>jQuery(function(){One.helpers(['flatpickr', 'datepicker', 'select2', 'rangeslider']);});</script>
 
     <script>
-        $(document).ready(function() {
-            $('.js-tags').select2({
-                tags: true
+        $('#branchId').change(function() {
+            let branchId = $('#branchId').val();
+            var selectDept = $('#departmentId');
+            var selectPart = $('#participantId');
+            $.ajax({
+                type: 'POST',
+                async:false,
+                url: '{{ url("event/getDeptPart") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    branchId: branchId,
+                },
+                success: function(response) {
+                    var deptOptions = [];
+                    var partOptions = [];
+                    if(response.length){
+                        for( item in response[0] ) {
+                            html = '<option value="' + response[0][item] + '">' + response[1][item] + '</option>';
+                            deptOptions[deptOptions.length] = html;
+                        }
+                        selectDept.empty().append( deptOptions.join('') );
+
+                        for( item in response[2] ) {
+                            html = '<option value="' + response[2][item] + '">' + response[3][item] + '</option>';
+                            partOptions[partOptions.length] = html;
+                        }
+                        selectPart.empty().append( partOptions.join('') );
+
+                    } else {
+                        deptOptions[deptOptions.length] = '<option value=""></option>'
+                        selectDept.empty().append( deptOptions.join('') );
+
+                        partOptions[partOptions.length] = '<option value=""></option>'
+                        selectPart.empty().append( partOptions.join('') );
+                    }
+                },
+            });
+        });
+        $('#departmentId').change(function() {
+            let departmentId = $('#departmentId').val();
+            var selectPart = $('#participantId');
+            $.ajax({
+                type: 'POST',
+                async:false,
+                url: '{{ url("event/getDeptPart") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    departmentId: departmentId,
+                },
+                success: function(response) {
+                    var partOptions = [];
+                    if(response.length){
+                        for( item in response[2] ) {
+                            html = '<option value="' + response[2][item] + '">' + response[3][item] + '</option>';
+                            partOptions[partOptions.length] = html;
+                        }
+                        selectPart.empty().append( partOptions.join('') );
+                    } else {
+                        partOptions[partOptions.length] = '<option value=""></option>'
+                        selectPart.empty().append( partOptions.join('') );
+                    }
+                },
             });
         });
 
-        function daysdifference(firstDate, secondDate){
-            var startDay = new Date(firstDate);
-            var endDay = new Date(secondDate);
-            var millisBetween = startDay.getTime() - endDay.getTime();
-            var days = millisBetween / (1000 * 3600 * 24);
-            return Math.round(Math.abs(days)) + 1;
-        }
-
-        $('#startDate').change(function() {
-            let startDate = $('#startDate').val();
-            startDate = startDate.split("/");
-            newStartDate = startDate[1] + '/' + startDate[0] + '/' + startDate[2];
-
-            let endDate = $('#endDate').val();
-            endDate = endDate.split("/");
-            newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
-
-            total = daysdifference(newStartDate, newEndDate);
-            if(total < 90) {
-                $('#totalLeave').val(total);
-                document.getElementById('error_date').innerHTML = "";
-                $('#submit').attr('disabled', false);
-            } else {
-                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
-                $('#submit').attr('disabled', true);
-            }
-        });
-
-        $('#endDate').change(function() {
-            let startDate = $('#startDate').val();
-            startDate = startDate.split("/");
-            newStartDate = startDate[1] + '/' + startDate[0] + '/' + startDate[2];
-
-            let endDate = $('#endDate').val();
-            endDate = endDate.split("/");
-            newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
-
-            total = daysdifference(newStartDate, newEndDate);
-            if(total < 90) {
-                $('#totalLeave').val(total);
-                document.getElementById('error_date').innerHTML = "";
-                $('#submit').attr('disabled', false);
-            } else {
-                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
-                $('#submit').attr('disabled', true);
-            }
-        });
-
+        $('.form-prevent-multiple-submission').on('submit',function() {
+            $('.button-prevent-multiple-submission').attr('disabled', 'true');
+            $('.spinner').show();
+        })
+        $('.input-prevent-multiple-submission').on('keypress',function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
+        $('.input-prevent-multiple-submission').on('change' ,function() {
+            $('.button-prevent-multiple-submission').removeAttr('disabled');
+            $('.spinner').hide();
+        })
     </script>
 @endsection

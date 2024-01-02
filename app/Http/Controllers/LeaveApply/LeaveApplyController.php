@@ -37,6 +37,7 @@ class LeaveApplyController extends Controller
     public function apply()
     {
         View::share('sub_menu', 'Apply Leave');
+        abort_if(!$this->setSlug('applyLeave')->hasPermission(), 403, 'You don\'t have permission!');
         try {
             $leaveTypes = $this->leaveApplyService->getLeaveTypes();
             return view('backend.pages.leaveApply.apply', compact('leaveTypes'));
@@ -118,7 +119,6 @@ class LeaveApplyController extends Controller
 
     public function store(LeaveApplyAddRequest $request)
     {
-        abort_if(!$this->setSlug('applyLeave')->hasPermission(), 403, 'You don\'t have permission!');
         if($request->totalLeave == null) {
             return redirect('leaveApply/apply')->with('error', 'Select Leave date again');
         }
@@ -140,6 +140,7 @@ class LeaveApplyController extends Controller
     public function manage()
     {
         View::share('sub_menu', 'Manage Leaves');
+        abort_if(!$this->setSlug('manageLeave')->hasPermission(), 403, 'You don\'t have permission!');
         return view('backend.pages.leaveApply.manage');
     }
 
@@ -167,7 +168,7 @@ class LeaveApplyController extends Controller
 
     public function leaveReports()
     {
-        abort_if(!$this->setSlug('manageLeaves')->hasPermission(), 403, 'You don\'t have permission!');
+        abort_if(!$this->setSlug('viewLeaveReports')->hasPermission(), 403, 'You don\'t have permission!');
         View::share('sub_menu', 'Yearly Leaves Data');
         $leaveTypes = $this->leaveApplyService->getLeaveTypes();
         return view('backend.pages.leaveApply.leaveReports', compact('leaveTypes'));

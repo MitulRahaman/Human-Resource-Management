@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\UserRepository;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use App\Helpers\CommonHelper;
 use App\Traits\AuthorizationTrait;
+use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class UserService
 {
@@ -59,7 +59,7 @@ class UserService
         $fileName = null;
         if($data['photo']) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
-            $this->fileUploadService->uploadFile($fileName, $data['photo']);
+            $this->fileUploadService->setPathName(Config::get('variable_constants.file_path.user'))->uploadFile($fileName, $data['photo']);
         }
         return $this->userRepository
             ->setEmployeeId($data->employee_id)
@@ -94,7 +94,7 @@ class UserService
         $fileName = null;
         if($data->hasFile('photo')) {
             $fileName = $this->fileUploadService->setPath($data['photo']);
-            $this->fileUploadService->uploadFile($fileName, $data['photo']);
+            $this->fileUploadService->setPathName(Config::get('variable_constants.file_path.user'))->uploadFile($fileName, $data['photo']);
         }
 
         return $this->userRepository

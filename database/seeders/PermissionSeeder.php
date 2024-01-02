@@ -343,6 +343,18 @@ class PermissionSeeder extends Seeder
                 'name' => 'Add Tickets',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 52,
+                'slug' => 'manageEvents',
+                'name' => 'Manage Events',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 53,
+                'slug' => 'viewLeaveReports',
+                'name' => 'View Leave Reports',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($permissions as $key=>$permission)

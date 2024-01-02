@@ -297,6 +297,36 @@ class MenuSeeder extends Seeder
                 'parent_menu' => 26,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 29,
+                'title' => 'Events',
+                'url' => '',
+                'icon' => 'fa fa-calendar-alt',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => null,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 30,
+                'title' => 'Create Event',
+                'url' => 'event/create',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 29,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 31,
+                'title' => 'Manage Events',
+                'url' => 'event/manage',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 29,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($menus as $key=>$menu)

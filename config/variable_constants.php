@@ -46,6 +46,7 @@ return [
         'male' => 1,
         'female' => 2
     ],
+
     'requisition_status' => [
         'pending' => 0,
         'received' => 1,
@@ -55,6 +56,7 @@ return [
         'processing' => 5,
         'delivered' => 6
     ],
+
     'status' => [
         'pending' => 0,
         'approved' => 1,
@@ -103,5 +105,12 @@ return [
       'medium' => 1,
       'high' => 2,
       'critical' => 3,
+    ],
+
+    'file_path' =>
+    [
+      'user' => 0,
+      'leave' => 1,
+      'event' => 2,
     ],
 ];

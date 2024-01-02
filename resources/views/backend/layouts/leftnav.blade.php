@@ -98,6 +98,24 @@
                     </a>
                 </li>
                 <li class="nav-main-heading">User Interface</li>
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Request') == 0 || strcasecmp($sub_menu, 'Manage') == 0) ? 'open' : '' }}">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                        <i class="nav-main-link-icon far  fa-plus-square"></i>
+                        <span class="nav-main-link-name">Requisition</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Request') == 0 ? 'active' : '' }}" href="{{ url('requisition/request' )}}">
+                                <span class="nav-main-link-name">Request</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage') == 0 ? 'active' : '' }}" href="{{ url('requisition/' )}}">
+                                <span class="nav-main-link-name">Manage</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Assets Type') == 0 || strcasecmp($sub_menu, 'Banks') == 0 || strcasecmp($sub_menu, 'Institutes') == 0 || strcasecmp($sub_menu, 'Branches') == 0 || strcasecmp($sub_menu, 'Degree') == 0 || strcasecmp($sub_menu, 'Calender') == 0 || strcasecmp($sub_menu, 'Designations') == 0 || strcasecmp($sub_menu, 'Departments') == 0 || strcasecmp($sub_menu, 'Leaves') == 0 || strcasecmp($sub_menu, 'Roles') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon si si-settings"></i>

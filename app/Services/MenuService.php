@@ -89,10 +89,16 @@ class MenuService
                 $parent_menu = $this->menuRepository->getMenuTitle($row->parent_menu);
                 $created_at = $row->created_at;
                 $permissions = '';
-                foreach ($row->permissions as $p) {
-                    $permissions.="<span class=\"badge badge-primary\">$p</span><br>";
+                if($row->permissions)
+                {
+                    foreach ($row->permissions as $p) {
+                        $permissions.="<span class=\"badge badge-primary\">$p</span><br>";
+                    }
                 }
-                $permissions = $permissions==''? $permissions:'N/A';
+                else
+                {
+                    $permissions = 'N/A';
+                }
                 if ($row->status == Config::get('variable_constants.activation.active')) {
                     $status = "<span class=\"badge badge-success\">Active</span>";
                     $status_msg = "Deactivate";

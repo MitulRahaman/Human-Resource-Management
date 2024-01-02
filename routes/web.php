@@ -13,7 +13,7 @@ use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\LeaveApply\LeaveApplyController;
 use App\Http\Controllers\LeaveApply\LeaveApplicationMailController;
-
+use App\Http\Controllers\Event\EventController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Menu\MenuController;
@@ -48,15 +48,15 @@ Route::group(['middleware'=> 'auth'], function() {
     Route::post('change_password', [AuthController::class, 'changePassword']);
     Route::post('change_password/validate_inputs', [AuthController::class, 'validatePasswords']);
 
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('leave_types/get_data', [LeaveController::class, 'getTypeWiseTotalLeavesData']);
+
     Route::prefix('dashboard')->group(function() {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/get_requisition_data', [DashboardController::class, 'fetchRequisitionData']);
         Route::get('/get_on_leave_data', [DashboardController::class, 'fetchOnLeaveData']);
         Route::get('/get_pending_leave_data', [DashboardController::class, 'fetchPendingLeaveData']);
     });
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('leave_types/get_data', [LeaveController::class, 'getTypeWiseTotalLeavesData']);
-
     Route::prefix('branch')->group(function() {
         Route::get('/', [BranchController::class, 'index']);
         Route::get('/add', [BranchController::class, 'create']);
@@ -226,81 +226,124 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('status/{id}/deliver', [RequisitionController::class, 'deliver']);
         Route::post('/fetch_assets_to_deliver',[RequisitionController::class, 'fetchAssetsToDeliver']);
     });
-
-        Route::prefix('permission')->group(function() {
-            Route::get('/', [PermissionController::class, 'index']);
-            Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
-            Route::get('/add', [PermissionController::class, 'create']);
-            Route::post('/store', [PermissionController::class, 'store']);
-            Route::post('/{id}/change_status', [PermissionController::class, 'changeStatus']);
-            Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
-            Route::post('/{id}/update', [PermissionController::class, 'update']);
-            Route::post('/validate_inputs', [PermissionController::class, 'validate_inputs']);
-            Route::post('/{id}/validate_name',[PermissionController::class, 'validate_name']);
-            Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
-            Route::post('/{id}/delete', [PermissionController::class, 'delete']);
-            Route::post('/{id}/restore', [PermissionController::class, 'restore']);
-            Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
-        });
-        Route::prefix('menu')->group(function() {
-            Route::get('/', [MenuController::class, 'index']);
-            Route::get('/get_menu_data', [MenuController::class, 'fetchData']);
-            Route::get('/add', [MenuController::class, 'create']);
-            Route::post('/store', [MenuController::class, 'store']);
-            Route::post('/{id}/change_status', [MenuController::class, 'changeStatus']);
-            Route::post('/{id}/delete', [MenuController::class, 'delete']);
-            Route::post('/{id}/restore', [MenuController::class, 'restore']);
-            Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
-            Route::post('/{id}/update', [MenuController::class, 'update']);
-        });
-
-
-        Route::prefix('assetsType')->group(function() {
-            Route::get('/', [AssetController::class, 'assetTypeIndex']);
-            Route::get('/get_asset_type_data', [AssetController::class, 'fetchDataAssetType']);
-            Route::get('/add', [AssetController::class, 'createAssetType']);
-            Route::post('/validate_inputs', [AssetController::class, 'validate_inputs_asset_type']);
-            Route::post('/store', [AssetController::class, 'storeAssetType']);
-            Route::get('/{id}/edit_asset_type', [AssetController::class, 'edit_asset_type'])->name('edit_asset_type');
-            Route::post('/{id}/update_asset_type', [AssetController::class, 'update_asset_type']);
-            Route::post('/{id}/validate_name',[AssetController::class, 'validate_name_asset_type']);
-            Route::post('/{id}/delete', [AssetController::class, 'deleteAssetType']);
-            Route::post('/{id}/restore', [AssetController::class, 'restoreAssetType']);
-            Route::post('/{id}/change_status', [AssetController::class, 'changeStatusAssetType']);
-        });
-
-        Route::prefix('asset')->group(function() {
-            Route::get('/', [AssetController::class, 'index']);
-            Route::get('/get_asset_data', [AssetController::class, 'fetchData']);
-            Route::get('/add', [AssetController::class, 'create']);
-            Route::post('/store', [AssetController::class, 'store']);
-            Route::get('/{id}/edit', [AssetController::class, 'edit'])->name('edit_asset');
-            Route::post('/{id}/update', [AssetController::class, 'update']);
-            Route::post('/{id}/delete', [AssetController::class, 'delete']);
-            Route::post('/{id}/restore', [AssetController::class, 'restore']);
-            Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
-            Route::post('/{id}/change_condition', [AssetController::class, 'changeCondition']);
-            Route::get('/user_assets', [AssetController::class, 'userAssets']);
-            Route::get('/get_user_asset_data', [AssetController::class, 'fetchUserAssetData']);
-            Route::post('/{id}/change_user_asset_status', [AssetController::class, 'changeUserAssetStatus']);
-        });
-        Route::prefix('log')->group(function() {
-            Route::get('/', [LogController::class, 'index']);
-            Route::get('/get_log_data', [LogController::class, 'fetchData']);
-        });
-        Route::prefix('ticket')->group(function() {
-            Route::get('/', [TicketController::class, 'index']);
-            Route::get('/get_ticket_data', [TicketController::class, 'fetchData']);
-            Route::get('/add', [TicketController::class, 'create']);
-            Route::post('/store', [TicketController::class, 'store']);
-            Route::get('status/{id}/close', [TicketController::class, 'close']);
-            Route::get('/{id}/edit', [TicketController::class, 'edit']);
-            Route::post('/{id}/update', [TicketController::class, 'update']);
-            Route::get('status/{id}/hold', [TicketController::class, 'hold']);
-            Route::post('status/{id}/complete', [TicketController::class, 'complete']);
-        });
-
+    Route::prefix('permission')->group(function() {
+        Route::get('/', [PermissionController::class, 'index']);
+        Route::get('/get_permission_data', [PermissionController::class, 'fetchData']);
+        Route::get('/add', [PermissionController::class, 'create']);
+        Route::post('/store', [PermissionController::class, 'store']);
+        Route::post('/{id}/change_status', [PermissionController::class, 'changeStatus']);
+        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit_permission');
+        Route::post('/{id}/update', [PermissionController::class, 'update']);
+        Route::post('/validate_inputs', [PermissionController::class, 'validate_inputs']);
+        Route::post('/{id}/validate_name',[PermissionController::class, 'validate_name']);
+        Route::post('/check_edit', [PermissionController::class, 'checkEdit']);
+        Route::post('/{id}/delete', [PermissionController::class, 'delete']);
+        Route::post('/{id}/restore', [PermissionController::class, 'restore']);
+        Route::get('export-permissions-data', [PermissionController::class, 'exportPermissionsData']);
     });
-
-//});
-
+    Route::prefix('menu')->group(function() {
+        Route::get('/', [MenuController::class, 'index']);
+        Route::get('/get_menu_data', [MenuController::class, 'fetchData']);
+        Route::get('/add', [MenuController::class, 'create']);
+        Route::post('/store', [MenuController::class, 'store']);
+        Route::post('/{id}/change_status', [MenuController::class, 'changeStatus']);
+        Route::post('/{id}/delete', [MenuController::class, 'delete']);
+        Route::post('/{id}/restore', [MenuController::class, 'restore']);
+        Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
+        Route::post('/{id}/update', [MenuController::class, 'update']);
+    });
+    Route::prefix('assetsType')->group(function() {
+        Route::get('/', [AssetController::class, 'assetTypeIndex']);
+        Route::get('/get_asset_type_data', [AssetController::class, 'fetchDataAssetType']);
+        Route::get('/add', [AssetController::class, 'createAssetType']);
+        Route::post('/validate_inputs', [AssetController::class, 'validate_inputs_asset_type']);
+        Route::post('/store', [AssetController::class, 'storeAssetType']);
+        Route::get('/{id}/edit_asset_type', [AssetController::class, 'edit_asset_type'])->name('edit_asset_type');
+        Route::post('/{id}/update_asset_type', [AssetController::class, 'update_asset_type']);
+        Route::post('/{id}/validate_name',[AssetController::class, 'validate_name_asset_type']);
+        Route::post('/{id}/delete', [AssetController::class, 'deleteAssetType']);
+        Route::post('/{id}/restore', [AssetController::class, 'restoreAssetType']);
+        Route::post('/{id}/change_status', [AssetController::class, 'changeStatusAssetType']);
+    });
+    Route::prefix('asset')->group(function() {
+        Route::get('/', [AssetController::class, 'index']);
+        Route::get('/get_asset_data', [AssetController::class, 'fetchData']);
+        Route::get('/add', [AssetController::class, 'create']);
+        Route::post('/store', [AssetController::class, 'store']);
+        Route::get('/{id}/edit', [AssetController::class, 'edit'])->name('edit_asset');
+        Route::post('/{id}/update', [AssetController::class, 'update']);
+        Route::post('/{id}/delete', [AssetController::class, 'delete']);
+        Route::post('/{id}/restore', [AssetController::class, 'restore']);
+        Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
+        Route::post('/{id}/change_condition', [AssetController::class, 'changeCondition']);
+        Route::get('/user_assets', [AssetController::class, 'userAssets']);
+        Route::get('/get_user_asset_data', [AssetController::class, 'fetchUserAssetData']);
+        Route::post('/{id}/change_user_asset_status', [AssetController::class, 'changeUserAssetStatus']);
+    });
+    Route::prefix('log')->group(function() {
+        Route::get('/', [LogController::class, 'index']);
+        Route::get('/get_log_data', [LogController::class, 'fetchData']);
+    });
+    Route::prefix('ticket')->group(function() {
+        Route::get('/', [TicketController::class, 'index']);
+        Route::get('/get_ticket_data', [TicketController::class, 'fetchData']);
+        Route::get('/add', [TicketController::class, 'create']);
+        Route::post('/store', [TicketController::class, 'store']);
+        Route::get('status/{id}/close', [TicketController::class, 'close']);
+        Route::get('/{id}/edit', [TicketController::class, 'edit']);
+        Route::post('/{id}/update', [TicketController::class, 'update']);
+        Route::get('status/{id}/hold', [TicketController::class, 'hold']);
+        Route::post('status/{id}/complete', [TicketController::class, 'complete']);
+    });
+    Route::prefix('menu')->group(function() {
+        Route::get('/', [MenuController::class, 'index']);
+        Route::get('/get_menu_data', [MenuController::class, 'fetchData']);
+        Route::get('/add', [MenuController::class, 'create']);
+        Route::post('/store', [MenuController::class, 'store']);
+        Route::post('/{id}/change_status', [MenuController::class, 'changeStatus']);
+        Route::post('/{id}/delete', [MenuController::class, 'delete']);
+        Route::post('/{id}/restore', [MenuController::class, 'restore']);
+        Route::get('/{menu}/edit', [MenuController::class, 'edit'])->name('edit_menu');
+        Route::post('/{id}/update', [MenuController::class, 'update']);
+    });
+    Route::prefix('assetsType')->group(function() {
+        Route::get('/', [AssetController::class, 'assetTypeIndex']);
+        Route::get('/get_asset_type_data', [AssetController::class, 'fetchDataAssetType']);
+        Route::get('/add', [AssetController::class, 'createAssetType']);
+        Route::post('/validate_inputs', [AssetController::class, 'validate_inputs_asset_type']);
+        Route::post('/store', [AssetController::class, 'storeAssetType']);
+        Route::get('/{id}/edit_asset_type', [AssetController::class, 'edit_asset_type'])->name('edit_asset_type');
+        Route::post('/{id}/update_asset_type', [AssetController::class, 'update_asset_type']);
+        Route::post('/{id}/validate_name',[AssetController::class, 'validate_name_asset_type']);
+        Route::post('/{id}/delete', [AssetController::class, 'deleteAssetType']);
+        Route::post('/{id}/restore', [AssetController::class, 'restoreAssetType']);
+        Route::post('/{id}/change_status', [AssetController::class, 'changeStatusAssetType']);
+    });
+    Route::prefix('asset')->group(function() {
+        Route::get('/', [AssetController::class, 'index']);
+        Route::get('/get_asset_data', [AssetController::class, 'fetchData']);
+        Route::get('/add', [AssetController::class, 'create']);
+        Route::post('/store', [AssetController::class, 'store']);
+        Route::get('/{id}/edit', [AssetController::class, 'edit'])->name('edit_asset');
+        Route::post('/{id}/update', [AssetController::class, 'update']);
+        Route::post('/{id}/delete', [AssetController::class, 'delete']);
+        Route::post('/{id}/restore', [AssetController::class, 'restore']);
+        Route::post('/{id}/change_status', [AssetController::class, 'changeStatus']);
+        Route::post('/{id}/change_condition', [AssetController::class, 'changeCondition']);
+        Route::get('/user_assets', [AssetController::class, 'userAssets']);
+        Route::get('/get_user_asset_data', [AssetController::class, 'fetchUserAssetData']);
+        Route::post('/{id}/change_user_asset_status', [AssetController::class, 'changeUserAssetStatus']);
+    });
+    Route::prefix('log')->group(function() {
+        Route::get('/', [LogController::class, 'index']);
+        Route::get('/get_log_data', [LogController::class, 'fetchData']);
+    });
+    Route::prefix('event')->group(function() {
+        Route::get('create', [EventController::class, 'create']);
+        Route::get('manage', [EventController::class, 'manage']);
+        Route::post('store', [EventController::class, 'store']);
+        Route::get('/{id}/edit', [EventController::class, 'edit']);
+        Route::patch('/update/{id}', [EventController::class, 'update']);
+        Route::post('getDeptPart', [EventController::class, 'getDeptPart']);
+    });
+});

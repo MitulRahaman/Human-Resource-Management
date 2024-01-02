@@ -34,7 +34,7 @@ class LeaveApplyService
         $fileName = null;
         if($request['photo']) {
             $fileName = $this->fileUploadService->setPath($request['photo']);
-            $this->fileUploadService->uploadFile($fileName, $request['photo']);
+            $this->fileUploadService->setPathName(Config::get('variable_constants.file_path.leave'))->uploadFile($fileName, $request['photo']);
         }
         $data =[
             'leaveTypeId' => $request['leaveTypeId'],

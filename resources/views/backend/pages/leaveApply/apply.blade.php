@@ -15,7 +15,7 @@
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('leaveApply') }}">Leave Apply</a></li>
+            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('leaveApply/manage') }}">Leave Apply</a></li>
             <li class="breadcrumb-item">Add</li>
         </ol>
     </nav>
@@ -104,12 +104,6 @@
 
 
     <script>
-        $(document).ready(function() {
-            $('.js-tags').select2({
-                tags: true
-            });
-        });
-
         function daysdifference(firstDate, secondDate){
             var startDay = new Date(firstDate);
             var endDay = new Date(secondDate);
@@ -128,12 +122,12 @@
             newEndDate = endDate[1] + '/' + endDate[0] + '/' + endDate[2];
 
             total = daysdifference(newStartDate, newEndDate);
-            if(total < 90) {
+            if(total < 181) {
                 $('#totalLeave').val(total);
                 document.getElementById('error_date').innerHTML = "";
                 $('#submit').attr('disabled', false);
             } else {
-                document.getElementById('error_date').innerHTML = "total leave must be less than 90 days";
+                document.getElementById('error_date').innerHTML = "total leave must be less than or equal 180 days";
                 $('#submit').attr('disabled', true);
             }
 

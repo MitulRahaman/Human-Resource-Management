@@ -233,6 +233,24 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Create Event') == 0 || strcasecmp($sub_menu, 'Manage Events') == 0) ? 'open' : '' }}">
+                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                    <i class="nav-main-link-icon fa fa-calendar-alt"></i>
+                        <span class="nav-main-link-name">Events</span>
+                    </a>
+                    <ul class="nav-main-submenu">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Create Event') == 0 ? 'active' : '' }}" href="{{ url('event/create' )}}">
+                                <span class="nav-main-link-name">Create Event</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Events') == 0 ? 'active' : '' }}" href="{{ url('event/manage' )}}">
+                                <span class="nav-main-link-name">Manage Events</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add Tickets') == 0 || strcasecmp($sub_menu, 'Manage Tickets') == 0) ? 'open' : '' }}">
                     <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
                         <i class="nav-main-link-icon fa fa-tasks"></i>
@@ -251,6 +269,7 @@
                         </li>
                     </ul>
                 </li>
+
 
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">

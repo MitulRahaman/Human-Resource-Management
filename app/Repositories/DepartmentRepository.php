@@ -124,10 +124,10 @@ class DepartmentRepository
 
     public function getDepartments()
     {
-        return DB::table('departments as d')
-            ->whereNull('d.deleted_at')
-            ->where('d.status', '=', Config::get('variable_constants.activation.active'))
-            ->select('d.id', 'd.name')
+        return DB::table('departments')
+            ->whereNull('deleted_at')
+            ->where('status', '=', Config::get('variable_constants.activation.active'))
+            ->select('id', 'name')
             ->get();
     }
 }

@@ -373,6 +373,108 @@ class PermissionSeeder extends Seeder
                 'name' => 'Add Warnings',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 57,
+                'slug' => 'viewUsers',
+                'name' => 'View Users',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 58,
+                'slug' => 'viewAssets',
+                'name' => 'View Assets',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 59,
+                'slug' => 'viewRequisitions',
+                'name' => 'View Requisitions',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 60,
+                'slug' => 'viewTickets',
+                'name' => 'View Tickets',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 61,
+                'slug' => 'viewAppliedLeave',
+                'name' => 'View Applied Leave',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 62,
+                'slug' => 'viewEvents',
+                'name' => 'View Events',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 63,
+                'slug' => 'viewWarnings',
+                'name' => 'View Warnings',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 64,
+                'slug' => 'viewAssetType',
+                'name' => 'View Asset Type',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 65,
+                'slug' => 'viewBanks',
+                'name' => 'View Banks',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 66,
+                'slug' => 'viewCalendar',
+                'name' => 'View Calendar',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 67,
+                'slug' => 'viewDegrees',
+                'name' => 'View Degrees',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 68,
+                'slug' => 'viewDepartments',
+                'name' => 'View Departments',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 69,
+                'slug' => 'viewBranches',
+                'name' => 'View Branches',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 70,
+                'slug' => 'viewDesignations',
+                'name' => 'View Designations',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 71,
+                'slug' => 'viewInstitutes',
+                'name' => 'View Institutes',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 72,
+                'slug' => 'viewLeaves',
+                'name' => 'View Leaves',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 73,
+                'slug' => 'viewRoles',
+                'name' => 'View Roles',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($permissions as $key=>$permission)

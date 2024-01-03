@@ -23,6 +23,7 @@ use App\Http\Controllers\Asset\AssetController;
 use App\Http\Controllers\Requisition\RequisitionController;
 use App\Http\Controllers\Log\LogController;
 use App\Http\Controllers\Ticket\TicketController;
+use App\Http\Controllers\Warning\WarningController;
 
 
 /*
@@ -345,5 +346,15 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/{id}/edit', [EventController::class, 'edit']);
         Route::patch('/update/{id}', [EventController::class, 'update']);
         Route::post('getDeptPart', [EventController::class, 'getDeptPart']);
+    });
+
+    Route::prefix('warning')->group(function() {
+        Route::get('/', [WarningController::class, 'index']);
+        Route::get('/get_warning_data', [WarningController::class, 'fetchData']);
+        Route::get('/add', [WarningController::class, 'create']);
+        Route::post('/store', [WarningController::class, 'store']);
+        Route::get('status/{id}/acknowledged', [WarningController::class, 'acknowledged']);
+        Route::get('/{id}/edit', [WarningController::class, 'edit']);
+        Route::post('/{id}/update', [WarningController::class, 'update']);
     });
 });

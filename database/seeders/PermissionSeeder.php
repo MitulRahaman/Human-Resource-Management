@@ -355,6 +355,24 @@ class PermissionSeeder extends Seeder
                 'name' => 'View Leave Reports',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 54,
+                'slug' => 'manageWarning',
+                'name' => 'Manage Warnings',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 55,
+                'slug' => 'editWarning',
+                'name' => 'Edit Warnings',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 56,
+                'slug' => 'addWarning',
+                'name' => 'Add Warnings',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($permissions as $key=>$permission)

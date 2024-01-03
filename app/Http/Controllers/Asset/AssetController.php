@@ -28,7 +28,7 @@ class AssetController extends Controller
     {
         View::share('sub_menu', 'Manage Assets');
         $addAssetPermission = $this->setSlug('addAsset')->hasPermission();
-        return \view('backend.pages.asset.index');
+        return \view('backend.pages.asset.index',compact('addAssetPermission'));
     }
     public function fetchData()
     {

@@ -22,7 +22,8 @@ class MenuController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.menu.index');
+        $addMenuPermission = $this->setSlug('addMenu')->hasPermission();
+        return \view('backend.pages.menu.index',compact('addMenuPermission'));
     }
     public function fetchData()
     {

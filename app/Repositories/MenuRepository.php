@@ -118,16 +118,15 @@ class MenuRepository
     {
         $menus=DB::table('menus as m')
             ->select('m.id', 'm.title', 'm.url', 'm.icon', 'm.description', 'm.menu_order', 'm.parent_menu', 'm.status', DB::raw('date_format(m.created_at, "%d/%m/%Y") as created_at'), DB::raw('date_format(m.deleted_at, "%d/%m/%Y") as deleted_at'))
-            ->selectRaw('GROUP_CONCAT(p.name) as permissions')
             ->leftJoin('menu_permissions as mp', 'm.id', '=', 'mp.menu_id')
             ->leftJoin('permissions as p', 'mp.permission_id', '=', 'p.id')
+            ->selectRaw('GROUP_CONCAT(p.name) as permissions')
             ->groupBy('m.id', 'm.title', 'm.url', 'm.icon','m.description', 'm.menu_order', 'm.parent_menu', 'm.status', 'm.created_at', 'm.deleted_at')
             ->orderBy('m.id', 'desc')
             ->get();
         foreach ($menus as $menu) {
             $menu->permissions = explode(',', $menu->permissions);
         }
-
         return $menus;
     }
     public function getAllPermissions($id)

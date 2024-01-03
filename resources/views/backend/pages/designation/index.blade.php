@@ -29,7 +29,7 @@
     </style>
 @endsection
 @section('page_action')
-    @if ($hasDesignationManagePermission)
+    @if ($addDesignationPermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('designation/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">

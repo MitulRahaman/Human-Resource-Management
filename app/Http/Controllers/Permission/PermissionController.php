@@ -23,7 +23,8 @@ class PermissionController extends Controller
     }
     public function index()
     {
-        return \view('backend.pages.permission.index');
+        $addPermissionPermission = $this->setSlug('addPermission')->hasPermission();
+        return \view('backend.pages.permission.index',compact('addPermissionPermission'));
     }
     public function create()
     {

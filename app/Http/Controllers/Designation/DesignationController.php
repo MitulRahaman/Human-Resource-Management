@@ -26,7 +26,8 @@ class DesignationController extends Controller
     public function index()
     {
         $hasDesignationManagePermission = $this->setId(auth()->user()->id)->setSlug('manageDesignation')->hasPermission();
-        return \view('backend.pages.designation.index', compact('hasDesignationManagePermission'));
+        $addDesignationPermission = $this->setSlug('addDesignation')->hasPermission();
+        return \view('backend.pages.designation.index', compact('hasDesignationManagePermission','addDesignationPermission'));
     }
 
     public function create()

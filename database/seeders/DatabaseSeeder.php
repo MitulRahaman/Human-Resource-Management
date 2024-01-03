@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([SuperUser::class, PermissionSeeder::class, AssetTypeSeeder::class, BankSeeder::class, DegreeSeeder::class, InstituteSeeder::class,
-            LeaveTypeSeeder::class, MenuSeeder::class, OrganizationSeeder::class]);
+            LeaveTypeSeeder::class, MenuSeeder::class, OrganizationSeeder::class, MenuPermissionsSeeder::class]);
 
     }
 }

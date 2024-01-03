@@ -24,7 +24,8 @@ class RequisitionController extends Controller
     public function index()
     {
         View::share('sub_menu', 'Manage');
-        return view('backend.pages.requisition.index');
+        $requestRequisitionPermission = $this->setSlug('requestRequisition')->hasPermission();
+        return view('backend.pages.requisition.index',compact('requestRequisitionPermission'));
     }
     public function fetchData()
     {

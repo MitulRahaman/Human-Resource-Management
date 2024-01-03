@@ -28,7 +28,7 @@
     </style>
 @endsection
 @section('page_action')
-    @if ($hasDegreeManagePermission)
+    @if ($addDegreePermission)
     <div class="mt-3 mt-sm-0 ml-sm-3">
         <a href="{{ url('degree/add') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">

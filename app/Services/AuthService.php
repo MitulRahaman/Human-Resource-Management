@@ -25,13 +25,25 @@ class AuthService
             $user->save();
 
             $basicInfo = $this->authRepository->setUserId(Auth::id())->getBasicInfo();
+            if($basicInfo)
+            {
+                $permissions = $this->authRepository->setRoleId($basicInfo->role_id)->getRolePermissions();
+                $menus = $this->authRepository->setPermissions($permissions)->getMenus();
+            }
+            elseif ($user->is_super_user)
+            {
+                $permissions = $this->authRepository->getAllPermission();
+                $menus = $this->authRepository->setPermissions($permissions)->getMenus();
+            }
 
             $user_data = [
                 'employee_id' => Auth::user()->employee_id,
                 'full_name' => Auth::user()->full_name,
                 'nick_name' => Auth::user()->nick_name,
                 'is_super_user' => $user->is_super_user,
-                'basic_info' => $basicInfo
+                'basic_info' => $basicInfo,
+                'user_permissions' => $permissions,
+                'user_menus' => $menus,
             ];
 
             session(['user_data' => $user_data]);

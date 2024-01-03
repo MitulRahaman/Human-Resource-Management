@@ -27,6 +27,7 @@ class AssetController extends Controller
     public function index()
     {
         View::share('sub_menu', 'Manage Assets');
+        $addAssetPermission = $this->setSlug('addAsset')->hasPermission();
         return \view('backend.pages.asset.index');
     }
     public function fetchData()
@@ -149,7 +150,8 @@ class AssetController extends Controller
     public function assetTypeIndex()
     {
         View::share('sub_menu', 'Assets Type');
-        return \view('backend.pages.asset.assetTypeIndex');
+        $addAssetTypePermission = $this->setSlug('addAssetType')->hasPermission();
+        return \view('backend.pages.asset.assetTypeIndex', compact('addAssetTypePermission'));
     }
     public function fetchDataAssetType()
     {

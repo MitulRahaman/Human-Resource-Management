@@ -98,179 +98,41 @@
                     </a>
                 </li>
                 <li class="nav-main-heading">User Interface</li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Assets Type') == 0 || strcasecmp($sub_menu, 'Banks') == 0 || strcasecmp($sub_menu, 'Institutes') == 0 || strcasecmp($sub_menu, 'Branches') == 0 || strcasecmp($sub_menu, 'Degree') == 0 || strcasecmp($sub_menu, 'Calender') == 0 || strcasecmp($sub_menu, 'Designations') == 0 || strcasecmp($sub_menu, 'Departments') == 0 || strcasecmp($sub_menu, 'Leaves') == 0 || strcasecmp($sub_menu, 'Roles') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-settings"></i>
-                        <span class="nav-main-link-name">System Settings</span>
+                <?php
+                $menus = session('user_data')['user_menus'];
+                $parentMenus = $menus->filter(function ($menu) {
+                    return $menu->parent_menu === null;
+                });
+                ?>
+                @foreach($parentMenus as $pm)
+                    <?php
+                    $subMenus = $menus->filter(function ($menu) use($pm) {
+                        return $menu->parent_menu === $pm->id;
+                    });
+                    $isOpen = $subMenus->contains('title', $sub_menu);
+                    ?>
+                    <li class="nav-main-item {{ $isOpen ? 'open' : '' }}">
+                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="">
+                            <i class="nav-main-link-icon {{$pm->icon}}"></i>
+                            <span class="nav-main-link-name">{{$pm->title}}</span>
+                        </a>
+                        <ul class="nav-main-submenu">
+                            @foreach($subMenus as $sm)
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link {{ strcasecmp($sub_menu, $sm->title) == 0 ? 'active' : '' }}" href="{{ url($sm->url) }}">
+                                        <span class="nav-main-link-name">{{$sm->title}}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endforeach
+                <li class="nav-main-item">
+                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Logs') == 0 ? 'active' : '' }}" href="{{ url('log') }}">
+                        <i class="nav-main-link-icon far fa-clone"></i>
+                        <span class="nav-main-link-name">Logs</span>
                     </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Assets Type') == 0 ? 'active' : '' }}" href="{{ url('assetsType') }}">
-                                <span class="nav-main-link-name">Assets Type</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Banks') == 0 ? 'active' : '' }}" href="{{ url('bank') }}">
-                                <span class="nav-main-link-name">Banks</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Branches') == 0 ? 'active' : '' }}" href="{{ url('branch') }}">
-                                <span class="nav-main-link-name">Branches</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Calender') == 0 ? 'active' : '' }}" href="{{ url('calender') }}">
-                                <span class="nav-main-link-name">Calender</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Degree') == 0 ? 'active' : '' }}" href="{{ url('degree') }}">
-                                <span class="nav-main-link-name">Degree</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Departments') == 0 ? 'active' : '' }}" href="{{ url('department') }}">
-                                <span class="nav-main-link-name">Departments</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Designations') == 0 ? 'active' : '' }}" href="{{ url('designation') }}">
-                                <span class="nav-main-link-name">Designations</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Institutes') == 0 ? 'active' : '' }}" href="{{ url('institute') }}">
-                                <span class="nav-main-link-name">Institutes</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Leaves') == 0 ? 'active' : '' }}" href="{{ url('leave') }}">
-                                <span class="nav-main-link-name">Leaves</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Roles') == 0 ? 'active' : '' }}" href="{{ url('role') }}">
-                                <span class="nav-main-link-name">Roles</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add User') == 0 || strcasecmp($sub_menu, 'Manage Users') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-users"></i>
-                        <span class="nav-main-link-name">Users</span>
-                    </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Add User') == 0 ? 'active' : '' }}" href="{{ url('user/create') }}">
-                                <span class="nav-main-link-name">Add User</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Users') == 0 ? 'active' : '' }}" href="{{ url('user/manage') }}">
-                                <span class="nav-main-link-name">Manage Users</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add Asset') == 0 || strcasecmp($sub_menu, 'User Assets') == 0 || strcasecmp($sub_menu, 'Manage Assets') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon si si-grid"></i>
-                        <span class="nav-main-link-name">Assets</span>
-                    </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Add Asset') == 0 ? 'active' : '' }}" href="{{ url('asset/add') }}">
-                                <span class="nav-main-link-name">Add Asset</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'User Assets') == 0 ? 'active' : '' }}" href="{{ url('asset/user_assets') }}">
-                                <span class="nav-main-link-name">User Assets</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Assets') == 0 ? 'active' : '' }}" href="{{ url('asset/') }}">
-                                <span class="nav-main-link-name">Manage Assets</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Request') == 0 || strcasecmp($sub_menu, 'Manage') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon far  fa-plus-square"></i>
-                        <span class="nav-main-link-name">Requisition</span>
-                    </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Request') == 0 ? 'active' : '' }}" href="{{ url('requisition/request' )}}">
-                                <span class="nav-main-link-name">Request</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage') == 0 ? 'active' : '' }}" href="{{ url('requisition/' )}}">
-                                <span class="nav-main-link-name">Manage</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Apply Leave') == 0 || strcasecmp($sub_menu, 'Manage Leaves') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                    <i class="nav-main-link-icon si si-note"></i>
-                        <span class="nav-main-link-name">Apply for Leave</span>
-                    </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Apply Leave') == 0 ? 'active' : '' }}" href="{{ url('leaveApply/apply' )}}">
-                                <span class="nav-main-link-name">Apply Leave</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Leaves') == 0 ? 'active' : '' }}" href="{{ url('leaveApply/manage' )}}">
-                                <span class="nav-main-link-name">Manage Leaves</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Create Event') == 0 || strcasecmp($sub_menu, 'Manage Events') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                    <i class="nav-main-link-icon fa fa-calendar-alt"></i>
-                        <span class="nav-main-link-name">Events</span>
-                    </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Create Event') == 0 ? 'active' : '' }}" href="{{ url('event/create' )}}">
-                                <span class="nav-main-link-name">Create Event</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Events') == 0 ? 'active' : '' }}" href="{{ url('event/manage' )}}">
-                                <span class="nav-main-link-name">Manage Events</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-main-item {{ (strcasecmp($sub_menu, 'Add Tickets') == 0 || strcasecmp($sub_menu, 'Manage Tickets') == 0) ? 'open' : '' }}">
-                    <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                        <i class="nav-main-link-icon fa fa-tasks"></i>
-                        <span class="nav-main-link-name">Tickets</span>
-                    </a>
-                    <ul class="nav-main-submenu">
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Add Tickets') == 0 ? 'active' : '' }}" href="{{ url('ticket/add' )}}">
-                                <span class="nav-main-link-name">Add</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link {{ strcasecmp($sub_menu, 'Manage Tickets') == 0 ? 'active' : '' }}" href="{{ url('ticket/' )}}">
-                                <span class="nav-main-link-name">Manage Tickets</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">
                     <a class="nav-main-link {{ strcasecmp($sub_menu, 'Menus') == 0 ? 'active' : '' }}" href="{{ url('menu') }}">
@@ -282,14 +144,11 @@
                         <span class="nav-main-link-name">Permissions</span>
                     </a>
                 </li>
-                <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Logs') == 0 ? 'active' : '' }}" href="{{ url('log') }}">
-                        <span class="nav-main-link-name">Logs</span>
-                    </a>
-                </li>
+
             </ul>
         </div>
         <!-- END Side Navigation -->
     </div>
     <!-- END Sidebar Scrolling -->
 </nav>
+

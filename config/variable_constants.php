@@ -113,4 +113,10 @@ return [
       'leave' => 1,
       'event' => 2,
     ],
+
+    'warning_status' =>
+    [
+        'pending' => 0,
+        'acknowledged' => 1,
+    ],
 ];

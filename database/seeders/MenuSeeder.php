@@ -327,6 +327,36 @@ class MenuSeeder extends Seeder
                 'parent_menu' => 29,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 32,
+                'title' => 'Warnings',
+                'url' => '',
+                'icon' => 'fa fa-mountain',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => null,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 33,
+                'title' => 'Add Warnings',
+                'url' => 'warning/add',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 32,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 34,
+                'title' => 'Manage Warnings',
+                'url' => 'warning/',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 32,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($menus as $key=>$menu)

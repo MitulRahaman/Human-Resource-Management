@@ -305,6 +305,36 @@ class MenuPermissionsSeeder extends Seeder
                 'permission_id' => 51,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 49,
+                'menu_id' => 32,
+                'permission_id' => 54,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 50,
+                'menu_id' => 32,
+                'permission_id' => 56,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 51,
+                'menu_id' => 33,
+                'permission_id' => 54,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 52,
+                'menu_id' => 33,
+                'permission_id' => 56,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 53,
+                'menu_id' => 34,
+                'permission_id' => 54,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
 
 
 

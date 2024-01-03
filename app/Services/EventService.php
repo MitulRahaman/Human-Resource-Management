@@ -63,16 +63,22 @@ class EventService
     public function getAllEvents($id = null)
     {
         $data = $this->eventRepository->setEventId($id)->getAllEvents();
-        foreach($data as $d) {
-            $events[] = [
-                'id' => $d->id,
-                'title' => $d->title,
-                'start' => $d->start_date,
-                'end' => $d->end_date,
-                'description' => $d->description,
-            ];
+        if(!$data->isEmpty()) {
+            foreach($data as $d) {
+                $events[] = [
+                    'id' => $d->id,
+                    'title' => $d->title,
+                    'start' => $d->start_date,
+                    'end' => $d->end_date,
+                    'description' => $d->description,
+                    'itinerary' => $d->itinerary,
+                ];
+            }
+            return $events;
+        } else {
+            $events[] = null;
         }
-        return $events;
+
     }
 
     public function getCurrentBranch($id)
@@ -85,24 +91,66 @@ class EventService
         return $this->eventRepository->setEventId($id)->getCurrentDepartments();
     }
 
+    public function getAvailableDepartments($id, $currentDepartments)
+    {
+        $allDept = $this->eventRepository->setEventId($id)->getAvailableDepartments();
+        $temp = array();
+        $temp = $allDept;
+        foreach($allDept as $key=>$allDept) {
+            foreach($currentDepartments as $currentDept) {
+                if($allDept->department_id == $currentDept->department_id){
+
+                    $temp->forget($key);
+                }
+            }
+        }
+        return $temp;
+    }
+
     public function getCurrentUsers($id)
     {
         return $this->eventRepository->setEventId($id)->getCurrentUsers();
     }
 
-    // public function editLeave($id)
-    // {
-    //     return $this->leaveApplyRepository->setId($id)->getLeaveInfo();
-    // }
+    public function getAvailableUsers($id, $currentDepartments, $currentUsers)
+    {
+        $allUser = $this->eventRepository->setEventId($id)->getAvailableUsers($currentDepartments);
+        $temp = array();
+        $temp = $allUser;
+        foreach($allUser as $key=>$allUser) {
+            foreach($currentUsers as $currentUser) {
+                if($allUser->participant_id == $currentUser->participant_id){
+                    $temp->forget($key);
+                }
+            }
+        }
+        return $temp;
+    }
 
-    // public function updateLeave($data, $id)
-    // {
-    //     return $this->leaveApplyRepository->setId($id)->updateLeave($data);
-    // }
+    public function updateEvent($request, $id)
+    {
+        $fileName = null;
+        if($request['photo']) {
+            $fileName = $this->fileUploadService->setPath($request['photo']);
+            $this->fileUploadService->setPathName(Config::get('variable_constants.file_path.event'))->uploadFile($fileName, $request['photo']);
+        }
 
-    // public function delete($id)
-    // {
-    //     return $this->leaveApplyRepository->delete($id);
-    // }
+        return $this->eventRepository
+            ->setEventId($id)
+            ->setTitle($request->title)
+            ->setBranchId($request->branchId)
+            ->setDepartmentId($request->departmentId)
+            ->setParticipantId($request->participantId)
+            ->setStartDate($request->startDate)
+            ->setEndDate($request->endDate)
+            ->setDescription($request->description)
+            ->setFile($fileName)
+            ->updateEvents();
+    }
+
+    public function destroyEvent($id)
+    {
+        return $this->eventRepository->setEventId($id)->destroyEvent();
+    }
 
 }

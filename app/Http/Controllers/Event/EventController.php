@@ -76,27 +76,36 @@ class EventController extends Controller
             $allUsers = $this->userService->getAllUsers(null);
             $currentBranch = $this->eventService->getCurrentBranch($id);
             $currentDepartments = $this->eventService->getCurrentDepartments($id);
+            $availableDepartments = $this->eventService->getAvailableDepartments($id, $currentDepartments);
             $currentParticipants = $this->eventService->getCurrentUsers($id);
-            return view('backend.pages.event.edit', compact('events', 'branches', 'allUsers', 'currentBranch', 'currentDepartments', 'currentParticipants'));
+            $availableParticipants = $this->eventService->getAvailableUsers($id, $currentDepartments, $currentParticipants);
+            return view('backend.pages.event.edit', compact('events', 'branches', 'allUsers', 'currentBranch', 'currentDepartments', 'availableDepartments', 'currentParticipants', 'availableParticipants'));
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
 
-    public function update(EventAddRequest $request, $id)
+    public function update(EventUpdateRequest $request, $id)
     {
-        dd(1);
         try {
-            $response = $this->leaveApplyService->updateLeave($request, $id);
-            if ($response === true) {
-                return redirect('leaveApply/manage')->with('success', 'Leave updated successfully.');
+            if($this->eventService->updateEvent($request, $id)) {
+                return redirect('event/manage')->with('success', 'Event updated successfully.');
             } else {
-                return redirect('leaveApply/apply')->with('error', $response);
+                return redirect()->back()->with('error', 'An error occoured!');
             }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
 
+    public function delete($id)
+    {
+        try {
+            $this->eventService->destroyEvent($id);
+            return redirect('event/manage')->with('success', 'Event deleted');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 
 }

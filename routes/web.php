@@ -344,6 +344,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('store', [EventController::class, 'store']);
         Route::get('/{id}/edit', [EventController::class, 'edit']);
         Route::patch('/update/{id}', [EventController::class, 'update']);
+        Route::post('/delete/{id}', [EventController::class, 'delete']);
         Route::post('getDeptPart', [EventController::class, 'getDeptPart']);
     });
 });

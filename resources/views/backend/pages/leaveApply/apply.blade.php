@@ -15,7 +15,7 @@
     <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('leaveApply/manage') }}">Leave Apply</a></li>
+            <li class="breadcrumb-item"><a class="link-fx" href="{{ url('leaveApply/apply') }}">Leave Apply</a></li>
             <li class="breadcrumb-item">Add</li>
         </ol>
     </nav>

@@ -167,6 +167,21 @@ class EventRepository
             ->get();
     }
 
+    public function getAvailableDepartments()
+    {
+        return DB::table('events as e')
+            ->leftJoin('branch_departments as bd', function ($join) {
+                $join->on('e.branch_id', '=', 'bd.branch_id');
+            })
+            ->leftJoin('departments as d', function ($join) {
+                $join->on('d.id', '=', 'bd.department_id');
+            })
+            ->where('e.id', '=', $this->eventId)
+            ->select('bd.department_id', 'd.name')
+            ->get();
+
+    }
+
     public function getCurrentUsers()
     {
         return DB::table('events as e')
@@ -181,74 +196,70 @@ class EventRepository
             ->get();
     }
 
-    // public function updateLeave($data)
-    // {
-    //     $data->startDate = date("Y-m-d", strtotime(str_replace("/","-",$data->startDate)));
-    //     $data->endDate = date("Y-m-d", strtotime(str_replace("/","-",$data->endDate)));
-    //     if($data->totalLeave == null) {
-    //         DB::table('leaves')
-    //         ->where('id', '=', $this->id)
-    //         ->update([
-    //             'leave_type_id' => $data->leaveTypeId,
-    //             'start_date' => $$data->startDatee,
-    //             'end_date' => $data->endDate,
-    //             'reason' => $data->reason,
-    //         ]);
-    //     } else {
+    public function getAvailableUsers($currentDepartments)
+    {
+        $temp = array();
+        foreach($currentDepartments as $currentDepartment) {
+            array_push($temp, $currentDepartment->department_id);
+        }
+        return DB::table('basic_info as bi')
+            ->leftJoin('users as u', function ($join) {
+                $join->on('u.id', '=', 'bi.user_id');
+            })
+            ->whereIn('bi.department_id', $temp)
+            ->select('bi.user_id as participant_id', 'u.full_name')
+            ->get();
+    }
 
-    //         DB::table('leaves')
-    //         ->where('id', '=', $this->id)
-    //         ->update([
-    //             'leave_type_id' => $data->leaveTypeId,
-    //             'start_date' => $data->startDate,
-    //             'end_date' => $data->endDate,
-    //             'total' => $data->totalLeave,
-    //             'reason' => $data->reason,
-    //         ]);
-    //     }
-    //     return true;
-    // }
-    // public function recommendLeave($data, $id)
-    // {
-    //     return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.line_manager_approval'),
-    //         'remarks'=>$data['recommend-modal-remarks']]);
-    // }
-    // public function approveLeave($data, $id)
-    // {
-    //     return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
-    //         'remarks'=>$data['approve-modal-remarks']]);
-    // }
-    // public function rejectLeave($data, $id)
-    // {
-    //     return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.rejected'),
-    //         'remarks'=>$data['reject-modal-remarks']]);
-    // }
-    // public function cancelLeave($id)
-    // {
-    //     return DB::table('leaves')->where('id',$id)->update(['status'=> Config::get('variable_constants.leave_status.canceled')]);
-    // }
-    // public function delete($id)
-    // {
-    //     return DB::table('leaves')->where('id', $id)->delete();
-    // }
-    // public function getReciever($employeeId)
-    // {
-    //     $appliedUser = DB::table('users')->where('employee_id',$employeeId)->first();
-    //     $getLineManagers  = DB::table('users as u')
-    //     ->leftJoin('line_managers as lm', function ($join) {
-    //         $join->on('u.id', '=', 'lm.user_id')
-    //         ->whereNULL('lm.deleted_at');
-    //     })
-    //     ->where('lm.user_id', '=', $appliedUser->id)
-    //     ->select('lm.line_manager_user_id')
-    //     ->get()
-    //     ->toArray();
+    public function updateEvents()
+    {
+        $this->startDate = CommonHelper::format_date($this->startDate, 'd/m/Y', 'Y-m-d');
+        $this->endDate = CommonHelper::format_date($this->endDate, 'd/m/Y', 'Y-m-d');
 
-    //     $lineManagerEmail = array();
-    //     foreach ($getLineManagers as $glm) {
-    //         array_push($lineManagerEmail, DB::table('users')->where('id', '=', $glm->line_manager_user_id)->first()->email);
-    //     }
-    //     return [$lineManagerEmail, $appliedUser->email];
-    // }
+        try {
+            DB::beginTransaction();
+            DB::table('events')
+            ->where('id', '=', $this->eventId)
+            ->update([
+                'title' => $this->title,
+                'branch_id' => $this->branchId,
+                'start_date' => $this->startDate,
+                'end_date' => $this->endDate,
+                'description' => $this->description,
+                'itinerary' => $this->file,
+            ]);
+
+            DB::table('event_departments')->where('event_id', '=', $this->eventId)->delete();
+            foreach ($this->departmentId as $departmentId) {
+                DB::table('event_departments')
+                    ->insert([
+                        'department_id' => $departmentId,
+                        'event_id' => $this->eventId,
+                        'status' => Config::get('variable_constants.activation.active'),
+                    ]);
+            }
+
+            DB::table('event_participants')->where('event_id', '=', $this->eventId)->delete();
+            foreach ($this->participantId as $participantId) {
+                DB::table('event_participants')
+                    ->insert([
+                        'participant_id' => $participantId,
+                        'event_id' => $this->eventId,
+                        'status' => Config::get('variable_constants.activation.active'),
+                    ]);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+
+    public function destroyEvent()
+    {
+        $data = Event::find($this->eventId);
+        return $data->delete();
+    }
 }
 

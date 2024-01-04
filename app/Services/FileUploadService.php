@@ -51,5 +51,9 @@
                 $destinationPath = storage_path('app/public') . DIRECTORY_SEPARATOR . 'eventFiles';
                 return $photo->move($destinationPath, $fileName);
             }
+            if($this->pathName == Config::get('variable_constants.file_path.complaint')) {
+                $destinationPath = storage_path('app/public') . DIRECTORY_SEPARATOR . 'complaintFiles';
+                return $photo->move($destinationPath, $fileName);
+            }
         }
     }

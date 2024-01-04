@@ -19,7 +19,7 @@
         <ol class="breadcrumb breadcrumb-alt">
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('home') }}">Dashboard</a></li>
             <li class="breadcrumb-item"><a class="link-fx" href="{{ url('event/manage') }}">Events</a></li>
-            <li class="breadcrumb-item">Create</li>
+            <li class="breadcrumb-item">Update</li>
         </ol>
     </nav>
 @endsection
@@ -28,7 +28,7 @@
     @include('backend.layouts.error_msg')
         <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
-                <h3 class="block-title">Create Event</h3>
+                <h3 class="block-title">Update Event</h3>
             </div>
 
             <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _js/pages/be_forms_validation.js) -->
@@ -56,9 +56,14 @@
                                 <div class="form-group">
                                     <label for="val-department">Department<span class="text-danger">*</span></label>
                                     <select class="js-select2 form-control input-prevent-multiple-submission" id="departmentId" name="departmentId[]" style="width: 100%;" multiple required>
+                                        @if ($availableDepartments)
+                                            @foreach($availableDepartments as $a_dept)
+                                                    <option value="{{ $a_dept->department_id }}" >{{ $a_dept->name }}</option>
+                                            @endforeach
+                                        @endif
                                         @if ($currentDepartments)
-                                            @foreach($currentDepartments as $departments)
-                                                <option value="{{ $departments->department_id }}" selected >{{ $departments->name }}</option>
+                                            @foreach ($currentDepartments as $c_dept)
+                                                <option value="{{ $c_dept->department_id }}" selected >{{ $c_dept->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -66,9 +71,14 @@
                                 <div class="form-group">
                                     <label for="val-participant">Participant<span class="text-danger">*</span></label>
                                     <select class="js-select2 form-control input-prevent-multiple-submission" id="participantId" name="participantId[]" style="width: 100%;" data-placeholder="Choose Participant for the Event.." multiple required>
+                                        @if ($availableParticipants)
+                                            @foreach($availableParticipants as $a_part)
+                                                <option value="{{ $a_part->participant_id }}" >{{ $a_part->full_name }}</option>
+                                            @endforeach
+                                        @endif
                                         @if ($currentParticipants)
-                                            @foreach($currentParticipants as $participants)
-                                                <option value="{{ $participants->participant_id }}" selected >{{ $participants->full_name }}</option>
+                                            @foreach($currentParticipants as $c_part)
+                                                <option value="{{ $c_part->participant_id }}" selected >{{ $c_part->full_name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -97,21 +107,53 @@
                             </div>
                         </div>
 
-                        <!-- Save -->
-                        <div class="row items-push">
-                            <div class="col-lg-6 offset-lg-5">
+                        <div class="row items-push ">
+                            <div class="col-lg-12 d-flex justify-content-between">
                                 <button type="submit" class="btn btn-alt-primary button-prevent-multiple-submission" id="submit">
                                     <i class="spinner fa fa-spinner fa-spin"></i>Update
                                 </button>
+                                <button type="button" class="btn btn-alt-danger button-prevent-multiple-submission" data-toggle="modal" data-target="#modal-block-vcenter" >
+                                    <i class="spinner fa fa-spinner fa-spin"></i><i class="fa fa-trash text-danger mr-2"></i>Delete this event
+                                </button>
                             </div>
                         </div>
-                        <!-- END Save -->
                     </div>
                 </div>
             </form>
             <!-- End jQuery Validation -->
         </div>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="modal-block-vcenter" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="block block-rounded block-themed block-transparent mb-0">
+                    <div class="block-header bg-primary-dark">
+                        <div>
+                            <h3 class="block-title text-white">Warning</h3>
+                        </div>
+                        <div class="block-options">
+                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                <i class="fa fa-fw fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="block-content font-size-sm">
+                        <p>Are you sure want to delete? </p>
+                    </div>
+                    <div class="d-flex justify-content-between p-4 border-top">
+                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                        <form action ="{{ url('event/delete', $events[0]['id']) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Ok</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END Delete Confirmation Modal -->
 
 @endsection
 

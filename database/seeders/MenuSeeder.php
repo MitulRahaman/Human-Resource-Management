@@ -357,6 +357,16 @@ class MenuSeeder extends Seeder
                 'parent_menu' => 32,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 35,
+                'title' => 'Meeting Places',
+                'url' => 'meeting_place',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 2,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($menus as $key=>$menu)

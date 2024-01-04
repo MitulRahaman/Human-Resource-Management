@@ -475,6 +475,30 @@ class PermissionSeeder extends Seeder
                 'name' => 'View Roles',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 74,
+                'slug' => 'viewMeetingPlaces',
+                'name' => 'View Meeting Places',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 75,
+                'slug' => 'manageMeetingPlace',
+                'name' => 'Manage Meeting Place',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 76,
+                'slug' => 'addMeetingPlace',
+                'name' => 'Add Meeting Place',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 77,
+                'slug' => 'editMeetingPlace',
+                'name' => 'Edit MeetingPlace',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($permissions as $key=>$permission)

@@ -359,13 +359,13 @@ class AssetService
     {
         return $this->assetRepository->restoreAssetType($id);
     }
-    public function deleteAssetType($data)
+    public function deleteAssetType($id)
     {
-        return $this->assetRepository->deleteAssetType($data);
+        return $this->assetRepository->deleteAssetType($id);
     }
-    public function changeStatusAssetType($data)
+    public function changeStatusAssetType($id)
     {
-        return $this->assetRepository->changeStatusAssetType($data);
+        return $this->assetRepository->changeStatusAssetType($id);
     }
     public function fetchDataAssetType()
     {

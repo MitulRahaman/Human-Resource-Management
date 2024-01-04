@@ -24,6 +24,8 @@ use App\Http\Controllers\Asset\AssetController;
 use App\Http\Controllers\Requisition\RequisitionController;
 use App\Http\Controllers\Log\LogController;
 use App\Http\Controllers\Ticket\TicketController;
+use App\Http\Controllers\Warning\WarningController;
+use App\Http\Controllers\Meeting\MeetingController;
 
 
 /*
@@ -358,5 +360,28 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('{id}/reject', [ComplaintController::class, 'rejectComplaint']);
         Route::post('{id}/delete/', [ComplaintController::class, 'delete']);
         Route::post('get_table_data', [ComplaintController::class, 'getTableData']);
+    });
+    Route::prefix('warning')->group(function() {
+        Route::get('/', [WarningController::class, 'index']);
+        Route::get('/get_warning_data', [WarningController::class, 'fetchData']);
+        Route::get('/add', [WarningController::class, 'create']);
+        Route::post('/store', [WarningController::class, 'store']);
+        Route::get('status/{id}/acknowledged', [WarningController::class, 'acknowledged']);
+        Route::get('/{id}/edit', [WarningController::class, 'edit']);
+        Route::post('/{id}/update', [WarningController::class, 'update']);
+    });
+
+    Route::prefix('meeting_place')->group(function() {
+        Route::get('/', [MeetingController::class, 'meetingPlaceIndex']);
+        Route::get('/get_meeting_place_data', [MeetingController::class, 'fetchMeetingPlaceData']);
+        Route::get('/add', [MeetingController::class, 'createMeetingPlace']);
+        Route::post('/validate_inputs', [MeetingController::class, 'validate_inputs_meeting_place']);
+        Route::post('/store', [MeetingController::class, 'storeMeetingPlace']);
+        Route::get('/{id}/edit', [MeetingController::class, 'editMeetingPlace'])->name('edit');
+        Route::post('/{id}/update', [MeetingController::class, 'updateMeetingPlace']);
+        Route::post('/{id}/validate_name',[MeetingController::class, 'validate_name_meeting_place']);
+        Route::post('/{id}/change_status', [MeetingController::class, 'changeMeetingPlaceStatus']);
+        Route::post('/{id}/delete', [MeetingController::class, 'deleteMeetingPlace']);
+        Route::post('/{id}/restore', [MeetingController::class, 'restoreMeetingPlace']);
     });
 });

@@ -114,4 +114,10 @@ return [
       'event' => 2,
       'complaint' => 3,
     ],
+
+    'warning_status' =>
+    [
+        'pending' => 0,
+        'acknowledged' => 1,
+    ],
 ];

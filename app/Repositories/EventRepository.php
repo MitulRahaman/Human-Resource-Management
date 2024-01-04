@@ -199,8 +199,8 @@ class EventRepository
     public function getAvailableUsers($currentDepartments)
     {
         $temp = array();
-        foreach($currentDepartments as $x) {
-            array_push($temp, $x->department_id);
+        foreach($currentDepartments as $currentDepartment) {
+            array_push($temp, $currentDepartment->department_id);
         }
         return DB::table('basic_info as bi')
             ->leftJoin('users as u', function ($join) {

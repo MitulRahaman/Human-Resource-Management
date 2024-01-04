@@ -105,7 +105,7 @@ class ComplaintRepository
 
     public function approveComplaint()
     {
-        DB::table('complaints')->where('id', '=', $this->complaintId)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
+        return DB::table('complaints')->where('id', '=', $this->complaintId)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
             'remarks'=>$this->remarks['approve-modal-remarks']]);
     }
 

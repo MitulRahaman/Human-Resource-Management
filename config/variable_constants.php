@@ -112,5 +112,6 @@ return [
       'user' => 0,
       'leave' => 1,
       'event' => 2,
+      'complaint' => 3,
     ],
 ];

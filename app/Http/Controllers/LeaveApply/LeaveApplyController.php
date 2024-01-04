@@ -140,7 +140,6 @@ class LeaveApplyController extends Controller
     public function manage()
     {
         View::share('sub_menu', 'Manage Leaves');
-        abort_if(!$this->setSlug('manageLeave')->hasPermission(), 403, 'You don\'t have permission!');
         return view('backend.pages.leaveApply.manage');
     }
 

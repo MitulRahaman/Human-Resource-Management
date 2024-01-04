@@ -4,8 +4,6 @@ namespace App\Services;
 
 use Mail;
 use App\Events\LeaveApplied;
-use App\Mail\LeaveApplicationMail;
-use App\Mail\LeaveApproveMail;
 use App\Jobs\LeaveApplyJob;
 use App\Jobs\LeaveApproveJob;
 use App\Repositories\LeaveApplyRepository;

@@ -22,14 +22,9 @@
 @endsection
 @section('page_action')
     <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href="{{ url('leaveApply/apply') }}">
+        <a href="{{ url('complaint/create') }}">
             <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Apply for Leave
-            </button>
-        </a>
-        <a href="{{ url('leaveApply/leaveReports') }}">
-            <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="si si-settings"></i> Generate Report
+                <i class="fa fa-fw fa-key mr-1"></i> Create Complaint
             </button>
         </a>
     </div>
@@ -46,17 +41,15 @@
                     <table class="table table-bordered table-striped table-vcenter" id="dataTable">
                         <thead>
                             <tr>
-                                <th class="text-center">No.</th>
-                                <th class="text-center">Employee ID</th>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Phone</th>
-                                <th class="text-center">Subject</th>
-                                <th class="text-center">Start Date</th>
-                                <th class="text-center">End date</th>
-                                <th class="text-center">Days</th>
-                                <th class="text-center">Reason</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Sl no.</th>
+                                <th class="text-center">Title</th>
+                                <th class="text-center">By Whom</th>
+                                <th class="text-center">Against Whom</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Complaint Date</th>
                                 <th class="text-center">Remarks</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">File</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -65,41 +58,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="modal" id="recommend-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <form id="recommend" action="" method="post">
-                                @csrf
-                                <div class="block block-rounded block-themed block-transparent mb-0">
-                                    <div class="block-header bg-primary-dark">
-                                        <h3 class="block-title text-center">Approve</h3>
-                                        <div class="block-options">
-                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
-                                                <i class="fa fa-fw fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group font-size-sm px-6">
-                                        <p class="text-center mt-2"><span id="recommend_leave"></span> Give a reason: </p>
-                                        <input class="form-control bg-light" type="text" name="recommend-modal-remarks" id="recommend-modal-remarks" value="" required>
-                                    </div>
-                                    <div class="block-content block-content-full text-right border-top">
-                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Recommend</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal" id="approve-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                 <!-- Vertically Centered Block Modal -->
+                 <div class="modal" id="approve-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <form id="approve" action="" method="post">
                                 @csrf
                                 <div class="block block-rounded block-themed block-transparent mb-0">
                                     <div class="block-header bg-primary-dark">
-                                        <h3 class="block-title text-center">Approve</h3>
+                                        <h3 class="block-title text-center">Acknowledge</h3>
                                         <div class="block-options">
                                             <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                                                 <i class="fa fa-fw fa-times"></i>
@@ -107,13 +74,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group font-size-sm px-6">
-                                        <p class="text-center mt-2"><span id="approve_leave"></span> Approval Note</p>
+                                        <p class="text-center mt-2"><span id="approve_complaint"></span>Acknowledgement Note</p>
                                         <input class="form-control bg-light" type="text" name="approve-modal-remarks" id="approve-modal-remarks" style="width: 100%" value="">
                                     </div>
-                                    <input type="hidden" id="employeeId" name="employeeId" value="">
-                                    <input type="hidden" id="leaveType" name="leaveType" value="">
-                                    <input type="hidden" id="startDate" name="startDate" value="">
-                                    <input type="hidden" id="endDate" name="endDate" value="">
                                     <div class="block-content block-content-full text-right border-top">
                                         <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -138,7 +101,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group font-size-sm px-6">
-                                        <p class="text-center mt-2"><span id="reject_leave"></span> Rejection Note</p>
+                                        <p class="text-center mt-2"><span id="reject_complaint"></span> Rejection Note</p>
                                         <input class="form-control bg-light" type="text" name="reject-modal-remarks" id="reject-modal-remarks" value="" style="width: 100%">
                                     </div>
                                     <div class="block-content block-content-full text-right border-top">
@@ -150,6 +113,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="delete" action="" method="post">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Delete User</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm">
+                                        <p class="text-center">Complaint will be deleted. Are you sure?</p>
+                                        <input type="hidden" name="delete_user_id" id="delete_user_id">
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- END Vertically Centered Block Modal -->
             </div>
         </div>
     </div>
@@ -168,14 +159,14 @@
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.js') }}"></script>
 
     <script>
-        //create table
         jQuery(function(){
             function createTable(){
                 $('#dataTable').DataTable( {
+
                     dom: 'Blfrtip',
                     ajax: {
                         type: 'POST',
-                        url: '{{ url("leaveApply/get_table_data") }}',
+                        url: '{{ url("complaint/get_table_data") }}',
                         data: {
                             _token: '{{ csrf_token() }}',
                         }
@@ -184,19 +175,19 @@
                         {
                             extend: 'copy',
                             text: 'Copy',
-                            title: "Leave Table"
+                            title: "Complaint Table"
                         },
                         {
                             extend: 'csv',
                             text: 'CSV',
-                            title: "Leave Table"
+                            title: "Complaint Table"
                         },
                         {
                             extend: 'print',
                             exportOptions: {
                                 columns: ':visible'
                             },
-                            title: "Leave Table"
+                            title: "Complaint Table"
                         },
                         'colvis'
                     ],
@@ -205,34 +196,20 @@
             }
             createTable();
         });
-        //end create table
-        function show_recommend_modal(id, type, remarks) {
-            var x = document.getElementById('recommend_leave');
-            x.innerHTML = type;
-            const url = "{{ url('leaveApply/status/:id/recommend') }}".replace(':id', id);
-            $('#recommend').attr('action', url);
-            document.getElementById("recommend-modal-remarks").value = remarks;
-            $('#recommend-modal').modal('show');
-        }
-        function show_approve_modal(id, type, remarks, startDate, endDate, employeeId) {
-            var x = document.getElementById('approve_leave');
-            x.innerHTML = type;
-            const url = "{{ url('leaveApply/status/:id/approve') }}".replace(':id', id);
+        function show_approve_modal(id) {
+            const url = "{{ url('complaint/:id/approve') }}".replace(':id', id);
             $('#approve').attr('action', url);
-            document.getElementById("approve-modal-remarks").value = remarks;
-            document.getElementById("leaveType").value = type;
-            document.getElementById("startDate").value = startDate;
-            document.getElementById("endDate").value = endDate;
-            document.getElementById("employeeId").value = employeeId;
             $('#approve-modal').modal('show');
         }
-        function show_reject_modal(id, type, remarks) {
-            var x = document.getElementById('reject_leave');
-            x.innerHTML = type;
-            const url = "{{ url('leaveApply/status/:id/reject') }}".replace(':id', id);
+        function show_reject_modal(id) {
+            const url = "{{ url('complaint/:id/reject') }}".replace(':id', id);
             $('#reject').attr('action', url);
-            document.getElementById("reject-modal-remarks").value = remarks;
             $('#reject-modal').modal('show');
+        }
+        function show_delete_modal(id) {
+            const url = "{{ url('complaint/:id/delete') }}".replace(':id', id);
+            $('#delete').attr('action', url);
+            $('#delete-modal').modal('show');
         }
      </script>
 

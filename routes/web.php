@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Bank\BankController;
+use App\Http\Controllers\Complaint\ComplaintController;
 use App\Http\Controllers\Degree\DegreeController;
 use App\Http\Controllers\Institute\InstituteController;
 use App\Http\Controllers\DashboardController;
@@ -346,5 +347,16 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('/update/{id}', [EventController::class, 'update']);
         Route::post('/delete/{id}', [EventController::class, 'delete']);
         Route::post('getDeptPart', [EventController::class, 'getDeptPart']);
+    });
+    Route::prefix('complaint')->group(function() {
+        Route::get('create', [ComplaintController::class, 'create']);
+        Route::get('manage', [ComplaintController::class, 'manage']);
+        Route::post('store', [ComplaintController::class, 'store']);
+        Route::get('/{id}/edit', [ComplaintController::class, 'edit']);
+        Route::patch('/update/{id}', [ComplaintController::class, 'update']);
+        Route::post('{id}/approve', [ComplaintController::class, 'approveComplaint']);
+        Route::post('{id}/reject', [ComplaintController::class, 'rejectComplaint']);
+        Route::post('{id}/delete/', [ComplaintController::class, 'delete']);
+        Route::post('get_table_data', [ComplaintController::class, 'getTableData']);
     });
 });

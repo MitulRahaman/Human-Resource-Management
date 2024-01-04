@@ -6,7 +6,6 @@ use App\Events\RequisitionRequested;
 use App\Services\RequisitionService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Mail;
 
 class RequisitionRequestedListener
 {

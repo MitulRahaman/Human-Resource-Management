@@ -313,7 +313,7 @@ class AssetRepository
     }
     public function getAssetType($id)
     {
-        return DB::table('asset_types')->where('id',$id)->select('*')->first();
+        return DB::table('asset_types')->where('id', '=', $id)->select('*')->first();
     }
     public function isNameUnique($id)
     {
@@ -337,9 +337,9 @@ class AssetRepository
     {
         return AssetType::withTrashed()->where('id', $id)->restore();
     }
-    public function changeStatusAssetType($data)
+    public function changeStatusAssetType($id)
     {
-        $asset_type = AssetType::findOrFail($data);
+        $asset_type = AssetType::findOrFail($id);
         $old=$asset_type->status;
         $status= config('variable_constants.activation');
         if($old==$status['active'])

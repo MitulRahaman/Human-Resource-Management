@@ -372,4 +372,15 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/{id}/delete', [MeetingController::class, 'deleteMeetingPlace']);
         Route::post('/{id}/restore', [MeetingController::class, 'restoreMeetingPlace']);
     });
+    Route::prefix('meeting')->group(function() {
+        Route::get('/', [MeetingController::class, 'index']);
+        Route::get('/get_meeting_data', [MeetingController::class, 'fetchData']);
+        Route::get('/add', [MeetingController::class, 'create']);
+        Route::post('/store', [MeetingController::class, 'store']);
+//        Route::get('status/{id}/close', [TicketController::class, 'close']);
+//        Route::get('/{id}/edit', [TicketController::class, 'edit']);
+//        Route::post('/{id}/update', [TicketController::class, 'update']);
+//        Route::get('status/{id}/hold', [TicketController::class, 'hold']);
+//        Route::post('status/{id}/complete', [TicketController::class, 'complete']);
+    });
 });

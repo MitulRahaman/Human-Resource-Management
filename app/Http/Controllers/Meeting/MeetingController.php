@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Meeting;
 
+use App\Http\Requests\MeetingAddRequest;
 use App\Http\Requests\MeetingPlaceAddRequest;
 use App\Http\Requests\MeetingPlaceEditRequest;
 use App\Services\MeetingService;
@@ -23,6 +24,40 @@ class MeetingController extends Controller
     }
 
 //    ========================= start meeting ==========================
+    public function index()
+    {
+        View::share('sub_menu', 'Manage Meetings');
+        $addMeetingPermission = $this->setSlug('addMeeting')->hasPermission();
+        return \view('backend.pages.meeting.index', compact('addMeetingPermission'));
+    }
+
+    public function fetchData()
+    {
+        return $this->meetingService->fetchData();
+    }
+
+    public function create()
+    {
+        View::share('sub_menu', 'Add Meeting');
+        $places = $this->meetingService->getAllPlaces();
+        $participants = $this->meetingService->getAllUsers();
+        return \view('backend.pages.meeting.create', compact('places','participants'));
+    }
+
+    public function store(MeetingAddRequest $request)
+    {
+        dd($request->all());
+        try{
+            $response = $this->meetingService->create($request->validated());
+            if (is_int($response)) {
+                return redirect('meeting/')->with('success', 'Meeting saved successfully.');
+            } else {
+                return redirect()->back()->with('error', $response);
+            }
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 //    ========================= end meeting ==========================
 //    ========================= start meeting place ==========================
     public function meetingPlaceIndex()

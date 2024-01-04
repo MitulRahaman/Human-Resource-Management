@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class MeetingRepository
 {
-    private  $name, $id, $url, $status, $created_at, $updated_at, $deleted_at;
+    private  $name, $id, $title, $agenda, $date, $place, $start_time, $end_time, $description, $url, $status, $created_at, $updated_at, $deleted_at;
 
     public function setName($name)
     {
@@ -18,6 +18,48 @@ class MeetingRepository
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function setAgenda($agenda)
+    {
+        $this->agenda = $agenda;
+        return $this;
+    }
+
+    public function setDate($date)
+    {
+        $this->date = $date;
+        return $this;
+    }
+
+    public function setPlace($place)
+    {
+        $this->place = $place;
+        return $this;
+    }
+
+    public function setStartTime($start_time)
+    {
+        $this->start_time = $start_time;
+        return $this;
+    }
+
+    public function setEndTime($end_time)
+    {
+        $this->end_time = $end_time;
+        return $this;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -52,7 +94,30 @@ class MeetingRepository
     }
 
     //    =============================start meeting======================
+    public function getAllPlaces()
+    {
+        return DB::table('meeting_places')
+            ->whereNull('deleted_at')
+            ->where('status','=',Config::get('variable_constants.activation.active'))
+            ->get();
+    }
 
+    public function getAllUsers()
+    {
+        return DB::table('users')
+            ->whereNull('deleted_at')
+            ->where('status','=',Config::get('variable_constants.activation.active'))
+            ->where('is_super_user', '=', Config::get('variable_constants.check.no'))
+            ->get();
+    }
+
+    public function getAllMeetingData()
+    {
+        return DB::table('meetings as m')
+            ->leftJoin('meeting_places as mp', 'mp.id','m.place')
+            ->select('m.*',DB::raw('date_format(m.date, "%d-%m-%Y") as created_at'),'mp.name as place',DB::raw('date_format(m.created_at, "%d-%m-%Y") as created_at'))
+            ->get();
+    }
 
     //    =============================end meeting======================
 

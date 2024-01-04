@@ -17,7 +17,88 @@ class MeetingService
         $this->meetingRepository = $meetingRepository;
     }
     //    =============================start meeting======================
+    public function getAllPlaces()
+    {
+        return $this->meetingRepository->getAllPlaces();
+    }
 
+    public function getAllUsers()
+    {
+        return $this->meetingRepository->getAllUsers();
+    }
+
+//    public function create($data)
+//    {
+//        return $this->meetingRepository->setName($data['name'])
+//            ->setStatus(Config::get('variable_constants.activation.active'))
+//            ->setCreatedAt(date('Y-m-d H:i:s'))
+//            ->createMeetingPlace();
+//    }
+
+    public function fetchData()
+    {
+        $result = $this->meetingRepository->getAllMeetingData();
+        $manageMeetingPermission = $this->setSlug('manageMeeting')->hasPermission();
+        if ($result->count() > 0) {
+            $data = array();
+            foreach ($result as $key=>$row) {
+                $id = $row->id;
+                $title = $row->title;
+                $agenda = $row->agenda;
+                $description = $row->description;
+                $place = $row->place;
+                $date = $row->date;
+                $start_time = $row->start_time;
+                $end_time = $row->end_time;
+                $meeting_minutes = $row->meeting_minutes;
+                $created_at = $row->created_at;
+                if ($row->status == Config::get('variable_constants.meeting_status.pending')) {
+                    $status = "<span class=\"badge badge-primary\">Pending</span>";
+                }elseif ($row->status == Config::get('variable_constants.meeting_status.completed')){
+                    $status = "<span class=\"badge badge-success\" >Completed</span>";
+                }
+                $edit_url = route('edit', ['id'=>$id]);
+                $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
+                $complete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_complete_modal(\"$id\", \"$title\")'> Complete Meeting</a>";
+                $action_btn = "<div class=\"col-sm-6 col-xl-4\">
+                                    <div class=\"dropdown\">
+                                        <button type=\"button\" class=\"btn btn-success dropdown-toggle\" id=\"dropdown-default-success\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+                                            Action
+                                        </button>
+                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-success\">";
+                if ($manageMeetingPermission && $row->status == Config::get('variable_constants.meeting_status.pending')) {
+                    $action_btn .= "$edit_btn $complete_btn ";
+                }
+                else
+                    $action_btn = 'N/A';
+                $action_btn .= "</div>
+                                    </div>
+                                </div>";
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $title);
+                array_push($temp, $agenda);
+                array_push($temp, $description);
+                array_push($temp, $place);
+                array_push($temp, $date);
+                array_push($temp, $start_time);
+                array_push($temp, $end_time);
+                array_push($temp, $status);
+                array_push($temp, $meeting_minutes);
+                array_push($temp, $created_at);
+                array_push($temp, $action_btn);
+                array_push($data, $temp);
+            }
+            return json_encode(array('data'=>$data));
+        } else {
+            return '{
+                    "sEcho": 1,
+                    "iTotalRecords": "0",
+                    "iTotalDisplayRecords": "0",
+                    "aaData": []
+                }';
+        }
+    }
     //    =============================end meeting======================
 
 //    =============================start meeting places======================

@@ -119,4 +119,10 @@ return [
         'pending' => 0,
         'acknowledged' => 1,
     ],
+
+    'meeting_status' =>
+    [
+        'pending' => 0,
+        'completed' => 1,
+    ]
 ];

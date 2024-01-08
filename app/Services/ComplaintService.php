@@ -43,11 +43,6 @@ class ComplaintService
             'file' => $fileName,
             'receiver' => $receivers
         ];
-
-        // ComplaintJob::dispatch($data);
-        // dd(1);
-
-
         $stored = true; $this->complaintRepository
                 ->setTitle($request->title)
                 ->setId($request->againstWhom)

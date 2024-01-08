@@ -34,7 +34,7 @@ class TicketController extends Controller
 
     public function create()
     {
-        View::share('sub_menu', 'Add Tickets');
+        View::share('sub_menu', 'Add Ticket');
         $priority = Config::get('variable_constants.ticket_priority');
         $users = $this->ticketService->getUsers();
         return \view('backend.pages.ticket.create', compact('priority','users'));

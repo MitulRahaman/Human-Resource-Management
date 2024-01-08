@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class MeetingRepository
 {
-    private  $name, $id, $url, $status, $created_at, $updated_at, $deleted_at;
+    private  $name, $id, $title, $meeting_minutes, $agenda, $participants, $date, $place, $start_time, $end_time, $description, $url, $status, $created_at, $updated_at, $deleted_at;
 
     public function setName($name)
     {
@@ -18,6 +18,60 @@ class MeetingRepository
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function setMeetingMinutes($meeting_minutes)
+    {
+        $this->meeting_minutes = $meeting_minutes;
+        return $this;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function setAgenda($agenda)
+    {
+        $this->agenda = $agenda;
+        return $this;
+    }
+
+    public function setParticipants($participants)
+    {
+        $this->participants = $participants;
+        return $this;
+    }
+
+    public function setDate($date)
+    {
+        $this->date = $date;
+        return $this;
+    }
+
+    public function setPlace($place)
+    {
+        $this->place = $place;
+        return $this;
+    }
+
+    public function setStartTime($start_time)
+    {
+        $this->start_time = $start_time;
+        return $this;
+    }
+
+    public function setEndTime($end_time)
+    {
+        $this->end_time = $end_time;
+        return $this;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -52,7 +106,160 @@ class MeetingRepository
     }
 
     //    =============================start meeting======================
+    public function getAllPlaces()
+    {
+        return DB::table('meeting_places')
+            ->whereNull('deleted_at')
+            ->where('status','=',Config::get('variable_constants.activation.active'))
+            ->get();
+    }
 
+    public function getAllUsers()
+    {
+        return DB::table('users')
+            ->whereNull('deleted_at')
+            ->where('status','=',Config::get('variable_constants.activation.active'))
+            ->where('is_super_user', '=', Config::get('variable_constants.check.no'))
+            ->get();
+    }
+
+    public function getAllMeetingData()
+    {
+        return DB::table('meetings as m')
+            ->leftJoin('meeting_places as mp', 'mp.id','m.place')
+            ->select('m.*',DB::raw('date_format(m.date, "%d-%m-%Y") as date'),'mp.name as place',DB::raw('date_format(m.created_at, "%d-%m-%Y") as created_at'),DB::raw('date_format(FROM_UNIXTIME(m.start_time / 1000), "%H:%i") as start_time_formatted'),DB::raw('date_format(FROM_UNIXTIME(m.end_time / 1000), "%H:%i") as end_time_formatted'))
+            ->get();
+    }
+
+    public function getMeetingPlaceName($id)
+    {
+        return (DB::table('meeting_places')->where('id','=',$id)->select('name')->first())->name;
+    }
+
+    public function checkMeetingAvailability()
+    {
+        $end_time = $this->end_time + 1800000;
+        return DB::table('meetings')->where('place','=',$this->place)
+            ->where('date', '=', $this->date)
+            ->where(function ($query) use ($end_time) {
+                $query->whereBetween('start_time', [$this->start_time, $end_time])
+                    ->orWhereBetween('end_time', [$this->start_time, $end_time]);
+            })
+            ->exists();
+    }
+
+    public function createMeeting()
+    {
+        DB::beginTransaction();
+        try {
+            $meeting = DB::table('meetings')
+                ->insertGetId([
+                    'title' => $this->title,
+                    'agenda' => $this->agenda,
+                    'date' => $this->date,
+                    'place' => $this->place,
+                    'start_time' => $this->start_time,
+                    'end_time' => $this->end_time,
+                    'url' => $this->url,
+                    'description' => $this->description,
+                    'status' => $this->status,
+                    'created_at' => $this->created_at
+                ]);
+            if($meeting)
+            {
+                if($this->participants)
+                {
+                    foreach ($this->participants as $p)
+                    {
+                        DB::table('meeting_participants')->insert([
+                            'meeting_id'=> $meeting,
+                            'user_id'=> $p,
+                            'status' => Config::get('variable_constants.activation.active'),
+                            'created_at' => $this->created_at,
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+
+    public function getParticipantsEmails()
+    {
+        return DB::table('users')
+            ->whereIn('id', $this->participants)
+            ->pluck('email')
+            ->toArray();
+    }
+
+    public function getMeeting()
+    {
+        $meeting = DB::table('meetings as m')
+            ->where('m.id','=',$this->id)
+            ->leftJoin('meeting_participants as mp', 'mp.meeting_id','=', 'm.id')
+            ->select('m.*',DB::raw('date_format(m.date, "%d-%m-%Y") as date'),DB::raw('date_format(FROM_UNIXTIME(m.start_time / 1000), "%H:%i") as start_time_formatted'),DB::raw('date_format(FROM_UNIXTIME(m.end_time / 1000), "%H:%i") as end_time_formatted'))
+            ->selectRaw('GROUP_CONCAT(mp.user_id) as participants')
+            ->groupBy('m.id')
+            ->first();
+        $meeting->participants =($meeting->participants)? explode(',', $meeting->participants):[];
+        return $meeting;
+    }
+
+    public function updateMeeting()
+    {
+        DB::beginTransaction();
+        try {
+            $meeting = DB::table('meetings')
+                ->where('id', '=',$this->id)
+                ->update([
+                    'title' => $this->title,
+                    'agenda' => $this->agenda,
+                    'date' => $this->date,
+                    'place' => $this->place,
+                    'start_time' => $this->start_time,
+                    'end_time' => $this->end_time,
+                    'url' => $this->url,
+                    'description' => $this->description,
+                    'updated_at' => $this->updated_at
+                ]);
+            if($meeting)
+            {
+                DB::table('meeting_participants')->where('meeting_id',$this->id)->delete();
+                if($this->participants)
+                {
+                    foreach ($this->participants as $p)
+                    {
+                        DB::table('meeting_participants')->insert([
+                            'meeting_id'=> $this->id,
+                            'user_id'=> $p,
+                            'status' => Config::get('variable_constants.activation.active'),
+                            'updated_at' => $this->updated_at,
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+
+    public function complete()
+    {
+        return DB::table('meetings')
+            ->where('id','=', $this->id)
+            ->update([
+                'meeting_minutes' => $this->meeting_minutes,
+                'status' => Config::get('variable_constants.meeting_status.completed'),
+                'updated_at' => $this->updated_at,
+            ]);
+    }
 
     //    =============================end meeting======================
 
@@ -77,7 +284,7 @@ class MeetingRepository
 
     public function getMeetingPlace()
     {
-        return DB::table('meeting_places')->where('id',$this->id)->select('*')->first();
+        return DB::table('meeting_places')->where('id', '=',$this->id)->select('*')->first();
     }
 
     public function createMeetingPlace()

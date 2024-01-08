@@ -551,7 +551,90 @@ class MenuPermissionsSeeder extends Seeder
                 'permission_id' => 75,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
-
+            [
+                'id' => 90,
+                'menu_id' => 36,
+                'permission_id' => 78,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 91,
+                'menu_id' => 36,
+                'permission_id' => 79,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 92,
+                'menu_id' => 36,
+                'permission_id' => 80,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 93,
+                'menu_id' => 37,
+                'permission_id' => 80,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 94,
+                'menu_id' => 38,
+                'permission_id' => 78,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 95,
+                'menu_id' => 38,
+                'permission_id' => 79,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 96,
+                'menu_id' => 38,
+                'permission_id' => 80,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 97,
+                'menu_id' => 39,
+                'permission_id' => 82,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 98,
+                'menu_id' => 39,
+                'permission_id' => 83,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 99,
+                'menu_id' => 39,
+                'permission_id' => 84,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 100,
+                'menu_id' => 40,
+                'permission_id' => 84,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 101,
+                'menu_id' => 41,
+                'permission_id' => 82,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 102,
+                'menu_id' => 41,
+                'permission_id' => 83,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 103,
+                'menu_id' => 41,
+                'permission_id' => 84,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($menu_permissions as $key=>$mp)

@@ -43,7 +43,7 @@ class ComplaintService
             'file' => $fileName,
             'receiver' => $receivers
         ];
-        $stored = true; $this->complaintRepository
+        $stored = $this->complaintRepository
                 ->setTitle($request->title)
                 ->setId($request->againstWhom)
                 ->setDescription($request->description)

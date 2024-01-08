@@ -135,19 +135,6 @@
                 </li>
 
 
-
-                <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Complaint') == 0 ? 'active' : '' }}" href="{{ url('complaint/create') }}">
-                        <span class="nav-main-link-name">Create Complaint</span>
-                    </a>
-                </li>
-                <li class="nav-main-item">
-                    <a class="nav-main-link {{ strcasecmp($sub_menu, 'Complaint') == 0 ? 'active' : '' }}" href="{{ url('complaint/manage') }}">
-                        <span class="nav-main-link-name">Manage Complaint</span>
-                    </a>
-                </li>
-
-
                 <li class="nav-main-heading">Admin Console</li>
                 <li class="nav-main-item">
                     <a class="nav-main-link {{ strcasecmp($sub_menu, 'Menus') == 0 ? 'active' : '' }}" href="{{ url('menu') }}">

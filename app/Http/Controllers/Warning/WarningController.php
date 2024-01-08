@@ -32,7 +32,7 @@ class WarningController extends Controller
 
     public function create()
     {
-        View::share('sub_menu', 'Add Warnings');
+        View::share('sub_menu', 'Add Warning');
         $users = $this->warningService->getUsers();
         return \view('backend.pages.warning.create', compact('users'));
     }

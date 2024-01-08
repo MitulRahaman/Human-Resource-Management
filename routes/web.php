@@ -384,4 +384,13 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('/{id}/delete', [MeetingController::class, 'deleteMeetingPlace']);
         Route::post('/{id}/restore', [MeetingController::class, 'restoreMeetingPlace']);
     });
+    Route::prefix('meeting')->group(function() {
+        Route::get('/', [MeetingController::class, 'index']);
+        Route::get('/get_meeting_data', [MeetingController::class, 'fetchData']);
+        Route::get('/add', [MeetingController::class, 'create']);
+        Route::post('/store', [MeetingController::class, 'store']);
+        Route::get('/{id}/edit', [MeetingController::class, 'edit'])->name('edit');
+        Route::post('/{id}/update', [MeetingController::class, 'update']);
+        Route::post('status/{id}/complete', [MeetingController::class, 'complete']);
+    });
 });

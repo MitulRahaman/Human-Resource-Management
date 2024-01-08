@@ -496,7 +496,55 @@ class PermissionSeeder extends Seeder
             [
                 'id' => 77,
                 'slug' => 'editMeetingPlace',
-                'name' => 'Edit MeetingPlace',
+                'name' => 'Edit Meeting Place',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 78,
+                'slug' => 'viewMeetings',
+                'name' => 'View Meetings',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 79,
+                'slug' => 'manageMeeting',
+                'name' => 'Manage Meeting',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 80,
+                'slug' => 'addMeeting',
+                'name' => 'Add Meeting',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 81,
+                'slug' => 'editMeeting',
+                'name' => 'Edit Meeting',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 82,
+                'slug' => 'viewComplaints',
+                'name' => 'View Complaints',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 83,
+                'slug' => 'manageComplaint',
+                'name' => 'Manage Complaint',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 84,
+                'slug' => 'addComplaint',
+                'name' => 'Add Complaint',
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 85,
+                'slug' => 'editComplaint',
+                'name' => 'Edit Complaint',
                 'status' => Config::get('variable_constants.activation.active'),
             ],
         ];

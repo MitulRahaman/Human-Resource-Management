@@ -22,12 +22,18 @@ class ComplaintController extends Controller
     public function __construct(ComplaintService $complaintService)
     {
         $this->complaintService = $complaintService;
-        View::share('main_menu', 'Complaint');
+        View::share('main_menu', 'Complaints');
     }
 
     public function getTableData()
     {
         return $this->complaintService->getTableData();
+    }
+
+    public function manage()
+    {
+        View::share('sub_menu', 'Manage Complaints');
+        return view('backend.pages.complaint.manage');
     }
 
     public function create()
@@ -54,12 +60,6 @@ class ComplaintController extends Controller
         }
     }
 
-    public function manage()
-    {
-        View::share('sub_menu', 'Manage Complaints');
-        return view('backend.pages.complaint.manage');
-    }
-
     public function edit($id)
     {
         View::share('sub_menu', 'Manage Complaints');
@@ -78,17 +78,17 @@ class ComplaintController extends Controller
         }
     }
 
-    public function approveComplaint(Request $request, $id)
+    public function acknowledge(Request $request, $id)
     {
         try {
-            $this->complaintService->approveComplaint($request,$id);
+            $this->complaintService->acknowledgeComplaint($request,$id);
             return redirect()->back()->with('success', 'Complaint acknowledged');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
 
-    public function rejectComplaint(Request $request, $id)
+    public function reject(Request $request, $id)
     {
         try {
             $this->complaintService->rejectComplaint($request,$id);

@@ -401,7 +401,7 @@ class MenuSeeder extends Seeder
                 'id' => 39,
                 'title' => 'Complaints',
                 'url' => '',
-                'icon' => 'fab fa-meetup',
+                'icon' => 'fa fa-pen',
                 'description' => '',
                 'menu_order' => '',
                 'parent_menu' => null,
@@ -419,7 +419,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'id' => 41,
-                'title' => 'Manage Complaint',
+                'title' => 'Manage Complaints',
                 'url' => 'complaint/manage',
                 'icon' => '',
                 'description' => '',

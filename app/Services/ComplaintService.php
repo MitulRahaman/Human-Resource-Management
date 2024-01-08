@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\ComplaintJob;
-use App\Jobs\ComplaintApproveJob;
+use App\Jobs\ComplaintAcknowledgedJob;
 use App\Repositories\ComplaintRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -80,16 +80,16 @@ class ComplaintService
             ->updateComplaints();
     }
 
-    public function approveComplaint($data, $id)
+    public function acknowledgeComplaint($data, $id)
     {
-        return $this->complaintRepository
-                ->setComplaintId($id)
-                ->setRemarks($data)
-                ->approveComplaint();
-
-
-        if($this->complaintRepository->setComplaintId($id)->approveComplaint($data)) {
-            event(new LeaveApplied($data));
+        $complaintdata = $this->complaintRepository->setComplaintId($id)->getComplaintEmailRecipient();
+        if($this->complaintRepository->setComplaintId($id)->setRemarks($data)->acknowledgeComplaint()) {
+            $data =[
+                'againstWhom' => $complaintdata->name,
+                'email' => auth()->user()->email,
+                'receiver' => $complaintdata->email
+            ];
+            ComplaintAcknowledgedJob::dispatch($data);
             return true;
         } else {
             return false;

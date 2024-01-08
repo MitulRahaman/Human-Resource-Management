@@ -103,7 +103,7 @@ class ComplaintRepository
             ]);
     }
 
-    public function approveComplaint()
+    public function acknowledgeComplaint()
     {
         return DB::table('complaints')->where('id', '=', $this->complaintId)->update(['status'=> Config::get('variable_constants.leave_status.approved'),
             'remarks'=>$this->remarks['approve-modal-remarks']]);
@@ -123,6 +123,14 @@ class ComplaintRepository
 
     public function getComplaintEmailRecipient()
     {
+        if($this->complaintId) {
+            return DB::table('complaints as c')
+                ->leftJoin('users as u', 'u.id', '=', 'c.by_whom')
+                ->leftJoin('users as _u', '_u.id', '=', 'c.against_whom')
+                ->where('c.id', '=', $this->complaintId)
+                ->select('u.email as email', '_u.full_name as name')
+                ->first();
+        }
         $appliedUser = DB::table('basic_info')->where('user_id', '=', auth()->user()->id)->first();
         if($appliedUser == null ) {
             return false;
@@ -133,7 +141,7 @@ class ComplaintRepository
             ->leftJoin('basic_info as bi', 'bi.role_id', '=', 'rp.role_id')
             ->where('p.slug', '=', 'manageComplaint')
             ->where('bi.branch_id', '=', $appliedUser->branch_id)
-            ->select('rp.role_id')
+            ->select('bi.preferred_email')
             ->get()
             ->toArray();
         if($hasManageComplaintPermission == null ) {
@@ -142,7 +150,7 @@ class ComplaintRepository
 
         $recipientEmail = array();
         foreach ($hasManageComplaintPermission as $hmlp) {
-            array_push($recipientEmail, DB::table('basic_info')->where('role_id', '=', $hmlp->role_id)->first()->preferred_email);
+            array_push($recipientEmail, $hmlp->preferred_email);
         }
         if($recipientEmail == null ) {
             return false;

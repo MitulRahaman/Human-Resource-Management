@@ -356,8 +356,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('store', [ComplaintController::class, 'store']);
         Route::get('/{id}/edit', [ComplaintController::class, 'edit']);
         Route::patch('/update/{id}', [ComplaintController::class, 'update']);
-        Route::post('{id}/approve', [ComplaintController::class, 'approveComplaint']);
-        Route::post('{id}/reject', [ComplaintController::class, 'rejectComplaint']);
+        Route::post('{id}/approve', [ComplaintController::class, 'acknowledge']);
+        Route::post('{id}/reject', [ComplaintController::class, 'reject']);
         Route::post('{id}/delete/', [ComplaintController::class, 'delete']);
         Route::post('get_table_data', [ComplaintController::class, 'getTableData']);
     });

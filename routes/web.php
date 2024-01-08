@@ -389,10 +389,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/get_meeting_data', [MeetingController::class, 'fetchData']);
         Route::get('/add', [MeetingController::class, 'create']);
         Route::post('/store', [MeetingController::class, 'store']);
-//        Route::get('status/{id}/close', [TicketController::class, 'close']);
-//        Route::get('/{id}/edit', [TicketController::class, 'edit']);
-//        Route::post('/{id}/update', [TicketController::class, 'update']);
-//        Route::get('status/{id}/hold', [TicketController::class, 'hold']);
-//        Route::post('status/{id}/complete', [TicketController::class, 'complete']);
+        Route::get('/{id}/edit', [MeetingController::class, 'edit'])->name('edit');
+        Route::post('/{id}/update', [MeetingController::class, 'update']);
+        Route::post('status/{id}/complete', [MeetingController::class, 'complete']);
     });
 });

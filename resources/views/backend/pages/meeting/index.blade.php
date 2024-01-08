@@ -85,16 +85,17 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="block-content font-size-sm">
+                                    <div class="block-content font-size-sm ">
                                         <p class="text-center"><span id="description_text"></span></p>
                                         <input type="hidden" name="remarks" id="remarks" required>
-                                        <div class="form-group" id="condition_select">
-                                            <label for="file">Upload meeting-minutes</label>
-                                            <input type="file" name="meeting_minutes" id="meeting_minutes" >
+                                        <div class="form-group ml-8" id="condition_select">
+                                            <label for="file">Upload meeting-minutes<span class="text-danger">*</span></label>
+                                            <input type="file" name="meeting_minutes" id="meeting_minutes" required>
                                         </div>
                                     </div>
-                                    <div class="block-content block-content-full text-right border-top" id="buttons">
-
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                             </form>

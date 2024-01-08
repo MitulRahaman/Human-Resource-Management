@@ -593,6 +593,48 @@ class MenuPermissionsSeeder extends Seeder
                 'permission_id' => 80,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 97,
+                'menu_id' => 39,
+                'permission_id' => 82,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 98,
+                'menu_id' => 39,
+                'permission_id' => 83,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 99,
+                'menu_id' => 39,
+                'permission_id' => 84,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 100,
+                'menu_id' => 40,
+                'permission_id' => 84,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 101,
+                'menu_id' => 41,
+                'permission_id' => 82,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 102,
+                'menu_id' => 41,
+                'permission_id' => 83,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 103,
+                'menu_id' => 41,
+                'permission_id' => 84,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($menu_permissions as $key=>$mp)

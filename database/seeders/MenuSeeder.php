@@ -397,6 +397,36 @@ class MenuSeeder extends Seeder
                 'parent_menu' => 36,
                 'status' => Config::get('variable_constants.activation.active'),
             ],
+            [
+                'id' => 39,
+                'title' => 'Complaints',
+                'url' => '',
+                'icon' => 'fab fa-meetup',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => null,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 40,
+                'title' => 'Create Complaint',
+                'url' => 'complaint/create',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 39,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
+            [
+                'id' => 41,
+                'title' => 'Manage Complaint',
+                'url' => 'complaint/manage',
+                'icon' => '',
+                'description' => '',
+                'menu_order' => '',
+                'parent_menu' => 39,
+                'status' => Config::get('variable_constants.activation.active'),
+            ],
         ];
 
         foreach ($menus as $key=>$menu)

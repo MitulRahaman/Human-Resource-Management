@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Meeting;
 
 use App\Http\Requests\MeetingAddRequest;
+use App\Http\Requests\MeetingEditRequest;
 use App\Http\Requests\MeetingPlaceAddRequest;
 use App\Http\Requests\MeetingPlaceEditRequest;
 use App\Services\MeetingService;
@@ -46,18 +47,51 @@ class MeetingController extends Controller
 
     public function store(MeetingAddRequest $request)
     {
-        dd($request->all());
         try{
             $response = $this->meetingService->create($request->validated());
-            if (is_int($response)) {
+            if ($response) {
                 return redirect('meeting/')->with('success', 'Meeting saved successfully.');
             } else {
-                return redirect()->back()->with('error', $response);
+                return redirect('meeting/')->with('error', 'Meeting not saved');
             }
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
+    public function edit($id)
+    {
+        View::share('sub_menu', 'Manage Meetings');
+        $meeting = $this->meetingService->getMeeting($id);
+        if($meeting && !is_null($meeting->deleted_at))
+            return redirect()->back()->with('error', 'Invalid meeting');
+        $places = $this->meetingService->getAllPlaces();
+        $participants = $this->meetingService->getAllUsers();
+        return \view('backend.pages.meeting.edit',compact('meeting','places', 'participants'));
+    }
+
+    public function update(MeetingEditRequest $request)
+    {
+        try {
+            $meeting = $this->meetingService->update($request->validated());
+            if(!$meeting)
+                return redirect('meeting')->with('error', 'Failed to update meeting');
+            return redirect('/meeting')->with('success', 'Meeting updated successfully');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function complete($id, Request $request)
+    {
+        try {
+            $this->meetingService->complete($id, $request->all());
+            return redirect()->back()->with('success', 'Meeting completed');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
 //    ========================= end meeting ==========================
 //    ========================= start meeting place ==========================
     public function meetingPlaceIndex()

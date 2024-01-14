@@ -128,6 +128,7 @@ class MeetingRepository
         return DB::table('meetings as m')
             ->leftJoin('meeting_places as mp', 'mp.id','m.place')
             ->select('m.*',DB::raw('date_format(m.date, "%d-%m-%Y") as date'),'mp.name as place',DB::raw('date_format(m.created_at, "%d-%m-%Y") as created_at'),DB::raw('date_format(FROM_UNIXTIME(m.start_time / 1000), "%H:%i") as start_time_formatted'),DB::raw('date_format(FROM_UNIXTIME(m.end_time / 1000), "%H:%i") as end_time_formatted'))
+            ->orderBy('m.id', 'desc')
             ->get();
     }
 
@@ -144,6 +145,9 @@ class MeetingRepository
             ->where(function ($query) use ($end_time) {
                 $query->whereBetween('start_time', [$this->start_time, $end_time])
                     ->orWhereBetween('end_time', [$this->start_time, $end_time]);
+            })
+            ->when($this->id, function($query){
+                $query->where('id', '!=', $this->id);
             })
             ->exists();
     }
@@ -261,6 +265,14 @@ class MeetingRepository
             ]);
     }
 
+    public function getPrevMeeting()
+    {
+        return DB::table('meetings as m')
+            ->where('m.id','=',$this->id)
+            ->select('m.*',DB::raw('date_format(FROM_UNIXTIME(start_time / 1000), "%H:%i") as start_time_formatted'),DB::raw('date_format(FROM_UNIXTIME(end_time / 1000), "%H:%i") as end_time_formatted'))
+            ->first();
+    }
+
     //    =============================end meeting======================
 
 //    =============================start meeting places======================
@@ -268,6 +280,7 @@ class MeetingRepository
     {
         return DB::table('meeting_places')
             ->select('*',DB::raw('date_format(created_at, "%d/%m/%Y") as created_at'))
+            ->orderBy('id', 'desc')
             ->get();
     }
 

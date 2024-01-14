@@ -90,11 +90,10 @@ class MeetingService
 
     public function update($data)
     {
-        $prev_meeting = $this->meetingRepository->getPrevMeeting($data['id']);
+        $prev_meeting = $this->meetingRepository->setId($data['id'])->getPrevMeeting();
         $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000-21600000;
         $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000-21600000;
-        $this->meetingRepository->setId($data['id'])
-            ->setTitle($data['title'])
+        $this->meetingRepository->setTitle($data['title'])
             ->setAgenda($data['agenda'])
             ->setDate(Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d'))
             ->setPlace($data['place'])

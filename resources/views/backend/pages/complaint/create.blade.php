@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 @section('css_after')
-        <style >
+    <style >
         .spinner {
             display: none;
         }

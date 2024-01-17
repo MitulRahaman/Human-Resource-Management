@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use App\Traits\AuthorizationTrait;
 use Illuminate\Support\Facades\Storage;
+use Spatie\GoogleCalendar\Event;
 
 class MeetingService
 {
@@ -47,6 +48,9 @@ class MeetingService
         $not_available = $this->meetingRepository->checkMeetingAvailability();
         if($not_available) return false;
         $meeting = $this->meetingRepository->createMeeting();
+        $event_name = $data['title'];
+        $start_date_time =(Carbon::parse($data['date'].' '.$data['start_time']))->subHours(6);
+        $end_date_time = (Carbon::parse($data['date'].' '.$data['end_time']))->subHours(6);
         if($meeting)
         {
             $to = $this->meetingRepository->getParticipantsEmails();
@@ -60,6 +64,20 @@ class MeetingService
                 'subject' => "Meeting : ".$data['title'],
             ];
             MeetingJob::dispatch($data);
+
+            $attendees = array_map(function ($email) {
+                return ['email' => $email];
+            }, $to);
+
+            $event = new Event;
+            $event->name = $event_name;
+            $event->startDateTime = $start_date_time;
+            $event->endDateTime = $end_date_time;
+            foreach ($attendees as $a)
+            {
+                $event->addAttendee($a);
+            }
+            $event->save();
             return true;
         }
         return false;
@@ -72,10 +90,10 @@ class MeetingService
 
     public function update($data)
     {
+        $prev_meeting = $this->meetingRepository->setId($data['id'])->getPrevMeeting();
         $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000-21600000;
         $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000-21600000;
-        $this->meetingRepository->setId($data['id'])
-            ->setTitle($data['title'])
+        $this->meetingRepository->setTitle($data['title'])
             ->setAgenda($data['agenda'])
             ->setDate(Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d'))
             ->setPlace($data['place'])
@@ -88,6 +106,11 @@ class MeetingService
         $not_available = $this->meetingRepository->checkMeetingAvailability();
         if($not_available) return false;
         $meeting = $this->meetingRepository->updateMeeting();
+        $event_name = $data['title'];
+        $start_date_time =(Carbon::parse($prev_meeting->date.' '.$prev_meeting->start_time_formatted))->subHours(6);
+        $end_date_time = (Carbon::parse($prev_meeting->date.' '.$prev_meeting->end_time_formatted))->subHours(6);
+        $sdt =(Carbon::parse($data['date'].' '.$data['start_time']))->subHours(6);
+        $edt = (Carbon::parse($data['date'].' '.$data['end_time']))->subHours(6);
         if($meeting)
         {
             $to = $this->meetingRepository->getParticipantsEmails();
@@ -101,6 +124,22 @@ class MeetingService
                 'subject' => "Meeting(Updated) : ".$data['title'],
             ];
             MeetingJob::dispatch($data);
+
+            $attendees = array_map(function ($email) {
+                return ['email' => $email];
+            }, $to);
+
+            $event = Event::get($start_date_time,$end_date_time)->first();
+
+            $event->name = $event_name;
+            $event->startDateTime = $sdt;
+            $event->endDateTime = $edt;
+            foreach ($attendees as $a)
+            {
+                $event->addAttendee($a);
+            }
+
+            $event->save();
             return true;
         }
         return false;

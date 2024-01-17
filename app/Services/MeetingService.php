@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Config;
 use App\Traits\AuthorizationTrait;
 use Illuminate\Support\Facades\Storage;
 use Spatie\GoogleCalendar\Event;
-use DateTime;
 
 class MeetingService
 {

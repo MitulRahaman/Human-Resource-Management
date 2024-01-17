@@ -31,7 +31,7 @@ class MeetingAddRequest extends FormRequest
             'start_time' => 'required',
             'end_time' => 'required',
             'url' => 'nullable',
-            'description' => 'nullable',
+            'description' => 'required',
             'participants' => 'required|array',
             'participants.*' => 'exists:users,id'
         ];

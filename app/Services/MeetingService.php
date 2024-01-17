@@ -320,7 +320,7 @@ class MeetingService
                     $status = "<span class=\"badge badge-danger\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
-                $edit_url = route('edit', ['id'=>$id]);
+                $edit_url = url('meeting_place/'.$id.'/edit');
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
                 $toggle_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a>";
                 if ($row->deleted_at) {

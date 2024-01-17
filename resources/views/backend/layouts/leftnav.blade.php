@@ -105,6 +105,7 @@
                 });
                 ?>
                 @foreach($parentMenus as $pm)
+                    @if($pm->title!='Logs')
                     <?php
                     $subMenus = $menus->filter(function ($menu) use($pm) {
                         return $menu->parent_menu === $pm->id;
@@ -126,6 +127,7 @@
                             @endforeach
                         </ul>
                     </li>
+                    @endif
                 @endforeach
                 @if($parentMenus->contains('title', 'Logs'))
                 <li class="nav-main-item">

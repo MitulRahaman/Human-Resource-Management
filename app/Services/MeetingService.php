@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use App\Traits\AuthorizationTrait;
 use Illuminate\Support\Facades\Storage;
 use Spatie\GoogleCalendar\Event;
+use DateTime;
 
 class MeetingService
 {
@@ -32,8 +33,8 @@ class MeetingService
 
     public function create($data)
     {
-        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000-21600000;
-        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000-21600000;
+        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000;
+        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000;
         $this->meetingRepository->setTitle($data['title'])
             ->setAgenda($data['agenda'])
             ->setDate(Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d'))
@@ -49,8 +50,8 @@ class MeetingService
         if($not_available) return false;
         $meeting = $this->meetingRepository->createMeeting();
         $event_name = $data['title'];
-        $start_date_time =(Carbon::parse($data['date'].' '.$data['start_time']))->subHours(6);
-        $end_date_time = (Carbon::parse($data['date'].' '.$data['end_time']))->subHours(6);
+        $start_date_time =(Carbon::parse($data['date'].' '.$data['start_time']));
+        $end_date_time = (Carbon::parse($data['date'].' '.$data['end_time']));
         if($meeting)
         {
             $to = $this->meetingRepository->getParticipantsEmails();
@@ -91,8 +92,8 @@ class MeetingService
     public function update($data)
     {
         $prev_meeting = $this->meetingRepository->setId($data['id'])->getPrevMeeting();
-        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000-21600000;
-        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000-21600000;
+        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000;
+        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000;
         $this->meetingRepository->setTitle($data['title'])
             ->setAgenda($data['agenda'])
             ->setDate(Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d'))
@@ -107,10 +108,10 @@ class MeetingService
         if($not_available) return false;
         $meeting = $this->meetingRepository->updateMeeting();
         $event_name = $data['title'];
-        $start_date_time =(Carbon::parse($prev_meeting->date.' '.$prev_meeting->start_time_formatted))->subHours(6);
-        $end_date_time = (Carbon::parse($prev_meeting->date.' '.$prev_meeting->end_time_formatted))->subHours(6);
-        $sdt =(Carbon::parse($data['date'].' '.$data['start_time']))->subHours(6);
-        $edt = (Carbon::parse($data['date'].' '.$data['end_time']))->subHours(6);
+        $start_date_time =(Carbon::parse($prev_meeting->date.' '.$prev_meeting->start_time_formatted));
+        $end_date_time = (Carbon::parse($prev_meeting->date.' '.$prev_meeting->end_time_formatted));
+        $sdt =(Carbon::parse($data['date'].' '.$data['start_time']));
+        $edt = (Carbon::parse($data['date'].' '.$data['end_time']));
         if($meeting)
         {
             $to = $this->meetingRepository->getParticipantsEmails();
@@ -130,16 +131,19 @@ class MeetingService
             }, $to);
 
             $event = Event::get($start_date_time,$end_date_time)->first();
-
-            $event->name = $event_name;
-            $event->startDateTime = $sdt;
-            $event->endDateTime = $edt;
-            foreach ($attendees as $a)
+            if($event)
             {
-                $event->addAttendee($a);
+                $event->name = $event_name;
+                $event->startDateTime = $sdt;
+                $event->endDateTime = $edt;
+                foreach ($attendees as $a)
+                {
+                    $event->addAttendee($a);
+                }
+
+                $event->save();
             }
 
-            $event->save();
             return true;
         }
         return false;

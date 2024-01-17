@@ -84,6 +84,7 @@
                                     <label for="val-suggestions">Description<span class="text-danger">*</span></label>
                                     <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="5" placeholder="What it is used for?" required>{{ old('description') }}</textarea>
                                 </div>
+                                <input type="hidden" name="timezone" value="" id="timezone">
                             </div>
                         </div>
 
@@ -116,6 +117,7 @@
     <script src="{{ asset('backend/js/pages/be_forms_validation.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+
             $('#participants').change(function() {
                 if ($(this).val() && $(this).val().includes('all')) {
                     $(this).find('option[value="all"]').prop('selected', false);
@@ -132,6 +134,8 @@
             $('.js-select2').select2({
                 placeholder: 'Choose Permissions for the Role..',
             });
+            var timezone = document.getElementById("timezone");
+            timezone.setAttribute('value', Intl.DateTimeFormat().resolvedOptions().timeZone);
         });
         $('.form-prevent-multiple-submission').on('submit',function() {
             $('.button-prevent-multiple-submission').attr('disabled', 'true');
@@ -144,6 +148,8 @@
         $('.input-prevent-multiple-submission').on('change' ,function() {
             $('.button-prevent-multiple-submission').removeAttr('disabled');
             $('.spinner').hide();
+
+
         })
     </script>
 

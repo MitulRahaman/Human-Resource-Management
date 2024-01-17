@@ -32,8 +32,15 @@ class MeetingService
 
     public function create($data)
     {
-        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000;
-        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000;
+
+        $start_time_carbonDate = Carbon::createFromFormat('H:i', $data['start_time']);
+        $start_time_carbonDate->setTimezone($data['timezone']);
+        $start_time_ms = $start_time_carbonDate->timestamp * 1000;
+
+        $end_time_carbonDate = Carbon::createFromFormat('H:i', $data['end_time']);
+        $end_time_carbonDate->setTimezone($data['timezone']);
+        $end_time_ms = $end_time_carbonDate->timestamp * 1000;
+
         $this->meetingRepository->setTitle($data['title'])
             ->setAgenda($data['agenda'])
             ->setDate(Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d'))
@@ -91,8 +98,17 @@ class MeetingService
     public function update($data)
     {
         $prev_meeting = $this->meetingRepository->setId($data['id'])->getPrevMeeting();
-        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000;
-        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000;
+//        $start_time_ms = (Carbon::createFromFormat('H:i', $data['start_time']))->timestamp * 1000;
+//        $end_time_ms = (Carbon::createFromFormat('H:i', $data['end_time']))->timestamp * 1000;
+
+        $start_time_carbonDate = Carbon::createFromFormat('H:i', $data['start_time']);
+        $start_time_carbonDate->setTimezone('Asia/Dhaka');
+        $start_time_ms = $start_time_carbonDate->timestamp * 1000;
+
+        $end_time_carbonDate = Carbon::createFromFormat('H:i', $data['end_time']);
+        $end_time_carbonDate->setTimezone('Asia/Dhaka');
+        $end_time_ms = $end_time_carbonDate->timestamp * 1000;
+
         $this->meetingRepository->setTitle($data['title'])
             ->setAgenda($data['agenda'])
             ->setDate(Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d'))

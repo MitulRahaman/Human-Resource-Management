@@ -33,7 +33,8 @@ class MeetingAddRequest extends FormRequest
             'url' => 'nullable',
             'description' => 'required',
             'participants' => 'required|array',
-            'participants.*' => 'exists:users,id'
+            'participants.*' => 'exists:users,id',
+            'timezone' => 'nullable'
         ];
     }
 }

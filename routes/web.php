@@ -377,7 +377,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/add', [MeetingController::class, 'createMeetingPlace']);
         Route::post('/validate_inputs', [MeetingController::class, 'validate_inputs_meeting_place']);
         Route::post('/store', [MeetingController::class, 'storeMeetingPlace']);
-        Route::get('/{id}/edit', [MeetingController::class, 'editMeetingPlace'])->name('edit');
+        Route::get('/{id}/edit', [MeetingController::class, 'editMeetingPlace']);
         Route::post('/{id}/update', [MeetingController::class, 'updateMeetingPlace']);
         Route::post('/{id}/validate_name',[MeetingController::class, 'validate_name_meeting_place']);
         Route::post('/{id}/change_status', [MeetingController::class, 'changeMeetingPlaceStatus']);

@@ -127,12 +127,14 @@
                         </ul>
                     </li>
                 @endforeach
+                @if($parentMenus->contains('title', 'Logs'))
                 <li class="nav-main-item">
                     <a class="nav-main-link {{ strcasecmp($sub_menu, 'Logs') == 0 ? 'active' : '' }}" href="{{ url('log') }}">
                         <i class="nav-main-link-icon far fa-clone"></i>
                         <span class="nav-main-link-name">Logs</span>
                     </a>
                 </li>
+                @endif
 
 
                 <li class="nav-main-heading">Admin Console</li>

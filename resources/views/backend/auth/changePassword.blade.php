@@ -113,12 +113,12 @@ MAIN CONTENT LAYOUT
                                         </div>
                                         <div class="form-group">
                                             <label>New Password<span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control form-control-lg form-control-alt" id="new_password" name="new_password" placeholder="Enter New Password" required>
+                                            <input type="password" minlength="5" class="form-control form-control-lg form-control-alt" id="new_password" name="new_password" placeholder="Enter New Password" required>
                                         </div>
                                         <div class="form-group">
                                             <label>Confirm Password<span class="text-danger">*</span></label>
                                             <input type="password" class="form-control form-control-lg form-control-alt" id="confirm_password" name="confirm_password" placeholder="Confirm New Password" required>
-                                            <span id="error_confirm_password" class="m-2" style="color:red;  font-size: 14px;"></span>
+                                            <span id="error_confirm_password" minlength="5" class="m-2" style="color:red;  font-size: 14px;"></span>
                                         </div>
                                     </div>
                                     <div class="form-group row justify-content-center mb-0">

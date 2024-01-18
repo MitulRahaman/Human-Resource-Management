@@ -51,8 +51,8 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
-            'new_password' => 'required',
-            'confirm_password' => 'required|same:new_password'
+            'new_password' => 'required|min:5',
+            'confirm_password' => 'required|same:new_password|min:5'
         ]);
         if($validator)
         {
@@ -65,8 +65,8 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'current_password' => 'required',
-                'new_password' => 'required',
-                'confirm_password' => 'required|same:new_password'
+                'new_password' => 'required|min:5',
+                'confirm_password' => 'required|same:new_password|min:5'
             ]);
             if($validator)
             {

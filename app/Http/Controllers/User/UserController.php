@@ -158,7 +158,15 @@ class UserController extends Controller
         }
     }
 
-
+    public function resetPassword($id)
+    {
+        try {
+            $this->userService->resetPassword($id);
+            return redirect()->back()->with('success', 'Password reset successful');
+        } catch(\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 
     // -----basic info part-----
 

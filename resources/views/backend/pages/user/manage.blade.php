@@ -147,6 +147,34 @@
                 </div>
             </div>
         </div>
+        <div class="modal" id="reset-password-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form id="reset" action="" method="post">
+                        @csrf
+                        @method('patch')
+                        <div class="block block-rounded block-themed block-transparent mb-0">
+                            <div class="block-header bg-primary-dark">
+                                <h3 class="block-title text-center">Restore User</h3>
+                                <div class="block-options">
+                                    <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                        <i class="fa fa-fw fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="block-content font-size-sm">
+                                <p class="text-center">Are you sure want to reset password for <span id="reset_user_name"></span>?</p>
+                                <input type="hidden" name="reset_user_id" id="reset_user_id">
+                            </div>
+                            <div class="block-content block-content-full text-right border-top">
+                                <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- END Vertically Centered Block Modal -->
             </div>
         </div>
@@ -226,6 +254,13 @@
             const url = "{{ url('user/:id/restore') }}".replace(':id', id);
             $('#restore').attr('action', url);
             $('#restore-modal').modal('show');
+        }
+        function show_reset_password_modal(id, name) {
+            var x = document.getElementById('reset_user_name');
+            x.innerHTML = name;
+            const url = "{{ url('user/:id/reset_password') }}".replace(':id', id);
+            $('#reset').attr('action', url);
+            $('#reset-password-modal').modal('show');
         }
      </script>
 

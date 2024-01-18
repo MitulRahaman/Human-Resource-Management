@@ -133,6 +133,11 @@ class UserService
         return $this->userRepository->updateStatus($id);
     }
 
+    public function resetPassword($id)
+    {
+        return $this->userRepository->resetPassword($id);
+    }
+
     public function getTableData()
     {
         $result = $this->userRepository->getTableData();
@@ -175,6 +180,7 @@ class UserService
                 $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
                 $profile_edit_url = url('user/profile/'.$id.'/edit');
                 $profile_edit_btn= "<li><a class=\"dropdown-item\" href=\"$profile_edit_url\">Edit Full Profile</a></li>";
+                $password_reset_btn= "<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_reset_password_modal(\"$id\", \"$name\")'>Reset Password</a></li>";
                 $distribute_asset_url = url('user/'.$id.'/distribute_asset');
                 $distribute_asset_url_btn= "<li><a class=\"dropdown-item\" href=\"$distribute_asset_url\">Distribute asset</a></li>";
                 $toggle_btn = "<li><a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_status_modal(\"$id\", \"$status_msg\")'> $status_msg </a></li>";
@@ -191,7 +197,7 @@ class UserService
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-secondary\">
                                         <ul style=\"max-height: 100px; overflow-x:hidden\">";
                 if($hasManageEmployeePermsission)
-                    $action_btn .="$edit_btn $profile_edit_btn ";
+                    $action_btn .="$edit_btn $profile_edit_btn $password_reset_btn";
                 elseif($id==Auth::id())
                     $action_btn .="$profile_edit_btn ";
                 if($hasDistributeAssetPermsission)

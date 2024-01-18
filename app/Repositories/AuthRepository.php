@@ -90,13 +90,12 @@ class AuthRepository
     }
     public function changePassword()
     {
-        $user = DB::table('users')
+        return DB::table('users')
             ->where('id','=',auth()->user()->id)
             ->update([
-                'password'=> Hash::make($this->password)
+                'password'=> Hash::make($this->password),
+                'is_password_changed' => Config::get('variable_constants.check.yes')
             ]);
-        if($user==1) return true;
-        return false;
     }
     public function getUserPassword()
     {

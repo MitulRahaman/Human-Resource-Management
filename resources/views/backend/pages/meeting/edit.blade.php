@@ -76,8 +76,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="val-suggestions">Description</label>
-                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="5" placeholder="What it is used for?">{{ $meeting->description }}</textarea>
+                                    <label for="val-suggestions">Description<span class="text-danger">*</span></label>
+                                    <textarea class="form-control input-prevent-multiple-submission" id="description" name="description" rows="5" placeholder="What it is used for?" required>{{ $meeting->description }}</textarea>
                                 </div>
                             </div>
                         </div>

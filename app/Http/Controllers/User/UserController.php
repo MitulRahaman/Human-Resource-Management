@@ -253,4 +253,15 @@ class UserController extends Controller
         return redirect('user/manage')->with('success', 'Distributed Asset successfully.');
     }
 
+    public function publicProfile($id)
+    {
+        View::share('sub_menu', 'Public Profile');
+        $user = $this->userService->getUserInfo($id);
+        $user_official_info = $this->userService->getOfficialInfo($user->id);
+        $user_address = $this->userService->getUserAddress($user->id);
+        $userInstituteDegree = $this->userService->getInstituteDegree($user->academicInfo);
+        abort_if(!$user, 404);
+        return \view('backend.pages.user.publicProfile', compact('user', 'user_official_info','user_address', 'userInstituteDegree'));
+    }
+
 }

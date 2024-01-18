@@ -13,7 +13,15 @@
             <div class="block-content text-center">
                 <div class="py-4">
                     <div class="mb-3">
-                        <img class="img-avatar" src="{{ asset('backend/media/avatars/avatar13.jpg') }}" alt="">
+
+                        <?php
+                        $url =asset('backend/media/avatars/avatar13.jpg');
+                            if($user->image)
+                                {
+                                    $url = asset('storage/userImg/'. $user->image);
+                                }
+                        ?>
+                        <img class="img-avatar" src="{{$url}}" alt="">
                     </div>
                     <h1 class="font-size-lg mb-0">
                         {{ $user->full_name }} <i class="fa fa-star text-warning" data-toggle="tooltip" title="Premium Member"></i>
@@ -31,7 +39,7 @@
             </div>
             <div class="block-content">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-12 ">
                         <!-- Billing Address -->
                         <div class="block block-rounded block-bordered">
                             <div class="block-header border-bottom">
@@ -47,103 +55,16 @@
                                     Department: {{$user_official_info->department_name}}<br>
                                     Branch:{{$user_official_info->branch_name}}<br>
                                     @endif
-                                    <br><br>
+                                    <br>
                                     <i class="fa fa-phone"></i> {{$user->phone_number}}<br>
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->email}}</a><br>
+                                    <i class="fa fa-envelope"></i> Official: <a href="javascript:void(0)">{{$user->email}}</a><br>
                                     @if($user->basicInfo)
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$user->basicInfo->personal_email}}</a><br>
+                                    <i class="fa fa-envelope"></i> Personal: <a href="javascript:void(0)">{{$user->basicInfo->personal_email}}</a><br>
                                     @endif
                                 </div>
                             </div>
                         </div>
                         <!-- END Billing Address -->
-                    </div>
-
-                    <div class="col-lg-6">
-                        <!-- Shipping Address -->
-                        @if($user->personalInfo)
-                        <div class="block block-rounded block-bordered">
-                            <div class="block-header border-bottom">
-                                <h3 class="block-title">Personal Information</h3>
-                            </div>
-                            <div class="block-content">
-                                {{--<div class="font-size-h4 mb-1">John Parker</div>--}}
-
-                                <div class="font-size-sm">
-                                    Father name: {{$user->personalInfo->father_name}}<br>
-                                    Mother name: {{$user->personalInfo->mother_name}}<br>
-                                    NID: {{$user->personalInfo->nid}}<br>
-                                    Birth Certificate: {{$user->personalInfo->birth_certificate}}<br>
-                                    Passport No: {{$user->personalInfo->passport_no}}<br>
-                                    Date of Birth: {{$user->personalInfo->dob}}<br> Gender:
-                                    @if(Config::get('variable_constants.gender.male')==$user->personalInfo->gender)
-                                        male<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.gender.female')==$user->personalInfo->gender)
-                                        female<br>
-                                    @endif
-                                    Religion:
-                                    @if(Config::get('variable_constants.religion.islam')==$user->personalInfo->religion)
-                                        islam<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.religion.hindu')==$user->personalInfo->religion)
-                                        hindu<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.religion.christian')==$user->personalInfo->religion)
-                                        christian<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.religion.buddhist')==$user->personalInfo->religion)
-                                        buddhist<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.religion.others')==$user->personalInfo->religion)
-                                        others<br>
-                                    @endif
-                                    Blood group:
-                                    @if(Config::get('variable_constants.blood_group.O+')==$user->personalInfo->blood_group)
-                                        O+<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.O-')==$user->personalInfo->blood_group)
-                                        O-<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.A+')==$user->personalInfo->blood_group)
-                                        A+<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.A-')==$user->personalInfo->blood_group)
-                                        A-<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.B+')==$user->personalInfo->blood_group)
-                                        B+<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.B-')==$user->personalInfo->blood_group)
-                                        B-<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.AB+')==$user->personalInfo->blood_group)
-                                        AB+<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.blood_group.AB-')==$user->personalInfo->blood_group)
-                                        AB-<br>
-                                    @endif
-                                    Marital status:
-                                    @if(Config::get('variable_constants.marital_status.unmarried')==$user->personalInfo->marital_status)
-                                        unmarried<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.marital_status.married')==$user->personalInfo->marital_status)
-                                        married<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.marital_status.divorced')==$user->personalInfo->marital_status)
-                                        divorced<br>
-                                    @endif
-                                    @if(Config::get('variable_constants.marital_status.widowed')==$user->personalInfo->marital_status)
-                                        widowed<br>
-                                    @endif
-                                    No of Children {{$user->personalInfo->no_of_children}}<br>
-                                    <br>
-                                </div>
-
-                            </div>
-                        </div>
-                    @endif
-                        <!-- END Shipping Address -->
                     </div>
                 </div>
             </div>

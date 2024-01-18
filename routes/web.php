@@ -116,6 +116,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('profile/{id?}/edit', [UserController::class, 'editData']);
         Route::post('profile/{id?}/update', [UserController::class, 'updateData']);
         Route::delete('profile/{id}/delete_academic_info', [UserController::class, 'deleteAcademicInfo']);
+        Route::get('/{id?}/public/profile', [UserController::class, 'publicProfile']);
 
         Route::get('get_user_assets_data', [UserController::class, 'getUserAssetData']);
 

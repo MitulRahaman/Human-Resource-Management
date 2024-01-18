@@ -171,6 +171,8 @@ class UserService
                     $status = "<span class=\"badge badge-danger\" >Inactive</span>";
                     $status_msg = "Activate";
                 }
+                $view_profile_url = url('user/'.$id.'/public/profile');
+                $view_profile_btn= "<li><a class=\"dropdown-item\" href=\"$view_profile_url\">View Profile</a></li>";
                 $edit_url = url('user/'.$id.'/edit');
                 $edit_btn = "<li><a class=\"dropdown-item\" href=\"$edit_url\">Edit</a></li>";
                 $profile_edit_url = url('user/profile/'.$id.'/edit');
@@ -196,7 +198,7 @@ class UserService
                     $action_btn .="$profile_edit_btn ";
                 if($hasDistributeAssetPermsission)
                     $action_btn .=" $distribute_asset_url_btn ";
-                $action_btn .=" $toggle_btn $toggle_delete_btn";
+                $action_btn .=" $view_profile_btn $toggle_btn $toggle_delete_btn";
                 $action_btn .= "</ul>
                                 </div>
                             </div>

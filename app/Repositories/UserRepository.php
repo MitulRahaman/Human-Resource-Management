@@ -520,7 +520,7 @@ class UserRepository
     public function destroyUser($id)
     {
         $data = User::find($id);
-        $data->update(array('status' => 0));
+        $data->update(array('status' => Config::get('variable_constants.check.no')));
         return $data->delete();
     }
 
@@ -533,9 +533,15 @@ class UserRepository
     {
         $data = User::find($id);
         if($data->status)
-            $data->update(array('status' => 0));
+            return $data->update(array('status' => Config::get('variable_constants.check.no')));
         else
-            $data->update(array('status' => 1));
+            return $data->update(array('status' => Config::get('variable_constants.check.yes')));
+    }
+
+    public function resetPassword($id)
+    {
+        $data = User::find($id);
+        return $data->update(array('password' => Hash::make('welcome'), 'is_password_changed' => Config::get('variable_constants.check.no')));
     }
 
     public function isEmployeeIdExists($employee_id)

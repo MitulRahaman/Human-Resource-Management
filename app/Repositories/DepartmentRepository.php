@@ -95,9 +95,9 @@ class DepartmentRepository
     {
         $data = Department::find($id);
         if($data->status)
-            $data->update(array('status' => 0));
+            $data->update(array('status' => Config::get('variable_constants.check.no')));
         else
-            $data->update(array('status' => 1));
+            $data->update(array('status' => Config::get('variable_constants.check.yes')));
     }
 
     public function destroyDepartment($id)

@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'superUser' => \App\Http\Middleware\SuperUser::class,
         'log' => \App\Http\Middleware\Log::class,
+        'checkPasswordIsChange' => \App\Http\Middleware\CheckPasswordIsChanged::class,
     ];
 }

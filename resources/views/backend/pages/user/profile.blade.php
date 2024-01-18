@@ -43,7 +43,14 @@
             <div class="block-content text-center">
                 <div class="py-4">
                     <div class="mb-3">
-                        <img class="img-avatar" src="{{ asset('backend/media/avatars/avatar13.jpg') }}" alt="">
+                        <?php
+                        $url =asset('backend/media/avatars/avatar13.jpg');
+                        if($user->image)
+                        {
+                            $url = asset('storage/userImg/'. $user->image);
+                        }
+                        ?>
+                        <img class="img-avatar" src="{{$url}}" alt="">
                     </div>
                     <h1 class="font-size-lg mb-0">
                         {{ $user->full_name }} <i class="fa fa-star text-warning" data-toggle="tooltip" title="Premium Member"></i>
@@ -332,7 +339,6 @@
                                     Routing no: {{$banking->routing_no}}<br>
                                     Bank: {{$banking->bank_name}}<br>
                                     Branch: {{$banking->branch}}<br>
-                                    <br><br>
                                 </div>
                             </div>
                         </div>
@@ -350,8 +356,12 @@
                                     NID: {{$banking->nid}}<br>
                                     Relation: {{$banking->relation}}<br>
                                     <br>
-                                    <i class="fa fa-phone"></i> ({{$banking->phone_number}}<br><br>
-                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$banking->email}}<br></a>
+                                    @if($banking->phone_number)
+                                    <i class="fa fa-phone"></i> {{$banking->phone_number}}
+                                        <br>@endif
+                                    @if($banking->email)
+                                    <i class="fa fa-envelope-o"></i> <a href="javascript:void(0)">{{$banking->email}}</a>
+                                            @endif<br>
                                 </div>
                             </div>
                         </div>

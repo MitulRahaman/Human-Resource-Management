@@ -47,6 +47,7 @@ Route::get('/', function () {
 Route::get('login', [AuthController::class, 'index'])->name('viewLogin');
 Route::post('login', [AuthController::class, 'authenticate'])->name('login');
 
+
 Route::group(['middleware'=> 'auth'], function() {
     Route::get('change_password', [AuthController::class, 'viewChangePassword']);
     Route::post('change_password', [AuthController::class, 'changePassword']);
@@ -389,11 +390,17 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::prefix('meeting')->group(function() {
             Route::get('/', [MeetingController::class, 'index']);
             Route::get('/get_meeting_data', [MeetingController::class, 'fetchData']);
+            Route::get('/{id}/get_meeting_participant_data', [MeetingController::class, 'fetchAttendeeData']);
             Route::get('/add', [MeetingController::class, 'create']);
             Route::post('/store', [MeetingController::class, 'store']);
             Route::get('/{id}/edit', [MeetingController::class, 'edit'])->name('edit');
             Route::post('/{id}/update', [MeetingController::class, 'update']);
-            Route::post('status/{id}/complete', [MeetingController::class, 'complete']);
+            Route::get('/{id}/attendee', [MeetingController::class, 'attendee']);
+            Route::get('/{id}/notes/approve', [MeetingController::class, 'approveNote']);
+            Route::get('/{id}/notes', [MeetingController::class, 'viewAddNote']);
+            Route::post('/add/notes', [MeetingController::class, 'addNote']);
+            Route::get('/{id}/meeting_minute', [MeetingController::class, 'meetingMinute']);
+
         });
     });
 });

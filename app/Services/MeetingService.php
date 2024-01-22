@@ -95,6 +95,43 @@ class MeetingService
         return $this->meetingRepository->setId($id)->getMeeting();
     }
 
+    public function getNote($id)
+    {
+        return $this->meetingRepository->setId($id)->getNote();
+    }
+
+    public function meetingMinute($id)
+    {
+        $result = $this->meetingRepository->setId($id)->meetingMinute();
+        $data = [];
+        if (sizeof($result) > 0) {
+            foreach ($result as $key=>$row) {
+                $user = $this->meetingRepository->getUser($key);
+                $data[]=[
+                  'employee_id' => $user->employee_id,
+                    'name' => $user->full_name,
+                    'notes' => preg_replace('#<[^>]+>#', ' ', $row)
+                ];
+            }
+        }
+        return $data;
+    }
+
+    public function getMeetingParticipants($id)
+    {
+        return $this->meetingRepository->setId($id)->getMeetingParticipants();
+    }
+
+    public function addNote($data)
+    {
+        return $this->meetingRepository->setId($data['id'])->setNotes($data['notes'])->addNote();
+    }
+
+    public function approveNote($id)
+    {
+        return $this->meetingRepository->setId($id)->approveNote();
+    }
+
     public function update($data)
     {
         $prev_meeting = $this->meetingRepository->setId($data['id'])->getPrevMeeting();
@@ -164,19 +201,77 @@ class MeetingService
         return false;
     }
 
-    public function complete($id, $data)
+    public function fetchAttendeeData($id)
     {
-        $extension = $data['meeting_minutes']->getClientOriginalExtension();
-        $file_name = random_int(00001, 99999).'.'.$extension;
-        $file_path = 'meeting/'.$file_name;
-        Storage::disk('public')->put($file_path, file_get_contents($data['meeting_minutes']));
-        return $this->meetingRepository->setId($id)->setMeetingMinutes($file_name)->setUpdatedAt(date('Y-m-d H:i:s'))->complete();
+        $result = $this->meetingRepository->setId($id)->getMeetingParticipants();
+        $manageMeetingPermission = $this->setSlug('manageMeeting')->hasPermission();
+        $user_id = auth()->user()->id;
+        if ($result->count() > 0) {
+            $data = array();
+            foreach ($result as $key=>$row) {
+                $id = $row->id;
+                $employee_id = $row->employee_id;
+                $name = $row->full_name;
+                $meeting = $this->meetingRepository->getMeeting($id);
+                if ($manageMeetingPermission ||  $user_id==$meeting->created_by || $this->isMeetingParticipant($id)) {
+                    $notes = $row->notes ? $row->notes : "N/A";
+                }
+                else $notes = "N/A";
+                $attendee_url = url('meeting/'.$id.'/notes/approve');
+                $attendee_btn ="<a class=\"dropdown-item\" href=\"$attendee_url\">Approve Notes</a>";
+                $note_url = url('meeting/'.$id.'/notes');
+                $note_btn ="<a class=\"dropdown-item\" href=\"$note_url\">Notes</a>";
+
+                if ($row->note_status == Config::get('variable_constants.note_status.pending')) {
+                    $status = "<span class=\"badge badge-primary\">Pending</span>";
+                }elseif ($row->note_status == Config::get('variable_constants.note_status.approved')){
+                    $status = "<span class=\"badge badge-success\" >Approved</span>";
+                }
+                $action_btn = "<div class=\"col-sm-6 col-xl-4\">
+                                    <div class=\"dropdown\">
+                                        <button type=\"button\" class=\"btn btn-success dropdown-toggle\" id=\"dropdown-default-success\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+                                            Action
+                                        </button>
+                                        <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-success\">";
+                if ($user_id==$row->created_by && $row->notes && $row->note_status == Config::get('variable_constants.note_status.pending')) {
+                    $action_btn .= " $attendee_btn ";
+                }
+                elseif($user_id==$row->user_id && $row->note_status == Config::get('variable_constants.note_status.pending'))
+                    $action_btn .= " $note_btn ";
+                else $action_btn = 'N/A';
+                $action_btn .= "</div>
+                                    </div>
+                                </div>";
+                $temp = array();
+                array_push($temp, $key+1);
+                array_push($temp, $employee_id);
+                array_push($temp, $name);
+                array_push($temp, $notes);
+                array_push($temp, $status);
+                array_push($temp, $action_btn);
+                array_push($data, $temp);
+            }
+            return json_encode(array('data'=>$data));
+        } else {
+            return '{
+                    "sEcho": 1,
+                    "iTotalRecords": "0",
+                    "iTotalDisplayRecords": "0",
+                    "aaData": []
+                }';
+        }
+    }
+
+    public function isMeetingParticipant($id)
+    {
+        return $this->meetingRepository->isMeetingParticipant($id);
     }
 
     public function fetchData()
     {
         $result = $this->meetingRepository->getAllMeetingData();
         $manageMeetingPermission = $this->setSlug('manageMeeting')->hasPermission();
+        $user_id = auth()->user()->id;
         if ($result->count() > 0) {
             $data = array();
             foreach ($result as $key=>$row) {
@@ -188,30 +283,26 @@ class MeetingService
                 $date = $row->date;
                 $start_time = $row->start_time_formatted;
                 $end_time = $row->end_time_formatted;
-                $meeting_minutes = $row->meeting_minutes? "Download":"N/A";
-                if ($manageMeetingPermission && $row->meeting_minutes) {
-                    $meeting_minutes = "<a href='" . asset('storage/meeting/' . $row->meeting_minutes) . "' download>Download</a>";
-                }
                 $created_at = $row->created_at;
-                if ($row->status == Config::get('variable_constants.meeting_status.pending')) {
-                    $status = "<span class=\"badge badge-primary\">Pending</span>";
-                }elseif ($row->status == Config::get('variable_constants.meeting_status.completed')){
-                    $status = "<span class=\"badge badge-success\" >Completed</span>";
-                }
+                $attendee_url = url('meeting/'.$id.'/attendee');
+                $attendee_btn ="<a class=\"dropdown-item\" href=\"$attendee_url\">Attendee</a>";
+                $meeting_minute_url = url('meeting/'.$id.'/meeting_minute');
+                $meeting_minute_btn ="<a class=\"dropdown-item\" href=\"$meeting_minute_url\">Meeting Minute</a>";
                 $edit_url = route('edit', ['id'=>$id]);
                 $edit_btn = "<a class=\"dropdown-item\" href=\"$edit_url\">Edit</a>";
-                $complete_btn = "<a class=\"dropdown-item\" href=\"javascript:void(0)\" onclick='show_complete_modal(\"$id\", \"$title\")'> Complete Meeting</a>";
                 $action_btn = "<div class=\"col-sm-6 col-xl-4\">
                                     <div class=\"dropdown\">
                                         <button type=\"button\" class=\"btn btn-success dropdown-toggle\" id=\"dropdown-default-success\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
                                             Action
                                         </button>
                                         <div class=\"dropdown-menu font-size-sm\" aria-labelledby=\"dropdown-default-success\">";
-                if ($manageMeetingPermission && $row->status == Config::get('variable_constants.meeting_status.pending')) {
-                    $action_btn .= "$edit_btn $complete_btn ";
+                if (($manageMeetingPermission ||  $user_id==$row->created_by) && $row->status == Config::get('variable_constants.meeting_status.pending')) {
+                    $action_btn .= " $edit_btn ";
                 }
-                else
-                    $action_btn = 'N/A';
+                if ($manageMeetingPermission ||  $user_id==$row->created_by || $this->isMeetingParticipant($id)) {
+                    $action_btn .= " $meeting_minute_btn ";
+                }
+                $action_btn .= " $attendee_btn " ;
                 $action_btn .= "</div>
                                     </div>
                                 </div>";
@@ -224,8 +315,7 @@ class MeetingService
                 array_push($temp, $date);
                 array_push($temp, $start_time);
                 array_push($temp, $end_time);
-                array_push($temp, $status);
-                array_push($temp, $meeting_minutes);
+//                array_push($temp, $meeting_minutes);
                 array_push($temp, $created_at);
                 array_push($temp, $action_btn);
                 array_push($data, $temp);

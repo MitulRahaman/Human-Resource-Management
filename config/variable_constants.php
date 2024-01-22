@@ -125,5 +125,10 @@ return [
     [
         'pending' => 0,
         'completed' => 1,
+    ],
+    'note_status' =>
+    [
+        'pending' =>0,
+        'approved' => 1,
     ]
 ];

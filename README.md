@@ -10,7 +10,7 @@ Installation
 
 2. Run `composer install`
 
-3. Run `cp .env.example .env`
+3. Run `copy .env.example .env`
 
 4. Update database configuration
 
@@ -20,7 +20,9 @@ Installation
 
 7. Run `php artisan key:generate`
 
-8. Run `php artisan serve`
+8. Run `php artisan storage:link`
+
+9. Run `php artisan serve`
 
 ##########
 

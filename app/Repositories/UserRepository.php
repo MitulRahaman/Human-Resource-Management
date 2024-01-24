@@ -460,7 +460,6 @@ class UserRepository
                 'nick_name' => $this->nickName,
                 'email' => $this->preferredEmail,
                 'phone_number' => $this->phone,
-                'password' => Hash::make("welcome"),
                 'image' => $this->file,
                 'is_super_user' => 0,
                 'is_registration_complete' => 0,

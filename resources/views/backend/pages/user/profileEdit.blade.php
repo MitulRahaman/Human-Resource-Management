@@ -156,7 +156,7 @@
                         <!-- Step 3 -->
                         <div class="tab-pane" id="wizard-validation-step3" role="tabpanel">
                             <div class="form-group">
-                                <label for="wizard-validation-skills">Bank<span class="text-danger">*</span></label>
+                                <label for="wizard-validation-skills">Bank</label>
                                 <select class="form-control" id="bank_id" name="bank_id">
                                     @foreach ($bank as $b)
                                         <option value="{{$b->id}}" {{$user->bankingInfo? ($user->bankingInfo->bank_id == $b->id? 'selected':'') : ''}}>{{$b->name}}</option>
@@ -164,36 +164,36 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="wizard-validation-location">Account Name<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="account_name" name="account_name" value="{{$user->bankingInfo? $user->bankingInfo->account_name:''}}" required>
+                                <label for="wizard-validation-location">Account Name</label>
+                                <input class="form-control" type="text" id="account_name" name="account_name" value="{{$user->bankingInfo? $user->bankingInfo->account_name:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-validation-location">Account Number<span class="text-danger">*</span></label>
-                                <input class="form-control" type="number" id="account_number" name="account_number" value="{{$user->bankingInfo? $user->bankingInfo->account_number:''}}" required>
+                                <label for="wizard-validation-location">Account Number</label>
+                                <input class="form-control" type="number" id="account_number" name="account_number" value="{{$user->bankingInfo? $user->bankingInfo->account_number:''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-validation-location">Branch<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="branch" name="branch" value="{{$user->bankingInfo? $user->bankingInfo->branch:''}}" required>
+                                <label for="wizard-validation-location">Branch</label>
+                                <input class="form-control" type="text" id="branch" name="branch" value="{{$user->bankingInfo? $user->bankingInfo->branch:''}}">
                             </div>
                             <div class="form-group">
                                 <label for="wizard-validation-location">Routing Number</label>
                                 <input class="form-control" type="text" id="routing_number" name="routing_number" value="{{$user->bankingInfo? $user->bankingInfo->routing_number:''}}" >
                             </div>
                             <div class="form-group">
-                                <label for="wizard-validation-location">Nominee Name<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nominee_name" name="nominee_name" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->name:''):''}}" required>
+                                <label for="wizard-validation-location">Nominee Name</label>
+                                <input class="form-control" type="text" id="nominee_name" name="nominee_name" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->name:''):''}}">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-validation-location">Nominee NID<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nominee_nid" name="nominee_nid" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->nid:''):''}}" required>
+                                <label for="wizard-validation-location">Nominee NID</label>
+                                <input class="form-control" type="text" id="nominee_nid" name="nominee_nid" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->nid:''):''}}">
                             </div>
                             <div class="form-group">
                                 <label for="wizard-validation-location">Nominee Photo</label>
                                 <input class="form-control" type="file" id="nominee_photo" name="nominee_photo">
                             </div>
                             <div class="form-group">
-                                <label for="wizard-validation-location">Relation with Nominee<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="nominee_relation" name="nominee_relation" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->relation:''):''}}" required>
+                                <label for="wizard-validation-location">Relation with Nominee</label>
+                                <input class="form-control" type="text" id="nominee_relation" name="nominee_relation" value="{{$user->bankingInfo? ($user->bankingInfo->nominees[0]? $user->bankingInfo->nominees[0]->relation:''):''}}">
                             </div>
                             <div class="form-group">
                                 <label for="phone">Nominee Contact Number</label>

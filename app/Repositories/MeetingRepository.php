@@ -4,10 +4,11 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use function Ramsey\Collection\Map\keys;
 
 class MeetingRepository
 {
-    private  $name, $id, $title, $meeting_minutes, $agenda, $participants, $date, $place, $start_time, $end_time, $description, $url, $status, $created_at, $updated_at, $deleted_at;
+    private  $name, $notes, $id, $title, $meeting_minutes, $agenda, $participants, $date, $place, $start_time, $end_time, $description, $url, $status, $created_at, $updated_at, $deleted_at;
 
     public function setName($name)
     {
@@ -18,6 +19,12 @@ class MeetingRepository
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
         return $this;
     }
 
@@ -123,11 +130,76 @@ class MeetingRepository
             ->get();
     }
 
+    public function addNote()
+    {
+        return DB::table('meeting_participants')
+            ->whereNull('deleted_at')
+            ->where('id', '=', $this->id)
+            ->update([
+                'notes' => $this->notes,
+            ]);
+    }
+
+    public function getNote()
+    {
+        return DB::table('meeting_participants')->whereNull('deleted_at')->where('id', '=', $this->id)->value('notes');
+    }
+
+    public function meetingMinute()
+    {
+        $meeting_minute = DB::table('meetings')->where('id','=', $this->id)->value('meeting_minutes');
+        return json_decode($meeting_minute, true);
+    }
+
+    public function getUser($id)
+    {
+        return DB::table('users')->whereNull('deleted_at')
+            ->where('status','=',Config::get('variable_constants.activation.active'))
+            ->where('id','=',$id)
+            ->first();
+    }
+
+    public function approveNote()
+    {
+        DB::beginTransaction();
+        try {
+            DB::table('meeting_participants')
+                ->where('id', '=', $this->id)
+                ->update(['note_status' => Config::get('variable_constants.note_status.approved')]);
+            $values = DB::table('meeting_participants')->where('id', '=', $this->id)->first();
+            $meeting_minute = DB::table('meetings')->where('id','=', $values->meeting_id)->value('meeting_minutes');
+            if($meeting_minute)
+                $notes = json_decode($meeting_minute, true);
+            else
+                $notes = [];
+            $notes[$values->user_id] = $values->notes;
+            DB::table('meetings')
+                ->where('id','=', $values->meeting_id)
+                ->update([
+                    'meeting_minutes' => json_encode($notes),
+                ]);
+            DB::commit();
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+    }
+
+    public function isMeetingParticipant($id)
+    {
+        return DB::table('meeting_participants')
+            ->whereNull('deleted_at')
+            ->where('meeting_id' , '=',$id)
+            ->where('user_id', '=', auth()->user()->id)
+            ->exists();
+    }
+
     public function getAllMeetingData()
     {
         return DB::table('meetings as m')
             ->leftJoin('meeting_places as mp', 'mp.id','m.place')
-            ->select('m.*',DB::raw('date_format(m.date, "%d-%m-%Y") as date'),'mp.name as place',DB::raw('date_format(m.created_at, "%d-%m-%Y") as created_at'),DB::raw('date_format(FROM_UNIXTIME(m.start_time / 1000), "%H:%i") as start_time_formatted'),DB::raw('date_format(FROM_UNIXTIME(m.end_time / 1000), "%H:%i") as end_time_formatted'))
+            ->select('m.*',DB::raw('date_format(m.date, "%d-%m-%Y") as date'),'mp.name as place', DB::raw('date_format(m.created_at, "%d-%m-%Y") as created_at'),DB::raw('date_format(FROM_UNIXTIME(m.start_time / 1000), "%H:%i") as start_time_formatted'),DB::raw('date_format(FROM_UNIXTIME(m.end_time / 1000), "%H:%i") as end_time_formatted'))
             ->orderBy('m.id', 'desc')
             ->get();
     }
@@ -167,7 +239,8 @@ class MeetingRepository
                     'url' => $this->url,
                     'description' => $this->description,
                     'status' => $this->status,
-                    'created_at' => $this->created_at
+                    'created_at' => $this->created_at,
+                    'created_by' => auth()->user()->id
                 ]);
             if($meeting)
             {
@@ -213,6 +286,16 @@ class MeetingRepository
         return $meeting;
     }
 
+    public function getMeetingParticipants()
+    {
+        return DB::table('meeting_participants as mp')
+            ->where('mp.meeting_id', '=', $this->id)
+            ->leftJoin('users as u', 'u.id', '=', 'mp.user_id')
+            ->leftJoin('meetings as m', 'm.id', '=', 'mp.meeting_id')
+            ->select('u.employee_id', 'u.full_name', 'mp.id', 'mp.notes', 'm.created_by', 'mp.user_id', 'mp.note_status')
+            ->get();
+    }
+
     public function updateMeeting()
     {
         DB::beginTransaction();
@@ -254,16 +337,6 @@ class MeetingRepository
         }
     }
 
-    public function complete()
-    {
-        return DB::table('meetings')
-            ->where('id','=', $this->id)
-            ->update([
-                'meeting_minutes' => $this->meeting_minutes,
-                'status' => Config::get('variable_constants.meeting_status.completed'),
-                'updated_at' => $this->updated_at,
-            ]);
-    }
 
     public function getPrevMeeting()
     {

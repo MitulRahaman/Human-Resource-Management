@@ -28,38 +28,26 @@
     </style>
 @endsection
 @section('page_action')
-    @if($addMeetingPermission)
-    <div class="mt-3 mt-sm-0 ml-sm-3">
-        <a href="{{ url('meeting/add') }}">
-            <button type="button" class="btn btn-dark mr-1 mb-3">
-                <i class="fa fa-fw fa-key mr-1"></i> Add Meeting
-            </button>
-        </a>
-    </div>
-    @endif
 @endsection
 @section('content')
     <div class="content">
         @include('backend.layouts.error_msg')
         <div class="block block-rounded">
             <div class="block-header">
-                <h3 class="block-title">Manage Meetings</h3>
+                <h3 class="block-title">Meetings Attendee</h3>
             </div>
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _js/pages/be_tables_datatables.js -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons " id="table">
+                        <h3 class="text-center">{{$meeting->title}}</h3>
                         <thead>
                         <tr>
                             <th class="text-center ">#</th>
-                            <th class="text-center ">Title</th>
-                            <th class="text-center ">Agenda</th>
-                            <th class="text-center ">Description</th>
-                            <th class="text-center ">Place</th>
-                            <th class="text-center ">Date</th>
-                            <th class="text-center ">Start Time</th>
-                            <th class="text-center ">End Time</th>
-                            <th class="text-center ">Created At</th>
+                            <th class="text-center ">Employee ID</th>
+                            <th class="text-center ">Name</th>
+                            <th class="text-center ">Notes</th>
+                            <th class="text-center ">Note Status</th>
                             <th >Action</th>
                         </tr>
                         </thead>
@@ -69,7 +57,40 @@
                     </table>
                 </div>
                 <!-- Vertically Centered Block Modal -->
-
+                <div class="modal" id="note-modal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form id="note" action="" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="block block-rounded block-themed block-transparent mb-0">
+                                    <div class="block-header bg-primary-dark">
+                                        <h3 class="block-title text-center">Meeting Note</h3>
+                                        <div class="block-options">
+                                            <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-fw fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="block-content font-size-sm ">
+                                        <div class="form-group" id="condition_select">
+                                            <h3 class="block-title">Notes</h3>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option">
+                                                    <i class="si si-settings"></i>
+                                                </button>
+                                            </div>
+                                            <div id="js-ckeditor5-inline">Hello inline CKEditor 5! Click this text to edit it!</div>
+                                        </div>
+                                    </div>
+                                    <div class="block-content block-content-full text-right border-top">
+                                        <button type="button" class="btn btn-alt-primary mr-1" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <!-- END Vertically Centered Block Modal -->
             </div>
         </div>
@@ -86,7 +107,10 @@
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.flash.min.js') }}"></script>
     <script src="{{ asset('backend/js/plugins/datatables/buttons/buttons.colVis.min.js') }}"></script>
 
+    <script src="{{ asset('backend/js/plugins/ckeditor5-inline/build/ckeditor.js') }}"></script>
+
     <!-- Page JS Code -->
+    <script>jQuery(function(){One.helpers(['ckeditor5']);});</script>
     <script src="{{ asset('backend/js/pages/be_tables_datatables.min.js') }}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
@@ -94,7 +118,7 @@
 
             var dtable = $('#table').DataTable({
                 responsive: true,
-                ajax: '{{ url('meeting/get_meeting_data') }}',
+                ajax: '{{ url('meeting/'.$id.'/get_meeting_participant_data') }}',
                 paging: true,
                 dom: 'B<"top"<"left-col"l><"right-col"f>>rtip',
                 retrieve: true,
@@ -103,37 +127,35 @@
                     extend: 'copy',
                     text: 'Copy',
                     className: 'button',
-                    title: "Meeting Table"
+                    title: "Meeting Attendee Table"
                 },
                     {
                         extend: 'csv',
                         text: 'CSV',
                         className: 'button' ,
                         exportOptions:  {
-                            columns: [0, 1,2,3,4,5,6,7,8,9,10]
+                            columns: [0, 1,2,3]
                         },
-                        title: "Meeting Table"
+                        title: "Meeting Attendee Table"
                     },
                     {
                         extend: 'print',
                         text: 'Print',
                         className: 'button' ,
                         exportOptions:  {
-                            columns: [0, 1,2,3,4,5,6,7,8,9,10]
+                            columns: [0, 1,2,3]
                         },
-                        title: "Meeting Table"
+                        title: "Meeting Attendee Table"
                     },
                 ],
                 lengthMenu: [[ 10, 25, 50, -1], [ 10, 25, 50, 'All']],
             });
             dtable.buttons().container().addClass('center-align-buttons');
         });
-        function show_complete_modal(id, name) {
-            var x = document.getElementById('description_text');
-            x.innerHTML = name;
-            const url = "{{ url('meeting/status/:id/complete') }}".replace(':id', id);
-            $('#complete').attr('action', url);
-            $('#complete-modal').modal('show');
+        function show_notes_modal(id, name) {
+            const url = "{{ url('meeting/:id/add/notes') }}".replace(':id', id);
+            $('#note').attr('action', url);
+            $('#note-modal').modal('show');
         }
     </script>
 @endsection

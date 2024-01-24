@@ -7,11 +7,13 @@ use App\Http\Requests\MeetingEditRequest;
 use App\Http\Requests\MeetingPlaceAddRequest;
 use App\Http\Requests\MeetingPlaceEditRequest;
 use App\Services\MeetingService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use App\Traits\AuthorizationTrait;
+//use Barryvdh\DomPDF\Facade as PDF;
 
 class MeetingController extends Controller
 {
@@ -35,6 +37,10 @@ class MeetingController extends Controller
     public function fetchData()
     {
         return $this->meetingService->fetchData();
+    }
+    public function fetchAttendeeData($id)
+    {
+        return $this->meetingService->fetchAttendeeData($id);
     }
 
     public function create()
@@ -70,6 +76,62 @@ class MeetingController extends Controller
         return \view('backend.pages.meeting.edit',compact('meeting','places', 'participants'));
     }
 
+    public function attendee($id)
+    {
+        View::share('sub_menu', 'Manage Meetings');
+        $meeting = $this->meetingService->getMeeting($id);
+        return \view('backend.pages.meeting.attendee',compact('meeting','id'));
+    }
+
+    public function viewAddNote($id)
+    {
+        View::share('sub_menu', 'Manage Meetings');
+        $note = $this->meetingService->getNote($id);
+        return \view('backend.pages.meeting.notes',compact('id', 'note'));
+    }
+
+    public function meetingMinute($id)
+    {
+        View::share('sub_menu', 'Manage Meetings');
+            $meeting_minute = $this->meetingService->meetingMinute($id);
+            $meeting = $this->meetingService->getMeeting($id);
+            $data = [
+                'meeting_minute' => $meeting_minute,
+                'meeting_info' => $meeting,
+                'date' => date('m/d/Y')
+            ];
+
+            $pdf = Pdf::loadView('backend.pages.meeting.meetingMinute', $data);
+            return $pdf->download('MeetingMinutes.pdf');
+    }
+
+    public function addNote(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'id' => 'required|exists:meeting_participants,id',
+                'notes' => 'required'
+            ]);
+            if($validator->fails()) {
+                return redirect()->back()->with('error', 'Note not added');
+            }
+            $note = $this->meetingService->addNote($validator->validated());
+            if($note)
+                return redirect('meeting')->with('success', 'Note added');
+            return redirect()->back()->with('error', 'Note not added');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function approveNote($id)
+    {
+        $note = $this->meetingService->approveNote($id);
+        if($note)
+           return redirect()->back()->with('success', 'Note approved');
+        return redirect()->back()->with('error', 'Note not approved');
+    }
+
     public function update(MeetingEditRequest $request)
     {
         try {
@@ -77,16 +139,6 @@ class MeetingController extends Controller
             if(!$meeting)
                 return redirect('meeting')->with('error', 'Failed to update meeting');
             return redirect('/meeting')->with('success', 'Meeting updated successfully');
-        } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
-        }
-    }
-
-    public function complete($id, Request $request)
-    {
-        try {
-            $this->meetingService->complete($id, $request->all());
-            return redirect()->back()->with('success', 'Meeting completed');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }

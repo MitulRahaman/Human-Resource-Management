@@ -21,7 +21,7 @@
 @section('content')
     <div class="content">
         @include('backend.layouts.error_msg')
-        <div class="block block-rounded">
+        <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
                 <h3 class="block-title">Edit Role</h3>
             </div>
@@ -31,8 +31,8 @@
 
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
-                        <div class="row items-push ml-10">
-                            <div class="col-lg-9 col-xl-9">
+                        <div class="row items-push ">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-username">sl_no <span class="text-danger">*</span></label>
                                     <input type="number" step="1" class="form-control" id="sl_no" name="sl_no" value="{{ $role_info->sl_no }}" placeholder="Enter a serial number.." required>

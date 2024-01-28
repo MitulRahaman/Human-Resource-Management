@@ -21,7 +21,7 @@
 @section('content')
     <div class="content">
         @include('backend.layouts.error_msg')
-        <div class="block block-rounded">
+        <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
                 <h3 class="block-title">Edit Menu</h3>
             </div>
@@ -30,8 +30,8 @@
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
-                        <div class="row items-push ml-10">
-                            <div class="col-lg-8 col-xl-5">
+                        <div class="row items-push ">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-username">Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="title" name="title" value="{{ $menu_info->title }}" placeholder="Enter a title.." >

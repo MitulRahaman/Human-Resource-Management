@@ -19,7 +19,7 @@
 @section('content')
     <div class="content">
         @include('backend.layouts.error_msg')
-        <div class="block block-rounded">
+        <div class="block block-rounded block-content col-sm-6">
             <div class="block-header">
                 <h3 class="block-title">Distribute Assets</h3>
             </div>
@@ -27,8 +27,8 @@
                 @csrf
                 <div class="block block-rounded">
                     <div class="block-content block-content-full">
-                        <div class="row items-push ml-10">
-                            <div class="col-lg-6 col-xl-6">
+                        <div class="row items-push">
+                            <div class="col-lg-12 col-xl-12">
                                 <div class="form-group">
                                     <label for="val-suggestions">Assets<span class="text-danger">*</span></label>
                                         <select class="js-select2 form-control input-prevent-multiple-submission" id="assets" name="assets[]" style="width: 100%;" data-placeholder="Choose assets for the user.." required multiple>

@@ -1,7 +1,11 @@
 @extends('backend.layouts.master')
 @section('css_after')
     <link rel="stylesheet" href="{{asset('backend/js/plugins/fullcalendar/main.min.css')}}">
-    <link rel="stylesheet" href="{{asset('backend/js/plugins/fullcalendar/main.min.css')}}">
+    <style >
+        .fc-daygrid-day {
+            background-color: #A3E2A3;
+        }
+    </style>
 @endsection
 @section('page_action')
     @if($hasManageCalenderPermission)
@@ -49,9 +53,9 @@
                                 </div>
                             </div>
                             <div class="block-content font-size-sm">
-                                <p class="m-2">Title</p>
+                                <p class="my-2">Title</p>
                                 <input type="text" name="title" id="title" value="" style="width: 100%;" required>
-                                <p class="m-2 ">Description</p>
+                                <p class="my-2 ">Description</p>
                                 <input type="text" name="description" id="description" value="" style="width: 100%;" required>
                                 <input type="hidden" name="date" id="date">
                             </div>
@@ -79,9 +83,9 @@
                                 </div>
                             </div>
                             <div class="block-content font-size-sm">
-                                <p class="m-2">Enter Event Title</p>
+                                <p class="my-2">Enter Event Title</p>
                                 <input type="text" name="title" id="title" style="width: 100%;" required><br>
-                                <p class="m-2 ">Enter Event Description</p>
+                                <p class="my-2 ">Enter Event Description</p>
                                 <input type="text" name="description" id="description" style="width: 100%;" >
                                 <input type="hidden" name="day" id="day">
                             </div>
@@ -105,7 +109,6 @@
     <script src="{{asset('backend/js/plugins/fullcalendar/main.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
-
     <script>
         window.onload = function() {
             var calendarEl = document.getElementById('calendar');
@@ -114,8 +117,8 @@
                 events: '{{url ('calender/get_events')}}',
                 eventColor: '#A70000',
                 editable: true,
-                eventClick:  function(event, jsEvent, view) {
-                    var date= event.event.start;
+                eventClick:  function(event) {
+                    var date = event.event.start;
                     var title = event.event._def.title;
                     var description = event.event.extendedProps.description;
                     date = moment(date).format('YYYY-MM-DD');
@@ -124,7 +127,7 @@
                     document.getElementById('description').setAttribute('value',description);
                     $('#eventModal').modal();
                 },
-                dateClick : function(date, allDay, jsEvent, view) {
+                dateClick : function(date) {
                     date = moment(date.date).format('YYYY-MM-DD');
                     $('#day').val(date);
                     $('#dayModal').modal();
@@ -152,7 +155,15 @@
                             One.helpers('notify', {type: 'danger', icon: 'fa fa-check mr-1', message: 'Event not updated!'});
                         }
                     });
-                }
+                },
+                eventDidMount: function (event) {
+                    if (event.el) {
+                        event.el.setAttribute('data-toggle', 'tooltip');
+                        event.el.setAttribute('data-placement', 'top');
+                        event.el.setAttribute('title', event.event._def.title);
+                        $(event.el).tooltip();
+                    }
+                },
             });
             calendar.render();
         };

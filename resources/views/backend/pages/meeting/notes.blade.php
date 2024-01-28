@@ -4,7 +4,7 @@
 
     <div class="content">
 
-        <div class="block block-rounded">
+        <div class="block block-rounded ">
             <div class="block-header">
                 <h3 class="block-title">Notes<span class="text-danger">*</span></h3>
                 <div class="block-options">
